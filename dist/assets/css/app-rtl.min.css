@@ -3555,7 +3555,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
   font-weight: 500 !important;
 }
 
-.gmaps, .gmaps-panaroma {
+.gmaps,
+.gmaps-panaroma {
   height: 300px;
   background: var(--bs-tertiary-bg);
   border-radius: 3px;
@@ -3590,6 +3591,11 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
   border-right: 16px solid transparent;
   border-left: 16px solid transparent;
   border-bottom: 16px solid #0f9cf3;
+}
+
+.img-route-list {
+  width: 100%;
+  height: auto;
 }
 
 .jvectormap-label {
@@ -4034,6 +4040,16 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
   line-height: 30px;
   text-align: center;
   width: 30px;
+}
+
+.reports-links li a {
+  background: var(--bs-tertiary-bg);
+  border-radius: 50%;
+  color: var(--bs-body-color);
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
 }
 
 .auth-body-bg {
