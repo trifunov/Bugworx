@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 /*
 Template Name: Upcube -  Admin & Dashboard Template
 Author: Themesdesign
@@ -14,6 +15,7 @@ File: Icons Css File
   font-weight: normal;
   font-style: normal;
 }
+
 .mdi:before,
 .mdi-set {
   display: inline-block;
@@ -23850,19 +23852,23 @@ File: Icons Css File
   visibility: hidden;
 }
 
-.mdi-18px.mdi-set, .mdi-18px.mdi:before {
+.mdi-18px.mdi-set,
+.mdi-18px.mdi:before {
   font-size: 18px;
 }
 
-.mdi-24px.mdi-set, .mdi-24px.mdi:before {
+.mdi-24px.mdi-set,
+.mdi-24px.mdi:before {
   font-size: 24px;
 }
 
-.mdi-36px.mdi-set, .mdi-36px.mdi:before {
+.mdi-36px.mdi-set,
+.mdi-36px.mdi:before {
   font-size: 36px;
 }
 
-.mdi-48px.mdi-set, .mdi-48px.mdi:before {
+.mdi-48px.mdi-set,
+.mdi-48px.mdi:before {
   font-size: 48px;
 }
 
@@ -23902,8 +23908,8 @@ File: Icons Css File
 }
 
 .mdi-rotate-45:before {
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
 }
 
 .mdi-rotate-90 {
@@ -23926,8 +23932,8 @@ File: Icons Css File
 }
 
 .mdi-rotate-90:before {
-  -webkit-transform: rotate(90deg);
-  transform: rotate(90deg);
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 .mdi-rotate-135 {
@@ -23950,8 +23956,8 @@ File: Icons Css File
 }
 
 .mdi-rotate-135:before {
-  -webkit-transform: rotate(135deg);
-  transform: rotate(135deg);
+  -webkit-transform: rotate(-135deg);
+  transform: rotate(-135deg);
 }
 
 .mdi-rotate-180 {
@@ -23974,8 +23980,8 @@ File: Icons Css File
 }
 
 .mdi-rotate-180:before {
-  -webkit-transform: rotate(180deg);
-  transform: rotate(180deg);
+  -webkit-transform: rotate(-180deg);
+  transform: rotate(-180deg);
 }
 
 .mdi-rotate-225 {
@@ -23998,8 +24004,8 @@ File: Icons Css File
 }
 
 .mdi-rotate-225:before {
-  -webkit-transform: rotate(225deg);
-  transform: rotate(225deg);
+  -webkit-transform: rotate(-225deg);
+  transform: rotate(-225deg);
 }
 
 .mdi-rotate-270 {
@@ -24022,8 +24028,8 @@ File: Icons Css File
 }
 
 .mdi-rotate-270:before {
-  -webkit-transform: rotate(270deg);
-  transform: rotate(270deg);
+  -webkit-transform: rotate(-270deg);
+  transform: rotate(-270deg);
 }
 
 .mdi-rotate-315 {
@@ -24046,15 +24052,15 @@ File: Icons Css File
 }
 
 .mdi-rotate-315:before {
-  -webkit-transform: rotate(315deg);
-  transform: rotate(315deg);
+  -webkit-transform: rotate(-315deg);
+  transform: rotate(-315deg);
 }
 
 .mdi-flip-h:before {
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
   -webkit-filter: FlipH;
-          filter: FlipH;
+  filter: FlipH;
   -ms-filter: "FlipH";
 }
 
@@ -24062,7 +24068,7 @@ File: Icons Css File
   -webkit-transform: scaleY(-1);
   transform: scaleY(-1);
   -webkit-filter: FlipV;
-          filter: FlipV;
+  filter: FlipV;
   -ms-filter: "FlipV";
 }
 
@@ -24076,22 +24082,25 @@ File: Icons Css File
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
+    -webkit-transform: rotate(-359deg);
+    transform: rotate(-359deg);
   }
 }
+
 @keyframes mdi-spin {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
+    -webkit-transform: rotate(-359deg);
+    transform: rotate(-359deg);
   }
 }
-/*# sourceMappingURL=materialdesignicons.css.map */
+
 /*!
  * Font Awesome Free 5.13.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -24172,16 +24181,16 @@ File: Icons Css File
 
 .fa-ul {
   list-style-type: none;
-  margin-left: 2.5em;
-  padding-left: 0;
+  margin-right: 2.5em;
+  padding-right: 0;
 }
 
-.fa-ul > li {
+.fa-ul>li {
   position: relative;
 }
 
 .fa-li {
-  left: -2em;
+  right: -2em;
   position: absolute;
   text-align: center;
   width: 2em;
@@ -24195,11 +24204,11 @@ File: Icons Css File
 }
 
 .fa-pull-left {
-  float: left;
+  float: right;
 }
 
 .fa-pull-right {
-  float: right;
+  float: left;
 }
 
 .fa.fa-pull-left,
@@ -24207,7 +24216,7 @@ File: Icons Css File
 .far.fa-pull-left,
 .fal.fa-pull-left,
 .fab.fa-pull-left {
-  margin-right: 0.3em;
+  margin-left: 0.3em;
 }
 
 .fa.fa-pull-right,
@@ -24215,7 +24224,7 @@ File: Icons Css File
 .far.fa-pull-right,
 .fal.fa-pull-right,
 .fab.fa-pull-right {
-  margin-left: 0.3em;
+  margin-right: 0.3em;
 }
 
 .fa-spin {
@@ -24233,37 +24242,41 @@ File: Icons Css File
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
+    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
   }
 }
+
 @keyframes fa-spin {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
+    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
   }
 }
+
 .fa-rotate-90 {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
-  -webkit-transform: rotate(90deg);
-  transform: rotate(90deg);
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 .fa-rotate-180 {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
-  -webkit-transform: rotate(180deg);
-  transform: rotate(180deg);
+  -webkit-transform: rotate(-180deg);
+  transform: rotate(-180deg);
 }
 
 .fa-rotate-270 {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
-  -webkit-transform: rotate(270deg);
-  transform: rotate(270deg);
+  -webkit-transform: rotate(-270deg);
+  transform: rotate(-270deg);
 }
 
 .fa-flip-horizontal {
@@ -24278,7 +24291,8 @@ File: Icons Css File
   transform: scale(1, -1);
 }
 
-.fa-flip-both, .fa-flip-horizontal.fa-flip-vertical {
+.fa-flip-both,
+.fa-flip-horizontal.fa-flip-vertical {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
   -webkit-transform: scale(-1, -1);
   transform: scale(-1, -1);
@@ -24305,7 +24319,7 @@ File: Icons Css File
 
 .fa-stack-1x,
 .fa-stack-2x {
-  left: 0;
+  right: 0;
   position: absolute;
   text-align: center;
   width: 100%;
@@ -30088,7 +30102,8 @@ readers do not read off random characters that represent icons */
   width: 1px;
 }
 
-.sr-only-focusable:active, .sr-only-focusable:focus {
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
   clip: auto;
   height: auto;
   margin: 0;
@@ -30105,6 +30120,7 @@ readers do not read off random characters that represent icons */
   src: url("../fonts/fa-brands-400.eot");
   src: url("../fonts/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-brands-400.woff2") format("woff2"), url("../fonts/fa-brands-400.woff") format("woff"), url("../fonts/fa-brands-400.ttf") format("truetype"), url("../fonts/fa-brands-400.svg#fontawesome") format("svg");
 }
+
 .fab {
   font-family: "Font Awesome 5 Brands";
   font-weight: 400;
@@ -30118,6 +30134,7 @@ readers do not read off random characters that represent icons */
   src: url("../fonts/fa-regular-400.eot");
   src: url("../fonts/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-regular-400.woff2") format("woff2"), url("../fonts/fa-regular-400.woff") format("woff"), url("../fonts/fa-regular-400.ttf") format("truetype"), url("../fonts/fa-regular-400.svg#fontawesome") format("svg");
 }
+
 .far {
   font-family: "Font Awesome 5 Free";
   font-weight: 400;
@@ -30131,6 +30148,7 @@ readers do not read off random characters that represent icons */
   src: url("../fonts/fa-solid-900.eot");
   src: url("../fonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-solid-900.woff2") format("woff2"), url("../fonts/fa-solid-900.woff") format("woff"), url("../fonts/fa-solid-900.ttf") format("truetype"), url("../fonts/fa-solid-900.svg#fontawesome") format("svg");
 }
+
 .fa,
 .fas {
   font-family: "Font Awesome 5 Free";
@@ -30144,6 +30162,7 @@ readers do not read off random characters that represent icons */
   font-weight: normal;
   font-style: normal;
 }
+
 [data-icon]:before {
   font-family: "dripicons-v2" !important;
   content: attr(data-icon);
@@ -30988,7 +31007,9 @@ readers do not read off random characters that represent icons */
   /* iOS 4.1- */
   font-display: swap;
 }
-[class^=ri-], [class*=" ri-"] {
+
+[class^=ri-],
+[class*=" ri-"] {
   font-family: "remixicon" !important;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
