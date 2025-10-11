@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 /*
 Template Name: Upcube -  Admin & Dashboard Template
 Author: Themesdesign
@@ -15,7 +14,6 @@ File: Icons Css File
   font-weight: normal;
   font-style: normal;
 }
-
 .mdi:before,
 .mdi-set {
   display: inline-block;
@@ -23852,23 +23850,19 @@ File: Icons Css File
   visibility: hidden;
 }
 
-.mdi-18px.mdi-set,
-.mdi-18px.mdi:before {
+.mdi-18px.mdi-set, .mdi-18px.mdi:before {
   font-size: 18px;
 }
 
-.mdi-24px.mdi-set,
-.mdi-24px.mdi:before {
+.mdi-24px.mdi-set, .mdi-24px.mdi:before {
   font-size: 24px;
 }
 
-.mdi-36px.mdi-set,
-.mdi-36px.mdi:before {
+.mdi-36px.mdi-set, .mdi-36px.mdi:before {
   font-size: 36px;
 }
 
-.mdi-48px.mdi-set,
-.mdi-48px.mdi:before {
+.mdi-48px.mdi-set, .mdi-48px.mdi:before {
   font-size: 48px;
 }
 
@@ -24060,7 +24054,7 @@ File: Icons Css File
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
   -webkit-filter: FlipH;
-  filter: FlipH;
+          filter: FlipH;
   -ms-filter: "FlipH";
 }
 
@@ -24068,7 +24062,7 @@ File: Icons Css File
   -webkit-transform: scaleY(-1);
   transform: scaleY(-1);
   -webkit-filter: FlipV;
-  filter: FlipV;
+          filter: FlipV;
   -ms-filter: "FlipV";
 }
 
@@ -24082,25 +24076,21 @@ File: Icons Css File
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
   100% {
     -webkit-transform: rotate(-359deg);
     transform: rotate(-359deg);
   }
 }
-
 @keyframes mdi-spin {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
   100% {
     -webkit-transform: rotate(-359deg);
     transform: rotate(-359deg);
   }
 }
-
 /*!
  * Font Awesome Free 5.13.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -24185,7 +24175,7 @@ File: Icons Css File
   padding-right: 0;
 }
 
-.fa-ul>li {
+.fa-ul > li {
   position: relative;
 }
 
@@ -24242,25 +24232,21 @@ File: Icons Css File
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
   100% {
     -webkit-transform: rotate(-360deg);
     transform: rotate(-360deg);
   }
 }
-
 @keyframes fa-spin {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
   100% {
     -webkit-transform: rotate(-360deg);
     transform: rotate(-360deg);
   }
 }
-
 .fa-rotate-90 {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
   -webkit-transform: rotate(-90deg);
@@ -24291,8 +24277,7 @@ File: Icons Css File
   transform: scale(1, -1);
 }
 
-.fa-flip-both,
-.fa-flip-horizontal.fa-flip-vertical {
+.fa-flip-both, .fa-flip-horizontal.fa-flip-vertical {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
   -webkit-transform: scale(-1, -1);
   transform: scale(-1, -1);
@@ -30102,8 +30087,7 @@ readers do not read off random characters that represent icons */
   width: 1px;
 }
 
-.sr-only-focusable:active,
-.sr-only-focusable:focus {
+.sr-only-focusable:active, .sr-only-focusable:focus {
   clip: auto;
   height: auto;
   margin: 0;
@@ -30120,7 +30104,6 @@ readers do not read off random characters that represent icons */
   src: url("../fonts/fa-brands-400.eot");
   src: url("../fonts/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-brands-400.woff2") format("woff2"), url("../fonts/fa-brands-400.woff") format("woff"), url("../fonts/fa-brands-400.ttf") format("truetype"), url("../fonts/fa-brands-400.svg#fontawesome") format("svg");
 }
-
 .fab {
   font-family: "Font Awesome 5 Brands";
   font-weight: 400;
@@ -30134,7 +30117,6 @@ readers do not read off random characters that represent icons */
   src: url("../fonts/fa-regular-400.eot");
   src: url("../fonts/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-regular-400.woff2") format("woff2"), url("../fonts/fa-regular-400.woff") format("woff"), url("../fonts/fa-regular-400.ttf") format("truetype"), url("../fonts/fa-regular-400.svg#fontawesome") format("svg");
 }
-
 .far {
   font-family: "Font Awesome 5 Free";
   font-weight: 400;
@@ -30148,7 +30130,6 @@ readers do not read off random characters that represent icons */
   src: url("../fonts/fa-solid-900.eot");
   src: url("../fonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-solid-900.woff2") format("woff2"), url("../fonts/fa-solid-900.woff") format("woff"), url("../fonts/fa-solid-900.ttf") format("truetype"), url("../fonts/fa-solid-900.svg#fontawesome") format("svg");
 }
-
 .fa,
 .fas {
   font-family: "Font Awesome 5 Free";
@@ -30162,7 +30143,6 @@ readers do not read off random characters that represent icons */
   font-weight: normal;
   font-style: normal;
 }
-
 [data-icon]:before {
   font-family: "dripicons-v2" !important;
   content: attr(data-icon);
@@ -31007,9 +30987,7 @@ readers do not read off random characters that represent icons */
   /* iOS 4.1- */
   font-display: swap;
 }
-
-[class^=ri-],
-[class*=" ri-"] {
+[class^=ri-], [class*=" ri-"] {
   font-family: "remixicon" !important;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -39679,4 +39657,5 @@ readers do not read off random characters that represent icons */
 
 .ri-zoom-out-line:before {
   content: "\f265";
+} content: "\f265";
 }
