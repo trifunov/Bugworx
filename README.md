@@ -69,13 +69,3 @@ If the `dist` folder is already tracked by git, stop tracking it with:
 git rm -r --cached dist
 git commit -m "Remove dist from repository tracking"
 ```
-
-## Next steps I can help with
-
-- Run the build locally and fix any errors (you'll need to provide the build output or allow me to run commands).
-- Add or update `package.json` or `gulpfile.js` if the build process is missing or broken.
-- Add CI steps to build and publish `dist` automatically.
-
----
-
-If you'd like, I can run the build now and fix errors — paste the build error output here or allow me to run the commands in a terminal.
