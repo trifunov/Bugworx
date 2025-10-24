@@ -565,13 +565,36 @@
 
 <script src="assets/js/app.js"></script>
 
+// ...existing code...
 <style>
-/* hide until DataTable is filtered/ready to avoid blink */
-#datatable-buttons.dt-hidden-before-init { visibility: hidden; }
+/* keep hidden helper */
+#datatable-buttons.dt-hidden-before-init { visibility: hidden !important; }
+
+/* make rows clickable and show hand cursor (apply to both tr and td) */
+#datatable-buttons tbody tr,
+#datatable-buttons tbody tr > td { cursor: pointer; transition: background-color .12s ease; }
+
+/* stronger hover rule — apply to cells (td) and use !important to beat stripe rules */
+#datatable-buttons.dataTable tbody tr:hover > td,
+#datatable-buttons.dataTable tbody tr:hover {
+    background-color: rgba(13,110,253,0.06) !important;
+}
+
+/* selected / active state on cells (avoid being overridden by stripe) */
+#datatable-buttons.dataTable tbody tr.selected > td,
+#datatable-buttons.dataTable tbody tr.active > td,
+#datatable-buttons.dataTable tbody tr.selected,
+#datatable-buttons.dataTable tbody tr.active {
+    background-color: rgba(13,110,253,0.12) !important;
+}
+
+/* ensure header/footer not affected */
+#datatable-buttons thead tr > th,
+#datatable-buttons tfoot tr > th { background-color: inherit; }
 </style>
 
 <script>
-    function getQueryParam(param) {
+        function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
@@ -592,6 +615,20 @@
             dtOptions.search = { search: searchQuery };
         }
 
+        function attachRowClick() {
+            // remove any previous handler to avoid duplicates
+            $('#datatable-buttons tbody').off('click.customerRow').on('click.customerRow', 'tr', function (e) {
+                // ignore clicks on controls/inputs inside the row
+                if ($(e.target).closest('a,button,input,select,label').length) return;
+
+                const name = $(this).find('td').first().text().trim();
+                if (!name) return;
+
+                const url = 'pages-customer-home.html?name=' + encodeURIComponent(name);
+                window.location.href = url;
+            });
+        }
+
         if ($.fn.DataTable.isDataTable('#datatable-buttons')) {
             // already initialized by datatables.init.js -> reuse instance
             const table = $('#datatable-buttons').DataTable();
@@ -603,8 +640,9 @@
                 if ($filterInput.length) $filterInput.val(searchQuery);
             }
 
-            // show table once draw has finished
+            // attach click handler once draw completed and reveal table
             table.one('draw', function() {
+                attachRowClick();
                 $('#datatable-buttons').removeClass('dt-hidden-before-init');
             }).draw(false);
         } else {
@@ -617,10 +655,24 @@
                     const $filterInput = $('.dataTables_filter input');
                     if ($filterInput.length) $filterInput.val(searchQuery);
                 }
+
+                // attach click handler now that table DOM is ready
+                attachRowClick();
             };
 
             $('#datatable-buttons').DataTable(dtOptions);
         }
+
+        // if DataTables initializes later via another script, attach when init event fires
+        $(document).on('init.dt', function (e, settings) {
+            if (settings && settings.nTable && settings.nTable.id === 'datatable-buttons') {
+                // small timeout to allow controls to be rendered
+                setTimeout(function () {
+                    attachRowClick();
+                    $('#datatable-buttons').removeClass('dt-hidden-before-init');
+                }, 0);
+            }
+        });
     });
 </script>
 </body>
