@@ -28,9 +28,9 @@
             </button>
 
             <!-- App Search-->
-            <form class="app-search d-none d-lg-block">
+            <form class="app-search d-none d-lg-block" onsubmit="return handleSearch(this)">
                 <div class="position-relative">
-                    <input type="text" class="form-control" placeholder="Search...">
+                    <input type="text" name="searchQuery" class="form-control" placeholder="Search...">
                     <span class="ri-search-line"></span>
                 </div>
             </form>
@@ -661,3 +661,14 @@
         </nav>
     </div>
 </div>
+
+
+<script>
+    function handleSearch(form) {
+        const searchQuery = form.searchQuery.value.trim();
+        if (searchQuery) {
+            window.location.href = `/tables-customers.html?q=${encodeURIComponent(searchQuery)}`;
+        }
+        return false; // Prevent form submission
+    }
+</script>

@@ -565,6 +565,64 @@
 
 <script src="assets/js/app.js"></script>
 
+<style>
+/* hide until DataTable is filtered/ready to avoid blink */
+#datatable-buttons.dt-hidden-before-init { visibility: hidden; }
+</style>
+
+<script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    $(document).ready(function() {
+        const searchQuery = getQueryParam('q') || '';
+
+        // mark table hidden until ready to avoid flicker
+        $('#datatable-buttons').addClass('dt-hidden-before-init');
+
+        // options for initialization (used only when not already initialized)
+        const dtOptions = {
+            deferRender: true,
+            responsive: true
+        };
+
+        if (searchQuery) {
+            dtOptions.search = { search: searchQuery };
+        }
+
+        if ($.fn.DataTable.isDataTable('#datatable-buttons')) {
+            // already initialized by datatables.init.js -> reuse instance
+            const table = $('#datatable-buttons').DataTable();
+
+            if (searchQuery) {
+                table.search(searchQuery).draw(); // apply search without reinit
+                // ensure visible search input shows the query
+                const $filterInput = $('.dataTables_filter input');
+                if ($filterInput.length) $filterInput.val(searchQuery);
+            }
+
+            // show table once draw has finished
+            table.one('draw', function() {
+                $('#datatable-buttons').removeClass('dt-hidden-before-init');
+            }).draw(false);
+        } else {
+            // initialize ourselves with initComplete to show table when ready
+            dtOptions.initComplete = function() {
+                $('#datatable-buttons').removeClass('dt-hidden-before-init');
+
+                // ensure visible search input shows the query
+                if (searchQuery) {
+                    const $filterInput = $('.dataTables_filter input');
+                    if ($filterInput.length) $filterInput.val(searchQuery);
+                }
+            };
+
+            $('#datatable-buttons').DataTable(dtOptions);
+        }
+    });
+</script>
 </body>
 
 </html>
