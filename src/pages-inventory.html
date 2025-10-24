@@ -1,0 +1,160 @@
+@@include("partials/main.html")
+
+<head>
+
+    @@include("partials/title-meta.html", {"title": "Inventory"})
+
+    <!-- DataTables -->
+    <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet"
+        type="text/css" />
+    <link href="assets/libs/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet"
+        type="text/css" />
+
+    @@include("partials/head-css.html")
+
+</head>
+
+@@include("partials/body.html")
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+    @@include("partials/topbar.html")
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+
+        <div class="page-content">
+            <div class="container-fluid">
+
+                @@include("partials/page-title.html", {"pagetitle": "Bugworx", "title": "Inventory"})
+
+                <div class="row">
+                    <div class="col-12 card-parent">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h4 class="card-title">Inventory</h4>
+                                <p class="card-title-desc">
+                                    Below is a list of all items currently in inventory.
+                                </p>
+
+                                <table id="datatable-buttons"
+                                    class="table table-striped table-bordered dt-responsive nowrap"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Material code</th>
+                                            <th>Material name</th>
+                                            <th>Category</th>
+                                            <th>Stock</th>
+                                            <th>Cost per unit</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>TR001</td>
+                                            <td>Pesticide A</td>
+                                            <td>Chemical</td>
+                                            <td>150</td>
+                                            <td>$25.00</td>
+                                            <td>
+                                                <button type="button"
+                                                    class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                    Order More
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>TR002</td>
+                                            <td>Pesticide B</td>
+                                            <td>Chemical</td>
+                                            <td>200</td>
+                                            <td>$30.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>TR003</td>
+                                            <td>Herbicide A</td>
+                                            <td>Bait</td>
+                                            <td>100</td>
+                                            <td>$20.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>TR004</td>
+                                            <td>Insecticide A</td>
+                                            <td>Bait</td>
+                                            <td>75</td>
+                                            <td>$35.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>TR005</td>
+                                            <td>Fertilizer A</td>
+                                            <td>Bait</td>
+                                            <td>50</td>
+                                            <td>$40.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>TR005</td>
+                                            <td>Fertilizer A</td>
+                                            <td>Trap</td>
+                                            <td>50</td>
+                                            <td>$40.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+
+            </div> <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+
+        @@include("partials/footer.html")
+
+    </div>
+    <!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+
+@@include("partials/right-sidebar.html")
+
+@@include("partials/vendor-scripts.html")
+
+<!-- Required datatable js -->
+<script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="assets/libs/jszip/jszip.min.js"></script>
+<script src="assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+<script src="assets/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="assets/libs/datatables.net-select/js/dataTables.select.min.js"></script>
+
+<!-- Responsive examples -->
+<script src="assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Datatable init js -->
+<script src="assets/js/pages/datatables.init.js"></script>
+
+<script src="assets/js/app.js"></script>
+
+</body>
+
+</html>
