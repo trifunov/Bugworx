@@ -132,3 +132,7 @@
         background: transparent escape-svg($btn-close-bg-dark) center / $btn-close-width auto no-repeat;
     }
 }
+
+.main-content-no-margin {
+    margin-left: 0 !important;
+}
