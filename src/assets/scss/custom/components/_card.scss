@@ -5,6 +5,7 @@
 .card {
     margin-bottom: $grid-gutter-width;
     box-shadow: $box-shadow;
+    height: 100%;
 }
 
 .card-drop {
@@ -22,4 +23,8 @@
 .card-title-desc {
     color: $card-title-desc;
     margin-bottom: 24px;
+}
+
+.card-parent {
+    padding-bottom: 24px;
 }

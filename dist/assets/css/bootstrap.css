@@ -15773,6 +15773,7 @@ button, a {
   margin-bottom: 24px;
   -webkit-box-shadow: -1px 0px 20px rgba(0, 0, 0, 0.05);
           box-shadow: -1px 0px 20px rgba(0, 0, 0, 0.05);
+  height: 100%;
 }
 
 .card-drop {
@@ -15790,6 +15791,10 @@ button, a {
 .card-title-desc {
   color: #6c757d;
   margin-bottom: 24px;
+}
+
+.card-parent {
+  padding-bottom: 24px;
 }
 
 .dropdown-menu {
