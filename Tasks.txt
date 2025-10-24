@@ -1,0 +1,21 @@
+Panche
+
+1. Action cards on home page to be clickable and to redirect to according pages (creating the pages)
+
+Dimche
+
+1. Scheduler should redirect to /calendar.html and we should remove the sidebar
+
+2. Routing & Fleet should redirect to /maps-google.html and we should remove the sidebar
+
+3. Reports should redirect to /pages-reports.html and we should remove the sidebar
+
+4. When we click on View report in the Report cards we should redirect to /tables-customer.html and we should pass through query string the ReportId
+
+Mende
+
+1. Search customer should redirect to /tables-customers.html and search field on the table should be populated with the searched term (pass through query string)
+
+2. We should remove the Sidebar from the /tables-customers.html
+
+3. Names in the Customers table should be link which will redirect to /pages-customer-home.html
