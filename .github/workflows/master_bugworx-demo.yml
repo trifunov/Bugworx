@@ -64,5 +64,5 @@ jobs:
           app-name: 'bugworx-demo'
           slot-name: 'Production'
           # the artifact will contain the react-app folder, deploy the dist output
-          package: './node-app/dist'
+          package: './node-app/build'
           
