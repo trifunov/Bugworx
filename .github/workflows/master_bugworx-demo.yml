@@ -34,8 +34,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          # upload the whole react-app folder so the 'dist' subfolder is preserved
-          path: react-app
+          # upload only the Vite build output (dist)
+          path: react-app/dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -63,6 +63,6 @@ jobs:
         with:
           app-name: 'bugworx-demo'
           slot-name: 'Production'
-          # the artifact will contain the react-app folder, deploy the dist output
-          package: './node-app/build'
+          # deploy the artifact root (node-app now contains the static site files)
+          package: './node-app'
           
