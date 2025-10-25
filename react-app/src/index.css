@@ -1,0 +1,251 @@
+/* Bugworx Theme Custom Styles */
+:root {
+  --primary-color: #0f9cf3;
+  --sidebar-dark-bg: #252b3b;
+  --sidebar-light-bg: #ffffff;
+  --header-bg: #ffffff;
+  --success-color: #34c38f;
+  --warning-color: #f1b44c;
+  --danger-color: #f46a6a;
+  --info-color: #50a5f1;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f6f8;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Layout Styles */
+#layout-wrapper {
+  min-height: 100vh;
+}
+
+/* Topbar */
+#page-topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1002;
+  background-color: var(--header-bg);
+  box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+}
+
+.navbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 calc(24px / 2) 0 0;
+  height: 70px;
+  padding: 0 calc(24px / 2) 0 0;
+}
+
+.navbar-brand-box {
+  width: 250px;
+  text-align: center;
+  padding: 0 1.3rem;
+}
+
+/* Vertical Menu */
+.vertical-menu {
+  width: 250px;
+  z-index: 1001;
+  background: var(--sidebar-light-bg);
+  bottom: 0;
+  margin-top: 0;
+  position: fixed;
+  top: 70px;
+  box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+}
+
+.vertical-menu #sidebar-menu {
+  padding: 10px 0;
+}
+
+.metismenu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-title {
+  padding: 12px 20px !important;
+  letter-spacing: .05em;
+  pointer-events: none;
+  cursor: default;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #7c8798;
+  font-weight: 600;
+}
+
+.metismenu li {
+  display: block;
+  width: 100%;
+}
+
+.metismenu li a {
+  display: block;
+  padding: 0.625rem 1.5rem;
+  color: #545a6d;
+  position: relative;
+  font-size: 14px;
+  transition: all .4s;
+  text-decoration: none;
+}
+
+.metismenu li a i {
+  display: inline-block;
+  min-width: 1.75rem;
+  padding-bottom: .125em;
+  font-size: 1.25rem;
+  line-height: 1.40625rem;
+  vertical-align: middle;
+  color: #7c8798;
+  transition: all .4s;
+}
+
+.metismenu li a:hover,
+.metismenu li a.active {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.metismenu li a:hover i,
+.metismenu li a.active i {
+  color: var(--primary-color);
+}
+
+.metismenu .mm-active > a {
+  color: var(--primary-color) !important;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 250px;
+  overflow: hidden;
+  padding-top: 70px;
+  min-height: 100vh;
+}
+
+.page-content {
+  padding: calc(24px * 1.5) calc(24px / 2);
+}
+
+/* Page Title */
+.page-title-box {
+  padding-bottom: 24px;
+}
+
+.page-title-box .breadcrumb {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Footer */
+.footer {
+  bottom: 0;
+  padding: 20px calc(24px / 2);
+  position: absolute;
+  right: 0;
+  color: #74788d;
+  left: 250px;
+  height: 60px;
+  background-color: #f5f6f8;
+}
+
+/* Cards */
+.card {
+  margin-bottom: 24px;
+  box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+  border: none;
+}
+
+/* Badge Soft Colors */
+.badge-soft-primary {
+  color: var(--primary-color);
+  background-color: rgba(15, 156, 243, 0.18);
+}
+
+.badge-soft-success {
+  color: var(--success-color);
+  background-color: rgba(52, 195, 143, 0.18);
+}
+
+.badge-soft-danger {
+  color: var(--danger-color);
+  background-color: rgba(244, 106, 106, 0.18);
+}
+
+.badge-soft-warning {
+  color: var(--warning-color);
+  background-color: rgba(241, 180, 76, 0.18);
+}
+
+.badge-soft-info {
+  color: var(--info-color);
+  background-color: rgba(80, 165, 241, 0.18);
+}
+
+/* Avatar */
+.avatar-sm {
+  height: 3rem;
+  width: 3rem;
+}
+
+.avatar-md {
+  height: 4.5rem;
+  width: 4.5rem;
+}
+
+.avatar-title {
+  align-items: center;
+  background-color: var(--primary-color);
+  color: #fff;
+  display: flex;
+  font-weight: 500;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+.rounded-3 {
+  border-radius: 0.25rem !important;
+}
+
+.bg-soft-primary {
+  background-color: rgba(15, 156, 243, 0.18) !important;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.text-success {
+  color: var(--success-color) !important;
+}
+
+.text-warning {
+  color: var(--warning-color) !important;
+}
+
+.text-danger {
+  color: var(--danger-color) !important;
+}
+
+.text-info {
+  color: var(--info-color) !important;
+}
