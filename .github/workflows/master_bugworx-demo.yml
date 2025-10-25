@@ -30,6 +30,17 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      - name: Verify build output exists
+        shell: pwsh
+        run: |
+          Write-Host "Checking react-app\dist..."
+          if (-not (Test-Path -Path 'react-app\dist')) {
+            Write-Host "ERROR: react-app/dist does not exist. Build failed or output directory changed."
+            exit 1
+          }
+          Write-Host "react-app/dist contents:"
+          Get-ChildItem -Recurse -Force 'react-app\dist' | Format-Table
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -49,6 +60,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
+
+      - name: List downloaded artifact and verify
+        run: |
+          echo "Workspace: $(pwd)"
+          ls -la
+          echo "Contents of node-app:"
+          ls -la node-app || (echo "ERROR: node-app directory missing after download-artifact" && exit 1)
+          echo "Preview node-app files:"
+          ls -la node-app | sed -n '1,200p'
       
       - name: Login to Azure
         uses: azure/login@v2
