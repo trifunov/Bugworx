@@ -115,19 +115,24 @@ const Facilities = () => {
                                                     <h5 className="font-size-14 mb-0">{f.name}</h5>
                                                 </td>
                                                 <td>
-                                                    <a href="#" className="text-primary" title="View" onClick={() => {
-                                                        setSelectedDrawing(f.drawing);
-                                                    }}>
-                                                        <i className="font-size-18 me-1"></i>
-                                                        <span>{f.drawing?.name || '-'}</span>
-                                                    </a>
+                                                    {f.drawing ? (
+                                                        <a href="#" className="text-primary" title="View" onClick={() => {
+                                                            setSelectedDrawing(f.drawing);
+                                                        }}>
+                                                            <i className="font-size-18 me-1"></i>
+                                                            <span>{f.drawing?.name}</span>
+                                                        </a>
+                                                    ) : (<span>-</span>)}
                                                 </td>
                                                 <td>
                                                     <div className="d-flex gap-3">
                                                         <a href="#" className="text-success" title="View">
                                                             <i className="mdi mdi-eye font-size-18"></i>
                                                         </a>
-                                                        <a href="#" className="text-primary" title="Edit">
+                                                        <a href="#" className="text-primary" title="Edit"
+                                                            onClick={() => {
+                                                                setSelectedFacility(f);
+                                                            }}>
                                                             <i className="mdi mdi-pencil font-size-18"></i>
                                                         </a>
                                                         <a href="#" className="text-danger" title="Delete">
