@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import ConfigurationSidebar from './ConfigurationSidebar';
 import Footer from './Footer';
 import { useEffect } from 'react';
 import useSidebar from '../hooks/useSidebar';
