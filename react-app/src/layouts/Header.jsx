@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { accounts } from '../data/mockData';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
@@ -76,6 +78,11 @@ const Header = () => {
     navigate(`/accounts/${accountId}`);
     setSearchQuery('');
     setShowSearchDropdown(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -289,19 +296,26 @@ const Header = () => {
               aria-haspopup="true"
               aria-expanded="false"
             >
-              <img className="rounded-circle header-profile-user" src="/assets/images/users/avatar-1.jpg" alt="Header Avatar" />
-              <span className="d-none d-xl-inline-block ms-1">John</span>
+              <img
+                className="rounded-circle header-profile-user"
+                src={user?.avatar || '/assets/images/users/avatar-1.jpg'}
+                alt={user?.name || 'User'}
+              />
+              <span className="d-none d-xl-inline-block ms-1">{user?.name?.split(' ')[0] || 'User'}</span>
               <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
             </button>
             <div className="dropdown-menu dropdown-menu-end">
+              <div className="dropdown-header noti-title">
+                <h6 className="text-overflow m-0">{user?.name}</h6>
+                <span className="text-muted font-size-12">{user?.role}</span>
+              </div>
               <a className="dropdown-item" href="#"><i className="ri-user-line align-middle me-1"></i> Profile</a>
-              <a className="dropdown-item d-block" href="#">
-                <span className="badge bg-success float-end mt-1">11</span>
-                <i className="ri-settings-2-line align-middle me-1"></i> Settings
-              </a>
+              <a className="dropdown-item" href="#"><i className="ri-settings-2-line align-middle me-1"></i> Settings</a>
               <a className="dropdown-item" href="#"><i className="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
               <div className="dropdown-divider"></div>
-              <a className="dropdown-item text-danger" href="#"><i className="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
+              <button className="dropdown-item text-danger" onClick={handleLogout}>
+                <i className="ri-shut-down-line align-middle me-1 text-danger"></i> Logout
+              </button>
             </div>
           </div>
 
