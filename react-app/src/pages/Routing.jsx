@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { GoogleMap, Marker, InfoWindow, Polyline, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
 import {
   vehicles as initialVehicles,
   routes as initialRoutes,
@@ -24,35 +24,58 @@ import {
 } from '../utils/localStorage';
 import {
   generateRouteFromAppointments,
+  generateRouteWithStrategy,
   calculateDistance,
   optimizeRouteWithConstraints
 } from '../utils/routeUtils';
-import 'leaflet/dist/leaflet.css';
+import { calculateDirections } from '../services/googleMapsService';
+import {
+  analyzeEmergencies,
+  detectRouteConflicts,
+  generateRouteSuggestions,
+  calculateRouteEfficiency,
+  generateImprovementSuggestions
+} from '../services/routingAI';
 
-// Fix for default marker icons in React-Leaflet
-import L from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+// Google Maps libraries to load - MUST be defined outside component to prevent re-renders
+const libraries = ['places', 'geometry'];
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-});
+// Map container style
+const mapContainerStyle = {
+  width: '100%',
+  height: '500px'
+};
 
 // Custom marker colors
-const createColoredIcon = (color) => {
-  return L.divIcon({
-    className: 'custom-marker',
-    html: `<div style="background-color: ${color}; width: 25px; height: 25px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
-    iconSize: [25, 25],
-    iconAnchor: [12, 24],
-  });
+const getMarkerIcon = (color) => {
+  return {
+    path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+    fillColor: color,
+    fillOpacity: 1,
+    strokeColor: '#fff',
+    strokeWeight: 2,
+    scale: 1,
+  };
 };
 
 const Routing = () => {
+  // Load Google Maps API
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    libraries,
+  });
+
+  // Debug: Log API key status (remove in production)
+  useEffect(() => {
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+      console.error('Google Maps API key is not defined in .env file');
+    } else {
+      console.log('Google Maps API key loaded successfully');
+    }
+  }, []);
+
   const [activeTab, setActiveTab] = useState('routes');
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -69,8 +92,29 @@ const Routing = () => {
   const [selectedTechnicianForRoute, setSelectedTechnicianForRoute] = useState('');
   const [routeStartTime, setRouteStartTime] = useState('08:00');
 
+  // Google Maps state
+  const [map, setMap] = useState(null);
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
+
+  // AI Routing state
+  const [emergencyAnalysis, setEmergencyAnalysis] = useState(null);
+  const [routeOptions, setRouteOptions] = useState([]);
+  const [showRouteOptions, setShowRouteOptions] = useState(false);
+  const [selectedRouteOption, setSelectedRouteOption] = useState(null);
+  const [routeEfficiency, setRouteEfficiency] = useState(null);
+  const [improvementSuggestions, setImprovementSuggestions] = useState([]);
+
   // Map center (Springfield, IL)
-  const center = [39.7817, -89.6501];
+  const center = { lat: 39.7817, lng: -89.6501 };
+
+  const onLoad = useCallback((map) => {
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(() => {
+    setMap(null);
+  }, []);
 
   // Load data on mount
   useEffect(() => {
@@ -144,7 +188,7 @@ const Routing = () => {
     };
   };
 
-  // Generate route for technician
+  // Generate route for technician - AI-Powered
   const handleGenerateRoute = () => {
     if (!selectedTechnicianForRoute) {
       alert('Please select a technician');
@@ -172,83 +216,249 @@ const Routing = () => {
       return;
     }
 
-    // Add site coordinates to appointments
-    console.log('Tech appointments:', techAppointments);
-    console.log('Available sites:', sites);
+    console.log('🤖 AI Route Generation Starting...');
+    console.log('Technician:', tech.name);
+    console.log('Appointments:', techAppointments.length);
 
+    // Add site coordinates to appointments
     const appointmentsWithCoords = techAppointments.map(apt => {
       const site = sites.find(s => s.id === apt.siteId);
-      console.log(`Appointment ${apt.id} - siteId: ${apt.siteId}, found site:`, site);
 
-      if (!site) {
-        console.error(`Site ${apt.siteId} not found for appointment ${apt.id}`);
+      if (!site || !site.coordinates) {
+        console.warn(`Site ${apt.siteId} missing coordinates, using vehicle location`);
         return {
           ...apt,
+          siteName: site?.siteName || 'Unknown Site',
           siteCoordinates: vehicle.currentLocation,
-          coordinates: vehicle.currentLocation
-        };
-      }
-
-      if (!site.coordinates) {
-        console.error(`Site ${apt.siteId} has no coordinates:`, site);
-        return {
-          ...apt,
-          siteCoordinates: vehicle.currentLocation,
-          coordinates: vehicle.currentLocation
+          coordinates: vehicle.currentLocation,
+          site: site
         };
       }
 
       return {
         ...apt,
+        siteName: site.siteName,
         siteCoordinates: site.coordinates,
-        coordinates: site.coordinates
+        coordinates: site.coordinates,
+        site: site // Include full site object for customer tier
       };
     });
 
-    console.log('Appointments with coords:', appointmentsWithCoords);
+    // AI: Analyze emergencies
+    const emergencyData = analyzeEmergencies(appointmentsWithCoords, routeStartTime);
+    setEmergencyAnalysis(emergencyData);
 
-    // Generate optimized route
-    const generatedRoute = generateRouteFromAppointments(
+    console.log('🚨 Emergency Analysis:', emergencyData);
+
+    // Show emergency alerts if any
+    if (emergencyData.hasEmergencies) {
+      console.warn(`⚠️ Found ${emergencyData.emergencyCount} emergency appointment(s)`);
+      emergencyData.alerts.forEach(alert => {
+        console.warn(`  - ${alert.message}`);
+      });
+    }
+
+    // AI: Generate 3 route options
+    const suggestions = generateRouteSuggestions(
       appointmentsWithCoords,
-      vehicle.currentLocation,
+      tech,
+      vehicle,
       routeStartTime
     );
 
-    if (!generatedRoute) {
-      alert('Failed to generate route');
-      return;
-    }
+    console.log('💡 Generated route strategies:', suggestions.map(s => s.name).join(', '));
 
-    // Save route
+    // Generate actual routes for each strategy
+    const generatedOptions = suggestions.map(suggestion => {
+      console.log(`\n🔧 Generating ${suggestion.name} route with strategy: ${suggestion.id}`);
+
+      // Use strategy-specific optimization
+      const generatedRoute = generateRouteWithStrategy(
+        appointmentsWithCoords,
+        vehicle.currentLocation,
+        routeStartTime,
+        suggestion.id // 'fastest', 'balanced', or 'customer'
+      );
+
+      if (!generatedRoute) return null;
+
+      console.log(`📊 ${suggestion.name} Results:`, {
+        distance: generatedRoute.totalDistance,
+        duration: generatedRoute.totalDuration,
+        stops: generatedRoute.stops.length,
+        firstStop: generatedRoute.stops[0]?.siteName,
+        lastStop: generatedRoute.stops[generatedRoute.stops.length - 1]?.siteName
+      });
+
+      // Calculate efficiency
+      const efficiency = calculateRouteEfficiency(
+        generatedRoute,
+        generatedRoute.totalDistance * 1.3 // baseline
+      );
+
+      // Detect conflicts
+      const conflicts = detectRouteConflicts(
+        generatedRoute,
+        appointmentsWithCoords,
+        tech
+      );
+
+      // Generate improvement suggestions
+      const improvements = generateImprovementSuggestions(
+        generatedRoute,
+        efficiency,
+        conflicts
+      );
+
+      return {
+        ...suggestion,
+        route: generatedRoute,
+        efficiency,
+        conflicts,
+        improvements,
+        technicianId: techId,
+        vehicleId: vehicle.id,
+        date: selectedDate
+      };
+    }).filter(Boolean);
+
+    setRouteOptions(generatedOptions);
+    setShowRouteGenerator(false);
+    setShowRouteOptions(true);
+
+    console.log('✅ AI route generation complete - showing options to user');
+  };
+
+  // Select and save a route option
+  const handleSelectRouteOption = (option) => {
+    console.log('✅ User selected route option:', option.name);
+
+    // Save the selected route
     const newRoute = {
-      date: selectedDate,
-      technicianId: techId,
-      vehicleId: vehicle.id,
+      date: option.date,
+      technicianId: option.technicianId,
+      vehicleId: option.vehicleId,
       status: 'Planned',
-      startTime: generatedRoute.startTime,
-      endTime: generatedRoute.endTime,
-      totalDistance: generatedRoute.totalDistance,
-      totalDuration: generatedRoute.totalDuration,
-      optimizationScore: generatedRoute.optimizationScore,
-      stops: generatedRoute.stops
+      strategy: option.id,
+      strategyName: option.name,
+      startTime: option.route.startTime,
+      endTime: option.route.endTime,
+      totalDistance: option.route.totalDistance,
+      totalDuration: option.route.totalDuration,
+      optimizationScore: option.route.optimizationScore,
+      stops: option.route.stops,
+      efficiency: option.efficiency,
+      conflicts: option.conflicts
     };
 
     addRoute(newRoute);
     loadData();
-    setShowRouteGenerator(false);
-    alert(`Route created successfully! ${generatedRoute.stops.length} stops, ${generatedRoute.totalDistance} miles`);
+    setShowRouteOptions(false);
+    setRouteOptions([]);
+
+    alert(`✅ ${option.name} created successfully!\n\n` +
+          `${option.route.stops.length} stops • ${option.route.totalDistance} miles\n` +
+          `Efficiency: ${option.efficiency.overallEfficiency}% • Fuel: $${option.efficiency.fuelCost}`);
+  };
+
+  // Calculate route using Google Directions API
+  const calculateGoogleDirections = async (route) => {
+    if (!window.google || !route) {
+      console.warn('Google Maps not loaded or no route provided');
+      return;
+    }
+
+    const vehicle = vehicles.find(v => v.id === route.vehicleId);
+    if (!vehicle) {
+      console.warn('Vehicle not found for route');
+      return;
+    }
+
+    console.log('🗺️ Starting directions calculation for route:', route.id);
+
+    // Build waypoints from route stops
+    const waypoints = [];
+    const validStops = [];
+
+    for (const stop of route.stops) {
+      const aptInfo = getAppointmentInfo(stop.appointmentId);
+      if (aptInfo?.coordinates) {
+        waypoints.push({
+          location: {
+            lat: aptInfo.coordinates.lat,
+            lng: aptInfo.coordinates.lng
+          },
+          stopover: true
+        });
+        validStops.push(aptInfo);
+      } else {
+        console.warn('Stop has no coordinates:', stop);
+      }
+    }
+
+    if (validStops.length === 0) {
+      console.error('No valid stops with coordinates found');
+      alert('This route has no valid stop locations.');
+      return;
+    }
+
+    console.log(`📍 Found ${validStops.length} valid stops`);
+
+    try {
+      // Use the Google Maps service
+      const result = await calculateDirections(
+        vehicle.currentLocation, // origin
+        vehicle.currentLocation, // destination (return to start)
+        waypoints,
+        false // don't let Google optimize - we already did
+      );
+
+      console.log('✅ Directions calculated successfully');
+      setDirectionsResponse(result);
+
+      // Fit map to route bounds
+      if (map && result.routes[0]) {
+        const bounds = result.routes[0].bounds;
+        map.fitBounds(bounds);
+        console.log('📏 Map bounds adjusted to fit route');
+      }
+    } catch (error) {
+      console.error('❌ Error calculating directions:', error);
+      alert(`Failed to calculate route directions: ${error.message}\n\nCheck console for details.`);
+      // Fallback to simple polyline if Directions API fails
+      setDirectionsResponse(null);
+    }
   };
 
   // View route on map
   const handleViewRoute = (route) => {
-    console.log('Viewing route:', route);
+    console.log('👁️ Viewing route on map:', route);
+
+    // Clear previous route first
+    setDirectionsResponse(null);
+    setSelectedMarker(null);
+
+    // Set new route and calculate directions
     setSelectedRoute(route);
+
+    // Calculate directions after a brief delay to ensure state is updated
+    setTimeout(() => {
+      calculateGoogleDirections(route);
+    }, 100);
 
     // Scroll to map
     const mapElement = document.querySelector('.row.mb-4');
     if (mapElement) {
       mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  };
+
+  // Clear route selection
+  const handleClearRoute = () => {
+    console.log('🧹 Clearing route selection');
+    setSelectedRoute(null);
+    setDirectionsResponse(null);
+    setSelectedMarker(null);
   };
 
   // Optimize existing route
@@ -280,7 +490,7 @@ const Routing = () => {
     alert('Route optimized successfully!');
   };
 
-  // Get route polyline coordinates
+  // Get route polyline coordinates (fallback when Directions API is not available)
   const getRoutePolyline = (route) => {
     if (!route) return [];
 
@@ -292,7 +502,7 @@ const Routing = () => {
     route.stops.forEach(stop => {
       const aptInfo = getAppointmentInfo(stop.appointmentId);
       if (aptInfo?.coordinates) {
-        coords.push([aptInfo.coordinates.lat, aptInfo.coordinates.lng]);
+        coords.push({ lat: aptInfo.coordinates.lat, lng: aptInfo.coordinates.lng });
       }
     });
 
@@ -301,6 +511,39 @@ const Routing = () => {
 
     return coords;
   };
+
+  if (loadError) {
+    return (
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12">
+            <div className="alert alert-danger">
+              <h4 className="alert-heading">Error loading Google Maps</h4>
+              <p>Failed to load Google Maps API. Please check:</p>
+              <ul>
+                <li>API key is correctly set in .env file</li>
+                <li>API key has Maps JavaScript API enabled in Google Cloud Console</li>
+                <li>Your internet connection is working</li>
+                <li>You've restarted the dev server after adding the .env file</li>
+              </ul>
+              <hr />
+              <p className="mb-0">Error: {loadError.message || 'Unknown error'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '500px' }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -376,7 +619,7 @@ const Routing = () => {
                 {selectedRoute && (
                   <button
                     className="btn btn-sm btn-light"
-                    onClick={() => setSelectedRoute(null)}
+                    onClick={handleClearRoute}
                   >
                     <i className="mdi mdi-close me-1"></i>
                     Clear Selection
@@ -384,72 +627,115 @@ const Routing = () => {
                 )}
               </div>
 
-              <MapContainer
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
                 center={center}
                 zoom={12}
-                style={{ width: '100%', height: '500px' }}
-                scrollWheelZoom={true}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+                options={{
+                  zoomControl: true,
+                  streetViewControl: true,
+                  mapTypeControl: true,
+                  fullscreenControl: true,
+                }}
               >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-
                 {/* Vehicle markers */}
                 {vehicles.map((vehicle) => (
                   vehicle.currentLocation && (
                     <Marker
                       key={`vehicle-${vehicle.id}`}
-                      position={[vehicle.currentLocation.lat, vehicle.currentLocation.lng]}
-                      icon={createColoredIcon('#3b82f6')}
-                    >
-                      <Popup>
-                        <strong>{vehicle.vehicleNumber}</strong><br />
-                        {vehicle.make} {vehicle.model}<br />
-                        Status: {vehicle.status}
-                      </Popup>
-                    </Marker>
+                      position={{ lat: vehicle.currentLocation.lat, lng: vehicle.currentLocation.lng }}
+                      icon={getMarkerIcon('#3b82f6')}
+                      onClick={() => setSelectedMarker({ type: 'vehicle', data: vehicle })}
+                    />
                   )
                 ))}
 
-                {/* Selected route stops and polyline */}
-                {selectedRoute && selectedRoute.stops && (() => {
-                  console.log('Rendering selected route with', selectedRoute.stops.length, 'stops');
-                  return (
-                    <>
-                      {selectedRoute.stops.map((stop, index) => {
-                        const aptInfo = getAppointmentInfo(stop.appointmentId);
-                        console.log(`Stop ${index}:`, stop, 'AptInfo:', aptInfo);
-                        if (!aptInfo?.coordinates) {
-                          console.warn(`Stop ${index} has no coordinates`);
-                          return null;
-                        }
+                {/* Vehicle info windows */}
+                {selectedMarker?.type === 'vehicle' && (
+                  <InfoWindow
+                    position={{ lat: selectedMarker.data.currentLocation.lat, lng: selectedMarker.data.currentLocation.lng }}
+                    onCloseClick={() => setSelectedMarker(null)}
+                  >
+                    <div>
+                      <strong>{selectedMarker.data.vehicleNumber}</strong><br />
+                      {selectedMarker.data.make} {selectedMarker.data.model}<br />
+                      Status: {selectedMarker.data.status}
+                    </div>
+                  </InfoWindow>
+                )}
 
-                        return (
-                          <Marker
-                            key={`stop-${index}-${stop.appointmentId}`}
-                            position={[aptInfo.coordinates.lat, aptInfo.coordinates.lng]}
-                            icon={createColoredIcon(index === 0 ? '#10b981' : '#f59e0b')}
-                          >
-                            <Popup>
-                              <strong>Stop #{stop.order}</strong><br />
-                              {getSiteName(aptInfo.siteId)}<br />
-                              ETA: {stop.estimatedArrival}<br />
-                              Service: {aptInfo.serviceType}
-                            </Popup>
-                          </Marker>
-                        );
-                      })}
-                      <Polyline
-                        positions={getRoutePolyline(selectedRoute)}
-                        color="#3b82f6"
-                        weight={3}
-                        opacity={0.7}
+                {/* Selected route visualization */}
+                {selectedRoute && selectedRoute.stops && (
+                  <>
+                    {/* Use Google Directions Renderer if available, otherwise use polyline */}
+                    {directionsResponse ? (
+                      <DirectionsRenderer
+                        directions={directionsResponse}
+                        options={{
+                          suppressMarkers: true, // We show our own custom numbered markers
+                          polylineOptions: {
+                            strokeColor: '#2563eb', // Blue color
+                            strokeWeight: 5,
+                            strokeOpacity: 0.9,
+                          },
+                          preserveViewport: false, // Allow fitBounds to work
+                        }}
                       />
-                    </>
-                  );
-                })()}
-              </MapContainer>
+                    ) : (
+                      <Polyline
+                        path={getRoutePolyline(selectedRoute)}
+                        options={{
+                          strokeColor: '#94a3b8', // Gray color for fallback
+                          strokeWeight: 4,
+                          strokeOpacity: 0.6,
+                          strokeStyle: 'dashed',
+                        }}
+                      />
+                    )}
+
+                    {/* Route stop markers */}
+                    {selectedRoute.stops.map((stop, index) => {
+                      const aptInfo = getAppointmentInfo(stop.appointmentId);
+                      if (!aptInfo?.coordinates) return null;
+
+                      return (
+                        <Marker
+                          key={`stop-${index}-${stop.appointmentId}`}
+                          position={{ lat: aptInfo.coordinates.lat, lng: aptInfo.coordinates.lng }}
+                          icon={getMarkerIcon(index === 0 ? '#10b981' : '#f59e0b')}
+                          label={{
+                            text: `${stop.order}`,
+                            color: 'white',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                          }}
+                          onClick={() => setSelectedMarker({ type: 'stop', data: { stop, aptInfo } })}
+                        />
+                      );
+                    })}
+
+                    {/* Stop info window */}
+                    {selectedMarker?.type === 'stop' && (
+                      <InfoWindow
+                        position={{
+                          lat: selectedMarker.data.aptInfo.coordinates.lat,
+                          lng: selectedMarker.data.aptInfo.coordinates.lng
+                        }}
+                        onCloseClick={() => setSelectedMarker(null)}
+                      >
+                        <div>
+                          <strong>Stop #{selectedMarker.data.stop.order}</strong><br />
+                          {getSiteName(selectedMarker.data.aptInfo.siteId)}<br />
+                          ETA: {selectedMarker.data.stop.estimatedArrival}<br />
+                          Service: {selectedMarker.data.aptInfo.serviceType}
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </>
+                )}
+              </GoogleMap>
             </div>
           </div>
         </div>
@@ -754,6 +1040,147 @@ const Routing = () => {
                   >
                     <i className="mdi mdi-check me-1"></i>
                     Generate Route
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
+
+      {/* AI Route Options Modal */}
+      {showRouteOptions && routeOptions.length > 0 && (
+        <>
+          <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1">
+            <div className="modal-dialog modal-lg modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">
+                    <i className="mdi mdi-robot me-2"></i>
+                    Choose Route Strategy
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => {
+                      setShowRouteOptions(false);
+                      setRouteOptions([]);
+                    }}
+                  ></button>
+                </div>
+
+                <div className="modal-body">
+                  {/* Emergency Alerts */}
+                  {emergencyAnalysis && emergencyAnalysis.alerts.length > 0 && (
+                    <div className="alert alert-danger mb-4">
+                      <h6 className="alert-heading">
+                        <i className="mdi mdi-alert-circle-outline me-2"></i>
+                        Emergency Alerts ({emergencyAnalysis.alerts.length})
+                      </h6>
+                      {emergencyAnalysis.alerts.map((alert, idx) => (
+                        <div key={idx} className="mb-2">
+                          <strong>{alert.message}</strong>
+                          <br />
+                          <small>{alert.recommendation}</small>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Route Options */}
+                  {routeOptions.map((option, index) => (
+                    <div
+                      key={option.id}
+                      className="card mb-3"
+                      style={{ borderLeft: `4px solid ${option.color}` }}
+                    >
+                      <div className="card-body">
+                        <div className="row align-items-center">
+                          <div className="col-md-8">
+                            <h5 className="mb-2" style={{ color: option.color }}>
+                              {option.icon} {option.name}
+                              {option.recommended && (
+                                <span className="badge bg-success ms-2">Recommended</span>
+                              )}
+                            </h5>
+                            <p className="text-muted small mb-3">{option.description}</p>
+
+                            <div className="row g-2 mb-2">
+                              <div className="col-3">
+                                <div className="text-center">
+                                  <div className="fw-bold">{option.route.stops.length}</div>
+                                  <small className="text-muted">Stops</small>
+                                </div>
+                              </div>
+                              <div className="col-3">
+                                <div className="text-center">
+                                  <div className="fw-bold">{option.route.totalDistance} mi</div>
+                                  <small className="text-muted">Distance</small>
+                                </div>
+                              </div>
+                              <div className="col-3">
+                                <div className="text-center">
+                                  <div className="fw-bold">{Math.floor(option.route.totalDuration / 60)}h {option.route.totalDuration % 60}m</div>
+                                  <small className="text-muted">Duration</small>
+                                </div>
+                              </div>
+                              <div className="col-3">
+                                <div className="text-center">
+                                  <div className="fw-bold">${option.efficiency.fuelCost}</div>
+                                  <small className="text-muted">Fuel</small>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="small text-muted">
+                              <i className="mdi mdi-clock-outline me-1"></i>
+                              {option.route.startTime} → {option.route.endTime}
+                              <span className="ms-3">
+                                <i className="mdi mdi-home-circle me-1"></i>
+                                Includes return trip
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="col-md-4 text-center">
+                            <div className="mb-2">
+                              <span className={`badge ${
+                                option.efficiency.overallEfficiency >= 80 ? 'bg-success' :
+                                option.efficiency.overallEfficiency >= 60 ? 'bg-warning' : 'bg-danger'
+                              } fs-6 px-3 py-2`}>
+                                {option.efficiency.overallEfficiency}% Efficient
+                              </span>
+                            </div>
+                            <button
+                              className="btn btn-sm w-100"
+                              style={{
+                                backgroundColor: option.color,
+                                borderColor: option.color,
+                                color: 'white'
+                              }}
+                              onClick={() => handleSelectRouteOption(option)}
+                            >
+                              <i className="mdi mdi-check me-1"></i>
+                              Select
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-light"
+                    onClick={() => {
+                      setShowRouteOptions(false);
+                      setRouteOptions([]);
+                    }}
+                  >
+                    Cancel
                   </button>
                 </div>
               </div>
