@@ -8,7 +8,10 @@ const STORAGE_KEYS = {
   INVENTORY: 'bugworx_inventory',
   VEHICLES: 'bugworx_vehicles',
   ROUTES: 'bugworx_routes',
-  ROUTE_TEMPLATES: 'bugworx_route_templates'
+  ROUTE_TEMPLATES: 'bugworx_route_templates',
+  FACILITIES: 'bugworx_facilities',
+  AREAS: 'bugworx_areas',
+  INSPECTION_POINTS: 'bugworx_inspection_points'
 };
 
 // Generic storage functions
@@ -249,7 +252,7 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, accounts, sites, technicians, inventory, vehicles, routes, routeTemplates } = mockData;
+  const { appointments, accounts, sites, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
@@ -274,6 +277,16 @@ export const initializeStorage = (mockData) => {
   }
   if (routeTemplates && getRouteTemplates().length === 0) {
     setRouteTemplates(routeTemplates);
+  }
+
+  if (getFacilities().length === 0 && facilities) {
+    setFacilities(facilities);
+  }
+  if (getAreas().length === 0 && areas) {
+    setAreas(areas);
+  }
+  if (getInspectionPoints().length === 0 && inspectionPoints) {
+    setInspectionPoints(inspectionPoints);
   }
 };
 
@@ -303,8 +316,8 @@ export const isTechnicianAvailable = (technicianId, date, startTime, duration, e
 
     // Check if times overlap
     if ((newStart >= aptStart && newStart < aptEnd) ||
-        (newEnd > aptStart && newEnd <= aptEnd) ||
-        (newStart <= aptStart && newEnd >= aptEnd)) {
+      (newEnd > aptStart && newEnd <= aptEnd) ||
+      (newStart <= aptStart && newEnd >= aptEnd)) {
       return false;
     }
   }
@@ -407,6 +420,132 @@ export const getSuggestedTechnician = (serviceType, siteId, date, startTime, dur
   return suggestions.length > 0 ? suggestions[0] : null;
 };
 
+export const getFacilities = () => {
+  return getFromStorage(STORAGE_KEYS.FACILITIES, []);
+};
+
+export const setFacilities = (facilities) => {
+  return setToStorage(STORAGE_KEYS.FACILITIES, facilities);
+};
+
+export const getAreas = () => {
+  return getFromStorage(STORAGE_KEYS.AREAS, []);
+};
+
+export const setAreas = (areas) => {
+  return setToStorage(STORAGE_KEYS.AREAS, areas);
+};
+
+export const getInspectionPoints = () => {
+  return getFromStorage(STORAGE_KEYS.INSPECTION_POINTS, []);
+};
+
+export const setInspectionPoints = (inspectionPoints) => {
+  return setToStorage(STORAGE_KEYS.INSPECTION_POINTS, inspectionPoints);
+};
+
+export const addFacility = (facility) => {
+  const facilities = getFacilities();
+  const newFacility = {
+    ...facility,
+    id: Date.now(), // Generate unique ID
+  };
+  facilities.push(newFacility);
+  setFacilities(facilities);
+  return newFacility;
+}
+
+export const addArea = (area) => {
+  const areas = getAreas();
+  const newArea = {
+    ...area,
+    id: Date.now(), // Generate unique ID
+  };
+  areas.push(newArea);
+  setAreas(areas);
+  return newArea;
+};
+
+export const addInspectionPoint = (inspectionPoint) => {
+  const inspectionPoints = getInspectionPoints();
+  const newInspectionPoint = {
+    ...inspectionPoint,
+    id: Date.now(), // Generate unique ID
+  };
+  inspectionPoints.push(newInspectionPoint);
+  setInspectionPoints(inspectionPoints);
+  return newInspectionPoint;
+}
+
+export const updateFacility = (id, updates) => {
+  const facilities = getFacilities();
+  const index = facilities.findIndex(f => f.id === id);
+  if (index !== -1) {
+    facilities[index] = {
+      ...facilities[index],
+      ...updates
+    };
+    setFacilities(facilities);
+    return facilities[index];
+  }
+  return null;
+};
+
+export const updateArea = (id, updates) => {
+  const areas = getAreas();
+  const index = areas.findIndex(a => a.id === id);
+  if (index !== -1) {
+    areas[index] = {
+      ...areas[index],
+      ...updates
+    };
+    setAreas(areas);
+    return areas[index];
+  }
+  return null;
+};
+
+export const updateInspectionPoint = (id, updates) => {
+  const inspectionPoints = getInspectionPoints();
+  const index = inspectionPoints.findIndex(ip => ip.id === id);
+  if (index !== -1) {
+    inspectionPoints[index] = {
+      ...inspectionPoints[index],
+      ...updates
+    };
+    setInspectionPoints(inspectionPoints);
+    return inspectionPoints[index];
+  }
+  return null;
+};
+
+export const deleteFacility = (id) => {
+  const facilities = getFacilities();
+  const filtered = facilities.filter(f => f.id !== id);
+  setFacilities(filtered);
+  return filtered.length < facilities.length;
+};
+
+export const deleteArea = (id) => {
+  const areas = getAreas();
+  const filtered = areas.filter(a => a.id !== id);
+  setAreas(filtered);
+  return filtered.length < areas.length;
+};
+
+export const deleteInspectionPoint = (id) => {
+  const inspectionPoints = getInspectionPoints();
+  const filtered = inspectionPoints.filter(ip => ip.id !== id);
+  setInspectionPoints(filtered);
+  return filtered.length < inspectionPoints.length;
+};
+
+export const getFacilitiesByAccountId = (accountId) => {
+  const sitesByAccountId = getSitesByAccountId(accountId).map(site => site.id);
+  const facilities = getFacilities();
+  return facilities.filter(facility => sitesByAccountId.includes(facility.siteId));
+};
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -448,5 +587,21 @@ export default {
   isTechnicianAvailable,
   getTechnicianWorkload,
   suggestTechnicians,
-  getSuggestedTechnician
+  getSuggestedTechnician,
+  getFacilities,
+  setFacilities,
+  getAreas,
+  setAreas,
+  getInspectionPoints,
+  setInspectionPoints,
+  addFacility,
+  addArea,
+  addInspectionPoint,
+  updateFacility,
+  updateArea,
+  updateInspectionPoint,
+  deleteFacility,
+  deleteArea,
+  deleteInspectionPoint,
+  getFacilitiesByAccountId
 };

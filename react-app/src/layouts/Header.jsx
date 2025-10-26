@@ -130,6 +130,7 @@ const Header = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
+                autoComplete="off"
               />
               <span className="ri-search-line"></span>
 
@@ -198,6 +199,7 @@ const Header = () => {
                       placeholder="Search customer..."
                       value={searchQuery}
                       onChange={handleSearchChange}
+                      autoComplete="off"
                     />
                     <div className="input-group-append">
                       <button className="btn btn-primary" type="submit">

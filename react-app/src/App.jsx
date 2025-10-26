@@ -16,6 +16,9 @@ import Reports from './pages/Reports';
 import Analytics from './pages/Analytics';
 import Notifications from './pages/Notifications';
 import Configuration from './pages/Configuration';
+import InspectionPoints from './pages/InspectionPoints';
+import Facilities from './pages/Facilities';
+import Areas from './pages/Areas';
 
 function App() {
   return (
@@ -44,6 +47,9 @@ function App() {
         <Route path="accounts/:id/notes" element={<AccountDetail />} />
         <Route path="accounts/:id/schedule-service" element={<AccountDetail />} />
         <Route path="accounts/:id/create-invoice" element={<AccountDetail />} />
+        <Route path="accounts/:id/inspection-points" element={<InspectionPoints />} />
+        <Route path="accounts/:id/facilities" element={<Facilities />} />
+        <Route path="accounts/:id/areas" element={<Areas />} />
         <Route path="sites" element={<Sites />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="scheduler" element={<Scheduler />} />
