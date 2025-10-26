@@ -64,7 +64,9 @@ export const sites = [
     isActive: true,
     lastServiceDate: '2024-10-01',
     coordinates: { lat: 39.7817, lng: -89.6501 }, // Springfield downtown
-    zone: 'North'
+    zone: 'North',
+    siteClosingTime: '18:00', // Closes at 6 PM
+    customerTier: 'VIP' // VIP customer
   },
   {
     id: 2,
@@ -78,7 +80,9 @@ export const sites = [
     isActive: true,
     lastServiceDate: '2024-09-15',
     coordinates: { lat: 39.7990, lng: -89.6440 }, // North Springfield
-    zone: 'North'
+    zone: 'North',
+    siteClosingTime: '17:00', // Closes at 5 PM
+    customerTier: 'Contract' // Contract customer
   },
   {
     id: 3,
@@ -92,7 +96,8 @@ export const sites = [
     isActive: true,
     lastServiceDate: '2024-09-20',
     coordinates: { lat: 39.7456, lng: -89.6298 }, // South Springfield
-    zone: 'South'
+    zone: 'South',
+    siteClosingTime: '16:00' // Closes at 4 PM
   },
   {
     id: 4,
@@ -106,6 +111,68 @@ export const sites = [
     isActive: true,
     lastServiceDate: '2024-10-10',
     coordinates: { lat: 39.8017, lng: -89.6537 }, // West Springfield
+    zone: 'West',
+    siteClosingTime: '10:00', // Service must be done before 10 AM opening
+    customerTier: 'VIP'
+  },
+  {
+    id: 5,
+    accountId: 1,
+    siteName: 'Luxury Apartments - East Wing',
+    address: '500 Riverside Dr, Springfield, IL 62703',
+    contactName: 'Patricia Davis',
+    contactPhone: '555-0105',
+    siteType: 'Multi-Family',
+    instructions: 'Use service elevator, notify building manager',
+    isActive: true,
+    lastServiceDate: '2024-10-12',
+    coordinates: { lat: 39.7920, lng: -89.6380 }, // East Springfield
+    zone: 'East',
+    siteClosingTime: '17:00',
+    customerTier: 'Contract'
+  },
+  {
+    id: 6,
+    accountId: 3,
+    siteName: 'Shopping Mall - Food Court',
+    address: '1200 Shopping Plaza, Springfield, IL 62704',
+    contactName: 'Robert Lee',
+    contactPhone: '555-0106',
+    siteType: 'Food Service',
+    instructions: 'Service after closing at 9 PM',
+    isActive: true,
+    lastServiceDate: '2024-10-08',
+    coordinates: { lat: 39.7650, lng: -89.6150 }, // Far South
+    zone: 'South'
+  },
+  {
+    id: 7,
+    accountId: 2,
+    siteName: 'Medical Center',
+    address: '850 Hospital Rd, Springfield, IL 62702',
+    contactName: 'Dr. Amanda Foster',
+    contactPhone: '555-0107',
+    siteType: 'Healthcare',
+    instructions: 'URGENT: Active pest issue in kitchen area',
+    isActive: true,
+    lastServiceDate: '2024-09-28',
+    coordinates: { lat: 39.8100, lng: -89.6520 }, // North West
+    zone: 'North',
+    customerTier: 'VIP',
+    siteClosingTime: '20:00' // Open late but prefers service before 8 PM
+  },
+  {
+    id: 8,
+    accountId: 1,
+    siteName: 'Storage Facility - Units A-F',
+    address: '3400 Storage Lane, Springfield, IL 62701',
+    contactName: 'James Mitchell',
+    contactPhone: '555-0108',
+    siteType: 'Storage',
+    instructions: 'Gate code: 4521, check all units',
+    isActive: true,
+    lastServiceDate: '2024-10-05',
+    coordinates: { lat: 39.7550, lng: -89.6800 }, // Far West
     zone: 'West'
   }
 ];
@@ -185,70 +252,115 @@ nextWeek.setDate(nextWeek.getDate() + 7);
 const formatDate = (date) => date.toISOString().split('T')[0];
 
 export const appointments = [
-  // Today's appointments
+  // Today's appointments - Designed for realistic 8-hour workday testing
+
+  // EMERGENCY scheduled for LATER in the day - Should trigger "emergency delayed" alert
   {
     id: 1,
-    siteId: 1,
+    siteId: 7, // Medical Center - VIP
     technicianId: 1,
     scheduledDate: formatDate(today),
-    scheduledTime: '09:00',
-    serviceType: 'General Pest Control',
+    scheduledTime: '14:00', // 2 PM
+    serviceType: 'Cockroach Treatment',
     status: 'Scheduled',
-    estimatedDuration: 60,
+    estimatedDuration: 60, // Reduced from 90
     actualDuration: null,
-    priority: 'Normal',
-    notes: 'Regular monthly service',
+    priority: 'Emergency',
+    notes: '🚨 CRITICAL: Active cockroach infestation in hospital kitchen - health code violation',
+    requiredEquipment: ['Commercial Sprayer', 'Heavy-Duty Chemicals', 'Safety Gear'],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
+
+  // Normal appointment - early morning
   {
     id: 2,
-    siteId: 3,
+    siteId: 1, // Main Residence - VIP
     technicianId: 1,
     scheduledDate: formatDate(today),
-    scheduledTime: '11:00',
-    serviceType: 'Rodent Control',
+    scheduledTime: '08:30',
+    serviceType: 'General Pest Control',
     status: 'Scheduled',
-    estimatedDuration: 90,
+    estimatedDuration: 45, // Reduced from 60
     actualDuration: null,
-    priority: 'Urgent',
-    notes: 'Follow-up inspection',
+    priority: 'Normal',
+    notes: 'Regular monthly service - VIP customer',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
+
+  // Urgent appointment with equipment needs
   {
     id: 3,
-    siteId: 4,
+    siteId: 3, // Warehouse - closes at 4 PM
     technicianId: 1,
     scheduledDate: formatDate(today),
-    scheduledTime: '14:00',
+    scheduledTime: '10:00',
+    serviceType: 'Rodent Control',
+    status: 'Scheduled',
+    estimatedDuration: 75, // Reduced from 120
+    actualDuration: null,
+    priority: 'Urgent',
+    notes: 'Warehouse rodent control - bait stations',
+    requiredEquipment: ['Bait Stations', 'Traps', 'Rodenticide'],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+
+  // Restaurant - MUST be done before 10 AM (site closes at 10:00)
+  {
+    id: 4,
+    siteId: 4, // Main Restaurant - VIP
+    technicianId: 1,
+    scheduledDate: formatDate(today),
+    scheduledTime: '07:00', // Early to avoid conflict
     serviceType: 'General Pest Control',
     status: 'Scheduled',
     estimatedDuration: 45,
     actualDuration: null,
     priority: 'Normal',
-    notes: 'Restaurant pre-opening service',
+    notes: 'Pre-opening service - MUST complete before 10 AM',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
+
+  // Contract customer appointment
   {
-    id: 4,
-    siteId: 2,
+    id: 5,
+    siteId: 5, // Luxury Apartments - Contract
     technicianId: 1,
     scheduledDate: formatDate(today),
-    scheduledTime: '16:00',
-    serviceType: 'Termite Inspection',
+    scheduledTime: '12:00',
+    serviceType: 'General Pest Control',
     status: 'Scheduled',
-    estimatedDuration: 60,
+    estimatedDuration: 60, // Reduced from 90
+    actualDuration: null,
+    priority: 'Normal',
+    notes: 'Multi-family building - common areas',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+
+  // UNASSIGNED EMERGENCY - Should trigger "critical" alert (not assigned to David)
+  {
+    id: 7,
+    siteId: 2, // Office Building - Contract
+    technicianId: null, // NO TECHNICIAN ASSIGNED
+    scheduledDate: formatDate(today),
+    scheduledTime: '09:00',
+    serviceType: 'Bed Bug Treatment',
+    status: 'Scheduled',
+    estimatedDuration: 120, // Reduced from 180
     actualDuration: null,
     priority: 'Emergency',
-    notes: 'Urgent inspection requested by property manager',
+    notes: '⚠️ UNASSIGNED EMERGENCY: Bed bugs reported in office - employees refusing to work',
+    requiredEquipment: ['Heat Treatment Equipment', 'Bed Bug Chemicals', 'Vacuum'],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
   // Tomorrow's appointments
   {
-    id: 5,
+    id: 9,
     siteId: 2,
     technicianId: 2,
     scheduledDate: formatDate(tomorrow),
@@ -263,7 +375,7 @@ export const appointments = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: 6,
+    id: 10,
     siteId: 1,
     technicianId: 2,
     scheduledDate: formatDate(tomorrow),
@@ -278,7 +390,7 @@ export const appointments = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: 7,
+    id: 11,
     siteId: 4,
     technicianId: 2,
     scheduledDate: formatDate(tomorrow),
@@ -294,7 +406,7 @@ export const appointments = [
   },
   // Day after tomorrow's appointments
   {
-    id: 8,
+    id: 12,
     siteId: 3,
     technicianId: 3,
     scheduledDate: formatDate(dayAfterTomorrow),
@@ -309,7 +421,7 @@ export const appointments = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: 9,
+    id: 13,
     siteId: 1,
     technicianId: 3,
     scheduledDate: formatDate(dayAfterTomorrow),
@@ -324,7 +436,7 @@ export const appointments = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: 10,
+    id: 14,
     siteId: 2,
     technicianId: 3,
     scheduledDate: formatDate(dayAfterTomorrow),
@@ -340,7 +452,7 @@ export const appointments = [
   },
   // Next week - unassigned
   {
-    id: 11,
+    id: 15,
     siteId: 4,
     technicianId: null,
     scheduledDate: formatDate(nextWeek),
@@ -355,7 +467,7 @@ export const appointments = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: 12,
+    id: 16,
     siteId: 1,
     technicianId: null,
     scheduledDate: formatDate(nextWeek),
