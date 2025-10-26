@@ -31,7 +31,8 @@ const AccountDetail = () => {
       'documents': { title: 'Documents', breadcrumb: 'Documents' },
       'notes': { title: 'Notes', breadcrumb: 'Notes' },
       'schedule-service': { title: 'Schedule Service', breadcrumb: 'Schedule Service' },
-      'create-invoice': { title: 'Create Invoice', breadcrumb: 'Create Invoice' }
+      'create-invoice': { title: 'Create Invoice', breadcrumb: 'Create Invoice' },
+      'inspection-points': { title: 'Inspection Points', breadcrumb: 'Inspection Points' }
     };
     return sections[section] || sections['overview'];
   };

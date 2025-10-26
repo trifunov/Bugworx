@@ -240,6 +240,120 @@ export const technicians = [
   }
 ];
 
+export const facilities = [
+  {
+    id: 1,
+    name: 'Main Residence - Facility A',
+    siteId: 1,
+    drawing: {
+      id: 'DRAW-001',
+      name: 'Main Residence - Drawing A',
+      url: 'https://mapme.com/wp-content/uploads/2024/10/interactive-map-manufacturing-plant-example.png'
+    }
+  },
+  {
+    id: 3,
+    name: 'Main Residence - Facility B',
+    siteId: 1,
+    drawing: {
+      id: 'DRAW-003',
+      name: 'Main Residence - Drawing B',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/Facility-map.jpg'
+    }
+  },
+  {
+    id: 2,
+    name: 'Main Restaurant - Facility A',
+    siteId: 2,
+    drawing: {
+      id: 'DRAW-002',
+      name: 'Main Restaurant - Drawing A',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/Facility-map.jpg'
+    }
+  },
+  {
+    id: 4,
+    name: 'Main Restaurant - Facility B',
+    siteId: 2,
+    drawing: {
+      id: 'DRAW-004',
+      name: 'Main Restaurant - Drawing B',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/Facility-map.jpg'
+    }
+  }
+];
+
+export const areas = [
+  {
+    id: 1,
+    name: 'Kitchen',
+    facilityId: 1,
+  },
+  {
+    id: 2,
+    name: 'Basement',
+    facilityId: 1,
+  },
+  {
+    id: 3,
+    name: 'Storage Room',
+    facilityId: 2,
+  },
+  {
+    id: 4,
+    name: 'Dining Area',
+    facilityId: 2,
+  }
+];
+
+export const inspectionPoints = [
+  {
+    id: 1,
+    pointName: 'Main Residence - Inspection Point A',
+    barcode: 'IP-0001',
+    areaId: 1,
+    type: 'Garbage Disposal Areas',
+    typeCategory: 'Sanitation',
+    status: 1
+  },
+  {
+    id: 4,
+    pointName: 'Main Residence - Inspection Point B',
+    barcode: 'IP-0004',
+    areaId: 1,
+    type: 'Food Storage Areas',
+    typeCategory: 'Sanitation',
+    status: 4
+  },
+  {
+    id: 5,
+    pointName: 'Main Residence - Inspection Point C',
+    barcode: 'IP-0005',
+    areaId: 2,
+    type: 'Garbage Disposal Areas',
+    typeCategory: 'Sanitation',
+    status: 3
+  },
+  {
+    id: 2,
+    pointName: 'Main Restaurant - Inspection Point A',
+    barcode: 'IP-0002',
+    areaId: 3,
+    type: 'Bait Stations',
+    typeCategory: 'Monitoring Devices',
+    status: 2
+  },
+  {
+    id: 3,
+    pointName: 'Main Restaurant - Inspection Point B',
+    barcode: 'IP-0003',
+    areaId: 3,
+    type: 'Rodent Boxes',
+    typeCategory: 'Monitoring Devices',
+    status: 0
+  }
+];
+
 // Helper to get today's date and future dates
 const today = new Date();
 const tomorrow = new Date(today);
