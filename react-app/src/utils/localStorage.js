@@ -546,6 +546,18 @@ export const getFacilitiesByAccountId = (accountId) => {
   return facilities.filter(facility => sitesByAccountId.includes(facility.siteId));
 };
 
+export const getCurrentUser = () => {
+  return getFromStorage('currentUser', null);
+}
+
+export const updateCurrentUser = (userDetaisl) => {
+  const currentUser = getFromStorage('currentUser', null);
+  if(currentUser) {
+    setToStorage('currentUser', userDetaisl);
+    return currentUser;
+  }
+}
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -603,5 +615,7 @@ export default {
   deleteFacility,
   deleteArea,
   deleteInspectionPoint,
-  getFacilitiesByAccountId
+  getFacilitiesByAccountId,
+  getCurrentUser,
+  updateCurrentUser
 };

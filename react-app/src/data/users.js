@@ -10,6 +10,7 @@ export const users = [
     role: 'Administrator',
     avatar: '/assets/images/users/avatar-1.jpg',
     permissions: ['all'], // Admin has all permissions
+    phone: '555-1234',
     createdAt: '2024-01-01',
     lastLogin: null
   },
@@ -22,6 +23,7 @@ export const users = [
     role: 'Dispatcher',
     avatar: '/assets/images/users/avatar-2.jpg',
     permissions: ['scheduler', 'routing', 'appointments', 'view_reports'],
+    phone: '555-1234',
     createdAt: '2024-01-15',
     lastLogin: null
   },
@@ -34,6 +36,7 @@ export const users = [
     role: 'Manager',
     avatar: '/assets/images/users/avatar-3.jpg',
     permissions: ['accounts', 'billing', 'reports', 'analytics', 'inventory', 'technicians'],
+    phone: '555-1234',
     createdAt: '2024-02-01',
     lastLogin: null
   },
@@ -46,6 +49,7 @@ export const users = [
     role: 'Technician',
     avatar: '/assets/images/users/avatar-4.jpg',
     permissions: ['view_schedule', 'update_appointments', 'view_inventory'],
+    phone: '555-1234',
     createdAt: '2024-03-01',
     lastLogin: null,
     technicianId: 1 // Links to technician in mockData
