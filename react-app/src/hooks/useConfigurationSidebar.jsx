@@ -23,9 +23,9 @@ export default function useConfigurationSidebar() {
 
         const windowWidth = window.innerWidth;
         if (windowWidth >= 992) {
-            document.body.classList.toggle('vertical-collpsed');
+            document.body.classList.toggle('vertical-collapsed');
         } else {
-            document.body.classList.remove('vertical-collpsed');
+            document.body.classList.remove('vertical-collapsed');
         }
     }, []);
 
