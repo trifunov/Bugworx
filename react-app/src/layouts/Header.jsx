@@ -220,9 +220,13 @@ const Header = () => {
           </div>
 
           <div className="dropdown d-inline-block d-lg-none ms-1">
-            <Link to="/scheduler" className="btn header-item noti-icon waves-effect">
+            <button
+              type="button"
+              className="btn header-item noti-icon waves-effect"
+              onClick={() => navigate('/scheduler')}
+            >
               <i className="mdi mdi-calendar-multiselect"></i>
-            </Link>
+            </button>
           </div>
 
           <div className="dropdown d-none d-lg-inline-block ms-1">
@@ -233,9 +237,61 @@ const Header = () => {
           </div>
 
           <div className="dropdown d-inline-block d-lg-none ms-1">
-            <Link to="/routing" className="btn header-item noti-icon waves-effect">
+            <button
+              type="button"
+              className="btn header-item noti-icon waves-effect"
+              onClick={() => navigate('/routing')}
+            >
               <i className="mdi mdi-map-marker"></i>
-            </Link>
+            </button>
+          </div>
+
+          <div className="dropdown d-none d-lg-inline-block ms-1">
+            <button
+              type="button"
+              className="btn header-item noti-icon waves-effect"
+              id="page-header-add-new-dropdown"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i className="mdi mdi-plus"></i>
+            </button>
+            <div className="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-add-new-dropdown">
+              <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>New Lead</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>New Prospect</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>New Estimate</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-account-plus me-2"></i>New Customer</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>New Service</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>New Invoice</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-cash me-2"></i>New Payment</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-outline me-2"></i>New Document</a>
+            </div>
+          </div>
+
+          <div className="dropdown d-inline-block d-lg-none ms-1">
+            <button
+              type="button"
+              className="btn header-item noti-icon waves-effect"
+              id="page-header-add-new-dropdown-mobile"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i className="mdi mdi-plus"></i>
+            </button>
+            <div className="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-add-new-dropdown-mobile">
+              <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>New Lead</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>New Prospect</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>New Estimate</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-account-plus me-2"></i>New Customer</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>New Service</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>New Invoice</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-cash me-2"></i>New Payment</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-outline me-2"></i>New Document</a>
+            </div>
           </div>
 
           <div className="dropdown d-none d-lg-inline-block ms-1">
