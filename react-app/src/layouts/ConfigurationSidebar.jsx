@@ -55,42 +55,42 @@ const ConfigurationSidebar = () => {
             <li className="menu-title">Configuration</li>
 
             <li>
-              <Link to={`/configuration/companyprofile`} className="waves-effect">
+              <Link to={`/configuration/company-profile`} className="waves-effect">
                 <i className="ri-user-line" />
                 <span>Company Profile</span>
               </Link>
             </li>
 
             <li>
-              <Link to={`/configuration/customfields`} className="waves-effect">
+              <Link to={`/configuration/custom-fields`} className="waves-effect">
                 <i className="ri-building-line" />
                 <span>Custom Fields </span>
               </Link>
             </li>
 
             <li>
-              <Link to={`/configuration/apiintegrations`} className="waves-effect">
+              <Link to={`/configuration/api-integrations`} className="waves-effect">
                 <i className="ri-calendar-check-line" />
                 <span>API & Integrations </span>
               </Link>
             </li>
 
             <li>
-              <Link to={`/configuration/dataimportexport`} className="waves-effect">
+              <Link to={`/configuration/data-import-export`} className="waves-effect">
                 <i className="ri-history-line" />
                 <span>Data Import / Export </span>
               </Link>
             </li>
 
             <li>
-              <Link to={`/configuration/audittrail`} className="waves-effect">
+              <Link to={`/configuration/audit-trail`} className="waves-effect">
                 <i className="ri-file-list-3-line" />
                 <span>Audit Trail</span>
               </Link>
             </li>
 
             <li>
-              <Link to={`/configuration/backupandrestore`} className="waves-effect">
+              <Link to={`/configuration/backup-and-restore`} className="waves-effect">
                 <i className="ri-file-text-line" />
                 <span>Backup & Restore</span>
               </Link>
