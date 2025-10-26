@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { getSites, getSitesByAccountId } from '../../utils/localStorage';
+import { getFacilitiesByAccountId } from '../../utils/localStorage';
 
-const AddEditFacility = (
+const AddEditArea = (
     props
 ) => {
-    const { facility, show, onClose, onSave, accountId } = props;
+    const { area, show, onClose, onSave, accountId } = props;
 
-    const [populatedFacility, setPopulatedFacility] = useState(facility || {});
+    const [populatedArea, setPopulatedArea] = useState(area || { name: '', facilityId: '' });
 
-    // When the offcanvas opens, refresh local form state from the incoming facility prop.
-    // This handles the case where the same component instance is reused and `facility` may
+    // When the offcanvas opens, refresh local form state from the incoming area prop.
+    // This handles the case where the same component instance is reused and `area` may
     // be different on subsequent opens.
     useEffect(() => {
         if (show) {
-            setPopulatedFacility(facility);
+            setPopulatedArea(area ? { ...area } : { name: '', facilityId: '' });
         }
-    }, [show, facility]);
+    }, [show, area]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         // basic validation
-        if (!populatedFacility.name?.trim() || !populatedFacility.siteId) {
+        if (!populatedArea.name?.trim() || !populatedArea.facilityId) {
             return;
         }
 
         if (typeof onSave === 'function') {
             onSave({
-                ...populatedFacility,
-                name: populatedFacility.name.trim(),
-                siteId: Number(populatedFacility.siteId)
+                ...populatedArea,
+                name: populatedArea.name.trim(),
+                facilityId: Number(populatedArea.facilityId)
             });
         }
     };
@@ -39,42 +39,42 @@ const AddEditFacility = (
             {show &&
                 (<div className={`offcanvas offcanvas-end ${show ? 'show' : ''}`} tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                     <div className="offcanvas-header">
-                        <h5 className="offcanvas-title">{facility.id > 0 ? 'Edit Facility' : 'Add Facility'}</h5>
+                        <h5 className="offcanvas-title">{area.id > 0 ? 'Edit Area' : 'Add Area'}</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" onClick={onClose}></button>
                     </div>
                     <div className="offcanvas-body">
                         <form className="needs-validation" noValidate onSubmit={handleSubmit}>
                             <div className="mb-3">
-                                <label htmlFor="facilityName" className="form-label">Facility Name</label>
+                                <label htmlFor="areaName" className="form-label">Area Name</label>
                                 <input
                                     type="text"
                                     className="form-control"
-                                    id="facilityName"
-                                    value={populatedFacility.name}
-                                    onChange={(e) => setPopulatedFacility({ ...populatedFacility, name: e.target.value })}
+                                    id="areaName"
+                                    value={populatedArea.name}
+                                    onChange={(e) => setPopulatedArea({ ...populatedArea, name: e.target.value })}
                                     required
                                 />
                                 <div className="invalid-feedback">
-                                    Please provide a facility name.
+                                    Please provide an area name.
                                 </div>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="siteSelect" className="form-label">Service address</label>
+                                <label htmlFor="facilitySelect" className="form-label">Facility</label>
                                 <select
                                     className="form-select"
-                                    id="siteSelect"
-                                    value={populatedFacility.siteId}
-                                    onChange={(e) => setPopulatedFacility({ ...populatedFacility, siteId: e.target.value })}
+                                    id="facilitySelect"
+                                    value={populatedArea.facilityId}
+                                    onChange={(e) => setPopulatedArea({ ...populatedArea, facilityId: e.target.value })}
                                     required
                                 >
-                                    <option value="">Select a service address</option>
-                                    {/* Map through available sites and create an option for each */}
-                                    {getSitesByAccountId(accountId).map(site => (
-                                        <option key={site.id} value={site.id}>{site.address}</option>
+                                    <option value="">Select a facility</option>
+                                    {/* Map through available facilities and create an option for each */}
+                                    {getFacilitiesByAccountId(accountId).map(facility => (
+                                        <option key={facility.id} value={facility.id}>{facility.name}</option>
                                     ))}
                                 </select>
                                 <div className="invalid-feedback">
-                                    Please select a service address.
+                                    Please select a facility.
                                 </div>
                             </div>
                             <button type="submit" className="btn btn-primary">Save</button>
@@ -88,4 +88,4 @@ const AddEditFacility = (
     );
 };
 
-export default AddEditFacility;
+export default AddEditArea;

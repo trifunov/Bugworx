@@ -1,14 +1,22 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { sites, facilities as facilitiesData, areas as areasData } from '../data/mockData';
+import { Link, useParams } from 'react-router-dom';
 import AddNewButton from '../components/CustomerDetails/AddNewButton';
+import AddEditArea from '../components/CustomerDetails/AddEditArea';
+import { addArea, updateArea, getAreas, getFacilitiesByAccountId, getSitesByAccountId } from '../utils/localStorage';
 
 const Areas = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    const areas = areasData || [];
+    const [selectedArea, setSelectedArea] = useState(null);
+    const { id } = useParams();
+    const accountId = parseInt(id);
 
-    const getFacility = (facilityId) => facilitiesData.find((f) => f.id === facilityId) || null;
+    // Load dynamic data from localStorage helpers so saved changes persist
+    const facilities = getFacilitiesByAccountId(accountId);
+    const sites = getSitesByAccountId(accountId);
+    const areas = getAreas().filter(a => facilities.some(f => f.id === a.facilityId));
+
+    const getFacility = (facilityId) => facilities.find((f) => f.id === facilityId) || null;
 
     const getSiteAddress = (facility) => {
         if (!facility) return 'N/A';
@@ -29,6 +37,19 @@ const Areas = () => {
         );
     });
 
+    const handleSave = (updatedArea) => {
+        if (!updatedArea) return;
+
+        if (updatedArea.id > 0) {
+            updateArea(updatedArea.id, updatedArea);
+        } else {
+            addArea(updatedArea);
+        }
+
+        // close the offcanvas
+        setSelectedArea(null);
+    };
+
     return (
         <>
             <div className="row">
@@ -44,6 +65,14 @@ const Areas = () => {
                     </div>
                 </div>
             </div>
+
+            <AddEditArea
+                area={selectedArea}
+                show={selectedArea !== null}
+                onClose={() => setSelectedArea(null)}
+                onSave={handleSave}
+                accountId={accountId}
+            />
 
             <div className="row">
                 <div className="col-lg-12">
@@ -68,7 +97,7 @@ const Areas = () => {
 
                                         <div className="mt-2 mt-md-0">
                                             <AddNewButton handleAddNew={() => {
-                                                // Handle add new facility action
+                                                setSelectedArea({ id: 0, name: '', facilityId: '' });
                                             }} />
                                         </div>
                                     </div>
@@ -101,7 +130,10 @@ const Areas = () => {
                                                             <a href="#" className="text-success" title="View">
                                                                 <i className="mdi mdi-eye font-size-18"></i>
                                                             </a>
-                                                            <a href="#" className="text-primary" title="Edit">
+                                                            <a href="#" className="text-primary" title="Edit"
+                                                                onClick={() => {
+                                                                    setSelectedArea(a);
+                                                                }}>
                                                                 <i className="mdi mdi-pencil font-size-18"></i>
                                                             </a>
                                                             <a href="#" className="text-danger" title="Delete">
