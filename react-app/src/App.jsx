@@ -1,5 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import MainLayout from './layouts/MainLayout';
+import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Accounts from './pages/Accounts';
 import AccountDetail from './pages/AccountDetail';
@@ -14,11 +16,25 @@ import Reports from './pages/Reports';
 import Analytics from './pages/Analytics';
 import Notifications from './pages/Notifications';
 import Configuration from './pages/Configuration';
+import InspectionPoints from './pages/InspectionPoints';
+import Facilities from './pages/Facilities';
+import Areas from './pages/Areas';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
+      {/* Public Route */}
+      <Route path="/login" element={<Login />} />
+
+      {/* Protected Routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Dashboard />} />
         <Route path="accounts" element={<Accounts />} />
         <Route path="accounts/:id" element={<AccountDetail />} />
@@ -31,6 +47,9 @@ function App() {
         <Route path="accounts/:id/notes" element={<AccountDetail />} />
         <Route path="accounts/:id/schedule-service" element={<AccountDetail />} />
         <Route path="accounts/:id/create-invoice" element={<AccountDetail />} />
+        <Route path="accounts/:id/inspection-points" element={<InspectionPoints />} />
+        <Route path="accounts/:id/facilities" element={<Facilities />} />
+        <Route path="accounts/:id/areas" element={<Areas />} />
         <Route path="sites" element={<Sites />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="scheduler" element={<Scheduler />} />
@@ -43,6 +62,9 @@ function App() {
         <Route path="notifications" element={<Notifications />} />
         <Route path="configuration" element={<Configuration />} />
       </Route>
+
+      {/* Catch all - redirect to login or dashboard */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

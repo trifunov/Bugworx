@@ -302,16 +302,19 @@ export const calculateOptimizationScore = (optimizedDistance, baselineDistance) 
 };
 
 /**
- * Generate route from appointments
+ * Generate route from appointments with specific strategy
  * @param {Array} appointments - Array of appointments for a technician/date
  * @param {Object} technicianLocation - Technician's starting location
  * @param {string} startTime - Route start time
+ * @param {string} strategy - Route strategy: 'fastest', 'balanced', 'customer'
  * @returns {Object} Generated route object
  */
-export const generateRouteFromAppointments = (appointments, technicianLocation, startTime = '08:00') => {
+export const generateRouteWithStrategy = (appointments, technicianLocation, startTime = '08:00', strategy = 'balanced') => {
   if (!appointments || appointments.length === 0) {
     return null;
   }
+
+  console.log(`\n🚀 generateRouteWithStrategy called with strategy: "${strategy}"`);
 
   // Convert appointments to stops format
   const stops = appointments.map(apt => ({
@@ -320,20 +323,103 @@ export const generateRouteFromAppointments = (appointments, technicianLocation, 
     coordinates: apt.siteCoordinates,
     estimatedDuration: apt.estimatedDuration,
     priority: apt.priority,
-    serviceType: apt.serviceType
+    serviceType: apt.serviceType,
+    siteName: apt.siteName,
+    customerTier: apt.site?.customerTier,
+    scheduledTime: apt.scheduledTime
   }));
 
-  // Optimize the route
-  const optimizedStops = optimizeRouteWithConstraints(stops, technicianLocation, startTime);
+  console.log(`📍 Input stops (${stops.length}):`, stops.map(s => ({
+    name: s.siteName,
+    priority: s.priority,
+    tier: s.customerTier,
+    time: s.scheduledTime
+  })));
+
+  let optimizedStops;
+
+  if (strategy === 'fastest') {
+    console.log('⚡ Using FASTEST strategy (Emergency + Nearest Neighbor)');
+    // FASTEST: Emergency first, then pure distance optimization (ignore scheduled times)
+    const emergency = stops.filter(s => s.priority === 'Emergency');
+    const nonEmergency = stops.filter(s => s.priority !== 'Emergency');
+
+    const emergencyOptimized = optimizeRoute2Opt(emergency, technicianLocation);
+    const lastLoc = emergencyOptimized.length > 0
+      ? emergencyOptimized[emergencyOptimized.length - 1].coordinates
+      : technicianLocation;
+
+    // For non-emergencies, just use nearest neighbor (fastest)
+    const nonEmergencyOptimized = optimizeRouteNearestNeighbor(nonEmergency, lastLoc);
+
+    optimizedStops = [...emergencyOptimized, ...nonEmergencyOptimized];
+
+  } else if (strategy === 'customer') {
+    console.log('⭐ Using CUSTOMER PRIORITY strategy (VIP > Contract > Others)');
+    // CUSTOMER PRIORITY: Emergency > VIP > Contract > Others, respect scheduled times
+    const emergency = stops.filter(s => s.priority === 'Emergency');
+    const vip = stops.filter(s => s.priority !== 'Emergency' && s.customerTier === 'VIP');
+    const contract = stops.filter(s => s.priority !== 'Emergency' && s.customerTier === 'Contract' && s.customerTier !== 'VIP');
+    const others = stops.filter(s => s.priority !== 'Emergency' && !s.customerTier);
+
+    console.log(`  Emergency: ${emergency.length}, VIP: ${vip.length}, Contract: ${contract.length}, Others: ${others.length}`);
+
+    // Sort each group by scheduled time
+    const sortByTime = (a, b) => {
+      const timeA = a.scheduledTime || '12:00';
+      const timeB = b.scheduledTime || '12:00';
+      return timeA.localeCompare(timeB);
+    };
+
+    emergency.sort(sortByTime);
+    vip.sort(sortByTime);
+    contract.sort(sortByTime);
+    others.sort(sortByTime);
+
+    optimizedStops = [...emergency, ...vip, ...contract, ...others];
+
+  } else {
+    console.log('⚖️ Using BALANCED strategy (Emergency > Urgent > Normal with 2-opt)');
+    // BALANCED (default): Emergency > Urgent > Normal with 2-opt optimization
+    optimizedStops = optimizeRouteWithConstraints(stops, technicianLocation, startTime);
+  }
+
+  console.log(`✅ Optimized stop order:`, optimizedStops.map((s, i) => `${i+1}. ${s.siteName}`));
+
+  // Calculate estimated arrival/departure times
+  const [hours, minutes] = startTime.split(':').map(Number);
+  let currentTime = hours * 60 + minutes;
+  let currentLoc = technicianLocation;
+
+  const stopsWithTimes = optimizedStops.map((stop, index) => {
+    const travelTime = estimateTravelTime(
+      calculateDistance(currentLoc, stop.coordinates)
+    );
+    currentTime += travelTime;
+
+    const arrivalTime = formatTime(currentTime);
+    currentTime += stop.estimatedDuration || 60;
+    const departureTime = formatTime(currentTime);
+
+    currentLoc = stop.coordinates;
+
+    return {
+      ...stop,
+      order: index + 1,
+      estimatedArrival: arrivalTime,
+      estimatedDeparture: departureTime,
+      status: 'Pending'
+    };
+  });
 
   // Calculate metrics
   const totalDistance = calculateRouteDistance(
-    optimizedStops.map(s => ({ coordinates: s.coordinates })),
+    stopsWithTimes.map(s => ({ coordinates: s.coordinates })),
     technicianLocation
   );
 
   const totalDuration = calculateRouteDuration(
-    optimizedStops.map(s => ({
+    stopsWithTimes.map(s => ({
       coordinates: s.coordinates,
       estimatedDuration: s.estimatedDuration
     })),
@@ -341,19 +427,31 @@ export const generateRouteFromAppointments = (appointments, technicianLocation, 
   );
 
   // Estimate end time
-  const [hours, minutes] = startTime.split(':').map(Number);
   const startMinutes = hours * 60 + minutes;
   const endMinutes = startMinutes + totalDuration;
   const endTime = formatTime(endMinutes);
 
+  console.log(`📊 Final metrics for "${strategy}": Distance=${totalDistance}mi, Duration=${totalDuration}min (${Math.floor(totalDuration/60)}h ${totalDuration%60}m)`);
+
   return {
-    stops: optimizedStops,
+    stops: stopsWithTimes,
     totalDistance,
     totalDuration,
     startTime,
     endTime,
     optimizationScore: calculateOptimizationScore(totalDistance, totalDistance * 1.3)
   };
+};
+
+/**
+ * Generate route from appointments (legacy - uses balanced strategy)
+ * @param {Array} appointments - Array of appointments for a technician/date
+ * @param {Object} technicianLocation - Technician's starting location
+ * @param {string} startTime - Route start time
+ * @returns {Object} Generated route object
+ */
+export const generateRouteFromAppointments = (appointments, technicianLocation, startTime = '08:00') => {
+  return generateRouteWithStrategy(appointments, technicianLocation, startTime, 'balanced');
 };
 
 export default {
@@ -365,5 +463,6 @@ export default {
   optimizeRoute2Opt,
   optimizeRouteWithConstraints,
   calculateOptimizationScore,
-  generateRouteFromAppointments
+  generateRouteFromAppointments,
+  generateRouteWithStrategy
 };

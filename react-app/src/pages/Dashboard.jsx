@@ -1,6 +1,35 @@
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+  initializeStorage
+} from '../utils/localStorage';
+import {
+  appointments as initialAppointments,
+  sites as initialSites,
+  technicians as initialTechnicians,
+  accounts as initialAccounts,
+  inventory as initialInventory,
+  facilities,
+  areas,
+  inspectionPoints
+} from '../data/mockData';
 
 const Dashboard = () => {
+
+  // Initialize localStorage on mount
+  useEffect(() => {
+    initializeStorage({
+      appointments: initialAppointments,
+      accounts: initialAccounts,
+      sites: initialSites,
+      technicians: initialTechnicians,
+      inventory: initialInventory,
+      facilities: facilities,
+      areas: areas,
+      inspectionPoints: inspectionPoints
+    });
+  }, []);
+
   return (
     <>
       {/* start page title */}

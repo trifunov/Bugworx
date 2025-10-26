@@ -109,6 +109,27 @@ const Sidebar = () => {
             </li>
 
             <li>
+              <Link to={`/accounts/${accountId}/facilities`} className="waves-effect">
+                <i className="mdi mdi-office-building"></i>
+                <span>Facilities</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={`/accounts/${accountId}/areas`} className="waves-effect">
+                <i className="mdi mdi-radar"></i>
+                <span>Areas</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={`/accounts/${accountId}/inspection-points`} className="waves-effect">
+                <i className="ri-map-pin-line"></i>
+                <span>Inspection Points</span>
+              </Link>
+            </li>
+
+            <li>
               <Link to={`/accounts/${accountId}/invoices`} className="waves-effect">
                 <i className="ri-file-list-3-line"></i>
                 <span>Invoices</span>
