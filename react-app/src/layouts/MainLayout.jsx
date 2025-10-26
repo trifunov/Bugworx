@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import ConfigurationSidebar from './ConfigurationSidebar';
 import Footer from './Footer';
 import { useEffect } from 'react';
 
@@ -10,10 +11,13 @@ const MainLayout = () => {
   // Only show sidebar when viewing a specific customer (account detail page)
   const showSidebar = location.pathname.startsWith('/accounts/') && location.pathname !== '/accounts';
 
+  // Only show sidebar when viewing a configuration page
+  const showConfigurationSidebar = location.pathname.startsWith('/configuration');
+
   useEffect(() => {
     // Handle vertical menu button click (sidebar toggle)
     const handleMenuToggle = () => {
-      if (!showSidebar) return; // Don't toggle sidebar when not on account detail
+      if (!showSidebar && !showConfigurationSidebar) return; // Don't toggle sidebar when not on account detail
 
       document.body.classList.toggle('sidebar-enable');
 
@@ -26,7 +30,7 @@ const MainLayout = () => {
     };
 
     const menuButton = document.getElementById('vertical-menu-btn');
-    if (menuButton && showSidebar) {
+    if (menuButton && (showSidebar || showConfigurationSidebar)) {
       menuButton.addEventListener('click', handleMenuToggle);
     }
 
@@ -35,14 +39,14 @@ const MainLayout = () => {
         menuButton.removeEventListener('click', handleMenuToggle);
       }
     };
-  }, [showSidebar]);
+  }, [showSidebar, showConfigurationSidebar]);
 
   return (
     <div id="layout-wrapper">
       <Header />
       {showSidebar && <Sidebar />}
-
-      <div className={showSidebar ? "main-content" : "main-content main-content-no-margin"}>
+      {showConfigurationSidebar && <ConfigurationSidebar />}
+      <div className={showSidebar || showConfigurationSidebar ? "main-content" : "main-content main-content-no-margin"}>
         <div className="page-content">
           <div className="container-fluid">
             <Outlet />
