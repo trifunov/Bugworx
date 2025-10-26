@@ -2,13 +2,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { accounts } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
+import useSidebar from '../hooks/useSidebar';
 
 const Header = () => {
   const navigate = useNavigate();
+  const { showSidebar, toggleSidebar } = useSidebar();
   const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -110,9 +113,11 @@ const Header = () => {
             </Link>
           </div>
 
-          <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
-            <i className="ri-menu-2-line align-middle"></i>
-          </button>
+          {showSidebar && (
+            <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn" onClick={toggleSidebar}>
+              <i className="ri-menu-2-line align-middle"></i>
+            </button>
+          )}
 
           {/* App Search */}
           <form className="app-search d-none d-lg-block" onSubmit={handleSearch}>
