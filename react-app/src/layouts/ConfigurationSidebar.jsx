@@ -54,17 +54,7 @@ const ConfigurationSidebar = () => {
               </a>
               <ul className="sub-menu" aria-expanded="false">
                 <li><Link to="/configuration/service-inspection/inspection-point-categories">Inspection Point Categories</Link></li>
-                <li>
-                  <a href="#" className="has-arrow">Inspection Point Types</a>
-                  <ul className="sub-menu" aria-expanded="false">
-                    <li><Link to="/configuration/service-inspection/inspection-point-types/target-pests">Target Pests</Link></li>
-                    <li><Link to="/configuration/service-inspection/inspection-point-types/materials">Materials</Link></li>
-                    <li><Link to="/configuration/service-inspection/inspection-point-types/equipment">Equipment</Link></li>
-                    <li><Link to="/configuration/service-inspection/inspection-point-types/observations">Observations</Link></li>
-                    <li><Link to="/configuration/service-inspection/inspection-point-types/application-methods">Application Methods</Link></li>
-                    <li><Link to="/configuration/service-inspection/inspection-point-types/reasons">Reasons</Link></li>
-                  </ul>
-                </li>
+                <li><Link to="/configuration/service-inspection/inspection-point-types">Inspection Point Types</Link></li>
                 <li><Link to="/configuration/service-inspection/pest-types">Pest Types</Link></li>
                 <li><Link to="/configuration/service-inspection/treatment-types">Treatment Types</Link></li>
                 <li><Link to="/configuration/service-inspection/service-templates">Service Templates</Link></li>
