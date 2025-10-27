@@ -8,7 +8,6 @@ import {
   sites as initialSites,
   technicians as initialTechnicians,
   accounts as initialAccounts,
-  serviceTypes,
   priorities,
   appointmentStatuses,
   inventory as initialInventory
@@ -23,7 +22,8 @@ import {
   getSites,
   getTechnicians,
   isTechnicianAvailable,
-  suggestTechnicians
+  suggestTechnicians,
+  getServiceTypes
 } from '../utils/localStorage';
 
 const Scheduler = () => {
@@ -37,6 +37,8 @@ const Scheduler = () => {
   const [accounts, setAccounts] = useState([]);
   const [sites, setSitesState] = useState([]);
   const [technicians, setTechniciansState] = useState([]);
+
+  const serviceTypes = getServiceTypes();
 
   // Filter state
   const [filterTechnician, setFilterTechnician] = useState('all');

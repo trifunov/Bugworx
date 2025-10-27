@@ -1,3 +1,5 @@
+import { getServiceTypes } from '../../utils/localStorage';
+
 const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, accountSites, onUpdateField, onClose, onSave }) => {
   if (!isOpen) return null;
 
@@ -6,18 +8,7 @@ const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, accountSites
     onSave();
   };
 
-  const serviceTypes = [
-    'General Pest Control',
-    'Termite Treatment',
-    'Rodent Control',
-    'Bed Bug Treatment',
-    'Ant Control',
-    'Cockroach Control',
-    'Spider Control',
-    'Mosquito Control',
-    'Flea & Tick Control',
-    'Wildlife Removal'
-  ];
+  const serviceTypes = getServiceTypes();
 
   const timeSlots = [
     '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
