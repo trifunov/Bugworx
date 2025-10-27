@@ -1,0 +1,21 @@
+/* Offcanvas helpers */
+
+/* Ensure offcanvas container uses column flex layout so body can grow and scroll */
+.offcanvas {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make the body area flexible and scrollable. Removes the need for inline maxHeight. */
+.offcanvas-scrollable {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* smooth scrolling on mobile */
+}
+
+/* Small tweak: ensure focus outlines remain visible for keyboard users inside offcanvas */
+.offcanvas-scrollable :focus {
+    outline: 2px solid rgba(13, 110, 253, 0.12);
+    outline-offset: 2px;
+}

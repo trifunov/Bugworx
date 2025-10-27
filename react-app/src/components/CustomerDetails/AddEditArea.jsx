@@ -37,12 +37,12 @@ const AddEditArea = (
     return (
         <>
             {show &&
-                (<div className={`offcanvas offcanvas-end ${show ? 'show' : ''}`} tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                (<div className={`offcanvas offcanvas-end ${show ? 'show' : ''}`} data-bs-scroll="true" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                     <div className="offcanvas-header">
                         <h5 className="offcanvas-title">{area.id > 0 ? 'Edit Area' : 'Add Area'}</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" onClick={onClose}></button>
                     </div>
-                    <div className="offcanvas-body">
+                    <div className="offcanvas-body offcanvas-scrollable">
                         <form className="needs-validation" noValidate onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="areaName" className="form-label">Area Name</label>

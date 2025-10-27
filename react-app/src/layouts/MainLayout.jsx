@@ -11,33 +11,6 @@ const MainLayout = () => {
   const { showSidebar } = useSidebar();
   const { showConfigurationSidebar } = useConfigurationSidebar();
 
-  // useEffect(() => {
-  // Handle vertical menu button click (sidebar toggle)
-  //   const handleMenuToggle = () => {
-  //     if (!showSidebar) return; // Don't toggle sidebar when not on account detail
-
-  //     document.body.classList.toggle('sidebar-enable');
-
-  //     const windowWidth = window.innerWidth;
-  //     if (windowWidth >= 992) {
-  //       document.body.classList.toggle('vertical-collpsed');
-  //     } else {
-  //       document.body.classList.remove('vertical-collpsed');
-  //     }
-  //   };
-
-  //   const menuButton = document.getElementById('vertical-menu-btn');
-  //   if (menuButton && showSidebar) {
-  //     menuButton.addEventListener('click', handleMenuToggle);
-  //   }
-
-  //   return () => {
-  //     if (menuButton) {
-  //       menuButton.removeEventListener('click', handleMenuToggle);
-  //     }
-  //   };
-  // }, [showSidebar]);
-
   return (
     <div id="layout-wrapper">
       <Header />

@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { accounts } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from '../hooks/useSidebar';
 import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
+import { getAccounts, addAccount, updateAccount } from '../utils/localStorage';
+import useAddEditCustomer from '../hooks/useAddEditCustomer';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -13,7 +15,8 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-
+  const [accounts, setAccounts] = useState(getAccounts());
+  const addEditCustomer = useAddEditCustomer();
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -90,10 +93,36 @@ const Header = () => {
     navigate('/login');
   };
 
+  const loadAccounts = () => {
+    const accounts = getAccounts();
+    setAccounts(accounts);
+  };
+
   return (
     <header id="page-topbar">
       <div className="navbar-header">
         <div className="d-flex">
+
+          <AddEditCustomer
+            isOpen={addEditCustomer.isOpen}
+            formData={addEditCustomer.formData}
+            errors={addEditCustomer.errors}
+            isSaving={addEditCustomer.isSaving}
+            onUpdateField={addEditCustomer.onUpdateFieldHandle}
+            onClose={addEditCustomer.close}
+            onSave={() => addEditCustomer.onSaveHandle((data) => {
+              let updatedCustomer = null;
+              if (data.id && data.id !== 0) {
+                updatedCustomer = updateAccount(data.id, data);
+              }
+              else {
+                updatedCustomer = addAccount(data);
+              }
+              loadAccounts();
+              return updatedCustomer;
+            })}
+          />
+
           {/* LOGO */}
           <div className="navbar-brand-box">
             <Link to="/" className="logo logo-dark">
@@ -265,7 +294,9 @@ const Header = () => {
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-account-plus me-2"></i>Customer</a>
+              <a className="dropdown-item" href="#"
+                onClick={() => addEditCustomer.open({ id: 0 })}
+              ><i className="mdi mdi-account-plus me-2"></i>Customer</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>Service</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>Invoice</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-cash me-2"></i>Payment</a>

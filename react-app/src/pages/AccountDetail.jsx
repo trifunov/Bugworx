@@ -1,15 +1,56 @@
-import { useParams, Link, useLocation } from 'react-router-dom';
-import { accounts, sites, appointments } from '../data/mockData';
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { appointments } from '../data/mockData';
+import { getSitesByAccountId, addSite, updateSite, addAppointment, getAccounts, addAccount, updateAccount } from '../utils/localStorage';
+import useAddEditSite from '../hooks/useAddEditSite';
+import useScheduleService from '../hooks/useScheduleService';
+import useViewReports from '../hooks/useViewReports';
+import AddEditSite from '../components/AccountActions/AddEditSite';
+import ScheduleServiceModal from '../components/AccountActions/ScheduleServiceModal';
+import ViewReportsModal from '../components/AccountActions/ViewReportsModal';
+import useAddEditCustomer from '../hooks/useAddEditCustomer';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
 
 const AccountDetail = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [accounts, setAccounts] = useState(getAccounts());
+  const [accountSites, setAccountSites] = useState([]);
   const account = accounts.find(a => a.id === parseInt(id));
-  const accountSites = sites.filter(s => s.accountId === parseInt(id));
+
+  useEffect(() => {
+    loadSites();
+  }, [id]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const action = params.get('action');
+    if (action === 'schedule-service') {
+      scheduleService.open();
+      navigate(`/accounts/${id}`, { replace: true });
+    }
+  }, [location.search]);
+
+  const loadSites = () => {
+    const sites = getSitesByAccountId(parseInt(id));
+    setAccountSites(sites);
+  };
+
+  const loadAccounts = () => {
+    const accounts = getAccounts();
+    setAccounts(accounts);
+  };
+
   const accountAppointments = appointments.filter(apt => {
-    const site = sites.find(s => s.id === apt.siteId);
+    const site = accountSites.find(s => s.id === apt.siteId);
     return site && site.accountId === parseInt(id);
   });
+
+  const addEditCustomer = useAddEditCustomer();
+  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditSite(parseInt(id));
+  const scheduleService = useScheduleService(parseInt(id));
+  const viewReports = useViewReports(parseInt(id));
 
   // Determine which section to display based on the current path
   const pathParts = location.pathname.split('/');
@@ -30,7 +71,6 @@ const AccountDetail = () => {
       'contracts': { title: 'Contracts', breadcrumb: 'Contracts' },
       'documents': { title: 'Documents', breadcrumb: 'Documents' },
       'notes': { title: 'Notes', breadcrumb: 'Notes' },
-      'schedule-service': { title: 'Schedule Service', breadcrumb: 'Schedule Service' },
       'create-invoice': { title: 'Create Invoice', breadcrumb: 'Create Invoice' },
       'inspection-points': { title: 'Inspection Points', breadcrumb: 'Inspection Points' }
     };
@@ -50,7 +90,9 @@ const AccountDetail = () => {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between mb-3">
                     <h5 className="card-title mb-0">Customer Sites</h5>
-                    <button className="btn btn-success btn-sm">
+                    <button className="btn btn-success btn-sm" onClick={() => open({
+                      id: 0,
+                    })}>
                       <i className="bx bx-plus me-1"></i>
                       Add Site
                     </button>
@@ -93,9 +135,13 @@ const AccountDetail = () => {
                                 <Link to={`/sites/${site.id}`} className="text-success" title="View">
                                   <i className="mdi mdi-eye font-size-18"></i>
                                 </Link>
-                                <a href="#" className="text-primary" title="Edit">
+                                <button
+                                  onClick={() => open(site)}
+                                  className="btn btn-link text-primary p-0"
+                                  title="Edit"
+                                >
                                   <i className="mdi mdi-pencil font-size-18"></i>
-                                </a>
+                                </button>
                               </div>
                             </td>
                           </tr>
@@ -123,10 +169,10 @@ const AccountDetail = () => {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between mb-3">
                     <h5 className="card-title mb-0">Customer Appointments</h5>
-                    <Link to={`/accounts/${id}/schedule-service`} className="btn btn-primary btn-sm">
+                    <button className="btn btn-primary btn-sm" onClick={scheduleService.open}>
                       <i className="bx bx-calendar-plus me-1"></i>
                       Schedule Service
-                    </Link>
+                    </button>
                   </div>
                   <div className="table-responsive">
                     <table className="table align-middle table-nowrap table-hover">
@@ -142,7 +188,7 @@ const AccountDetail = () => {
                       </thead>
                       <tbody>
                         {accountAppointments.map((appointment) => {
-                          const site = sites.find(s => s.id === appointment.siteId);
+                          const site = accountSites.find(s => s.id === appointment.siteId);
                           const getStatusBadgeClass = (status) => {
                             switch (status) {
                               case 'Completed': return 'badge-soft-success';
@@ -218,7 +264,7 @@ const AccountDetail = () => {
                       </thead>
                       <tbody>
                         {accountAppointments.filter(apt => apt.status === 'Completed').map((appointment) => {
-                          const site = sites.find(s => s.id === appointment.siteId);
+                          const site = accountSites.find(s => s.id === appointment.siteId);
                           return (
                             <tr key={appointment.id}>
                               <td>{appointment.scheduledDate}</td>
@@ -474,79 +520,6 @@ const AccountDetail = () => {
           </div>
         );
 
-      case 'schedule-service':
-        return (
-          <div className="row">
-            <div className="col-lg-8">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title mb-4">Schedule Service</h5>
-                  <form>
-                    <div className="row mb-3">
-                      <label className="col-md-3 col-form-label">Select Site</label>
-                      <div className="col-md-9">
-                        <select className="form-select">
-                          <option value="">Choose site...</option>
-                          {accountSites.map(site => (
-                            <option key={site.id} value={site.id}>{site.siteName}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="row mb-3">
-                      <label className="col-md-3 col-form-label">Service Type</label>
-                      <div className="col-md-9">
-                        <select className="form-select">
-                          <option value="">Choose service...</option>
-                          <option value="General Pest Control">General Pest Control</option>
-                          <option value="Termite Treatment">Termite Treatment</option>
-                          <option value="Rodent Control">Rodent Control</option>
-                          <option value="Bed Bug Treatment">Bed Bug Treatment</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="row mb-3">
-                      <label className="col-md-3 col-form-label">Preferred Date</label>
-                      <div className="col-md-9">
-                        <input type="date" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="row mb-3">
-                      <label className="col-md-3 col-form-label">Preferred Time</label>
-                      <div className="col-md-9">
-                        <select className="form-select">
-                          <option value="">Choose time...</option>
-                          <option value="8:00 AM - 10:00 AM">8:00 AM - 10:00 AM</option>
-                          <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
-                          <option value="12:00 PM - 2:00 PM">12:00 PM - 2:00 PM</option>
-                          <option value="2:00 PM - 4:00 PM">2:00 PM - 4:00 PM</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="row mb-3">
-                      <label className="col-md-3 col-form-label">Special Instructions</label>
-                      <div className="col-md-9">
-                        <textarea className="form-control" rows="3" placeholder="Any special instructions or notes..."></textarea>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-9 offset-md-3">
-                        <button type="submit" className="btn btn-primary me-2">
-                          <i className="bx bx-check me-1"></i>
-                          Schedule Appointment
-                        </button>
-                        <Link to={`/accounts/${id}`} className="btn btn-secondary">
-                          Cancel
-                        </Link>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
       case 'create-invoice':
         return (
           <div className="row">
@@ -667,15 +640,15 @@ const AccountDetail = () => {
                             <tbody>
                               <tr>
                                 <th className="text-muted" scope="row">Name:</th>
-                                <td>{account.billingContact.name}</td>
+                                <td>{account.billingContact?.name || account.primaryContactPerson}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Email:</th>
-                                <td>{account.billingContact.email}</td>
+                                <td>{account.billingContact?.email || account.email}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Phone:</th>
-                                <td>{account.billingContact.phone}</td>
+                                <td>{account.billingContact?.phone || account.phone}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -686,8 +659,8 @@ const AccountDetail = () => {
                     <div className="mt-4">
                       <h6 className="font-size-14 mb-3">Billing Address</h6>
                       <p className="mb-0">
-                        {account.billingAddress.street}<br />
-                        {account.billingAddress.city}, {account.billingAddress.state} {account.billingAddress.zip}
+                        {account.billingAddress?.street || ''}<br />
+                        {account.billingAddress?.city || ''}, {account.billingAddress?.state || ''} {account.billingAddress?.zip || ''}
                       </p>
                     </div>
 
@@ -737,9 +710,13 @@ const AccountDetail = () => {
                                 </span>
                               </td>
                               <td>
-                                <Link to={`/sites/${site.id}`} className="btn btn-sm btn-primary">
-                                  View
-                                </Link>
+                                <button
+                                  className="btn btn-sm btn-primary"
+                                  onClick={() => open(site)}
+                                >
+                                  <i className="mdi mdi-pencil me-1"></i>
+                                  Edit
+                                </button>
                               </td>
                             </tr>
                           ))}
@@ -755,19 +732,19 @@ const AccountDetail = () => {
                   <div className="card-body">
                     <h5 className="card-title mb-3">Actions</h5>
                     <div className="d-grid gap-2">
-                      <button className="btn btn-primary">
+                      <button className="btn btn-primary" onClick={() => addEditCustomer.open(account)}>
                         <i className="bx bx-edit me-1"></i>
                         Edit Account
                       </button>
-                      <button className="btn btn-success">
+                      <button className="btn btn-success" onClick={() => open({ id: 0 })}>
                         <i className="bx bx-plus me-1"></i>
                         Add Site
                       </button>
-                      <Link to={`/accounts/${id}/schedule-service`} className="btn btn-info">
+                      <button className="btn btn-info" onClick={scheduleService.open}>
                         <i className="bx bx-calendar me-1"></i>
                         Schedule Service
-                      </Link>
-                      <button className="btn btn-secondary">
+                      </button>
+                      <button className="btn btn-secondary" onClick={viewReports.open}>
                         <i className="bx bx-file me-1"></i>
                         View Reports
                       </button>
@@ -825,6 +802,71 @@ const AccountDetail = () => {
       </div>
 
       {renderSectionContent()}
+
+      <AddEditCustomer
+        isOpen={addEditCustomer.isOpen}
+        formData={addEditCustomer.formData}
+        errors={addEditCustomer.errors}
+        isSaving={addEditCustomer.isSaving}
+        onUpdateField={addEditCustomer.onUpdateFieldHandle}
+        onClose={addEditCustomer.close}
+        onSave={() => addEditCustomer.onSaveHandle((data) => {
+          let updatedCustomer = null;
+          if (data.id && data.id !== 0) {
+            updatedCustomer = updateAccount(data.id, data);
+          }
+          else {
+            updatedCustomer = addAccount(data);
+          }
+          loadAccounts();
+          return updatedCustomer;
+        })}
+      />
+
+      <AddEditSite
+        isOpen={isOpen}
+        formData={formData}
+        errors={errors}
+        isSaving={isSaving}
+        onUpdateField={onUpdateFieldHandle}
+        onClose={close}
+        onSave={() => onSaveHandle((data) => {
+          let updatedSite = null;
+          if (data.id && data.id !== 0) {
+            updatedSite = updateSite(data.id, data);
+          }
+          else {
+            updatedSite = addSite(data);
+          }
+          loadSites();
+          return updatedSite;
+        })}
+      />
+
+      <ScheduleServiceModal
+        isOpen={scheduleService.isOpen}
+        formData={scheduleService.formData}
+        errors={scheduleService.errors}
+        isSaving={scheduleService.isSaving}
+        accountSites={accountSites}
+        onUpdateField={scheduleService.updateField}
+        onClose={scheduleService.close}
+        onSave={() => scheduleService.save((data) => {
+          const newAppointment = addAppointment(data);
+          return newAppointment;
+        })}
+      />
+
+      <ViewReportsModal
+        isOpen={viewReports.isOpen}
+        selectedReportType={viewReports.selectedReportType}
+        dateRange={viewReports.dateRange}
+        onSelectReportType={viewReports.selectReportType}
+        onUpdateDateRange={viewReports.updateDateRange}
+        onClose={viewReports.close}
+        onGenerate={viewReports.generateReport}
+        accountId={parseInt(id)}
+      />
     </>
   );
 };

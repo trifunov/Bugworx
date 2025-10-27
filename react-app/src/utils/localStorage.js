@@ -11,7 +11,8 @@ const STORAGE_KEYS = {
   ROUTE_TEMPLATES: 'bugworx_route_templates',
   FACILITIES: 'bugworx_facilities',
   AREAS: 'bugworx_areas',
-  INSPECTION_POINTS: 'bugworx_inspection_points'
+  INSPECTION_POINTS: 'bugworx_inspection_points',
+  SERVICE_TYPES: 'bugworx_service_types'
 };
 
 // Generic storage functions
@@ -122,9 +123,112 @@ export const setSites = (sites) => {
   return setToStorage(STORAGE_KEYS.SITES, sites);
 };
 
+export const addAccount = (account) => {
+  const accounts = getAccounts();
+  const newAccount = {
+    ...account,
+    id: Date.now(),
+    accountNum: `ACC-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  accounts.push(newAccount);
+  setAccounts(accounts);
+  return newAccount;
+};
+
+export const updateAccount = (id, updates) => {
+  const accounts = getAccounts();
+  const index = accounts.findIndex(acc => acc.id === id);
+  if (index !== -1) {
+    accounts[index] = {
+      ...accounts[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setAccounts(accounts);
+    return accounts[index];
+  }
+  return null;
+};
+
+export const addSite = (site) => {
+  const sites = getSites();
+  const newSite = {
+    ...site,
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  sites.push(newSite);
+  setSites(sites);
+  return newSite;
+};
+
+export const updateSite = (id, updates) => {
+  const sites = getSites();
+  const index = sites.findIndex(s => s.id === id);
+  if (index !== -1) {
+    sites[index] = {
+      ...sites[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setSites(sites);
+    return sites[index];
+  }
+  return null;
+};
+
 export const getSitesByAccountId = (accountId) => {
   const sites = getSites();
   return sites.filter(site => site.accountId === accountId);
+};
+
+const DEFAULT_SERVICE_TYPES = [
+  'General Pest Control',
+  'Termite Treatment',
+  'Rodent Control',
+  'Bed Bug Treatment',
+  'Ant Control',
+  'Cockroach Control',
+  'Spider Control',
+  'Mosquito Control',
+  'Flea & Tick Control',
+  'Wildlife Removal'
+];
+
+export const getServiceTypes = () => {
+  const serviceTypes = getFromStorage(STORAGE_KEYS.SERVICE_TYPES, []);
+  if (serviceTypes.length === 0) {
+    setServiceTypes(DEFAULT_SERVICE_TYPES);
+    return DEFAULT_SERVICE_TYPES;
+  }
+  return serviceTypes;
+};
+
+export const setServiceTypes = (serviceTypes) => {
+  return setToStorage(STORAGE_KEYS.SERVICE_TYPES, serviceTypes);
+};
+
+export const addServiceType = (serviceType) => {
+  const serviceTypes = getServiceTypes();
+  if (!serviceTypes.includes(serviceType)) {
+    serviceTypes.push(serviceType);
+    setServiceTypes(serviceTypes);
+    return true;
+  }
+  return false;
+};
+
+export const removeServiceType = (serviceType) => {
+  const serviceTypes = getServiceTypes();
+  const filtered = serviceTypes.filter(st => st !== serviceType);
+  if (filtered.length < serviceTypes.length) {
+    setServiceTypes(filtered);
+    return true;
+  }
+  return false;
 };
 
 // Technician-specific functions
@@ -552,7 +656,7 @@ export const getCurrentUser = () => {
 
 export const updateCurrentUser = (userDetaisl) => {
   const currentUser = getFromStorage('currentUser', null);
-  if(currentUser) {
+  if (currentUser) {
     setToStorage('currentUser', userDetaisl);
     return currentUser;
   }
@@ -574,7 +678,13 @@ export default {
   setAccounts,
   getSites,
   setSites,
+  addSite,
+  updateSite,
   getSitesByAccountId,
+  getServiceTypes,
+  setServiceTypes,
+  addServiceType,
+  removeServiceType,
   getTechnicians,
   setTechnicians,
   getActiveTechnicians,
@@ -617,5 +727,7 @@ export default {
   deleteInspectionPoint,
   getFacilitiesByAccountId,
   getCurrentUser,
-  updateCurrentUser
+  updateCurrentUser,
+  addAccount,
+  updateAccount
 };
