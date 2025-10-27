@@ -63,12 +63,12 @@ function App() {
         <Route path="analytics" element={<Analytics />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="configuration" element={<Configuration />} />
-        <Route path="configuration/company-profile" element={<ConfigurationDetails />} />
-        <Route path="configuration/custom-fields" element={<ConfigurationDetails />} />
-        <Route path="configuration/api-integrations" element={<ConfigurationDetails />} />
-        <Route path="configuration/data-import-export" element={<ConfigurationDetails />} />
-        <Route path="configuration/audit-trail" element={<ConfigurationDetails />} />
-        <Route path="configuration/backup-and-restore" element={<ConfigurationDetails />} />
+        <Route path="configuration/general/company-profile" element={<ConfigurationDetails />} />
+        <Route path="configuration/general/custom-fields" element={<ConfigurationDetails />} />
+        <Route path="configuration/general/api-integrations" element={<ConfigurationDetails />} />
+        <Route path="configuration/general/data-import-export" element={<ConfigurationDetails />} />
+        <Route path="configuration/general/audit-trail" element={<ConfigurationDetails />} />
+        <Route path="configuration/general/backup-and-restore" element={<ConfigurationDetails />} />
         <Route path="user-profile" element={<UserProfile />} />
       </Route>
 

@@ -6,7 +6,7 @@ import * as ls from '../utils/localStorage';
 const ConfigurationDetails = () => {
   // Determine which section to display based on the current path
   const pathParts = location.pathname.split('/');
-  const section = pathParts[2] || 'overview'; // Default to overview if no section specified
+  const section = pathParts[3] || 'overview'; // Default to overview if no section specified
 
       // Get section title and breadcrumb
   const getSectionInfo = () => {
