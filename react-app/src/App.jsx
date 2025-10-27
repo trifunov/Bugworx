@@ -19,6 +19,7 @@ import Configuration from './pages/Configuration';
 import InspectionPoints from './pages/InspectionPoints';
 import Facilities from './pages/Facilities';
 import Areas from './pages/Areas';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
         <Route path="analytics" element={<Analytics />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="configuration" element={<Configuration />} />
+        <Route path="/user-profile" element={<UserProfile />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}

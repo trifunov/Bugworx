@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { defaultCredentials } from '../data/users';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,7 +8,6 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showCredentials, setShowCredentials] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const { login } = useAuth();
@@ -67,12 +65,6 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleQuickLogin = (role) => {
-    const creds = defaultCredentials[role];
-    setUsername(creds.username);
-    setPassword(creds.password);
   };
 
   return (
@@ -239,72 +231,6 @@ const Login = () => {
                 )}
               </button>
             </form>
-
-            {/* Demo Quick Login */}
-            <div className="mt-4 pt-4 border-top">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <small className="text-muted">
-                  <i className="mdi mdi-test-tube text-info me-1"></i>
-                  Demo Accounts
-                </small>
-                <button
-                  className="btn btn-sm btn-link p-0 text-decoration-none"
-                  onClick={() => setShowCredentials(!showCredentials)}
-                  type="button"
-                >
-                  {showCredentials ? 'Hide' : 'Show'} Credentials
-                </button>
-              </div>
-
-              {showCredentials && (
-                <div className="alert alert-info py-2 px-3 mb-3 small">
-                  <strong>Passwords:</strong> admin123, dispatch123, manager123, tech123
-                </div>
-              )}
-
-              <div className="row g-2">
-                <div className="col-6">
-                  <button
-                    className="btn btn-sm btn-outline-primary w-100"
-                    onClick={() => handleQuickLogin('admin')}
-                    type="button"
-                  >
-                    <i className="mdi mdi-shield-account me-1"></i>
-                    Admin
-                  </button>
-                </div>
-                <div className="col-6">
-                  <button
-                    className="btn btn-sm btn-outline-success w-100"
-                    onClick={() => handleQuickLogin('dispatcher')}
-                    type="button"
-                  >
-                    <i className="mdi mdi-calendar me-1"></i>
-                    Dispatcher
-                  </button>
-                </div>
-                <div className="col-6">
-                  <button
-                    className="btn btn-sm btn-outline-info w-100"
-                    onClick={() => handleQuickLogin('manager')}
-                    type="button"
-                  >
-                    <i className="mdi mdi-briefcase me-1"></i>
-                    Manager
-                  </button>
-                </div>
-                <div className="col-6">
-                  <button
-                    className="btn btn-sm btn-outline-warning w-100"
-                    onClick={() => handleQuickLogin('technician')}
-                    type="button"
-                  >
-                    <i className="mdi mdi-hard-hat me-1"></i>
-                    Technician
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
