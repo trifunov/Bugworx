@@ -16,6 +16,7 @@ import Reports from './pages/Reports';
 import Analytics from './pages/Analytics';
 import Notifications from './pages/Notifications';
 import Configuration from './pages/Configuration';
+import ConfigurationDetails from './pages/ConfigurationDetails';
 import InspectionPoints from './pages/InspectionPoints';
 import Facilities from './pages/Facilities';
 import Areas from './pages/Areas';
@@ -62,6 +63,12 @@ function App() {
         <Route path="analytics" element={<Analytics />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="configuration" element={<Configuration />} />
+         <Route path="configuration/company-profile" element={<ConfigurationDetails />} />
+        <Route path="configuration/custom-fields" element={<ConfigurationDetails />} />
+        <Route path="configuration/api-integrations" element={<ConfigurationDetails />} />
+        <Route path="configuration/data-import-export" element={<ConfigurationDetails />} />
+        <Route path="configuration/audit-trail" element={<ConfigurationDetails />} />
+        <Route path="configuration/backup-and-restore" element={<ConfigurationDetails />} />
         <Route path="/user-profile" element={<UserProfile />} />
       </Route>
 
