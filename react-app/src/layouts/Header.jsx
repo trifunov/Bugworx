@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { accounts } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from '../hooks/useSidebar';
+import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
 
 const Header = () => {
   const navigate = useNavigate();
   const { showSidebar, toggleSidebar } = useSidebar();
+  const { showConfigurationSidebar } = useConfigurationSidebar();
   const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -113,7 +115,7 @@ const Header = () => {
             </Link>
           </div>
 
-          {showSidebar && (
+          {(showSidebar || showConfigurationSidebar) && (
             <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn" onClick={toggleSidebar}>
               <i className="ri-menu-2-line align-middle"></i>
             </button>
