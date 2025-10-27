@@ -151,11 +151,20 @@ const Scheduler = () => {
     else if (apt.priority === 'Emergency') className = 'bg-danger';
     else if (apt.priority === 'Urgent') className = 'bg-warning';
 
+    const calculateEndTime = (startDate, startTime, durationMinutes) => {
+      const [hours, minutes] = startTime.split(':').map(Number);
+      const startDateTime = new Date(`${startDate}T${startTime}`);
+      startDateTime.setMinutes(startDateTime.getMinutes() + durationMinutes);
+      return startDateTime.toISOString().slice(0, 16);
+    };
+
+    const endTime = calculateEndTime(apt.scheduledDate, apt.scheduledTime, apt.estimatedDuration || 60);
+
     return {
       id: apt.id,
       title: `${getAccountName(apt.siteId)} - ${apt.serviceType}`,
       start: `${apt.scheduledDate}T${apt.scheduledTime}`,
-      end: `${apt.scheduledDate}T${apt.scheduledTime}`,
+      end: endTime,
       className: className,
       extendedProps: {
         appointment: apt,
