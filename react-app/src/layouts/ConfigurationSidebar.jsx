@@ -19,7 +19,7 @@ const ConfigurationSidebar = () => {
             <li>
               <a href="#" className="has-arrow waves-effect">
                 <i className="ri-user-settings-line" />
-                <span>User & Access Management</span>
+                <span>User & Access</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
                 <li><Link to="/configuration/user-management/users">Users</Link></li>
@@ -50,7 +50,7 @@ const ConfigurationSidebar = () => {
             <li>
               <a href="#" className="has-arrow waves-effect">
                 <i className="ri-clipboard-line" />
-                <span>Service & Inspection Setup</span>
+                <span>Service & Inspection</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
                 <li><Link to="/configuration/service-inspection/inspection-point-categories">Inspection Point Categories</Link></li>
@@ -67,7 +67,7 @@ const ConfigurationSidebar = () => {
             <li>
               <a href="#" className="has-arrow waves-effect">
                 <i className="ri-truck-line" />
-                <span>Fleet / Vehicle Management</span>
+                <span>Fleet Management</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
                 <li><Link to="/configuration/fleet/vehicles">Vehicle List</Link></li>
@@ -102,7 +102,7 @@ const ConfigurationSidebar = () => {
             <li>
               <a href="#" className="has-arrow waves-effect">
                 <i className="ri-notification-2-line" />
-                <span>Communication & Notifications</span>
+                <span>Communication</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
                 <li><Link to="/configuration/communication/email-sms-templates">Email & SMS Templates</Link></li>
@@ -136,7 +136,7 @@ const ConfigurationSidebar = () => {
             <li>
               <a href="#" className="has-arrow waves-effect">
                 <i className="ri-global-line" />
-                <span>General System Settings</span>
+                <span>System Settings</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
                 <li><Link to="/configuration/general/company-profile">Company Profile</Link></li>
