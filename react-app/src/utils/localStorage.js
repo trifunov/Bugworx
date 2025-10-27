@@ -122,6 +122,34 @@ export const setSites = (sites) => {
   return setToStorage(STORAGE_KEYS.SITES, sites);
 };
 
+export const addSite = (site) => {
+  const sites = getSites();
+  const newSite = {
+    ...site,
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  sites.push(newSite);
+  setSites(sites);
+  return newSite;
+};
+
+export const updateSite = (id, updates) => {
+  const sites = getSites();
+  const index = sites.findIndex(s => s.id === id);
+  if (index !== -1) {
+    sites[index] = {
+      ...sites[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setSites(sites);
+    return sites[index];
+  }
+  return null;
+};
+
 export const getSitesByAccountId = (accountId) => {
   const sites = getSites();
   return sites.filter(site => site.accountId === accountId);
@@ -562,6 +590,8 @@ export default {
   setAccounts,
   getSites,
   setSites,
+  addSite,
+  updateSite,
   getSitesByAccountId,
   getTechnicians,
   setTechnicians,

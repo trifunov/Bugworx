@@ -160,7 +160,7 @@ const Sidebar = () => {
             <li className="menu-title mt-3">Actions</li>
 
             <li>
-              <Link to={`/accounts/${accountId}/schedule-service`} className="waves-effect">
+              <Link to={`/accounts/${accountId}?action=schedule-service`} className="waves-effect">
                 <i className="ri-calendar-event-line"></i>
                 <span>Schedule Service</span>
               </Link>
