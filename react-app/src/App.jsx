@@ -63,13 +63,13 @@ function App() {
         <Route path="analytics" element={<Analytics />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="configuration" element={<Configuration />} />
-         <Route path="configuration/company-profile" element={<ConfigurationDetails />} />
+        <Route path="configuration/company-profile" element={<ConfigurationDetails />} />
         <Route path="configuration/custom-fields" element={<ConfigurationDetails />} />
         <Route path="configuration/api-integrations" element={<ConfigurationDetails />} />
         <Route path="configuration/data-import-export" element={<ConfigurationDetails />} />
         <Route path="configuration/audit-trail" element={<ConfigurationDetails />} />
         <Route path="configuration/backup-and-restore" element={<ConfigurationDetails />} />
-        <Route path="/user-profile" element={<UserProfile />} />
+        <Route path="user-profile" element={<UserProfile />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}
