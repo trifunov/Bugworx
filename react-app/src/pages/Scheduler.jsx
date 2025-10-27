@@ -59,7 +59,6 @@ const Scheduler = () => {
 
   // Bulk operations state
   const [selectedAppointments, setSelectedAppointments] = useState([]);
-  const [showBulkActions, setShowBulkActions] = useState(false);
   const [bulkAction, setBulkAction] = useState('');
   const [bulkTechnicianId, setBulkTechnicianId] = useState('');
   const [bulkStatus, setBulkStatus] = useState('');
@@ -130,12 +129,6 @@ const Scheduler = () => {
     return tech ? tech.name : 'N/A';
   };
 
-  const getAccountBySiteId = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    if (!site) return null;
-    return accounts.find(a => a.id === site.accountId);
-  };
-
   // Filter appointments
   const filteredAppointments = appointments.filter(apt => {
     if (filterTechnician !== 'all' && apt.technicianId !== parseInt(filterTechnician)) return false;
@@ -154,7 +147,6 @@ const Scheduler = () => {
     else if (apt.priority === 'Urgent') className = 'bg-warning';
 
     const calculateEndTime = (startDate, startTime, durationMinutes) => {
-      const [hours, minutes] = startTime.split(':').map(Number);
       const startDateTime = new Date(`${startDate}T${startTime}`);
       startDateTime.setMinutes(startDateTime.getMinutes() + durationMinutes);
       return startDateTime.toISOString().slice(0, 16);
@@ -325,7 +317,6 @@ const Scheduler = () => {
 
   const clearSelection = () => {
     setSelectedAppointments([]);
-    setShowBulkActions(false);
     setBulkAction('');
     setBulkTechnicianId('');
     setBulkStatus('');
@@ -378,7 +369,7 @@ const Scheduler = () => {
           deleteAppointment(aptId);
           successCount++;
         }
-      } catch (error) {
+      } catch {
         failCount++;
       }
     });

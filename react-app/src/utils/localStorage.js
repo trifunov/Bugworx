@@ -12,7 +12,9 @@ const STORAGE_KEYS = {
   FACILITIES: 'bugworx_facilities',
   AREAS: 'bugworx_areas',
   INSPECTION_POINTS: 'bugworx_inspection_points',
-  SERVICE_TYPES: 'bugworx_service_types'
+  SERVICE_TYPES: 'bugworx_service_types',
+  PROPOSALS: 'bugworx_proposals',
+  CONFIGURATION: 'bugworx_configuration'
 };
 
 // Generic storage functions
@@ -662,6 +664,110 @@ export const updateCurrentUser = (userDetaisl) => {
   }
 }
 
+// Proposal-specific functions
+export const getProposals = () => {
+  return getFromStorage(STORAGE_KEYS.PROPOSALS, []);
+};
+
+export const setProposals = (proposals) => {
+  return setToStorage(STORAGE_KEYS.PROPOSALS, proposals);
+};
+
+export const addProposal = (proposal) => {
+  const proposals = getProposals();
+  const newProposal = {
+    ...proposal,
+    id: Date.now(),
+    proposalNumber: `PROP-${String(Date.now()).slice(-6)}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  proposals.push(newProposal);
+  setProposals(proposals);
+  return newProposal;
+};
+
+export const updateProposal = (id, updates) => {
+  const proposals = getProposals();
+  const index = proposals.findIndex(p => p.id === id);
+  if (index !== -1) {
+    proposals[index] = {
+      ...proposals[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setProposals(proposals);
+    return proposals[index];
+  }
+  return null;
+};
+
+export const deleteProposal = (id) => {
+  const proposals = getProposals();
+  const filtered = proposals.filter(p => p.id !== id);
+  setProposals(filtered);
+  return filtered.length < proposals.length;
+};
+
+export const getProposalById = (id) => {
+  const proposals = getProposals();
+  return proposals.find(p => p.id === id);
+};
+
+export const getProposalsByAccountId = (accountId) => {
+  const proposals = getProposals();
+  return proposals.filter(p => p.customerId === accountId);
+};
+
+// Configuration-specific functions
+const DEFAULT_CONFIGURATION = {
+  defaultTermsAndConditions: `1. Payment Terms: Net 30 days from invoice date.
+
+2. Service Agreement: This proposal is valid for 30 days from the date of issuance. Services will be performed according to the scope of work outlined above.
+
+3. Cancellation Policy: Client may cancel services with 48 hours written notice. Cancellations with less than 48 hours notice may incur a cancellation fee.
+
+4. Liability: Company maintains comprehensive liability insurance. We are not responsible for damage to property caused by pests or pre-existing conditions.
+
+5. Access: Client agrees to provide access to property for scheduled services. If access is denied, rescheduling fees may apply.
+
+6. Treatment Guarantee: Services are guaranteed when client follows all recommendations and maintains regular service schedule.
+
+7. Chemical Safety: All products used are EPA registered and applied according to label directions by licensed technicians.
+
+8. Contract Terms: This proposal, once accepted, constitutes a binding agreement between the parties.`,
+  companyInfo: {
+    name: 'Bugworx Pest Management',
+    address: '',
+    phone: '',
+    email: '',
+    license: ''
+  }
+};
+
+export const getConfiguration = () => {
+  const config = getFromStorage(STORAGE_KEYS.CONFIGURATION, null);
+  if (!config) {
+    setConfiguration(DEFAULT_CONFIGURATION);
+    return DEFAULT_CONFIGURATION;
+  }
+  return config;
+};
+
+export const setConfiguration = (configuration) => {
+  return setToStorage(STORAGE_KEYS.CONFIGURATION, configuration);
+};
+
+export const updateConfiguration = (updates) => {
+  const config = getConfiguration();
+  const updatedConfig = {
+    ...config,
+    ...updates
+  };
+  setConfiguration(updatedConfig);
+  return updatedConfig;
+};
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -729,5 +835,15 @@ export default {
   getCurrentUser,
   updateCurrentUser,
   addAccount,
-  updateAccount
+  updateAccount,
+  getProposals,
+  setProposals,
+  addProposal,
+  updateProposal,
+  deleteProposal,
+  getProposalById,
+  getProposalsByAccountId,
+  getConfiguration,
+  setConfiguration,
+  updateConfiguration
 };

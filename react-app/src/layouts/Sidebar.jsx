@@ -1,5 +1,4 @@
-import { Link, useLocation, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { accounts } from '../data/mockData';
 import useSidebarMenu from '../hooks/useSidebarMenu';
 
@@ -101,6 +100,13 @@ const Sidebar = () => {
               <Link to={`/accounts/${accountId}/contracts`} className="waves-effect">
                 <i className="ri-file-text-line"></i>
                 <span>Contracts</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={`/accounts/${accountId}/proposals`} className="waves-effect">
+                <i className="ri-file-paper-line"></i>
+                <span>Proposals</span>
               </Link>
             </li>
 
