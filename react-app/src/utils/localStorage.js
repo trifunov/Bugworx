@@ -123,6 +123,35 @@ export const setSites = (sites) => {
   return setToStorage(STORAGE_KEYS.SITES, sites);
 };
 
+export const addAccount = (account) => {
+  const accounts = getAccounts();
+  const newAccount = {
+    ...account,
+    id: Date.now(),
+    accountNum: `ACC-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  accounts.push(newAccount);
+  setAccounts(accounts);
+  return newAccount;
+};
+
+export const updateAccount = (id, updates) => {
+  const accounts = getAccounts();
+  const index = accounts.findIndex(acc => acc.id === id);
+  if (index !== -1) {
+    accounts[index] = {
+      ...accounts[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setAccounts(accounts);
+    return accounts[index];
+  }
+  return null;
+};
+
 export const addSite = (site) => {
   const sites = getSites();
   const newSite = {
@@ -627,7 +656,7 @@ export const getCurrentUser = () => {
 
 export const updateCurrentUser = (userDetaisl) => {
   const currentUser = getFromStorage('currentUser', null);
-  if(currentUser) {
+  if (currentUser) {
     setToStorage('currentUser', userDetaisl);
     return currentUser;
   }
@@ -698,5 +727,7 @@ export default {
   deleteInspectionPoint,
   getFacilitiesByAccountId,
   getCurrentUser,
-  updateCurrentUser
+  updateCurrentUser,
+  addAccount,
+  updateAccount
 };

@@ -1,4 +1,4 @@
-const AddSiteModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave }) => {
+const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
@@ -10,7 +10,9 @@ const AddSiteModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClo
     <>
       <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden' }}>
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title">Add Site</h5>
+          <h5 className="offcanvas-title">
+            {formData.id && formData.id !== 0 ? 'Edit Service Address' : 'Add Service Address'}
+          </h5>
           <button type="button" className="btn-close" onClick={onClose}></button>
         </div>
         <div className="offcanvas-body">
@@ -29,7 +31,7 @@ const AddSiteModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClo
             </div>
 
             <div className="mb-3">
-              <label htmlFor="siteType" className="form-label">Site Type</label>
+              <label htmlFor="siteType" className="form-label">Property Type</label>
               <select
                 className={`form-select ${errors.siteType ? 'is-invalid' : ''}`}
                 id="siteType"
@@ -38,9 +40,8 @@ const AddSiteModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClo
                 disabled={isSaving}
               >
                 <option value="">Select type...</option>
-                <option value="Residential">Residential</option>
-                <option value="Commercial">Commercial</option>
-                <option value="Industrial">Industrial</option>
+                <option value="Warehouse">Warehouse</option>
+                <option value="Residential building">Residential building</option>
               </select>
               {errors.siteType && <div className="invalid-feedback">{errors.siteType}</div>}
             </div>
@@ -163,7 +164,7 @@ const AddSiteModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClo
                     Saving...
                   </>
                 ) : (
-                  'Add Site'
+                  formData.id && formData.id !== 0 ? 'Edit Site' : 'Add Site'
                 )}
               </button>
               <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSaving}>
@@ -178,4 +179,4 @@ const AddSiteModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClo
   );
 };
 
-export default AddSiteModal;
+export default AddEditSite;

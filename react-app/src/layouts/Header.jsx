@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { accounts } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from '../hooks/useSidebar';
 import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
 import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
-import { getAccounts, setAccounts } from '../utils/localStorage';
+import { getAccounts, addAccount, updateAccount } from '../utils/localStorage';
+import useAddEditCustomer from '../hooks/useAddEditCustomer';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -15,7 +15,8 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const [showAddEditCustomer, setShowAddEditCustomer] = useState(false);
+  const [accounts, setAccounts] = useState(getAccounts());
+  const addEditCustomer = useAddEditCustomer();
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -92,52 +93,10 @@ const Header = () => {
     navigate('/login');
   };
 
-  const handleSaveCustomer = (customer) => {
-    if (!customer) {
-      setShowAddEditCustomer(false);
-      return;
-    }
-
+  const loadAccounts = () => {
     const accounts = getAccounts();
-
-    // Map form fields to account schema used in storage
-    const mapToAccount = (c) => ({
-      id: c.id || Date.now(),
-      accountNum: c.id ? (c.accountNum || `ACC-${c.id}`) : `ACC-${Date.now()}`,
-      name: c.name || '',
-      accountType: c.customerType === 'Commercial' ? 2 : 1,
-      companyId: 1,
-      localeId: 1,
-      sendInvoice: false,
-      emailInvoice: !!c.email,
-      isActive: c.status === 'Active' ? 1 : 0,
-      instructions: '',
-      primaryNote: '',
-      registrationNum: c.registrationNum || `REG-${Date.now()}`,
-      billingContact: {
-        name: c.contactName || '',
-        email: c.email || '',
-        phone: c.phone || ''
-      },
-      billingAddress: c.billingAddress || {}
-    });
-
-    if (customer.id) {
-      const idx = accounts.findIndex(a => a.id === customer.id);
-      if (idx !== -1) {
-        accounts[idx] = { ...accounts[idx], ...mapToAccount(customer) };
-      } else {
-        accounts.push(mapToAccount(customer));
-      }
-    } else {
-      accounts.push(mapToAccount(customer));
-    }
-
     setAccounts(accounts);
-
-    // close the offcanvas
-    setShowAddEditCustomer(false);
-  }
+  };
 
   return (
     <header id="page-topbar">
@@ -145,13 +104,23 @@ const Header = () => {
         <div className="d-flex">
 
           <AddEditCustomer
-            customer={null}
-            show={showAddEditCustomer}
-            onClose={() => {
-              // Close the offcanvas
-              setShowAddEditCustomer(false);
-            }}
-            onSave={handleSaveCustomer}
+            isOpen={addEditCustomer.isOpen}
+            formData={addEditCustomer.formData}
+            errors={addEditCustomer.errors}
+            isSaving={addEditCustomer.isSaving}
+            onUpdateField={addEditCustomer.onUpdateFieldHandle}
+            onClose={addEditCustomer.close}
+            onSave={() => addEditCustomer.onSaveHandle((data) => {
+              let updatedCustomer = null;
+              if (data.id && data.id !== 0) {
+                updatedCustomer = updateAccount(data.id, data);
+              }
+              else {
+                updatedCustomer = addAccount(data);
+              }
+              loadAccounts();
+              return updatedCustomer;
+            })}
           />
 
           {/* LOGO */}
@@ -326,7 +295,7 @@ const Header = () => {
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</a>
               <a className="dropdown-item" href="#"
-                onClick={() => setShowAddEditCustomer(true)}
+                onClick={() => addEditCustomer.open({ id: 0 })}
               ><i className="mdi mdi-account-plus me-2"></i>Customer</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>Service</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>Invoice</a>

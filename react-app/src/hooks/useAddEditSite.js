@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { save, updateField } from '../utils/addEditFormUtils';
 
-const useAddSite = (accountId) => {
+const useAddEditSite = (accountId) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     accountId: accountId,
@@ -18,19 +19,20 @@ const useAddSite = (accountId) => {
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
 
-  const open = () => {
+  const open = (site) => {
     setFormData({
+      id: site?.id || 0,
       accountId: accountId,
-      siteName: '',
-      siteType: '',
-      address: '',
-      city: '',
-      state: '',
-      zip: '',
-      contactName: '',
-      contactPhone: '',
-      contactEmail: '',
-      isActive: true
+      siteName: site?.siteName || '',
+      siteType: site?.siteType || '',
+      address: site?.address || '',
+      city: site?.city || '',
+      state: site?.state || '',
+      zip: site?.zip || '',
+      contactName: site?.contactName || '',
+      contactPhone: site?.contactPhone || '',
+      contactEmail: site?.contactEmail || '',
+      isActive: site?.isActive ?? true
     });
     setErrors({});
     setIsOpen(true);
@@ -42,17 +44,8 @@ const useAddSite = (accountId) => {
     setErrors({});
   };
 
-  const updateField = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: null
-      }));
-    }
+  const onUpdateFieldHandle = (field, value) => {
+    updateField(field, value, setFormData, errors, setErrors);
   };
 
   const validate = () => {
@@ -82,24 +75,8 @@ const useAddSite = (accountId) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const save = async (onSaveCallback) => {
-    if (!validate()) {
-      return false;
-    }
-
-    setIsSaving(true);
-    try {
-      if (onSaveCallback) {
-        await onSaveCallback(formData);
-      }
-      close();
-      return true;
-    } catch (error) {
-      setErrors({ submit: error.message || 'Failed to save site' });
-      return false;
-    } finally {
-      setIsSaving(false);
-    }
+  const onSaveHandle = async (onSaveCallback) => {
+    save(formData, onSaveCallback, setIsSaving, close, setErrors, validate);
   };
 
   return {
@@ -109,9 +86,9 @@ const useAddSite = (accountId) => {
     isSaving,
     open,
     close,
-    updateField,
-    save
+    onUpdateFieldHandle,
+    onSaveHandle
   };
 };
 
-export default useAddSite;
+export default useAddEditSite;

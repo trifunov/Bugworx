@@ -1,25 +1,23 @@
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { accounts, appointments } from '../data/mockData';
-import { getSitesByAccountId, addSite, updateSite, addAppointment } from '../utils/localStorage';
-import useEditAccount from '../hooks/useEditAccount';
-import useAddSite from '../hooks/useAddSite';
-import useEditSite from '../hooks/useEditSite';
+import { appointments } from '../data/mockData';
+import { getSitesByAccountId, addSite, updateSite, addAppointment, getAccounts, addAccount, updateAccount } from '../utils/localStorage';
+import useAddEditSite from '../hooks/useAddEditSite';
 import useScheduleService from '../hooks/useScheduleService';
 import useViewReports from '../hooks/useViewReports';
-import EditAccountModal from '../components/AccountActions/EditAccountModal';
-import AddSiteModal from '../components/AccountActions/AddSiteModal';
-import EditSiteModal from '../components/AccountActions/EditSiteModal';
+import AddEditSite from '../components/AccountActions/AddEditSite';
 import ScheduleServiceModal from '../components/AccountActions/ScheduleServiceModal';
 import ViewReportsModal from '../components/AccountActions/ViewReportsModal';
+import useAddEditCustomer from '../hooks/useAddEditCustomer';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
 
 const AccountDetail = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const account = accounts.find(a => a.id === parseInt(id));
-
+  const [accounts, setAccounts] = useState(getAccounts());
   const [accountSites, setAccountSites] = useState([]);
+  const account = accounts.find(a => a.id === parseInt(id));
 
   useEffect(() => {
     loadSites();
@@ -39,14 +37,18 @@ const AccountDetail = () => {
     setAccountSites(sites);
   };
 
+  const loadAccounts = () => {
+    const accounts = getAccounts();
+    setAccounts(accounts);
+  };
+
   const accountAppointments = appointments.filter(apt => {
     const site = accountSites.find(s => s.id === apt.siteId);
     return site && site.accountId === parseInt(id);
   });
 
-  const editAccount = useEditAccount(account);
-  const addSiteHook = useAddSite(parseInt(id));
-  const editSite = useEditSite();
+  const addEditCustomer = useAddEditCustomer();
+  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditSite(parseInt(id));
   const scheduleService = useScheduleService(parseInt(id));
   const viewReports = useViewReports(parseInt(id));
 
@@ -88,7 +90,9 @@ const AccountDetail = () => {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between mb-3">
                     <h5 className="card-title mb-0">Customer Sites</h5>
-                    <button className="btn btn-success btn-sm" onClick={addSiteHook.open}>
+                    <button className="btn btn-success btn-sm" onClick={() => open({
+                      id: 0,
+                    })}>
                       <i className="bx bx-plus me-1"></i>
                       Add Site
                     </button>
@@ -132,7 +136,7 @@ const AccountDetail = () => {
                                   <i className="mdi mdi-eye font-size-18"></i>
                                 </Link>
                                 <button
-                                  onClick={() => editSite.open(site)}
+                                  onClick={() => open(site)}
                                   className="btn btn-link text-primary p-0"
                                   title="Edit"
                                 >
@@ -636,15 +640,15 @@ const AccountDetail = () => {
                             <tbody>
                               <tr>
                                 <th className="text-muted" scope="row">Name:</th>
-                                <td>{account.billingContact.name}</td>
+                                <td>{account.billingContact?.name || account.primaryContactPerson}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Email:</th>
-                                <td>{account.billingContact.email}</td>
+                                <td>{account.billingContact?.email || account.email}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Phone:</th>
-                                <td>{account.billingContact.phone}</td>
+                                <td>{account.billingContact?.phone || account.phone}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -655,8 +659,8 @@ const AccountDetail = () => {
                     <div className="mt-4">
                       <h6 className="font-size-14 mb-3">Billing Address</h6>
                       <p className="mb-0">
-                        {account.billingAddress.street}<br />
-                        {account.billingAddress.city}, {account.billingAddress.state} {account.billingAddress.zip}
+                        {account.billingAddress?.street || ''}<br />
+                        {account.billingAddress?.city || ''}, {account.billingAddress?.state || ''} {account.billingAddress?.zip || ''}
                       </p>
                     </div>
 
@@ -708,7 +712,7 @@ const AccountDetail = () => {
                               <td>
                                 <button
                                   className="btn btn-sm btn-primary"
-                                  onClick={() => editSite.open(site)}
+                                  onClick={() => open(site)}
                                 >
                                   <i className="mdi mdi-pencil me-1"></i>
                                   Edit
@@ -728,11 +732,11 @@ const AccountDetail = () => {
                   <div className="card-body">
                     <h5 className="card-title mb-3">Actions</h5>
                     <div className="d-grid gap-2">
-                      <button className="btn btn-primary" onClick={editAccount.open}>
+                      <button className="btn btn-primary" onClick={() => addEditCustomer.open(account)}>
                         <i className="bx bx-edit me-1"></i>
                         Edit Account
                       </button>
-                      <button className="btn btn-success" onClick={addSiteHook.open}>
+                      <button className="btn btn-success" onClick={() => open({ id: 0 })}>
                         <i className="bx bx-plus me-1"></i>
                         Add Site
                       </button>
@@ -799,29 +803,43 @@ const AccountDetail = () => {
 
       {renderSectionContent()}
 
-      <EditAccountModal
-        isOpen={editAccount.isOpen}
-        formData={editAccount.formData}
-        errors={editAccount.errors}
-        isSaving={editAccount.isSaving}
-        onUpdateField={editAccount.updateField}
-        onClose={editAccount.close}
-        onSave={() => editAccount.save((data) => {
-          console.log('Saving account:', data);
+      <AddEditCustomer
+        isOpen={addEditCustomer.isOpen}
+        formData={addEditCustomer.formData}
+        errors={addEditCustomer.errors}
+        isSaving={addEditCustomer.isSaving}
+        onUpdateField={addEditCustomer.onUpdateFieldHandle}
+        onClose={addEditCustomer.close}
+        onSave={() => addEditCustomer.onSaveHandle((data) => {
+          let updatedCustomer = null;
+          if (data.id && data.id !== 0) {
+            updatedCustomer = updateAccount(data.id, data);
+          }
+          else {
+            updatedCustomer = addAccount(data);
+          }
+          loadAccounts();
+          return updatedCustomer;
         })}
       />
 
-      <AddSiteModal
-        isOpen={addSiteHook.isOpen}
-        formData={addSiteHook.formData}
-        errors={addSiteHook.errors}
-        isSaving={addSiteHook.isSaving}
-        onUpdateField={addSiteHook.updateField}
-        onClose={addSiteHook.close}
-        onSave={() => addSiteHook.save((data) => {
-          const newSite = addSite(data);
+      <AddEditSite
+        isOpen={isOpen}
+        formData={formData}
+        errors={errors}
+        isSaving={isSaving}
+        onUpdateField={onUpdateFieldHandle}
+        onClose={close}
+        onSave={() => onSaveHandle((data) => {
+          let updatedSite = null;
+          if (data.id && data.id !== 0) {
+            updatedSite = updateSite(data.id, data);
+          }
+          else {
+            updatedSite = addSite(data);
+          }
           loadSites();
-          return newSite;
+          return updatedSite;
         })}
       />
 
@@ -836,20 +854,6 @@ const AccountDetail = () => {
         onSave={() => scheduleService.save((data) => {
           const newAppointment = addAppointment(data);
           return newAppointment;
-        })}
-      />
-
-      <EditSiteModal
-        isOpen={editSite.isOpen}
-        formData={editSite.formData}
-        errors={editSite.errors}
-        isSaving={editSite.isSaving}
-        onUpdateField={editSite.updateField}
-        onClose={editSite.close}
-        onSave={() => editSite.save((data) => {
-          const updatedSite = updateSite(data.id, data);
-          loadSites();
-          return updatedSite;
         })}
       />
 
