@@ -1,6 +1,7 @@
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { accounts } from '../data/mockData';
+import useSidebarMenu from '../hooks/useSidebarMenu';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -10,47 +11,7 @@ const Sidebar = () => {
   // Get customer data
   const customer = accountId ? accounts.find(acc => acc.id === accountId) : null;
 
-  useEffect(() => {
-    // Initialize MetisMenu after component mounts
-    if (window.jQuery && window.jQuery.fn.metisMenu) {
-      window.jQuery("#side-menu").metisMenu();
-    }
-
-    // Initialize Waves effect
-    if (window.Waves) {
-      window.Waves.init();
-    }
-  }, []);
-
-  useEffect(() => {
-    // Update active menu item based on current route
-    const activateMenuItems = () => {
-      const links = document.querySelectorAll('#side-menu a');
-      links.forEach(link => {
-        link.classList.remove('active');
-        const parent = link.parentElement;
-        if (parent) {
-          parent.classList.remove('mm-active');
-        }
-      });
-
-      const currentPath = location.pathname;
-      const matchingLink = Array.from(links).find(link => {
-        const href = link.getAttribute('href');
-        return href === currentPath;
-      });
-
-      if (matchingLink) {
-        matchingLink.classList.add('active');
-        const parent = matchingLink.parentElement;
-        if (parent) {
-          parent.classList.add('mm-active');
-        }
-      }
-    };
-
-    activateMenuItems();
-  }, [location]);
+ useSidebarMenu();
 
   return (
     <div className="vertical-menu">

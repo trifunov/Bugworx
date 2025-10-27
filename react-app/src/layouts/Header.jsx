@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { accounts } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from '../hooks/useSidebar';
+import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
 
 const Header = () => {
   const navigate = useNavigate();
   const { showSidebar, toggleSidebar } = useSidebar();
+  const { showConfigurationSidebar } = useConfigurationSidebar();
   const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -113,7 +115,7 @@ const Header = () => {
             </Link>
           </div>
 
-          {showSidebar && (
+          {(showSidebar || showConfigurationSidebar) && (
             <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn" onClick={toggleSidebar}>
               <i className="ri-menu-2-line align-middle"></i>
             </button>
@@ -373,9 +375,8 @@ const Header = () => {
                 <h6 className="text-overflow m-0">{user?.name}</h6>
                 <span className="text-muted font-size-12">{user?.role}</span>
               </div>
-              <a className="dropdown-item" href="#"><i className="ri-user-line align-middle me-1"></i> Profile</a>
-              <a className="dropdown-item" href="#"><i className="ri-settings-2-line align-middle me-1"></i> Settings</a>
-              <a className="dropdown-item" href="#"><i className="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
+              <a className="dropdown-item" href="user-profile"><i className="ri-user-line align-middle me-1"></i> Profile</a>
+              <a className="dropdown-item" href="configuration"><i className="ri-settings-2-line align-middle me-1"></i> Settings</a>
               <div className="dropdown-divider"></div>
               <button className="dropdown-item text-danger" onClick={handleLogout}>
                 <i className="ri-shut-down-line align-middle me-1 text-danger"></i> Logout
