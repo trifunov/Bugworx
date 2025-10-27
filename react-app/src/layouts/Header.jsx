@@ -4,6 +4,8 @@ import { accounts } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from '../hooks/useSidebar';
 import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
+import { getAccounts, setAccounts } from '../utils/localStorage';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-
+  const [showAddEditCustomer, setShowAddEditCustomer] = useState(false);
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -90,10 +92,68 @@ const Header = () => {
     navigate('/login');
   };
 
+  const handleSaveCustomer = (customer) => {
+    if (!customer) {
+      setShowAddEditCustomer(false);
+      return;
+    }
+
+    const accounts = getAccounts();
+
+    // Map form fields to account schema used in storage
+    const mapToAccount = (c) => ({
+      id: c.id || Date.now(),
+      accountNum: c.id ? (c.accountNum || `ACC-${c.id}`) : `ACC-${Date.now()}`,
+      name: c.name || '',
+      accountType: c.customerType === 'Commercial' ? 2 : 1,
+      companyId: 1,
+      localeId: 1,
+      sendInvoice: false,
+      emailInvoice: !!c.email,
+      isActive: c.status === 'Active' ? 1 : 0,
+      instructions: '',
+      primaryNote: '',
+      registrationNum: c.registrationNum || `REG-${Date.now()}`,
+      billingContact: {
+        name: c.contactName || '',
+        email: c.email || '',
+        phone: c.phone || ''
+      },
+      billingAddress: c.billingAddress || {}
+    });
+
+    if (customer.id) {
+      const idx = accounts.findIndex(a => a.id === customer.id);
+      if (idx !== -1) {
+        accounts[idx] = { ...accounts[idx], ...mapToAccount(customer) };
+      } else {
+        accounts.push(mapToAccount(customer));
+      }
+    } else {
+      accounts.push(mapToAccount(customer));
+    }
+
+    setAccounts(accounts);
+
+    // close the offcanvas
+    setShowAddEditCustomer(false);
+  }
+
   return (
     <header id="page-topbar">
       <div className="navbar-header">
         <div className="d-flex">
+
+          <AddEditCustomer
+            customer={null}
+            show={showAddEditCustomer}
+            onClose={() => {
+              // Close the offcanvas
+              setShowAddEditCustomer(false);
+            }}
+            onSave={handleSaveCustomer}
+          />
+
           {/* LOGO */}
           <div className="navbar-brand-box">
             <Link to="/" className="logo logo-dark">
@@ -265,7 +325,9 @@ const Header = () => {
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-account-plus me-2"></i>Customer</a>
+              <a className="dropdown-item" href="#"
+                onClick={() => setShowAddEditCustomer(true)}
+              ><i className="mdi mdi-account-plus me-2"></i>Customer</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>Service</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>Invoice</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-cash me-2"></i>Payment</a>

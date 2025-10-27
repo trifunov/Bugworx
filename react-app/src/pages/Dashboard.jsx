@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  initializeStorage
+  initializeStorage,
+  getAccounts,
+  setAccounts
 } from '../utils/localStorage';
 import {
   appointments as initialAppointments,
