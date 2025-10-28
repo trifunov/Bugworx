@@ -22,11 +22,11 @@ const ConfigurationSidebar = () => {
                 <span>User & Access</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
-                <li><Link to="/configuration/user-management/users">Users</Link></li>
-                <li><Link to="/configuration/user-management/roles-permissions">Roles & Permissions</Link></li>
-                <li><Link to="/configuration/user-management/employee-directory">Employee Directory</Link></li>
-                <li><Link to="/configuration/user-management/teams-branches">Teams / Branches</Link></li>
-                <li><Link to="/configuration/user-management/user-activity-log">User Activity Log</Link></li>
+                <li><Link to="configuration/user-access/users">Users</Link></li>
+                <li><Link to="configuration/user-access/roles-permissions">Roles & Permissions</Link></li>
+                <li><Link to="configuration/user-access/employee-directory">Employee Directory</Link></li>
+                <li><Link to="configuration/user-access/teams-branches">Teams / Branches</Link></li>
+                <li><Link to="configuration/user-access/user-activity-log">User Activity Log</Link></li>
               </ul>
             </li>
 

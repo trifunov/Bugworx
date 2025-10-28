@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { users } from '../data/users';
+import { getUsers } from '../utils/localStorage';
 
 const AuthContext = createContext(null);
 
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 500));
-
+    const users = getUsers();
     const foundUser = users.find(
       u => u.username === username && u.password === password
     );
