@@ -21,6 +21,7 @@ import InspectionPoints from './pages/InspectionPoints';
 import Facilities from './pages/Facilities';
 import Areas from './pages/Areas';
 import UserProfile from './pages/UserProfile';
+import Proposals from './pages/Proposals';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="accounts/:id/service-history" element={<AccountDetail />} />
         <Route path="accounts/:id/invoices" element={<AccountDetail />} />
         <Route path="accounts/:id/contracts" element={<AccountDetail />} />
+        <Route path="accounts/:id/proposals" element={<AccountDetail />} />
         <Route path="accounts/:id/documents" element={<AccountDetail />} />
         <Route path="accounts/:id/notes" element={<AccountDetail />} />
         <Route path="accounts/:id/schedule-service" element={<AccountDetail />} />
@@ -54,6 +56,7 @@ function App() {
         <Route path="accounts/:id/areas" element={<Areas />} />
         <Route path="sites" element={<Sites />} />
         <Route path="appointments" element={<Appointments />} />
+        <Route path="proposals" element={<Proposals />} />
         <Route path="scheduler" element={<Scheduler />} />
         <Route path="technicians" element={<Technicians />} />
         <Route path="inventory" element={<Inventory />} />

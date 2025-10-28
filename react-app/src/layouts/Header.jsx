@@ -82,12 +82,6 @@ const Header = () => {
     }
   };
 
-  const handleCustomerSelect = (accountId) => {
-    navigate(`/accounts/${accountId}`);
-    setSearchQuery('');
-    setShowSearchDropdown(false);
-  };
-
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -169,13 +163,13 @@ const Header = () => {
               {showSearchDropdown && searchResults.length > 0 && (
                 <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px' }}>
                   {searchResults.map((account) => (
-                    <a
+                    <Link
                       key={account.id}
-                      href="#"
+                      to={`/accounts/${account.id}`}
                       className="dropdown-item"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleCustomerSelect(account.id);
+                      onClick={() => {
+                        setSearchQuery('');
+                        setShowSearchDropdown(false);
                       }}
                     >
                       <div className="d-flex align-items-center">
@@ -184,23 +178,19 @@ const Header = () => {
                           <p className="text-muted mb-0 font-size-12">{account.accountNum}</p>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                   <div className="dropdown-divider"></div>
-                  <a
-                    href="#"
+                  <Link
+                    to={searchQuery.trim() ? `/accounts?q=${encodeURIComponent(searchQuery)}` : '#'}
                     className="dropdown-item text-center"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (searchQuery.trim()) {
-                        navigate(`/accounts?q=${encodeURIComponent(searchQuery)}`);
-                        setSearchQuery('');
-                        setShowSearchDropdown(false);
-                      }
+                    onClick={() => {
+                      setSearchQuery('');
+                      setShowSearchDropdown(false);
                     }}
                   >
                     View all results
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -293,7 +283,7 @@ const Header = () => {
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>Lead</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</a>
+              <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</Link>
               <a className="dropdown-item" href="#"
                 onClick={() => addEditCustomer.open({ id: 0 })}
               ><i className="mdi mdi-account-plus me-2"></i>Customer</a>
@@ -319,7 +309,7 @@ const Header = () => {
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>New Lead</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>New Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>New Estimate</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</a>
+              <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</Link>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-plus me-2"></i>New Customer</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>New Service</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>New Invoice</a>
