@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getActivityLogs, addActivityLog, clearActivityLogs } from '../../../utils/localStorage';
+import { getActivityLogs, addActivityLog } from '../../../utils/localStorage';
 
 const UserActivityLog = () => {
   const [logs, setLogs] = useState(() => getActivityLogs());
