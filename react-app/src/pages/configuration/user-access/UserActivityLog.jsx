@@ -22,7 +22,7 @@ const UserActivityLog = () => {
             <div className="page-title-right">
               <div className="btn-group">
                 <button className="btn btn-primary" onClick={() => addLog('Manual test entry', 'Created sample log')}><i className="mdi mdi-plus me-1"></i> Add Log</button>
-                <button className="btn btn-light" onClick={() => setLogs([])}><i className="mdi mdi-delete-outline me-1"></i> Clear</button>
+                <button className="btn btn-light" onClick={() => { clearActivityLogs(); setLogs([]); }}><i className="mdi mdi-delete-outline me-1"></i> Clear</button>
               </div>
             </div>
           </div>
