@@ -37,12 +37,12 @@ const ConfigurationSidebar = () => {
                 <span>Operational Setup</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
-                <li><Link to="/configuration/operational/contract-types">Contract Types</Link></li>
-                <li><Link to="/configuration/operational/service-types">Service Types</Link></li>
-                <li><Link to="/configuration/operational/frequency-templates">Frequency Templates</Link></li>
-                <li><Link to="/configuration/operational/job-settings">Job Settings</Link></li>
-                <li><Link to="/configuration/operational/route-configuration">Route Configuration</Link></li>
-                <li><Link to="/configuration/operational/operational-zones">Operational Zones</Link></li>
+                <li><Link to="/configuration/operational-setup/contract-types">Contract Types</Link></li>
+                <li><Link to="/configuration/operational-setup/service-types">Service Types</Link></li>
+                <li><Link to="/configuration/operational-setup/frequency-templates">Frequency Templates</Link></li>
+                <li><Link to="/configuration/operational-setup/job-settings">Job Settings</Link></li>
+                <li><Link to="/configuration/operational-setup/route-configuration">Route Configuration</Link></li>
+                <li><Link to="/configuration/operational-setup/operational-zones">Operational Zones</Link></li>
               </ul>
             </li>
 

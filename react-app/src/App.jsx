@@ -28,6 +28,13 @@ import RolesPermissions from './pages/configuration/user-access/RolesPermissions
 import TeamsBranches from './pages/configuration/user-access/TeamsBranches';
 import UserActivityLog from './pages/configuration/user-access/UserActivityLog';
 
+import ContractTypes from './pages/configuration/operational-setup/ContractTypes';
+import FrequencyTemplates from './pages/configuration/operational-setup/FrequencyTemplates';
+import JobSettings from './pages/configuration/operational-setup/JobSettings';
+import OperationZones from './pages/configuration/operational-setup/OperationZones';
+import RouteConfiguration from './pages/configuration/operational-setup/RouteConfiguration';
+import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes';
+
 function App() {
   return (
     <Routes>
@@ -83,6 +90,14 @@ function App() {
         <Route path="configuration/user-access/roles-permissions" element={<RolesPermissions />} />
         <Route path="configuration/user-access/teams-branches" element={<TeamsBranches />} />
         <Route path="configuration/user-access/user-activity-log" element={<UserActivityLog />} />
+
+        {/* Operational Setup */}
+        <Route path="configuration/operational-setup/route-configuration" element={<RouteConfiguration />} />
+        <Route path="configuration/operational-setup/contract-types" element={<ContractTypes />} />
+        <Route path="configuration/operational-setup/operational-zones" element={<OperationZones />} />
+        <Route path="configuration/operational-setup/frequency-templates" element={<FrequencyTemplates />} />
+        <Route path="configuration/operational-setup/job-settings" element={<JobSettings />} />
+        <Route path="configuration/operational-setup/service-types" element={<ServiceTypes />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}
