@@ -27,7 +27,7 @@ const Users = () => {
 
   const startAdd = () => {
     setEditing(null);
-    setForm({ name: '', username: '', email: '', role: roles && roles.length ? (roles[0].name ?? '') : '', password: '' });
+    setForm({ name: '', username: '', email: '', role: '', password: '' });
   };
 
   const startEdit = (u) => {
