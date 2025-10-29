@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getActivityLogs, addActivityLog, clearActivityLogs } from '../../../utils/localStorage';
+import { getActivityLogs, addActivityLog } from '../../../utils/localStorage';
 
 const UserActivityLog = () => {
   const [logs, setLogs] = useState(() => getActivityLogs());
 
-   const addLog = (action, details = '') => {
+  const addLog = (action, details = '') => {
     const entry = addActivityLog({ action, details });
     setLogs(prev => [entry, ...prev]);
   }
@@ -22,7 +22,7 @@ const UserActivityLog = () => {
             <div className="page-title-right">
               <div className="btn-group">
                 <button className="btn btn-primary" onClick={() => addLog('Manual test entry', 'Created sample log')}><i className="mdi mdi-plus me-1"></i> Add Log</button>
-                <button className="btn btn-light" onClick={() => setLogs([])}><i className="mdi mdi-delete-outline me-1"></i> Clear</button>
+                <button className="btn btn-light" onClick={() => { clearActivityLogs(); setLogs([]); }}><i className="mdi mdi-delete-outline me-1"></i> Clear</button>
               </div>
             </div>
           </div>

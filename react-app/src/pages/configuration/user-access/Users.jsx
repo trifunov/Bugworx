@@ -27,7 +27,7 @@ const Users = () => {
 
   const startAdd = () => {
     setEditing(null);
-    setForm({ name: '', username: '', email: '', role: roles && roles.length ? (roles[0].name ?? '') : '', password: '' });
+    setForm({ name: '', username: '', email: '', role: '', password: '' });
   };
 
   const startEdit = (u) => {
@@ -48,7 +48,7 @@ const Users = () => {
       const next = users.map(u => {
         if (u.id !== editing) return u;
         const updated = { ...u, ...form };
-        if (!form.password) delete updated.password;
+        if (!form.password) updated.password = u.password;
         return updated;
       });
       setUsers(next);
