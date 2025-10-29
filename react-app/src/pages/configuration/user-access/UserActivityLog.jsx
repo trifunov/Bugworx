@@ -4,7 +4,7 @@ import { getActivityLogs, addActivityLog } from '../../../utils/localStorage';
 const UserActivityLog = () => {
   const [logs, setLogs] = useState(() => getActivityLogs());
 
-   const addLog = (action, details = '') => {
+  const addLog = (action, details = '') => {
     const entry = addActivityLog({ action, details });
     setLogs(prev => [entry, ...prev]);
   }
