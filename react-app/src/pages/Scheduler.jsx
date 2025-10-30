@@ -5,9 +5,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import {
   appointments as initialAppointments,
-  sites as initialSites,
+  serviceAddresses as initialServiceAddresses,
   technicians as initialTechnicians,
-  accounts as initialAccounts,
+  customers as initialCustomers,
   priorities,
   appointmentStatuses,
   inventory as initialInventory
@@ -18,8 +18,8 @@ import {
   addAppointment,
   updateAppointment,
   deleteAppointment,
-  getAccounts,
-  getSites,
+  getCustomers,
+  getServiceAddresses,
   getTechnicians,
   isTechnicianAvailable,
   suggestTechnicians,
@@ -34,8 +34,8 @@ const Scheduler = () => {
 
   // Data state from localStorage
   const [appointments, setAppointmentsState] = useState([]);
-  const [accounts, setAccounts] = useState([]);
-  const [sites, setSitesState] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [serviceAddresses, setServiceAddresses] = useState([]);
   const [technicians, setTechniciansState] = useState([]);
 
   const serviceTypes = getServiceTypes();
@@ -82,8 +82,8 @@ const Scheduler = () => {
   useEffect(() => {
     initializeStorage({
       appointments: initialAppointments,
-      accounts: initialAccounts,
-      sites: initialSites,
+      customers: initialCustomers,
+      serviceAddresses: initialServiceAddresses,
       technicians: initialTechnicians,
       inventory: initialInventory
     });
@@ -93,8 +93,8 @@ const Scheduler = () => {
   // Load data from localStorage
   const loadData = () => {
     setAppointmentsState(getAppointments());
-    setAccounts(getAccounts());
-    setSitesState(getSites());
+    setCustomers(getCustomers());
+    setServiceAddresses(getServiceAddresses());
     setTechniciansState(getTechnicians());
   };
 
@@ -112,15 +112,15 @@ const Scheduler = () => {
 
   // Helper functions
   const getSiteName = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    return site ? site.siteName : 'N/A';
+    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+    return serviceAddress ? serviceAddress.serviceAddressName : 'N/A';
   };
 
   const getAccountName = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    if (!site) return 'N/A';
-    const account = accounts.find(a => a.id === site.accountId);
-    return account ? account.name : 'N/A';
+    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+    if (!serviceAddress) return 'N/A';
+    const customer = customers.find(a => a.id === serviceAddress.customerId);
+    return customer ? customer.name : 'N/A';
   };
 
   const getTechnicianName = (technicianId) => {
@@ -170,9 +170,9 @@ const Scheduler = () => {
     };
   });
 
-  // Get sites for selected account
+  // Get service addresses for selected customer
   const availableSites = appointmentForm.accountId
-    ? sites.filter(s => s.accountId === parseInt(appointmentForm.accountId))
+    ? serviceAddresses.filter(s => s.customerId === parseInt(appointmentForm.accountId))
     : [];
 
   // Modal handlers
@@ -197,9 +197,9 @@ const Scheduler = () => {
   const openEditModal = (appointment) => {
     setModalMode('edit');
     setSelectedAppointment(appointment);
-    const site = sites.find(s => s.id === appointment.siteId);
+    const serviceAddress = serviceAddresses.find(s => s.id === appointment.siteId);
     setAppointmentForm({
-      accountId: site ? site.accountId : '',
+      accountId: serviceAddress ? serviceAddress.customerId : '',
       siteId: appointment.siteId,
       technicianId: appointment.technicianId || '',
       scheduledDate: appointment.scheduledDate,
@@ -245,7 +245,7 @@ const Scheduler = () => {
       return;
     }
     if (!appointmentForm.siteId) {
-      alert('Please select a site first');
+      alert('Please select a service address first');
       return;
     }
     if (!appointmentForm.scheduledDate) {
@@ -439,7 +439,7 @@ const Scheduler = () => {
       return false;
     }
     if (!appointmentForm.siteId) {
-      alert('Please select a site');
+      alert('Please select a service address');
       return false;
     }
     if (!appointmentForm.serviceType) {
@@ -900,7 +900,7 @@ const Scheduler = () => {
                         </th>
                         <th>Date & Time</th>
                         <th>Customer</th>
-                        <th>Site</th>
+                        <th>Service Address</th>
                         <th>Service Type</th>
                         <th>Technician</th>
                         <th>Status</th>
@@ -1008,15 +1008,15 @@ const Scheduler = () => {
                       required
                     >
                       <option value="">Select Customer...</option>
-                      {accounts.map(acc => (
-                        <option key={acc.id} value={acc.id}>{acc.name}</option>
+                      {customers.map(cust => (
+                        <option key={cust.id} value={cust.id}>{cust.name}</option>
                       ))}
                     </select>
                   </div>
 
                   {/* Site Selection */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label">Site <span className="text-danger">*</span></label>
+                    <label className="form-label">Service Address <span className="text-danger">*</span></label>
                     <select
                       className="form-select"
                       value={appointmentForm.siteId}
@@ -1024,9 +1024,9 @@ const Scheduler = () => {
                       required
                       disabled={!appointmentForm.accountId}
                     >
-                      <option value="">Select Site...</option>
-                      {availableSites.map(site => (
-                        <option key={site.id} value={site.id}>{site.siteName}</option>
+                      <option value="">Select Service Address...</option>
+                      {availableSites.map(serviceAddress => (
+                        <option key={serviceAddress.id} value={serviceAddress.id}>{serviceAddress.serviceAddressName}</option>
                       ))}
                     </select>
                     {!appointmentForm.accountId && (

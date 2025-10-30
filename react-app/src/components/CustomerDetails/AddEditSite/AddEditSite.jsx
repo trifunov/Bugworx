@@ -18,7 +18,7 @@ const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
         <div className="offcanvas-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="siteName" className="form-label">Site Name</label>
+              <label htmlFor="siteName" className="form-label">Service Address Name</label>
               <input
                 type="text"
                 className={`form-control ${errors.siteName ? 'is-invalid' : ''}`}
@@ -96,7 +96,7 @@ const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
               </div>
             </div>
 
-            <h6 className="mt-4 mb-3">Site Contact</h6>
+            <h6 className="mt-4 mb-3">Service Address Contact</h6>
 
             <div className="mb-3">
               <label htmlFor="contactName" className="form-label">Contact Name</label>
@@ -146,7 +146,7 @@ const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
                 disabled={isSaving}
               />
               <label className="form-check-label" htmlFor="isActive">
-                Active Site
+                Active Service Address
               </label>
             </div>
 
@@ -164,7 +164,7 @@ const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
                     Saving...
                   </>
                 ) : (
-                  formData.id && formData.id !== 0 ? 'Edit Site' : 'Add Site'
+                  formData.id && formData.id !== 0 ? 'Edit Service Address' : 'Add Service Address'
                 )}
               </button>
               <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSaving}>

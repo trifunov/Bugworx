@@ -10,7 +10,7 @@ const ViewReportsModal = ({ isOpen, selectedReportType, dateRange, onSelectRepor
     { id: 'upcoming-services', name: 'Upcoming Services', icon: 'mdi-calendar-clock', description: 'Scheduled services for this account' },
     { id: 'invoices', name: 'Invoice Report', icon: 'mdi-receipt', description: 'Invoice history and status' },
     { id: 'chemical-usage', name: 'Chemical Usage', icon: 'mdi-flask-outline', description: 'Chemicals used at account sites' },
-    { id: 'site-summary', name: 'Site Summary', icon: 'mdi-map-marker-multiple', description: 'Summary of all sites for this account' }
+    { id: 'site-summary', name: 'Service Address Summary', icon: 'mdi-map-marker-multiple', description: 'Summary of all service addresses for this customer' }
   ];
 
   const handleViewFullReports = () => {
@@ -30,7 +30,7 @@ const ViewReportsModal = ({ isOpen, selectedReportType, dateRange, onSelectRepor
     <>
       <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden', width: '500px' }}>
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title">Account Reports</h5>
+          <h5 className="offcanvas-title">Customer Reports</h5>
           <button type="button" className="btn-close" onClick={onClose}></button>
         </div>
         <div className="offcanvas-body">

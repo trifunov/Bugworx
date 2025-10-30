@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { accounts, sites, appointments } from '../data/mockData';
+import { customers, serviceAddresses, appointments } from '../data/mockData';
 import * as ls from '../utils/localStorage';
 
 const ConfigurationDetails = () => {

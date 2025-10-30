@@ -29,7 +29,7 @@ const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, accountSites
         <div className="offcanvas-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="siteId" className="form-label">Select Site <span className="text-danger">*</span></label>
+              <label htmlFor="siteId" className="form-label">Select Service Address <span className="text-danger">*</span></label>
               <select
                 className={`form-select ${errors.siteId ? 'is-invalid' : ''}`}
                 id="siteId"

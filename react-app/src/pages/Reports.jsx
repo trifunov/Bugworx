@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react';
 import {
   getAppointments,
   getInventory,
-  getAccounts,
-  getSites,
+  getCustomers,
+  getServiceAddresses,
   getTechnicians
 } from '../utils/localStorage';
 
 const Reports = () => {
   const [appointments, setAppointments] = useState([]);
   const [inventory, setInventory] = useState([]);
-  const [accounts, setAccounts] = useState([]);
-  const [sites, setSites] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [serviceAddresses, setServiceAddresses] = useState([]);
   const [technicians, setTechnicians] = useState([]);
 
   // Modal state
@@ -38,8 +38,8 @@ const Reports = () => {
   const loadData = () => {
     setAppointments(getAppointments());
     setInventory(getInventory());
-    setAccounts(getAccounts());
-    setSites(getSites());
+    setCustomers(getCustomers());
+    setServiceAddresses(getServiceAddresses());
     setTechnicians(getTechnicians());
   };
 
@@ -56,16 +56,16 @@ const Reports = () => {
     });
 
     const reportData = completed.map(apt => {
-      const site = sites.find(s => s.id === apt.siteId);
-      const account = accounts.find(a => a.id === site?.accountId);
+      const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
+      const customer = customers.find(c => c.id === serviceAddress?.customerId);
       const tech = technicians.find(t => t.id === apt.technicianId);
 
       return {
         id: apt.id,
         date: apt.scheduledDate,
         time: apt.scheduledTime,
-        account: account?.companyName || 'Unknown',
-        site: site?.siteName || 'Unknown',
+        account: customer?.companyName || 'Unknown',
+        site: serviceAddress?.serviceAddressName || 'Unknown',
         serviceType: apt.serviceType,
         technician: tech?.name || 'Unassigned',
         duration: apt.estimatedDuration,
@@ -94,16 +94,16 @@ const Reports = () => {
     });
 
     const reportData = upcoming.map(apt => {
-      const site = sites.find(s => s.id === apt.siteId);
-      const account = accounts.find(a => a.id === site?.accountId);
+      const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
+      const customer = customers.find(c => c.id === serviceAddress?.customerId);
       const tech = technicians.find(t => t.id === apt.technicianId);
 
       return {
         id: apt.id,
         date: apt.scheduledDate,
         time: apt.scheduledTime,
-        account: account?.companyName || 'Unknown',
-        site: site?.siteName || 'Unknown',
+        account: customer?.companyName || 'Unknown',
+        site: serviceAddress?.serviceAddressName || 'Unknown',
         serviceType: apt.serviceType,
         technician: tech?.name || 'Unassigned',
         priority: apt.priority,
@@ -147,9 +147,9 @@ const Reports = () => {
     // Generate mock bait station data based on sites
     const baitStations = [];
 
-    sites.forEach(site => {
-      const account = accounts.find(a => a.id === site.accountId);
-      // Assume 3-5 bait stations per site
+    serviceAddresses.forEach(serviceAddress => {
+      const customer = customers.find(c => c.id === serviceAddress.customerId);
+      // Assume 3-5 bait stations per service address
       const numStations = Math.floor(Math.random() * 3) + 3;
 
       for (let i = 1; i <= numStations; i++) {
@@ -164,10 +164,10 @@ const Reports = () => {
         const activities = ['No Activity', 'Low Activity', 'Moderate Activity', 'High Activity'];
 
         baitStations.push({
-          id: `BS-${site.id}-${i}`,
+          id: `BS-${serviceAddress.id}-${i}`,
           stationNumber: `BS-${String(i).padStart(3, '0')}`,
-          site: site.siteName,
-          account: account?.companyName || 'Unknown',
+          site: serviceAddress.serviceAddressName,
+          account: customer?.companyName || 'Unknown',
           location: `Zone ${String.fromCharCode(65 + Math.floor(Math.random() * 4))}`,
           lastInspection: lastInspection.toISOString().split('T')[0],
           nextInspection: nextInspection.toISOString().split('T')[0],
@@ -521,8 +521,8 @@ const Reports = () => {
                               <tr>
                                 <th>Date</th>
                                 <th>Time</th>
-                                <th>Account</th>
-                                <th>Site</th>
+                                <th>Customer</th>
+                                <th>Service Address</th>
                                 <th>Service Type</th>
                                 <th>Technician</th>
                                 <th>Duration</th>
@@ -559,8 +559,8 @@ const Reports = () => {
                               <tr>
                                 <th>Date</th>
                                 <th>Time</th>
-                                <th>Account</th>
-                                <th>Site</th>
+                                <th>Customer</th>
+                                <th>Service Address</th>
                                 <th>Service Type</th>
                                 <th>Technician</th>
                                 <th>Priority</th>
@@ -647,8 +647,8 @@ const Reports = () => {
                             <thead className="table-light">
                               <tr>
                                 <th>Station ID</th>
-                                <th>Site</th>
-                                <th>Account</th>
+                                <th>Service Address</th>
+                                <th>Customer</th>
                                 <th>Location</th>
                                 <th>Last Inspection</th>
                                 <th>Next Inspection</th>

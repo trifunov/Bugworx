@@ -5,7 +5,7 @@ import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
 import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
 import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
-import { getAccounts, addAccount, updateAccount, addLead, updateLead } from '../utils/localStorage';
+import { getCustomers, addCustomer, updateCustomer, addLead, updateLead } from '../utils/localStorage';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 
@@ -17,7 +17,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const [accounts, setAccounts] = useState(getAccounts());
+  const [customers, setCustomers] = useState(getCustomers());
   const addEditCustomer = useAddEditCustomer();
   const addEditLead = useAddEditLead();
 
@@ -59,7 +59,7 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/accounts?q=${encodeURIComponent(searchQuery)}`);
+      navigate(`/customers?q=${encodeURIComponent(searchQuery)}`);
       setSearchQuery('');
       setShowSearchDropdown(false);
     }
@@ -70,11 +70,11 @@ const Header = () => {
     setSearchQuery(query);
 
     if (query.trim()) {
-      const filtered = accounts
+      const filtered = customers
         .filter(
-          (account) =>
-            account.name.toLowerCase().includes(query.toLowerCase()) ||
-            account.accountNum.toLowerCase().includes(query.toLowerCase())
+          (customer) =>
+            customer.name.toLowerCase().includes(query.toLowerCase()) ||
+            customer.customerNum.toLowerCase().includes(query.toLowerCase())
         )
         .slice(0, 5);
       setSearchResults(filtered);
@@ -90,9 +90,9 @@ const Header = () => {
     navigate('/login');
   };
 
-  const loadAccounts = () => {
-    const accounts = getAccounts();
-    setAccounts(accounts);
+  const loadCustomers = () => {
+    const customers = getCustomers();
+    setCustomers(customers);
   };
 
   return (
@@ -110,12 +110,12 @@ const Header = () => {
             onSave={() => addEditCustomer.onSaveHandle((data) => {
               let updatedCustomer = null;
               if (data.id && data.id !== 0) {
-                updatedCustomer = updateAccount(data.id, data);
+                updatedCustomer = updateCustomer(data.id, data);
               }
               else {
-                updatedCustomer = addAccount(data);
+                updatedCustomer = addCustomer(data);
               }
-              loadAccounts();
+              loadCustomers();
               return updatedCustomer;
             })}
           />
@@ -184,10 +184,10 @@ const Header = () => {
               {/* Search Results Dropdown */}
               {showSearchDropdown && searchResults.length > 0 && (
                 <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px' }}>
-                  {searchResults.map((account) => (
+                  {searchResults.map((customer) => (
                     <Link
-                      key={account.id}
-                      to={`/accounts/${account.id}`}
+                      key={customer.id}
+                      to={`/customers/${customer.id}`}
                       className="dropdown-item"
                       onClick={() => {
                         setSearchQuery('');
@@ -196,15 +196,15 @@ const Header = () => {
                     >
                       <div className="d-flex align-items-center">
                         <div className="flex-grow-1">
-                          <h6 className="mb-0">{account.name}</h6>
-                          <p className="text-muted mb-0 font-size-12">{account.accountNum}</p>
+                          <h6 className="mb-0">{customer.name}</h6>
+                          <p className="text-muted mb-0 font-size-12">{customer.customerNum}</p>
                         </div>
                       </div>
                     </Link>
                   ))}
                   <div className="dropdown-divider"></div>
                   <Link
-                    to={searchQuery.trim() ? `/accounts?q=${encodeURIComponent(searchQuery)}` : '#'}
+                    to={searchQuery.trim() ? `/customers?q=${encodeURIComponent(searchQuery)}` : '#'}
                     className="dropdown-item text-center"
                     onClick={() => {
                       setSearchQuery('');

@@ -26,7 +26,7 @@ export const analyzeEmergencies = (appointments, currentTime = '08:00') => {
         type: 'emergency_delayed',
         severity: 'high',
         appointmentId: emergency.id,
-        message: `🚨 EMERGENCY at ${emergency.siteName || 'Unknown Site'} scheduled for ${emergency.scheduledTime} (${hoursDifference.toFixed(1)}h from now)`,
+        message: `🚨 EMERGENCY at ${emergency.siteName || 'Unknown Service Address'} scheduled for ${emergency.scheduledTime} (${hoursDifference.toFixed(1)}h from now)`,
         recommendation: 'Consider immediate dispatch or reschedule to earlier time',
         impact: 'high'
       });
@@ -45,7 +45,7 @@ export const analyzeEmergencies = (appointments, currentTime = '08:00') => {
         type: 'unassigned_emergency',
         severity: 'critical',
         appointmentId: emergency.id,
-        message: `⚠️ CRITICAL: Emergency at ${emergency.siteName || 'Unknown Site'} has no technician assigned`,
+        message: `⚠️ CRITICAL: Emergency at ${emergency.siteName || 'Unknown Service Address'} has no technician assigned`,
         recommendation: 'Assign technician immediately',
         impact: 'critical'
       });

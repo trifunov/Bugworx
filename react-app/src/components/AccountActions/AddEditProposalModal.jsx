@@ -1,4 +1,4 @@
-import { getAccounts } from '../../utils/localStorage';
+import { getCustomers } from '../../utils/localStorage';
 import SearchableSelect from '../Common/SearchableSelect';
 
 const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave, onFileUpload, onRemoveAttachment }) => {
@@ -33,15 +33,15 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
     return 'mdi mdi-file-document';
   };
 
-  const accounts = getAccounts();
+  const customers = getCustomers();
   const statuses = ['Draft', 'Sent', 'Accepted', 'Rejected', 'Withdrawn'];
 
-  const accountOptions = accounts.map(account => ({
-    value: account.id,
-    label: account.accountName || account.name || `${account.firstName} ${account.lastName}`,
-    accountNum: account.accountNum,
-    address: account.address || account.billingAddress?.street || '',
-    phone: account.phone
+  const customerOptions = customers.map(customer => ({
+    value: customer.id,
+    label: customer.customerName || customer.name || `${customer.firstName} ${customer.lastName}`,
+    customerNum: customer.customerNum,
+    address: customer.address || customer.billingAddress?.street || '',
+    phone: customer.phone
   }));
 
   return (
@@ -56,13 +56,13 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
             <div className="mb-3">
               <label htmlFor="customerId" className="form-label">Customer <span className="text-danger">*</span></label>
               <SearchableSelect
-                options={accountOptions}
+                options={customerOptions}
                 value={formData.customerId || ''}
                 onChange={(value) => onUpdateField('customerId', value)}
-                placeholder="Search by name, address, or account number..."
+                placeholder="Search by name, address, or customer number..."
                 displayKey="label"
                 valueKey="value"
-                searchKeys={['accountNum', 'address', 'phone']}
+                searchKeys={['customerNum', 'address', 'phone']}
                 disabled={isSaving}
                 error={errors.customerId}
               />

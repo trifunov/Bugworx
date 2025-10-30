@@ -52,11 +52,11 @@ const useAddEditSite = (accountId) => {
     const newErrors = {};
 
     if (!formData.siteName?.trim()) {
-      newErrors.siteName = 'Site name is required';
+      newErrors.siteName = 'Service address name is required';
     }
 
     if (!formData.siteType?.trim()) {
-      newErrors.siteType = 'Site type is required';
+      newErrors.siteType = 'Service address type is required';
     }
 
     if (!formData.address?.trim()) {

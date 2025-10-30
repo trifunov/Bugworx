@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { appointments, sites, technicians, accounts } from '../data/mockData';
+import { appointments, serviceAddresses, technicians, customers } from '../data/mockData';
 
 const Appointments = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
   const getSiteName = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    return site ? site.siteName : 'N/A';
+    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+    return serviceAddress ? serviceAddress.serviceAddressName : 'N/A';
   };
 
   const getAccountName = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    if (!site) return 'N/A';
-    const account = accounts.find(a => a.id === site.accountId);
-    return account ? account.name : 'N/A';
+    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+    if (!serviceAddress) return 'N/A';
+    const customer = customers.find(c => c.id === serviceAddress.customerId);
+    return customer ? customer.name : 'N/A';
   };
 
   const getTechnicianName = (technicianId) => {
@@ -109,7 +109,7 @@ const Appointments = () => {
                     <tr>
                       <th>ID</th>
                       <th>Customer</th>
-                      <th>Site</th>
+                      <th>Service Address</th>
                       <th>Service Type</th>
                       <th>Date & Time</th>
                       <th>Technician</th>

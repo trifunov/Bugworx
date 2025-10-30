@@ -14,7 +14,7 @@ import {
   RadialLinearScale
 } from 'chart.js';
 import { Line, Bar, Doughnut, Pie, PolarArea } from 'react-chartjs-2';
-import { appointments, accounts } from '../data/mockData';
+import { appointments, customers } from '../data/mockData';
 
 // Register Chart.js components
 ChartJS.register(
@@ -55,7 +55,7 @@ const Analytics = () => {
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const newCustomers = accounts.filter(acc => {
+    const newCustomers = customers.filter(acc => {
       const createdDate = new Date(acc.createdDate || '2024-01-01');
       return createdDate >= thirtyDaysAgo;
     }).length;

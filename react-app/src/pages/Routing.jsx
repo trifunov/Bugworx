@@ -5,8 +5,8 @@ import {
   routes as initialRoutes,
   routeTemplates as initialRouteTemplates,
   appointments as initialAppointments,
-  accounts as initialAccounts,
-  sites as initialSites,
+  customers as initialCustomers,
+  serviceAddresses as initialServiceAddresses,
   technicians as initialTechnicians,
   inventory as initialInventory
 } from '../data/mockData';
@@ -20,7 +20,7 @@ import {
   deleteRoute,
   getTechnicians,
   getAppointments,
-  getSites
+  getServiceAddresses
 } from '../utils/localStorage';
 import {
   generateRouteFromAppointments,
@@ -86,7 +86,7 @@ const Routing = () => {
   const [vehicles, setVehiclesState] = useState([]);
   const [technicians, setTechniciansState] = useState([]);
   const [appointments, setAppointmentsState] = useState([]);
-  const [sites, setSitesState] = useState([]);
+  const [serviceAddresses, setServiceAddresses] = useState([]);
 
   // Route generator state
   const [selectedTechnicianForRoute, setSelectedTechnicianForRoute] = useState('');
@@ -121,8 +121,8 @@ const Routing = () => {
     // Initialize all mock data
     initializeStorage({
       appointments: initialAppointments,
-      accounts: initialAccounts,
-      sites: initialSites,
+      customers: initialCustomers,
+      serviceAddresses: initialServiceAddresses,
       technicians: initialTechnicians,
       inventory: initialInventory,
       vehicles: initialVehicles,
@@ -137,7 +137,7 @@ const Routing = () => {
     setVehiclesState(getVehicles());
     setTechniciansState(getTechnicians());
     setAppointmentsState(getAppointments());
-    setSitesState(getSites());
+    setServiceAddresses(getServiceAddresses());
   };
 
   // Get routes for selected date
@@ -157,8 +157,8 @@ const Routing = () => {
 
   // Get site name
   const getSiteName = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    return site ? site.siteName : 'Unknown Site';
+    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+    return serviceAddress ? serviceAddress.serviceAddressName : 'Unknown Service Address';
   };
 
   // Get appointment info
@@ -169,22 +169,22 @@ const Routing = () => {
       return null;
     }
 
-    const site = sites.find(s => s.id === apt.siteId);
-    if (!site) {
-      console.warn('Site not found for appointment:', apt.siteId);
+    const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
+    if (!serviceAddress) {
+      console.warn('Service address not found for appointment:', apt.siteId);
       return null;
     }
 
-    if (!site.coordinates) {
-      console.warn('Site has no coordinates:', site);
+    if (!serviceAddress.coordinates) {
+      console.warn('Service address has no coordinates:', serviceAddress);
       return null;
     }
 
     return {
       ...apt,
-      site,
+      site: serviceAddress,
       siteId: apt.siteId,
-      coordinates: site.coordinates
+      coordinates: serviceAddress.coordinates
     };
   };
 
@@ -220,27 +220,27 @@ const Routing = () => {
     console.log('Technician:', tech.name);
     console.log('Appointments:', techAppointments.length);
 
-    // Add site coordinates to appointments
+    // Add service address coordinates to appointments
     const appointmentsWithCoords = techAppointments.map(apt => {
-      const site = sites.find(s => s.id === apt.siteId);
+      const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
 
-      if (!site || !site.coordinates) {
-        console.warn(`Site ${apt.siteId} missing coordinates, using vehicle location`);
+      if (!serviceAddress || !serviceAddress.coordinates) {
+        console.warn(`Service address ${apt.siteId} missing coordinates, using vehicle location`);
         return {
           ...apt,
-          siteName: site?.siteName || 'Unknown Site',
+          siteName: serviceAddress?.serviceAddressName || 'Unknown Service Address',
           siteCoordinates: vehicle.currentLocation,
           coordinates: vehicle.currentLocation,
-          site: site
+          site: serviceAddress
         };
       }
 
       return {
         ...apt,
-        siteName: site.siteName,
-        siteCoordinates: site.coordinates,
-        coordinates: site.coordinates,
-        site: site // Include full site object for customer tier
+        siteName: serviceAddress.serviceAddressName,
+        siteCoordinates: serviceAddress.coordinates,
+        coordinates: serviceAddress.coordinates,
+        site: serviceAddress // Include full service address object for customer tier
       };
     });
 

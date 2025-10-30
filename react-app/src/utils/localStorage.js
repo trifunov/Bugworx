@@ -2,8 +2,8 @@
 
 const STORAGE_KEYS = {
   APPOINTMENTS: 'bugworx_appointments',
-  ACCOUNTS: 'bugworx_accounts',
-  SITES: 'bugworx_sites',
+  CUSTOMERS: 'bugworx_customers',
+  SERVICE_ADDRESSES: 'bugworx_service_addresses',
   TECHNICIANS: 'bugworx_technicians',
   INVENTORY: 'bugworx_inventory',
   VEHICLES: 'bugworx_vehicles',
@@ -108,84 +108,84 @@ export const getAppointmentById = (id) => {
   return appointments.find(apt => apt.id === id);
 };
 
-// Account-specific functions
-export const getAccounts = () => {
-  return getFromStorage(STORAGE_KEYS.ACCOUNTS, []);
+// Customer-specific functions
+export const getCustomers = () => {
+  return getFromStorage(STORAGE_KEYS.CUSTOMERS, []);
 };
 
-export const setAccounts = (accounts) => {
-  return setToStorage(STORAGE_KEYS.ACCOUNTS, accounts);
+export const setCustomers = (customers) => {
+  return setToStorage(STORAGE_KEYS.CUSTOMERS, customers);
 };
 
-// Site-specific functions
-export const getSites = () => {
-  return getFromStorage(STORAGE_KEYS.SITES, []);
+// ServiceAddress-specific functions
+export const getServiceAddresses = () => {
+  return getFromStorage(STORAGE_KEYS.SERVICE_ADDRESSES, []);
 };
 
-export const setSites = (sites) => {
-  return setToStorage(STORAGE_KEYS.SITES, sites);
+export const setServiceAddresses = (serviceAddresses) => {
+  return setToStorage(STORAGE_KEYS.SERVICE_ADDRESSES, serviceAddresses);
 };
 
-export const addAccount = (account) => {
-  const accounts = getAccounts();
-  const newAccount = {
-    ...account,
+export const addCustomer = (customer) => {
+  const customers = getCustomers();
+  const newCustomer = {
+    ...customer,
     id: Date.now(),
-    accountNum: `ACC-${Date.now()}`,
+    customerNum: `ACC-${Date.now()}`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-  accounts.push(newAccount);
-  setAccounts(accounts);
-  return newAccount;
+  customers.push(newCustomer);
+  setCustomers(customers);
+  return newCustomer;
 };
 
-export const updateAccount = (id, updates) => {
-  const accounts = getAccounts();
-  const index = accounts.findIndex(acc => acc.id === id);
+export const updateCustomer = (id, updates) => {
+  const customers = getCustomers();
+  const index = customers.findIndex(cust => cust.id === id);
   if (index !== -1) {
-    accounts[index] = {
-      ...accounts[index],
+    customers[index] = {
+      ...customers[index],
       ...updates,
       updatedAt: new Date().toISOString()
     };
-    setAccounts(accounts);
-    return accounts[index];
+    setCustomers(customers);
+    return customers[index];
   }
   return null;
 };
 
-export const addSite = (site) => {
-  const sites = getSites();
-  const newSite = {
-    ...site,
+export const addServiceAddress = (serviceAddress) => {
+  const serviceAddresses = getServiceAddresses();
+  const newServiceAddress = {
+    ...serviceAddress,
     id: Date.now(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-  sites.push(newSite);
-  setSites(sites);
-  return newSite;
+  serviceAddresses.push(newServiceAddress);
+  setServiceAddresses(serviceAddresses);
+  return newServiceAddress;
 };
 
-export const updateSite = (id, updates) => {
-  const sites = getSites();
-  const index = sites.findIndex(s => s.id === id);
+export const updateServiceAddress = (id, updates) => {
+  const serviceAddresses = getServiceAddresses();
+  const index = serviceAddresses.findIndex(s => s.id === id);
   if (index !== -1) {
-    sites[index] = {
-      ...sites[index],
+    serviceAddresses[index] = {
+      ...serviceAddresses[index],
       ...updates,
       updatedAt: new Date().toISOString()
     };
-    setSites(sites);
-    return sites[index];
+    setServiceAddresses(serviceAddresses);
+    return serviceAddresses[index];
   }
   return null;
 };
 
-export const getSitesByAccountId = (accountId) => {
-  const sites = getSites();
-  return sites.filter(site => site.accountId === accountId);
+export const getServiceAddressesByCustomerId = (customerId) => {
+  const serviceAddresses = getServiceAddresses();
+  return serviceAddresses.filter(serviceAddress => serviceAddress.customerId === customerId);
 };
 
 const DEFAULT_SERVICE_TYPES = [
@@ -359,16 +359,16 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, accounts, sites, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads } = mockData;
+  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
   }
-  if (getAccounts().length === 0) {
-    setAccounts(accounts);
+  if (getCustomers().length === 0) {
+    setCustomers(customers);
   }
-  if (getSites().length === 0) {
-    setSites(sites);
+  if (getServiceAddresses().length === 0) {
+    setServiceAddresses(serviceAddresses);
   }
   if (getTechnicians().length === 0) {
     setTechnicians(technicians);
@@ -446,13 +446,13 @@ export const getTechnicianWorkload = (technicianId, date) => {
 };
 
 // Smart technician suggestion algorithm
-export const suggestTechnicians = (serviceType, siteId, date, startTime, duration) => {
+export const suggestTechnicians = (serviceType, serviceAddressId, date, startTime, duration) => {
   const technicians = getTechnicians();
-  const sites = getSites();
+  const serviceAddresses = getServiceAddresses();
   const appointments = getAppointments();
 
-  const site = sites.find(s => s.id === siteId);
-  if (!site) return [];
+  const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
+  if (!serviceAddress) return [];
 
   const activeTechs = technicians.filter(t => t.isActive);
 
@@ -477,9 +477,9 @@ export const suggestTechnicians = (serviceType, siteId, date, startTime, duratio
     }
 
     // 3. Zone Preference (20 points)
-    if (site.zone && tech.preferredZones && tech.preferredZones.includes(site.zone)) {
+    if (serviceAddress.zone && tech.preferredZones && tech.preferredZones.includes(serviceAddress.zone)) {
       score += 20;
-      reasons.push(`Prefers ${site.zone} zone`);
+      reasons.push(`Prefers ${serviceAddress.zone} zone`);
     }
 
     // 4. Availability (REQUIRED - 0 points but eliminates if unavailable)
@@ -525,8 +525,8 @@ export const suggestTechnicians = (serviceType, siteId, date, startTime, duratio
 };
 
 // Get suggested technician (top choice)
-export const getSuggestedTechnician = (serviceType, siteId, date, startTime, duration) => {
-  const suggestions = suggestTechnicians(serviceType, siteId, date, startTime, duration);
+export const getSuggestedTechnician = (serviceType, serviceAddressId, date, startTime, duration) => {
+  const suggestions = suggestTechnicians(serviceType, serviceAddressId, date, startTime, duration);
   return suggestions.length > 0 ? suggestions[0] : null;
 };
 
@@ -699,10 +699,10 @@ export const deleteInspectionPoint = (id) => {
   return filtered.length < inspectionPoints.length;
 };
 
-export const getFacilitiesByAccountId = (accountId) => {
-  const sitesByAccountId = getSitesByAccountId(accountId).map(site => site.id);
+export const getFacilitiesByCustomerId = (customerId) => {
+  const serviceAddressesByCustomerId = getServiceAddressesByCustomerId(customerId).map(serviceAddress => serviceAddress.id);
   const facilities = getFacilities();
-  return facilities.filter(facility => sitesByAccountId.includes(facility.siteId));
+  return facilities.filter(facility => serviceAddressesByCustomerId.includes(facility.serviceAddressId));
 };
 
 export const getCurrentUser = () => {
@@ -767,9 +767,9 @@ export const getProposalById = (id) => {
   return proposals.find(p => p.id === id);
 };
 
-export const getProposalsByAccountId = (accountId) => {
+export const getProposalsByCustomerId = (customerId) => {
   const proposals = getProposals();
-  return proposals.filter(p => p.customerId === accountId);
+  return proposals.filter(p => p.customerId === customerId);
 };
 
 // Configuration-specific functions
@@ -833,13 +833,13 @@ export default {
   updateAppointment,
   deleteAppointment,
   getAppointmentById,
-  getAccounts,
-  setAccounts,
-  getSites,
-  setSites,
-  addSite,
-  updateSite,
-  getSitesByAccountId,
+  getCustomers,
+  setCustomers,
+  getServiceAddresses,
+  setServiceAddresses,
+  addServiceAddress,
+  updateServiceAddress,
+  getServiceAddressesByCustomerId,
   getServiceTypes,
   setServiceTypes,
   addServiceType,
@@ -890,18 +890,18 @@ export default {
   deleteFacility,
   deleteArea,
   deleteInspectionPoint,
-  getFacilitiesByAccountId,
+  getFacilitiesByCustomerId,
   getCurrentUser,
   updateCurrentUser,
-  addAccount,
-  updateAccount,
+  addCustomer,
+  updateCustomer,
   getProposals,
   setProposals,
   addProposal,
   updateProposal,
   deleteProposal,
   getProposalById,
-  getProposalsByAccountId,
+  getProposalsByCustomerId,
   getConfiguration,
   setConfiguration,
   updateConfiguration

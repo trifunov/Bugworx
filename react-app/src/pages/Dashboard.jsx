@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   initializeStorage,
-  getAccounts,
-  setAccounts
+  getCustomers,
+  setCustomers
 } from '../utils/localStorage';
 import {
   appointments as initialAppointments,
-  sites as initialSites,
+  serviceAddresses as initialServiceAddresses,
   technicians as initialTechnicians,
-  accounts as initialAccounts,
+  customers as initialCustomers,
   inventory as initialInventory,
   facilities,
   areas,
@@ -22,8 +22,8 @@ const Dashboard = () => {
   useEffect(() => {
     initializeStorage({
       appointments: initialAppointments,
-      accounts: initialAccounts,
-      sites: initialSites,
+      customers: initialCustomers,
+      serviceAddresses: initialServiceAddresses,
       technicians: initialTechnicians,
       inventory: initialInventory,
       facilities: facilities,
