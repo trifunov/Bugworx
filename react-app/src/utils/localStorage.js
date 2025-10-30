@@ -12,6 +12,7 @@ const STORAGE_KEYS = {
   FACILITIES: 'bugworx_facilities',
   AREAS: 'bugworx_areas',
   INSPECTION_POINTS: 'bugworx_inspection_points',
+  LEADS: 'bugworx_leads',
   SERVICE_TYPES: 'bugworx_service_types',
   PROPOSALS: 'bugworx_proposals',
   CONFIGURATION: 'bugworx_configuration'
@@ -358,7 +359,7 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, accounts, sites, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints } = mockData;
+  const { appointments, accounts, sites, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
@@ -393,6 +394,9 @@ export const initializeStorage = (mockData) => {
   }
   if (getInspectionPoints().length === 0 && inspectionPoints) {
     setInspectionPoints(inspectionPoints);
+  }
+  if (getLeads().length === 0 && leads) {
+    setLeads(leads);
   }
 };
 
@@ -582,6 +586,55 @@ export const addInspectionPoint = (inspectionPoint) => {
   setInspectionPoints(inspectionPoints);
   return newInspectionPoint;
 }
+
+// Lead-specific functions
+export const getLeads = () => {
+  return getFromStorage(STORAGE_KEYS.LEADS, []);
+};
+
+export const setLeads = (leads) => {
+  return setToStorage(STORAGE_KEYS.LEADS, leads);
+};
+
+export const addLead = (lead) => {
+  const leads = getLeads();
+  const newLead = {
+    ...lead,
+    id: Date.now(),
+    dateCreated: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  leads.unshift(newLead);
+  setLeads(leads);
+  return newLead;
+};
+
+export const updateLead = (id, updates) => {
+  const leads = getLeads();
+  const index = leads.findIndex(l => l.id === id);
+  if (index !== -1) {
+    leads[index] = {
+      ...leads[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setLeads(leads);
+    return leads[index];
+  }
+  return null;
+};
+
+export const deleteLead = (id) => {
+  const leads = getLeads();
+  const filtered = leads.filter(l => l.id !== id);
+  setLeads(filtered);
+  return filtered.length < leads.length;
+};
+
+export const getLeadById = (id) => {
+  const leads = getLeads();
+  return leads.find(l => l.id === id);
+};
 
 export const updateFacility = (id, updates) => {
   const facilities = getFacilities();
@@ -825,6 +878,12 @@ export default {
   addFacility,
   addArea,
   addInspectionPoint,
+  getLeads,
+  setLeads,
+  addLead,
+  updateLead,
+  deleteLead,
+  getLeadById,
   updateFacility,
   updateArea,
   updateInspectionPoint,
