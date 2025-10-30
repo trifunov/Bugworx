@@ -25,8 +25,11 @@ import {
   suggestTechnicians,
   getServiceTypes
 } from '../utils/localStorage';
+import { useBreadcrumbs } from '../contexts/BreadcrumbContext';
+import Breadcrumb from '../components/Common/Breadcrumb';
 
 const Scheduler = () => {
+  const { setBreadcrumbs } = useBreadcrumbs();
   const calendarRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('create'); // 'create' or 'edit'
@@ -88,7 +91,10 @@ const Scheduler = () => {
       inventory: initialInventory
     });
     loadData();
-  }, []);
+    setBreadcrumbs([
+      { label: 'Scheduler', path: '/scheduler' }
+    ]);
+  }, [setBreadcrumbs]);
 
   // Load data from localStorage
   const loadData = () => {
@@ -586,12 +592,7 @@ const Scheduler = () => {
                 </button>
               </div>
             </div>
-            <div className="page-title-right">
-              <ol className="breadcrumb m-0">
-                <li className="breadcrumb-item"><a href="/">Bugworx</a></li>
-                <li className="breadcrumb-item active">Scheduler</li>
-              </ol>
-            </div>
+            <Breadcrumb />
           </div>
         </div>
       </div>
