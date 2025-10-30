@@ -126,33 +126,33 @@ const CustomerDetail = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {customerServiceAddresses.map((site) => (
-                          <tr key={site.id}>
+                        {customerServiceAddresses.map((serviceAddress) => (
+                          <tr key={serviceAddress.id}>
                             <td>
                               <h5 className="font-size-14 mb-0">
-                                <Link to={`/service-addresses/${site.id}`} className="text-body">
-                                  {site.serviceAddressName}
+                                <Link to={`/service-addresses/${serviceAddress.id}`} className="text-body">
+                                  {serviceAddress.serviceAddressName}
                                 </Link>
                               </h5>
                             </td>
-                            <td>{site.serviceAddressType}</td>
-                            <td>{site.address}</td>
+                            <td>{serviceAddress.serviceAddressType}</td>
+                            <td>{serviceAddress.address}</td>
                             <td>
-                              <div>{site.contactName}</div>
-                              <div className="text-muted font-size-12">{site.contactPhone}</div>
+                              <div>{serviceAddress.contactName}</div>
+                              <div className="text-muted font-size-12">{serviceAddress.contactPhone}</div>
                             </td>
                             <td>
-                              <span className={`badge badge-soft-${site.isActive ? 'success' : 'danger'}`}>
-                                {site.isActive ? 'Active' : 'Inactive'}
+                              <span className={`badge badge-soft-${serviceAddress.isActive ? 'success' : 'danger'}`}>
+                                {serviceAddress.isActive ? 'Active' : 'Inactive'}
                               </span>
                             </td>
                             <td>
                               <div className="d-flex gap-3">
-                                <Link to={`/service-addresses/${site.id}`} className="text-success" title="View">
+                                <Link to={`/service-addresses/${serviceAddress.id}`} className="text-success" title="View">
                                   <i className="mdi mdi-eye font-size-18"></i>
                                 </Link>
                                 <button
-                                  onClick={() => open(site)}
+                                  onClick={() => open(serviceAddress)}
                                   className="btn btn-link text-primary p-0"
                                   title="Edit"
                                 >
@@ -204,7 +204,7 @@ const CustomerDetail = () => {
                       </thead>
                       <tbody>
                         {customerAppointments.map((appointment) => {
-                          const site = customerServiceAddresses.find(s => s.id === appointment.serviceAddressId);
+                          const serviceAddress = customerServiceAddresses.find(s => s.id === appointment.serviceAddressId);
                           const getStatusBadgeClass = (status) => {
                             switch (status) {
                               case 'Completed': return 'badge-soft-success';
@@ -217,7 +217,7 @@ const CustomerDetail = () => {
                           return (
                             <tr key={appointment.id}>
                               <td><span className="fw-bold">#{appointment.id}</span></td>
-                              <td>{site?.serviceAddressName || 'N/A'}</td>
+                              <td>{serviceAddress?.serviceAddressName || 'N/A'}</td>
                               <td>{appointment.serviceType}</td>
                               <td>
                                 <div>{appointment.scheduledDate}</div>
@@ -280,11 +280,11 @@ const CustomerDetail = () => {
                       </thead>
                       <tbody>
                         {customerAppointments.filter(apt => apt.status === 'Completed').map((appointment) => {
-                          const site = customerServiceAddresses.find(s => s.id === appointment.serviceAddressId);
+                          const serviceAddress = customerServiceAddresses.find(s => s.id === appointment.serviceAddressId);
                           return (
                             <tr key={appointment.id}>
                               <td>{appointment.scheduledDate}</td>
-                              <td>{site?.serviceAddressName || 'N/A'}</td>
+                              <td>{serviceAddress?.serviceAddressName || 'N/A'}</td>
                               <td>{appointment.serviceType}</td>
                               <td>Technician #{appointment.technicianId}</td>
                               <td>{appointment.duration || '2h'}</td>
@@ -857,24 +857,24 @@ const CustomerDetail = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {customerServiceAddresses.map((site) => (
-                            <tr key={site.id}>
+                          {customerServiceAddresses.map((serviceAddress) => (
+                            <tr key={serviceAddress.id}>
                               <td>
-                                <Link to={`/service-addresses/${site.id}`} className="text-body">
-                                  {site.serviceAddressName}
+                                <Link to={`/service-addresses/${serviceAddress.id}`} className="text-body">
+                                  {serviceAddress.serviceAddressName}
                                 </Link>
                               </td>
-                              <td>{site.serviceAddressType}</td>
-                              <td>{site.address}</td>
+                              <td>{serviceAddress.serviceAddressType}</td>
+                              <td>{serviceAddress.address}</td>
                               <td>
-                                <span className={`badge badge-soft-${site.isActive ? 'success' : 'danger'}`}>
-                                  {site.isActive ? 'Active' : 'Inactive'}
+                                <span className={`badge badge-soft-${serviceAddress.isActive ? 'success' : 'danger'}`}>
+                                  {serviceAddress.isActive ? 'Active' : 'Inactive'}
                                 </span>
                               </td>
                               <td>
                                 <button
                                   className="btn btn-sm btn-primary"
-                                  onClick={() => open(site)}
+                                  onClick={() => open(serviceAddress)}
                                 >
                                   <i className="mdi mdi-pencil me-1"></i>
                                   Edit
@@ -993,15 +993,15 @@ const CustomerDetail = () => {
         onUpdateField={onUpdateFieldHandle}
         onClose={close}
         onSave={() => onSaveHandle((data) => {
-          let updatedSite = null;
+          let updatedServiceAddress = null;
           if (data.id && data.id !== 0) {
-            updatedSite = updateServiceAddress(data.id, data);
+            updatedServiceAddress = updateServiceAddress(data.id, data);
           }
           else {
-            updatedSite = addServiceAddress(data);
+            updatedServiceAddress = addServiceAddress(data);
           }
           loadServiceAddresses();
-          return updatedSite;
+          return updatedServiceAddress;
         })}
       />
 

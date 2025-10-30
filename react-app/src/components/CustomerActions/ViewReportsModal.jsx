@@ -10,7 +10,7 @@ const ViewReportsModal = ({ isOpen, selectedReportType, dateRange, onSelectRepor
     { id: 'upcoming-services', name: 'Upcoming Services', icon: 'mdi-calendar-clock', description: 'Scheduled services for this customer' },
     { id: 'invoices', name: 'Invoice Report', icon: 'mdi-receipt', description: 'Invoice history and status' },
     { id: 'chemical-usage', name: 'Chemical Usage', icon: 'mdi-flask-outline', description: 'Chemicals used at customer service addresses' },
-    { id: 'site-summary', name: 'Service Address Summary', icon: 'mdi-map-marker-multiple', description: 'Summary of all service addresses for this customer' }
+    { id: 'service-address-summary', name: 'Service Address Summary', icon: 'mdi-map-marker-multiple', description: 'Summary of all service addresses for this customer' }
   ];
 
   const handleViewFullReports = () => {

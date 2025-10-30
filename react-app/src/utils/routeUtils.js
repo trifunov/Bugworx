@@ -319,13 +319,13 @@ export const generateRouteWithStrategy = (appointments, technicianLocation, star
   // Convert appointments to stops format
   const stops = appointments.map(apt => ({
     appointmentId: apt.id,
-    siteId: apt.siteId,
-    coordinates: apt.siteCoordinates,
+    serviceAddressId: apt.serviceAddressId,
+    coordinates: apt.serviceAddressCoordinates,
     estimatedDuration: apt.estimatedDuration,
     priority: apt.priority,
     serviceType: apt.serviceType,
     serviceAddressName: apt.serviceAddressName,
-    customerTier: apt.site?.customerTier,
+    customerTier: apt.serviceAddress?.customerTier,
     scheduledTime: apt.scheduledTime
   }));
 

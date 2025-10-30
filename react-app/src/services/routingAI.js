@@ -93,17 +93,17 @@ export const detectRouteConflicts = (route, appointments, technician) => {
     const apt = appointments.find(a => a.id === stop.appointmentId);
     if (!apt) return;
 
-    // Check if site has closing time
-    if (apt.siteClosingTime) {
+    // Check if service address has closing time
+    if (apt.serviceAddressClosingTime) {
       const arrivalMinutes = timeToMinutes(stop.estimatedArrival);
-      const closingMinutes = timeToMinutes(apt.siteClosingTime);
+      const closingMinutes = timeToMinutes(apt.serviceAddressClosingTime);
 
       if (arrivalMinutes > closingMinutes) {
         conflicts.push({
           type: 'time_window',
           severity: 'high',
           stopOrder: stop.order,
-          message: `⏰ Stop #${stop.order} arrives at ${stop.estimatedArrival} but site closes at ${apt.siteClosingTime}`,
+          message: `⏰ Stop #${stop.order} arrives at ${stop.estimatedArrival} but service address closes at ${apt.serviceAddressClosingTime}`,
           recommendation: 'Move this stop earlier in the route',
           impact: 'Cannot complete service - will require rescheduling'
         });

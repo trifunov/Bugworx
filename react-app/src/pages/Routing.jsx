@@ -155,9 +155,9 @@ const Routing = () => {
     return vehicle ? `${vehicle.vehicleNumber} (${vehicle.make} ${vehicle.model})` : 'N/A';
   };
 
-  // Get site name
-  const getSiteName = (siteId) => {
-    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+  // Get service address name
+  const getServiceAddressName = (serviceAddressId) => {
+    const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
     return serviceAddress ? serviceAddress.serviceAddressName : 'Unknown Service Address';
   };
 
@@ -182,7 +182,7 @@ const Routing = () => {
 
     return {
       ...apt,
-      site: serviceAddress,
+      serviceAddress: serviceAddress,
       serviceAddressId: apt.serviceAddressId,
       coordinates: serviceAddress.coordinates
     };
@@ -222,25 +222,25 @@ const Routing = () => {
 
     // Add service address coordinates to appointments
     const appointmentsWithCoords = techAppointments.map(apt => {
-      const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
+      const serviceAddress = serviceAddresses.find(s => s.id === apt.serviceAddressId);
 
       if (!serviceAddress || !serviceAddress.coordinates) {
-        console.warn(`Service address ${apt.siteId} missing coordinates, using vehicle location`);
+        console.warn(`Service address ${apt.serviceAddressId} missing coordinates, using vehicle location`);
         return {
           ...apt,
-          siteName: serviceAddress?.serviceAddressName || 'Unknown Service Address',
-          siteCoordinates: vehicle.currentLocation,
+          serviceAddressName: serviceAddress?.serviceAddressName || 'Unknown Service Address',
+          serviceAddressCoordinates: vehicle.currentLocation,
           coordinates: vehicle.currentLocation,
-          site: serviceAddress
+          serviceAddress: serviceAddress
         };
       }
 
       return {
         ...apt,
-        siteName: serviceAddress.serviceAddressName,
-        siteCoordinates: serviceAddress.coordinates,
+        serviceAddressName: serviceAddress.serviceAddressName,
+        serviceAddressCoordinates: serviceAddress.coordinates,
         coordinates: serviceAddress.coordinates,
-        site: serviceAddress // Include full service address object for customer tier
+        serviceAddress: serviceAddress // Include full service address object for customer tier
       };
     });
 
@@ -727,7 +727,7 @@ const Routing = () => {
                       >
                         <div>
                           <strong>Stop #{selectedMarker.data.stop.order}</strong><br />
-                          {getSiteName(selectedMarker.data.aptInfo.siteId)}<br />
+                          {getServiceAddressName(selectedMarker.data.aptInfo.serviceAddressId)}<br />
                           ETA: {selectedMarker.data.stop.estimatedArrival}<br />
                           Service: {selectedMarker.data.aptInfo.serviceType}
                         </div>

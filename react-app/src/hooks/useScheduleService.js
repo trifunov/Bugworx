@@ -4,7 +4,7 @@ const useScheduleService = (customerId) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     customerId: customerId,
-    siteId: '',
+    serviceAddressId: '',
     serviceType: '',
     scheduledDate: '',
     scheduledTime: '',
@@ -20,7 +20,7 @@ const useScheduleService = (customerId) => {
   const open = () => {
     setFormData({
       customerId: customerId,
-      siteId: '',
+      serviceAddressId: '',
       serviceType: '',
       scheduledDate: '',
       scheduledTime: '',
@@ -56,8 +56,8 @@ const useScheduleService = (customerId) => {
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.siteId) {
-      newErrors.siteId = 'Please select a service address';
+    if (!formData.serviceAddressId) {
+      newErrors.serviceAddressId = 'Please select a service address';
     }
 
     if (!formData.serviceType?.trim()) {

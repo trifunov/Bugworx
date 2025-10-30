@@ -67,7 +67,7 @@ const Scheduler = () => {
   // Appointment form state
   const [appointmentForm, setAppointmentForm] = useState({
     customerId: '',
-    siteId: '',
+    serviceAddressId: '',
     technicianId: '',
     scheduledDate: '',
     scheduledTime: '',
@@ -111,12 +111,12 @@ const Scheduler = () => {
   }, [showModal]);
 
   // Helper functions
-  const getSiteName = (serviceAddressId) => {
+  const getServiceAddressName = (serviceAddressId) => {
     const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
     return serviceAddress ? serviceAddress.serviceAddressName : 'N/A';
   };
 
-  const getAccountName = (serviceAddressId) => {
+  const getCustomerName = (serviceAddressId) => {
     const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
     if (!serviceAddress) return 'N/A';
     const customer = customers.find(a => a.id === serviceAddress.customerId);
@@ -156,14 +156,14 @@ const Scheduler = () => {
 
     return {
       id: apt.id,
-      title: `${getAccountName(apt.serviceAddressId)} - ${apt.serviceType}`,
+      title: `${getCustomerName(apt.serviceAddressId)} - ${apt.serviceType}`,
       start: `${apt.scheduledDate}T${apt.scheduledTime}`,
       end: endTime,
       className: className,
       extendedProps: {
         appointment: apt,
         technician: getTechnicianName(apt.technicianId),
-        site: getSiteName(apt.serviceAddressId),
+        serviceAddress: getServiceAddressName(apt.serviceAddressId),
         duration: apt.estimatedDuration,
         priority: apt.priority
       }
@@ -181,7 +181,7 @@ const Scheduler = () => {
     setSelectedAppointment(null);
     setAppointmentForm({
       customerId: '',
-      siteId: '',
+      serviceAddressId: '',
       technicianId: '',
       scheduledDate: dateInfo ? dateInfo.dateStr : '',
       scheduledTime: dateInfo ? '09:00' : '',
@@ -200,7 +200,7 @@ const Scheduler = () => {
     const serviceAddress = serviceAddresses.find(s => s.id === appointment.serviceAddressId);
     setAppointmentForm({
       customerId: serviceAddress ? serviceAddress.customerId : '',
-      siteId: appointment.serviceAddressId,
+      serviceAddressId: appointment.serviceAddressId,
       technicianId: appointment.technicianId || '',
       scheduledDate: appointment.scheduledDate,
       scheduledTime: appointment.scheduledTime,
@@ -226,7 +226,7 @@ const Scheduler = () => {
     });
     setAppointmentForm({
       customerId: '',
-      siteId: '',
+      serviceAddressId: '',
       technicianId: '',
       scheduledDate: '',
       scheduledTime: '',
@@ -244,7 +244,7 @@ const Scheduler = () => {
       alert('Please select a service type first');
       return;
     }
-    if (!appointmentForm.siteId) {
+    if (!appointmentForm.serviceAddressId) {
       alert('Please select a service address first');
       return;
     }
@@ -259,7 +259,7 @@ const Scheduler = () => {
 
     const suggestions = suggestTechnicians(
       appointmentForm.serviceType,
-      parseInt(appointmentForm.siteId),
+      parseInt(appointmentForm.serviceAddressId),
       appointmentForm.scheduledDate,
       appointmentForm.scheduledTime,
       appointmentForm.estimatedDuration
@@ -424,9 +424,9 @@ const Scheduler = () => {
     setAppointmentForm(prev => {
       const updated = { ...prev, [field]: value };
 
-      // Reset siteId when customerId changes
+      // Reset serviceAddressId when customerId changes
       if (field === 'customerId') {
-        updated.siteId = '';
+        updated.serviceAddressId = '';
       }
 
       return updated;
@@ -438,7 +438,7 @@ const Scheduler = () => {
       alert('Please select a customer');
       return false;
     }
-    if (!appointmentForm.siteId) {
+    if (!appointmentForm.serviceAddressId) {
       alert('Please select a service address');
       return false;
     }
@@ -480,7 +480,7 @@ const Scheduler = () => {
     if (!validateForm()) return;
 
     const appointmentData = {
-      serviceAddressId: parseInt(appointmentForm.siteId),
+      serviceAddressId: parseInt(appointmentForm.serviceAddressId),
       technicianId: appointmentForm.technicianId ? parseInt(appointmentForm.technicianId) : null,
       scheduledDate: appointmentForm.scheduledDate,
       scheduledTime: appointmentForm.scheduledTime,
@@ -717,7 +717,7 @@ const Scheduler = () => {
                             </div>
                           </div>
                           <div className="flex-grow-1 ms-3">
-                            <h6 className="mb-1 font-size-12">{getAccountName(apt.serviceAddressId)}</h6>
+                            <h6 className="mb-1 font-size-12">{getCustomerName(apt.serviceAddressId)}</h6>
                             <p className="text-muted mb-0 font-size-11">{apt.scheduledDate} {apt.scheduledTime}</p>
                           </div>
                         </div>
@@ -934,8 +934,8 @@ const Scheduler = () => {
                               <div className="fw-medium">{new Date(apt.scheduledDate).toLocaleDateString()}</div>
                               <small className="text-muted">{apt.scheduledTime} ({apt.estimatedDuration} min)</small>
                             </td>
-                            <td>{getAccountName(apt.serviceAddressId)}</td>
-                            <td>{getSiteName(apt.serviceAddressId)}</td>
+                            <td>{getCustomerName(apt.serviceAddressId)}</td>
+                            <td>{getServiceAddressName(apt.serviceAddressId)}</td>
                             <td>
                               <span className="badge badge-soft-info">{apt.serviceType}</span>
                             </td>
@@ -1019,8 +1019,8 @@ const Scheduler = () => {
                     <label className="form-label">Service Address <span className="text-danger">*</span></label>
                     <select
                       className="form-select"
-                      value={appointmentForm.siteId}
-                      onChange={(e) => handleFormChange('siteId', e.target.value)}
+                      value={appointmentForm.serviceAddressId}
+                      onChange={(e) => handleFormChange('serviceAddressId', e.target.value)}
                       required
                       disabled={!appointmentForm.customerId}
                     >

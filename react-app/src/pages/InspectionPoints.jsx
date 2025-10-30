@@ -13,7 +13,7 @@ const InspectionPoints = () => {
     const getServiceAddress = (areaId) => {
         const area = areas.find((a) => a.id === areaId);
         const facility = area ? facilities.find((f) => f.id === area.facilityId) : null;
-        const serviceAddress = facility ? serviceAddresses.find((s) => s.id === facility.siteId) : null;
+        const serviceAddress = facility ? serviceAddresses.find((s) => s.id === facility.serviceAddressId) : null;
         return serviceAddress ? serviceAddress.address : 'N/A';
     };
 

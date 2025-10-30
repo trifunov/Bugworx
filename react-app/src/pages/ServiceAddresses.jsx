@@ -68,7 +68,7 @@ const ServiceAddresses = () => {
                     {filteredServiceAddresses.map((serviceAddress) => (
                       <tr key={serviceAddress.id}>
                         <td>
-                          <Link to={`/sites/${serviceAddress.id}`} className="text-body fw-bold">
+                          <Link to={`/service-addresses/${serviceAddress.id}`} className="text-body fw-bold">
                             {serviceAddress.serviceAddressName}
                           </Link>
                         </td>
@@ -99,7 +99,7 @@ const ServiceAddresses = () => {
                         </td>
                         <td>
                           <div className="d-flex gap-3">
-                            <Link to={`/sites/${serviceAddress.id}`} className="text-success">
+                            <Link to={`/service-addresses/${serviceAddress.id}`} className="text-success">
                               <i className="mdi mdi-eye font-size-18"></i>
                             </Link>
                             <a href="#" className="text-primary">

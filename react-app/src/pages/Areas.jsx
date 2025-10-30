@@ -21,7 +21,7 @@ const Areas = () => {
 
     const getFacility = (facilityId) => facilities.find((f) => f.id === facilityId) || null;
 
-    const getSiteAddress = (facility) => {
+    const getServiceAddressAddress = (facility) => {
         if (!facility) return 'N/A';
         const serviceAddress = serviceAddresses.find((s) => s.id === facility.serviceAddressId);
         return serviceAddress ? serviceAddress.address : 'N/A';
@@ -31,12 +31,12 @@ const Areas = () => {
         const q = searchTerm.toLowerCase();
         const facility = getFacility(a.facilityId);
         const facilityName = facility ? facility.name : '';
-        const siteAddress = getSiteAddress(facility);
+        const serviceAddressAddress = getServiceAddressAddress(facility);
 
         return (
             (a.name && a.name.toLowerCase().includes(q)) ||
             (facilityName && facilityName.toLowerCase().includes(q)) ||
-            (siteAddress && siteAddress.toLowerCase().includes(q))
+            (serviceAddressAddress && serviceAddressAddress.toLowerCase().includes(q))
         );
     });
 
@@ -117,10 +117,10 @@ const Areas = () => {
                                     <tbody>
                                         {filtered.map((a) => {
                                             const facility = getFacility(a.facilityId);
-                                            const siteAddress = getSiteAddress(facility);
+                                            const serviceAddressAddress = getServiceAddressAddress(facility);
                                             return (
                                                 <tr key={a.id}>
-                                                    <td>{siteAddress}</td>
+                                                    <td>{serviceAddressAddress}</td>
                                                     <td>{facility ? facility.name : '-'}</td>
                                                     <td>
                                                         {a.name}

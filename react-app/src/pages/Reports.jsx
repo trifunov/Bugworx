@@ -56,7 +56,7 @@ const Reports = () => {
     });
 
     const reportData = completed.map(apt => {
-      const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
+      const serviceAddress = serviceAddresses.find(s => s.id === apt.serviceAddressId);
       const customer = customers.find(c => c.id === serviceAddress?.customerId);
       const tech = technicians.find(t => t.id === apt.technicianId);
 
@@ -65,7 +65,7 @@ const Reports = () => {
         date: apt.scheduledDate,
         time: apt.scheduledTime,
         customer: customer?.companyName || 'Unknown',
-        site: serviceAddress?.serviceAddressName || 'Unknown',
+        serviceAddress: serviceAddress?.serviceAddressName || 'Unknown',
         serviceType: apt.serviceType,
         technician: tech?.name || 'Unassigned',
         duration: apt.estimatedDuration,
@@ -94,7 +94,7 @@ const Reports = () => {
     });
 
     const reportData = upcoming.map(apt => {
-      const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
+      const serviceAddress = serviceAddresses.find(s => s.id === apt.serviceAddressId);
       const customer = customers.find(c => c.id === serviceAddress?.customerId);
       const tech = technicians.find(t => t.id === apt.technicianId);
 
@@ -103,7 +103,7 @@ const Reports = () => {
         date: apt.scheduledDate,
         time: apt.scheduledTime,
         customer: customer?.companyName || 'Unknown',
-        site: serviceAddress?.serviceAddressName || 'Unknown',
+        serviceAddress: serviceAddress?.serviceAddressName || 'Unknown',
         serviceType: apt.serviceType,
         technician: tech?.name || 'Unassigned',
         priority: apt.priority,
@@ -144,7 +144,7 @@ const Reports = () => {
 
   // Generate Bait Station Inspection Report
   const generateBaitStationReport = () => {
-    // Generate mock bait station data based on sites
+    // Generate mock bait station data based on service addresses
     const baitStations = [];
 
     serviceAddresses.forEach(serviceAddress => {
@@ -166,7 +166,7 @@ const Reports = () => {
         baitStations.push({
           id: `BS-${serviceAddress.id}-${i}`,
           stationNumber: `BS-${String(i).padStart(3, '0')}`,
-          site: serviceAddress.serviceAddressName,
+          serviceAddress: serviceAddress.serviceAddressName,
           customer: customer?.companyName || 'Unknown',
           location: `Zone ${String.fromCharCode(65 + Math.floor(Math.random() * 4))}`,
           lastInspection: lastInspection.toISOString().split('T')[0],
@@ -535,7 +535,7 @@ const Reports = () => {
                                   <td>{row.date}</td>
                                   <td>{row.time}</td>
                                   <td>{row.customer}</td>
-                                  <td>{row.site}</td>
+                                  <td>{row.serviceAddress}</td>
                                   <td>{row.serviceType}</td>
                                   <td>{row.technician}</td>
                                   <td>{row.duration} min</td>
@@ -573,7 +573,7 @@ const Reports = () => {
                                   <td>{row.date}</td>
                                   <td>{row.time}</td>
                                   <td>{row.customer}</td>
-                                  <td>{row.site}</td>
+                                  <td>{row.serviceAddress}</td>
                                   <td>{row.serviceType}</td>
                                   <td>{row.technician}</td>
                                   <td>
@@ -662,7 +662,7 @@ const Reports = () => {
                               {reportData.map((row) => (
                                 <tr key={row.id}>
                                   <td><strong>{row.stationNumber}</strong></td>
-                                  <td>{row.site}</td>
+                                  <td>{row.serviceAddress}</td>
                                   <td>{row.customer}</td>
                                   <td>{row.location}</td>
                                   <td>{row.lastInspection}</td>

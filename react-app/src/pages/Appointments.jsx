@@ -6,13 +6,13 @@ const Appointments = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const getSiteName = (siteId) => {
-    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+  const getServiceAddressName = (serviceAddressId) => {
+    const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
     return serviceAddress ? serviceAddress.serviceAddressName : 'N/A';
   };
 
-  const getAccountName = (siteId) => {
-    const serviceAddress = serviceAddresses.find(s => s.id === siteId);
+  const getCustomerName = (serviceAddressId) => {
+    const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
     if (!serviceAddress) return 'N/A';
     const customer = customers.find(c => c.id === serviceAddress.customerId);
     return customer ? customer.name : 'N/A';
@@ -25,8 +25,8 @@ const Appointments = () => {
 
   const filteredAppointments = appointments.filter(apt => {
     const matchesSearch =
-      getAccountName(apt.siteId).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getSiteName(apt.siteId).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getCustomerName(apt.serviceAddressId).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getServiceAddressName(apt.serviceAddressId).toLowerCase().includes(searchTerm.toLowerCase()) ||
       apt.serviceType.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = statusFilter === 'all' || apt.status === statusFilter;
@@ -125,10 +125,10 @@ const Appointments = () => {
                         </td>
                         <td>
                           <h5 className="font-size-14 mb-0">
-                            {getAccountName(appointment.siteId)}
+                            {getCustomerName(appointment.serviceAddressId)}
                           </h5>
                         </td>
-                        <td>{getSiteName(appointment.siteId)}</td>
+                        <td>{getServiceAddressName(appointment.serviceAddressId)}</td>
                         <td>{appointment.serviceType}</td>
                         <td>
                           <div>{appointment.scheduledDate}</div>

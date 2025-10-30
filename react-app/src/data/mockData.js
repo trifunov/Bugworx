@@ -494,7 +494,7 @@ export const appointments = [
     updatedAt: new Date().toISOString()
   },
 
-  // Restaurant - MUST be done before 10 AM (site closes at 10:00)
+  // Restaurant - MUST be done before 10 AM (service address closes at 10:00)
   {
     id: 4,
     serviceAddressId: 4, // Main Restaurant - VIP

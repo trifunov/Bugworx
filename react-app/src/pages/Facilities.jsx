@@ -16,7 +16,7 @@ const Facilities = () => {
     const [facilities, setFacilities] = useState(getFacilitiesByCustomerId(customerId));
     const serviceAddresses = getServiceAddressesByCustomerId(customerId);
 
-    const getSiteName = (serviceAddressId) => {
+    const getServiceAddressName = (serviceAddressId) => {
         const serviceAddress = serviceAddresses.find((s) => s.id === serviceAddressId);
         return serviceAddress ? serviceAddress.address : 'N/A';
     };
@@ -25,7 +25,7 @@ const Facilities = () => {
         const q = searchTerm.toLowerCase();
         return (
             (f.name && f.name.toLowerCase().includes(q)) ||
-            getSiteName(f.serviceAddressId).toLowerCase().includes(q)
+            getServiceAddressName(f.serviceAddressId).toLowerCase().includes(q)
         );
     });
 
@@ -114,7 +114,7 @@ const Facilities = () => {
                                     <tbody>
                                         {filtered.map((f) => (
                                             <tr key={f.id}>
-                                                <td>{getSiteName(f.serviceAddressId)}</td>
+                                                <td>{getServiceAddressName(f.serviceAddressId)}</td>
                                                 <td>
                                                     <h5 className="font-size-14 mb-0">{f.name}</h5>
                                                 </td>
