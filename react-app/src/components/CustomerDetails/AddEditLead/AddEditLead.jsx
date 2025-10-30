@@ -1,5 +1,5 @@
 import React from 'react';
-import { getAccounts, getServiceTypes } from '../../../utils/localStorage';
+import { getCustomers, getServiceTypes } from '../../../utils/localStorage';
 import { employees, sources, leadStatuses } from '../../../data/mockData';
 
 // Offcanvas form for adding/editing a Lead
@@ -12,7 +12,7 @@ const AddEditLead = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
         onSave();
     };
 
-    const accounts = getAccounts() || [];
+    const customers = getCustomers() || [];
     const serviceTypes = getServiceTypes() || [];
 
     return (
