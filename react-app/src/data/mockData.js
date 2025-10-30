@@ -177,6 +177,79 @@ export const sites = [
   }
 ];
 
+export const employees = [
+  {
+    id: 1,
+    name: 'Alice Johnson',
+    email: 'alice.johnson@example.com',
+    phone: '555-0121',
+    position: 'Sales Representative',
+    isActive: true
+  },
+  {
+    id: 2,
+    name: 'Bob Smith',
+    email: 'bob.smith@example.com',
+    phone: '555-0122',
+    position: 'Operator',
+    isActive: true
+  },
+  {
+    id: 3,
+    name: 'Charlie Brown',
+    email: 'charlie.brown@example.com',
+    phone: '555-0123',
+    position: 'Customer Support',
+    isActive: true
+  }
+];
+
+export const sources = [
+  { id: 1, name: 'Website' },
+  { id: 2, name: 'Call' },
+  { id: 3, name: 'Email Campaign' },
+  { id: 4, name: 'Social Media' },
+  { id: 5, name: 'Referral' }
+];
+
+export const leadStatuses = [
+  { id: 1, label: 'New' },
+  { id: 2, label: 'Contacted' }
+];
+
+export const leads = [
+  {
+    id: 1,
+    name: 'Lead 1',
+    status: 1, // New
+    dateCreated: '2024-09-01',
+    customerId: 1,
+    serviceInterest: 'General Pest Control',
+    assignedSalesRep: 1,
+    sourceId: 1
+  },
+  {
+    id: 3,
+    name: 'Lead 3',
+    status: 2, // Contacted
+    dateCreated: '2024-09-01',
+    customerId: 1,
+    serviceInterest: 'Termite Treatment',
+    assignedSalesRep: 1,
+    sourceId: 2
+  },
+  {
+    id: 2,
+    name: 'Lead 2',
+    status: 2, // Contacted
+    dateCreated: '2024-09-02',
+    customerId: 2,
+    serviceInterest: 'Termite Treatment',
+    assignedSalesRep: 1,
+    sourceId: 3
+  }
+];
+
 export const technicians = [
   {
     id: 1,

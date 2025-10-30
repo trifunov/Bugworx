@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import useSidebarMenu from '../hooks/useSidebarMenu';
+import useSidebarMenu from '../../hooks/useSidebarMenu';
 
 const ConfigurationSidebar = () => {
-  
-   useSidebarMenu(); // uses default selector '#side-menu'
+
+  useSidebarMenu(); // uses default selector '#side-menu'
 
   return (
     <div className="vertical-menu">

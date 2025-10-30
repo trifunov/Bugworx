@@ -1,42 +1,44 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import Drawing from '../components/CustomerDetails/Drawing';
+import { Link } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
-import AddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/AddEditFacility';
-import { addFacility, updateFacility, getFacilitiesByAccountId, getSitesByAccountId } from '../utils/localStorage';
-import useAddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/useAddEditFacility';
+import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
+import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
+import { employees, sources, leadStatuses } from '../data/mockData';
+import { getAccounts, getLeads, addLead, updateLead, deleteLead } from '../utils/localStorage';
 
-const Facilities = () => {
-    const { id } = useParams();
+const Leads = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedDrawing, setSelectedDrawing] = useState(null);
-    const accountId = parseInt(id);
-    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditFacility(accountId);
+    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditLead();
 
-    const [facilities, setFacilities] = useState(getFacilitiesByAccountId(accountId));
-    const sites = getSitesByAccountId(accountId);
+    // Initialize from local storage
+    const [leads, setLeads] = useState(getLeads() || []);
+    const accounts = getAccounts() || [];
 
-    const getSiteName = (siteId) => {
-        const site = sites.find((s) => s.id === siteId);
-        return site ? site.address : 'N/A';
-    };
+    const statusLabel = (statusId) => leadStatuses.find(s => s.id === Number(statusId))?.label || '-';
+    const customerName = (customerId) => accounts.find(a => a.id === customerId)?.name || 'N/A';
+    const employeeName = (empId) => employees.find(e => e.id === empId)?.name || '-';
+    const sourceName = (srcId) => sources.find(s => s.id === srcId)?.name || '-';
 
-    const filtered = facilities.filter((f) => {
+    const filtered = leads.filter((l) => {
         const q = searchTerm.toLowerCase();
         return (
-            (f.name && f.name.toLowerCase().includes(q)) ||
-            getSiteName(f.siteId).toLowerCase().includes(q)
+            (l.name && l.name.toLowerCase().includes(q)) ||
+            customerName(l.customerId).toLowerCase().includes(q) ||
+            (l.serviceInterest && l.serviceInterest.toLowerCase().includes(q)) ||
+            statusLabel(l.status).toLowerCase().includes(q) ||
+            employeeName(l.assignedSalesRep).toLowerCase().includes(q) ||
+            sourceName(l.sourceId).toLowerCase().includes(q) ||
+            (l.dateCreated && l.dateCreated.toLowerCase().includes(q))
         );
     });
 
     const handleSave = () => onSaveHandle((data) => {
-        if (data.id > 0) {
-            updateFacility(data.id, data);
+        if (data.id && data.id > 0) {
+            updateLead(data.id, data);
         } else {
-            addFacility(data);
+            addLead(data);
         }
-
-        setFacilities(getFacilitiesByAccountId(accountId));
+        setLeads(getLeads());
     });
 
     return (
@@ -44,24 +46,18 @@ const Facilities = () => {
             <div className="row">
                 <div className="col-12">
                     <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 className="mb-sm-0 font-size-18">Facilities</h4>
+                        <h4 className="mb-sm-0 font-size-18">Leads</h4>
                         <div className="page-title-right">
                             <ol className="breadcrumb m-0">
                                 <li className="breadcrumb-item"><Link to="/">Bugworx</Link></li>
-                                <li className="breadcrumb-item active">Facilities</li>
+                                <li className="breadcrumb-item active">Leads</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <Drawing
-                drawing={selectedDrawing}
-                show={selectedDrawing !== null}
-                onClose={() => setSelectedDrawing(null)}
-            />
-
-            <AddEditFacility
+            <AddEditLead
                 isOpen={isOpen}
                 formData={formData}
                 errors={errors}
@@ -83,7 +79,7 @@ const Facilities = () => {
                                                 <input
                                                     type="text"
                                                     className="form-control"
-                                                    placeholder="Search facilities..."
+                                                    placeholder="Search leads..."
                                                     value={searchTerm}
                                                     onChange={(e) => setSearchTerm(e.target.value)}
                                                     autoComplete="off"
@@ -93,9 +89,7 @@ const Facilities = () => {
                                         </div>
 
                                         <div className="mt-2 mt-md-0">
-                                            <AddNewButton handleAddNew={() => open({
-                                                id: 0,
-                                            })} />
+                                            <AddNewButton handleAddNew={() => open({ id: 0 })} />
                                         </div>
                                     </div>
                                 </div>
@@ -105,39 +99,39 @@ const Facilities = () => {
                                 <table className="table align-middle table-nowrap table-hover">
                                     <thead className="table-dark">
                                         <tr>
-                                            <th>Service address</th>
-                                            <th>Facility</th>
-                                            <th>Drawing</th>
+                                            <th>Lead</th>
+                                            <th>Customer</th>
+                                            <th>Service Interest</th>
+                                            <th>Status</th>
+                                            <th>Date Created</th>
+                                            <th>Sales Rep</th>
+                                            <th>Source</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filtered.map((f) => (
-                                            <tr key={f.id}>
-                                                <td>{getSiteName(f.siteId)}</td>
+                                        {filtered.map((l) => (
+                                            <tr key={l.id}>
                                                 <td>
-                                                    <h5 className="font-size-14 mb-0">{f.name}</h5>
+                                                    <h5 className="font-size-14 mb-0">{l.name}</h5>
                                                 </td>
+                                                <td>{customerName(l.customerId)}</td>
+                                                <td>{l.serviceInterest || '-'}</td>
                                                 <td>
-                                                    {f.drawing ? (
-                                                        <a href="#" className="text-primary" title="View" onClick={() => {
-                                                            setSelectedDrawing(f.drawing);
-                                                        }}>
-                                                            <i className="font-size-18 me-1"></i>
-                                                            <span>{f.drawing?.name}</span>
-                                                        </a>
-                                                    ) : (<span>-</span>)}
+                                                    <span className="badge badge-soft-primary">{statusLabel(l.status)}</span>
                                                 </td>
+                                                <td>{l.dateCreated || '-'}</td>
+                                                <td>{employeeName(l.assignedSalesRep)}</td>
+                                                <td>{sourceName(l.sourceId)}</td>
                                                 <td>
                                                     <div className="d-flex gap-3">
                                                         <a href="#" className="text-success" title="View">
                                                             <i className="mdi mdi-eye font-size-18"></i>
                                                         </a>
-                                                        <a href="#" className="text-primary" title="Edit"
-                                                            onClick={() => open(f)}>
+                                                        <a href="#" className="text-primary" title="Edit" onClick={() => open(l)}>
                                                             <i className="mdi mdi-pencil font-size-18"></i>
                                                         </a>
-                                                        <a href="#" className="text-danger" title="Delete">
+                                                        <a href="#" className="text-danger" title="Delete" onClick={() => { deleteLead(l.id); setLeads(getLeads()); }}>
                                                             <i className="mdi mdi-delete font-size-18"></i>
                                                         </a>
                                                     </div>
@@ -150,8 +144,8 @@ const Facilities = () => {
 
                             {filtered.length === 0 && (
                                 <div className="text-center py-4">
-                                    <i className="mdi mdi-office-building-cog font-size-48 text-muted"></i>
-                                    <p className="text-muted mt-2">No facilities found</p>
+                                    <i className="mdi mdi-account-search font-size-48 text-muted"></i>
+                                    <p className="text-muted mt-2">No leads found</p>
                                 </div>
                             )}
                         </div>
@@ -162,4 +156,4 @@ const Facilities = () => {
     );
 };
 
-export default Facilities;
+export default Leads;

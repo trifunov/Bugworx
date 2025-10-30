@@ -1,7 +1,6 @@
-import { Link, useLocation, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import { accounts } from '../data/mockData';
-import useSidebarMenu from '../hooks/useSidebarMenu';
+import { Link, useLocation } from 'react-router-dom';
+import { accounts } from '../../data/mockData';
+import useSidebarMenu from '../../hooks/useSidebarMenu';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -11,7 +10,7 @@ const Sidebar = () => {
   // Get customer data
   const customer = accountId ? accounts.find(acc => acc.id === accountId) : null;
 
- useSidebarMenu();
+  useSidebarMenu();
 
   return (
     <div className="vertical-menu">
@@ -101,6 +100,13 @@ const Sidebar = () => {
               <Link to={`/accounts/${accountId}/contracts`} className="waves-effect">
                 <i className="ri-file-text-line"></i>
                 <span>Contracts</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={`/accounts/${accountId}/proposals`} className="waves-effect">
+                <i className="ri-file-paper-line"></i>
+                <span>Proposals</span>
               </Link>
             </li>
 

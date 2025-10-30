@@ -1,15 +1,18 @@
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { appointments } from '../data/mockData';
-import { getSitesByAccountId, addSite, updateSite, addAppointment, getAccounts, addAccount, updateAccount } from '../utils/localStorage';
-import useAddEditSite from '../hooks/useAddEditSite';
+import { getSitesByAccountId, addSite, updateSite, addAppointment, getAccounts, addAccount, updateAccount, getProposalsByAccountId, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
+import useAddEditSite from '../components/CustomerDetails/AddEditSite/useAddEditSite';
 import useScheduleService from '../hooks/useScheduleService';
 import useViewReports from '../hooks/useViewReports';
-import AddEditSite from '../components/AccountActions/AddEditSite';
+import useAddEditProposal from '../hooks/useAddEditProposal';
+import AddEditSite from '../components/CustomerDetails/AddEditSite/AddEditSite';
 import ScheduleServiceModal from '../components/AccountActions/ScheduleServiceModal';
 import ViewReportsModal from '../components/AccountActions/ViewReportsModal';
-import useAddEditCustomer from '../hooks/useAddEditCustomer';
-import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
+import AddEditProposalModal from '../components/AccountActions/AddEditProposalModal';
+import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
+import AddNewButton from '../components/Common/AddNewButton';
 
 const AccountDetail = () => {
   const { id } = useParams();
@@ -17,11 +20,30 @@ const AccountDetail = () => {
   const navigate = useNavigate();
   const [accounts, setAccounts] = useState(getAccounts());
   const [accountSites, setAccountSites] = useState([]);
+  const [accountProposals, setAccountProposals] = useState([]);
+  const [proposalSearchTerm, setProposalSearchTerm] = useState('');
   const account = accounts.find(a => a.id === parseInt(id));
+
+  const addEditCustomer = useAddEditCustomer();
+  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditSite(parseInt(id));
+  const scheduleService = useScheduleService(parseInt(id));
+  const viewReports = useViewReports(parseInt(id));
+  const proposalModal = useAddEditProposal(parseInt(id));
+
+  const loadSites = useCallback(() => {
+    const sites = getSitesByAccountId(parseInt(id));
+    setAccountSites(sites);
+  }, [id]);
+
+  const loadProposals = useCallback(() => {
+    const proposals = getProposalsByAccountId(parseInt(id));
+    setAccountProposals(proposals);
+  }, [id]);
 
   useEffect(() => {
     loadSites();
-  }, [id]);
+    loadProposals();
+  }, [loadSites, loadProposals]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -30,12 +52,7 @@ const AccountDetail = () => {
       scheduleService.open();
       navigate(`/accounts/${id}`, { replace: true });
     }
-  }, [location.search]);
-
-  const loadSites = () => {
-    const sites = getSitesByAccountId(parseInt(id));
-    setAccountSites(sites);
-  };
+  }, [location.search, scheduleService, navigate, id]);
 
   const loadAccounts = () => {
     const accounts = getAccounts();
@@ -47,10 +64,7 @@ const AccountDetail = () => {
     return site && site.accountId === parseInt(id);
   });
 
-  const addEditCustomer = useAddEditCustomer();
-  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditSite(parseInt(id));
-  const scheduleService = useScheduleService(parseInt(id));
-  const viewReports = useViewReports(parseInt(id));
+
 
   // Determine which section to display based on the current path
   const pathParts = location.pathname.split('/');
@@ -69,6 +83,7 @@ const AccountDetail = () => {
       'service-history': { title: 'Service History', breadcrumb: 'Service History' },
       'invoices': { title: 'Invoices', breadcrumb: 'Invoices' },
       'contracts': { title: 'Contracts', breadcrumb: 'Contracts' },
+      'proposals': { title: 'Proposals', breadcrumb: 'Proposals' },
       'documents': { title: 'Documents', breadcrumb: 'Documents' },
       'notes': { title: 'Notes', breadcrumb: 'Notes' },
       'create-invoice': { title: 'Create Invoice', breadcrumb: 'Create Invoice' },
@@ -405,6 +420,152 @@ const AccountDetail = () => {
             </div>
           </div>
         );
+
+      case 'proposals': {
+        const getStatusBadgeClass = (status) => {
+          switch (status) {
+            case 'Accepted':
+              return 'badge-soft-success';
+            case 'Sent':
+              return 'badge-soft-primary';
+            case 'Draft':
+              return 'badge-soft-secondary';
+            case 'Rejected':
+              return 'badge-soft-danger';
+            case 'Withdrawn':
+              return 'badge-soft-warning';
+            default:
+              return 'badge-soft-secondary';
+          }
+        };
+
+        const formatDate = (dateString) => {
+          if (!dateString) return 'N/A';
+          return new Date(dateString).toLocaleDateString();
+        };
+
+        const handleEditProposal = (proposal) => {
+          proposalModal.open(proposal);
+        };
+
+        const handleDeleteProposal = (proposalId) => {
+          if (window.confirm('Are you sure you want to delete this proposal?')) {
+            deleteProposal(proposalId);
+            loadProposals();
+          }
+        };
+
+        const filteredProposals = accountProposals.filter((proposal) => {
+          const q = proposalSearchTerm.toLowerCase();
+          return (
+            (proposal.proposalTitle && proposal.proposalTitle.toLowerCase().includes(q)) ||
+            (proposal.proposalNumber && proposal.proposalNumber.toLowerCase().includes(q)) ||
+            (proposal.status && proposal.status.toLowerCase().includes(q))
+          );
+        });
+
+        return (
+          <div className="row">
+            <div className="col-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="row mb-3">
+                    <div className="col-12">
+                      <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
+                        <div className="flex-grow-1 w-100 me-md-3">
+                          <div className="position-relative">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Search proposals..."
+                              value={proposalSearchTerm}
+                              onChange={(e) => setProposalSearchTerm(e.target.value)}
+                              autoComplete="off"
+                            />
+                            <i className="bx bx-search-alt search-icon"></i>
+                          </div>
+                        </div>
+
+                        <div className="mt-2 mt-md-0">
+                          <AddNewButton handleAddNew={() => proposalModal.open()} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="table-responsive">
+                    <table className="table align-middle table-nowrap table-hover">
+                      <thead className="table-dark">
+                        <tr>
+                          <th>Proposal #</th>
+                          <th>Title</th>
+                          <th>Pricing</th>
+                          <th>Created Date</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredProposals.map((proposal) => (
+                          <tr key={proposal.id}>
+                            <td>
+                              <span className="fw-bold">{proposal.proposalNumber}</span>
+                            </td>
+                            <td>{proposal.proposalTitle}</td>
+                            <td>
+                              <div className="text-truncate" style={{ maxWidth: '200px' }}>
+                                {proposal.pricing}
+                              </div>
+                            </td>
+                            <td>{formatDate(proposal.createdAt)}</td>
+                            <td>
+                              <span className={`badge ${getStatusBadgeClass(proposal.status)}`}>
+                                {proposal.status}
+                              </span>
+                            </td>
+                            <td>
+                              <div className="d-flex gap-3">
+                                <a
+                                  href="#"
+                                  className="text-primary"
+                                  title="Edit"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleEditProposal(proposal);
+                                  }}
+                                >
+                                  <i className="mdi mdi-pencil font-size-18"></i>
+                                </a>
+                                <a
+                                  href="#"
+                                  className="text-danger"
+                                  title="Delete"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDeleteProposal(proposal.id);
+                                  }}
+                                >
+                                  <i className="mdi mdi-delete font-size-18"></i>
+                                </a>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {filteredProposals.length === 0 && (
+                    <div className="text-center py-4">
+                      <i className="mdi mdi-file-document-outline font-size-48 text-muted"></i>
+                      <p className="text-muted mt-2">No proposals found</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
 
       case 'documents':
         return (
@@ -866,6 +1027,25 @@ const AccountDetail = () => {
         onClose={viewReports.close}
         onGenerate={viewReports.generateReport}
         accountId={parseInt(id)}
+      />
+
+      <AddEditProposalModal
+        isOpen={proposalModal.isOpen}
+        formData={proposalModal.formData}
+        errors={proposalModal.errors}
+        isSaving={proposalModal.isSaving}
+        onUpdateField={proposalModal.onUpdateFieldHandle}
+        onClose={proposalModal.close}
+        onSave={() => proposalModal.onSaveHandle(async (data) => {
+          if (data.id) {
+            updateProposal(data.id, data);
+          } else {
+            addProposal(data);
+          }
+          loadProposals();
+        })}
+        onFileUpload={proposalModal.handleFileUpload}
+        onRemoveAttachment={proposalModal.removeAttachment}
       />
     </>
   );

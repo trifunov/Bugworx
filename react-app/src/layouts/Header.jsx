@@ -1,11 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import useSidebar from '../hooks/useSidebar';
-import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
-import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
-import { getAccounts, addAccount, updateAccount } from '../utils/localStorage';
-import useAddEditCustomer from '../hooks/useAddEditCustomer';
+import useSidebar from './Sidebar/useSidebar';
+import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
+import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
+import { getAccounts, addAccount, updateAccount, addLead, updateLead } from '../utils/localStorage';
+import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
+import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const Header = () => {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [accounts, setAccounts] = useState(getAccounts());
   const addEditCustomer = useAddEditCustomer();
+  const addEditLead = useAddEditLead();
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -82,12 +85,6 @@ const Header = () => {
     }
   };
 
-  const handleCustomerSelect = (accountId) => {
-    navigate(`/accounts/${accountId}`);
-    setSearchQuery('');
-    setShowSearchDropdown(false);
-  };
-
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -120,6 +117,25 @@ const Header = () => {
               }
               loadAccounts();
               return updatedCustomer;
+            })}
+          />
+
+          <AddEditLead
+            isOpen={addEditLead.isOpen}
+            formData={addEditLead.formData}
+            errors={addEditLead.errors}
+            isSaving={addEditLead.isSaving}
+            onUpdateField={addEditLead.onUpdateFieldHandle}
+            onClose={addEditLead.close}
+            onSave={() => addEditLead.onSaveHandle((data) => {
+              let updatedLead = null;
+              if (data.id && data.id !== 0) {
+                updatedLead = updateLead(data.id, data);
+              }
+              else {
+                updatedLead = addLead(data);
+              }
+              return updatedLead;
             })}
           />
 
@@ -169,13 +185,13 @@ const Header = () => {
               {showSearchDropdown && searchResults.length > 0 && (
                 <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px' }}>
                   {searchResults.map((account) => (
-                    <a
+                    <Link
                       key={account.id}
-                      href="#"
+                      to={`/accounts/${account.id}`}
                       className="dropdown-item"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleCustomerSelect(account.id);
+                      onClick={() => {
+                        setSearchQuery('');
+                        setShowSearchDropdown(false);
                       }}
                     >
                       <div className="d-flex align-items-center">
@@ -184,23 +200,19 @@ const Header = () => {
                           <p className="text-muted mb-0 font-size-12">{account.accountNum}</p>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                   <div className="dropdown-divider"></div>
-                  <a
-                    href="#"
+                  <Link
+                    to={searchQuery.trim() ? `/accounts?q=${encodeURIComponent(searchQuery)}` : '#'}
                     className="dropdown-item text-center"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (searchQuery.trim()) {
-                        navigate(`/accounts?q=${encodeURIComponent(searchQuery)}`);
-                        setSearchQuery('');
-                        setShowSearchDropdown(false);
-                      }
+                    onClick={() => {
+                      setSearchQuery('');
+                      setShowSearchDropdown(false);
                     }}
                   >
                     View all results
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -290,10 +302,10 @@ const Header = () => {
               <span>Add New</span>
             </button>
             <div className="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-add-new-dropdown">
-              <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>Lead</a>
+              <a className="dropdown-item" href="#" onClick={() => addEditLead.open({ id: 0 })}><i className="mdi mdi-account-convert me-2"></i>Lead</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</a>
+              <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</Link>
               <a className="dropdown-item" href="#"
                 onClick={() => addEditCustomer.open({ id: 0 })}
               ><i className="mdi mdi-account-plus me-2"></i>Customer</a>
@@ -319,7 +331,7 @@ const Header = () => {
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>New Lead</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>New Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>New Estimate</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</a>
+              <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</Link>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-plus me-2"></i>New Customer</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>New Service</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>New Invoice</a>
@@ -407,7 +419,7 @@ const Header = () => {
                 <span className="text-muted font-size-12">{user?.role}</span>
               </div>
               <Link className="dropdown-item" to="user-profile"><i className="ri-user-line align-middle me-1"></i> Profile</Link>
-               <Link className="dropdown-item" to="configuration"><i className="ri-settings-2-line align-middle me-1"></i> Settings</Link>
+              <Link className="dropdown-item" to="configuration"><i className="ri-settings-2-line align-middle me-1"></i> Settings</Link>
               <div className="dropdown-divider"></div>
               <button className="dropdown-item text-danger" onClick={handleLogout}>
                 <i className="ri-shut-down-line align-middle me-1 text-danger"></i> Logout
