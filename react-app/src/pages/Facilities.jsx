@@ -3,29 +3,29 @@ import { Link, useParams } from 'react-router-dom';
 import Drawing from '../components/CustomerDetails/Drawing';
 import AddNewButton from '../components/Common/AddNewButton';
 import AddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/AddEditFacility';
-import { addFacility, updateFacility, getFacilitiesByAccountId, getSitesByAccountId } from '../utils/localStorage';
+import { addFacility, updateFacility, getFacilitiesByCustomerId, getServiceAddressesByCustomerId } from '../utils/localStorage';
 import useAddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/useAddEditFacility';
 
 const Facilities = () => {
     const { id } = useParams();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDrawing, setSelectedDrawing] = useState(null);
-    const accountId = parseInt(id);
-    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditFacility(accountId);
+    const customerId = parseInt(id);
+    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditFacility(customerId);
 
-    const [facilities, setFacilities] = useState(getFacilitiesByAccountId(accountId));
-    const sites = getSitesByAccountId(accountId);
+    const [facilities, setFacilities] = useState(getFacilitiesByCustomerId(customerId));
+    const serviceAddresses = getServiceAddressesByCustomerId(customerId);
 
-    const getSiteName = (siteId) => {
-        const site = sites.find((s) => s.id === siteId);
-        return site ? site.address : 'N/A';
+    const getServiceAddressName = (serviceAddressId) => {
+        const serviceAddress = serviceAddresses.find((s) => s.id === serviceAddressId);
+        return serviceAddress ? serviceAddress.address : 'N/A';
     };
 
     const filtered = facilities.filter((f) => {
         const q = searchTerm.toLowerCase();
         return (
             (f.name && f.name.toLowerCase().includes(q)) ||
-            getSiteName(f.siteId).toLowerCase().includes(q)
+            getServiceAddressName(f.serviceAddressId).toLowerCase().includes(q)
         );
     });
 
@@ -36,7 +36,7 @@ const Facilities = () => {
             addFacility(data);
         }
 
-        setFacilities(getFacilitiesByAccountId(accountId));
+        setFacilities(getFacilitiesByCustomerId(customerId));
     });
 
     return (
@@ -114,7 +114,7 @@ const Facilities = () => {
                                     <tbody>
                                         {filtered.map((f) => (
                                             <tr key={f.id}>
-                                                <td>{getSiteName(f.siteId)}</td>
+                                                <td>{getServiceAddressName(f.serviceAddressId)}</td>
                                                 <td>
                                                     <h5 className="font-size-14 mb-0">{f.name}</h5>
                                                 </td>

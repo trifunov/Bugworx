@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-const useScheduleService = (accountId) => {
+const useScheduleService = (customerId) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
-    accountId: accountId,
-    siteId: '',
+    customerId: customerId,
+    serviceAddressId: '',
     serviceType: '',
     scheduledDate: '',
     scheduledTime: '',
@@ -19,8 +19,8 @@ const useScheduleService = (accountId) => {
 
   const open = () => {
     setFormData({
-      accountId: accountId,
-      siteId: '',
+      customerId: customerId,
+      serviceAddressId: '',
       serviceType: '',
       scheduledDate: '',
       scheduledTime: '',
@@ -56,8 +56,8 @@ const useScheduleService = (accountId) => {
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.siteId) {
-      newErrors.siteId = 'Please select a site';
+    if (!formData.serviceAddressId) {
+      newErrors.serviceAddressId = 'Please select a service address';
     }
 
     if (!formData.serviceType?.trim()) {

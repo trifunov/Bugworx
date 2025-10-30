@@ -13,7 +13,7 @@ export default function useSidebar() {
     const location = useLocation();
 
     const showSidebar =
-        location.pathname.startsWith('/accounts/') && location.pathname !== '/accounts';
+        location.pathname.startsWith('/customers/') && location.pathname !== '/customers';
 
     const toggleSidebar = useCallback(() => {
         // Mirror the previous imperative class toggling used in Header/MainLayout

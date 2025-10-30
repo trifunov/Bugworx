@@ -11,7 +11,7 @@ export async function save(formData, onSaveCallback, setIsSaving, close, setErro
         close();
         return true;
     } catch (error) {
-        setErrors({ submit: error.message || 'Failed to save site' });
+        setErrors({ submit: error.message || 'Failed to save service address' });
         return false;
     } finally {
         setIsSaving(false);

@@ -1,7 +1,7 @@
 import React from 'react';
-import { getFacilitiesByAccountId } from '../../../../utils/localStorage';
+import { getFacilitiesByCustomerId } from '../../../../utils/localStorage';
 
-const AddEditArea = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave, accountId }) => {
+const AddEditArea = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave, customerId }) => {
     if (!isOpen) return null;
 
     const handleSubmit = (e) => {
@@ -9,7 +9,7 @@ const AddEditArea = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
         onSave();
     };
 
-    const facilities = getFacilitiesByAccountId(accountId) || [];
+    const facilities = getFacilitiesByCustomerId(customerId) || [];
 
     return (
         <>

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { save, updateField } from '../../../utils/addEditFormUtils';
 
-const useAddEditSite = (accountId) => {
+const useAddEditServiceAddress = (customerId) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
-    accountId: accountId,
-    siteName: '',
-    siteType: '',
+    customerId: customerId,
+    serviceAddressName: '',
+    serviceAddressType: '',
     address: '',
     city: '',
     state: '',
@@ -19,20 +19,20 @@ const useAddEditSite = (accountId) => {
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
 
-  const open = (site) => {
+  const open = (serviceAddress) => {
     setFormData({
-      id: site?.id || 0,
-      accountId: accountId,
-      siteName: site?.siteName || '',
-      siteType: site?.siteType || '',
-      address: site?.address || '',
-      city: site?.city || '',
-      state: site?.state || '',
-      zip: site?.zip || '',
-      contactName: site?.contactName || '',
-      contactPhone: site?.contactPhone || '',
-      contactEmail: site?.contactEmail || '',
-      isActive: site?.isActive ?? true
+      id: serviceAddress?.id || 0,
+      customerId: customerId,
+      serviceAddressName: serviceAddress?.serviceAddressName || '',
+      serviceAddressType: serviceAddress?.serviceAddressType || '',
+      address: serviceAddress?.address || '',
+      city: serviceAddress?.city || '',
+      state: serviceAddress?.state || '',
+      zip: serviceAddress?.zip || '',
+      contactName: serviceAddress?.contactName || '',
+      contactPhone: serviceAddress?.contactPhone || '',
+      contactEmail: serviceAddress?.contactEmail || '',
+      isActive: serviceAddress?.isActive ?? true
     });
     setErrors({});
     setIsOpen(true);
@@ -51,12 +51,12 @@ const useAddEditSite = (accountId) => {
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.siteName?.trim()) {
-      newErrors.siteName = 'Site name is required';
+    if (!formData.serviceAddressName?.trim()) {
+      newErrors.serviceAddressName = 'Service address name is required';
     }
 
-    if (!formData.siteType?.trim()) {
-      newErrors.siteType = 'Site type is required';
+    if (!formData.serviceAddressType?.trim()) {
+      newErrors.serviceAddressType = 'Service address type is required';
     }
 
     if (!formData.address?.trim()) {
@@ -91,4 +91,4 @@ const useAddEditSite = (accountId) => {
   };
 };
 
-export default useAddEditSite;
+export default useAddEditServiceAddress;

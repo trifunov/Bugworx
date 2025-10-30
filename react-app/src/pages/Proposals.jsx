@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getProposals, getAccounts, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
+import { getProposals, getCustomers, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
 import useAddEditProposal from '../hooks/useAddEditProposal';
-import AddEditProposalModal from '../components/AccountActions/AddEditProposalModal';
+import AddEditProposalModal from '../components/CustomerActions/AddEditProposalModal';
 import AddNewButton from '../components/Common/AddNewButton';
 
 const Proposals = () => {
   const [proposals, setProposals] = useState([]);
-  const [accounts, setAccounts] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -19,19 +19,19 @@ const Proposals = () => {
 
   const loadData = () => {
     setProposals(getProposals());
-    setAccounts(getAccounts());
+    setCustomers(getCustomers());
   };
 
-  const getAccountName = (customerId) => {
-    const account = accounts.find(a => a.id === customerId);
-    return account ? account.name : 'N/A';
+  const getCustomerName = (customerId) => {
+    const customer = customers.find(c => c.id === customerId);
+    return customer ? customer.name : 'N/A';
   };
 
   const filteredProposals = proposals.filter(proposal => {
     const matchesSearch =
       proposal.proposalTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       proposal.proposalNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getAccountName(proposal.customerId).toLowerCase().includes(searchTerm.toLowerCase());
+      getCustomerName(proposal.customerId).toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = statusFilter === 'all' || proposal.status === statusFilter;
 
@@ -162,7 +162,7 @@ const Proposals = () => {
                         </td>
                         <td>
                           <h5 className="font-size-14 mb-0">
-                            {getAccountName(proposal.customerId)}
+                            {getCustomerName(proposal.customerId)}
                           </h5>
                         </td>
                         <td>{proposal.proposalTitle}</td>

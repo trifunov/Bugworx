@@ -1,67 +1,68 @@
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { appointments } from '../data/mockData';
-import { getSitesByAccountId, addSite, updateSite, addAppointment, getAccounts, addAccount, updateAccount, getProposalsByAccountId, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
-import useAddEditSite from '../components/CustomerDetails/AddEditSite/useAddEditSite';
+import { getServiceAddressesByCustomerId, addServiceAddress, updateServiceAddress, addAppointment, getCustomers, addCustomer, updateCustomer, getProposalsByCustomerId, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
+import useAddEditServiceAddress from '../components/CustomerDetails/AddEditServiceAddress/useAddEditServiceAddress';
 import useScheduleService from '../hooks/useScheduleService';
 import useViewReports from '../hooks/useViewReports';
 import useAddEditProposal from '../hooks/useAddEditProposal';
-import AddEditSite from '../components/CustomerDetails/AddEditSite/AddEditSite';
-import ScheduleServiceModal from '../components/AccountActions/ScheduleServiceModal';
-import ViewReportsModal from '../components/AccountActions/ViewReportsModal';
-import AddEditProposalModal from '../components/AccountActions/AddEditProposalModal';
+import AddEditServiceAddress from '../components/CustomerDetails/AddEditServiceAddress/AddEditServiceAddress';
+import ScheduleServiceModal from '../components/CustomerActions/ScheduleServiceModal';
+import ViewReportsModal from '../components/CustomerActions/ViewReportsModal';
+import AddEditProposalModal from '../components/CustomerActions/AddEditProposalModal';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
 import AddNewButton from '../components/Common/AddNewButton';
 
-const AccountDetail = () => {
+const CustomerDetail = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const [accounts, setAccounts] = useState(getAccounts());
-  const [accountSites, setAccountSites] = useState([]);
-  const [accountProposals, setAccountProposals] = useState([]);
+  const [customers, setCustomers] = useState(getCustomers());
+  const [customerServiceAddresses, setCustomerServiceAddresses] = useState([]);
+  const [customerProposals, setCustomerProposals] = useState([]);
   const [proposalSearchTerm, setProposalSearchTerm] = useState('');
-  const account = accounts.find(a => a.id === parseInt(id));
+  const customer = customers.find(a => a.id === parseInt(id));
 
   const addEditCustomer = useAddEditCustomer();
-  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditSite(parseInt(id));
+  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditServiceAddress(parseInt(id));
   const scheduleService = useScheduleService(parseInt(id));
   const viewReports = useViewReports(parseInt(id));
   const proposalModal = useAddEditProposal(parseInt(id));
 
-  const loadSites = useCallback(() => {
-    const sites = getSitesByAccountId(parseInt(id));
-    setAccountSites(sites);
+  const loadServiceAddresses = useCallback(() => {
+    const serviceAddresses = getServiceAddressesByCustomerId(parseInt(id));
+    setCustomerServiceAddresses(serviceAddresses);
   }, [id]);
 
   const loadProposals = useCallback(() => {
-    const proposals = getProposalsByAccountId(parseInt(id));
-    setAccountProposals(proposals);
+    const proposals = getProposalsByCustomerId(parseInt(id));
+    setCustomerProposals(proposals);
   }, [id]);
 
   useEffect(() => {
-    loadSites();
+    loadServiceAddresses();
     loadProposals();
-  }, [loadSites, loadProposals]);
+  }, [loadServiceAddresses, loadProposals]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const action = params.get('action');
     if (action === 'schedule-service') {
       scheduleService.open();
-      navigate(`/accounts/${id}`, { replace: true });
+      navigate(`/customers/${id}`, { replace: true });
     }
-  }, [location.search, scheduleService, navigate, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, navigate, id]);
 
-  const loadAccounts = () => {
-    const accounts = getAccounts();
-    setAccounts(accounts);
+  const loadCustomers = () => {
+    const customers = getCustomers();
+    setCustomers(customers);
   };
 
-  const accountAppointments = appointments.filter(apt => {
-    const site = accountSites.find(s => s.id === apt.siteId);
-    return site && site.accountId === parseInt(id);
+  const customerAppointments = appointments.filter(apt => {
+    const serviceAddress = customerServiceAddresses.find(s => s.id === apt.serviceAddressId);
+    return serviceAddress && serviceAddress.customerId === parseInt(id);
   });
 
 
@@ -70,15 +71,15 @@ const AccountDetail = () => {
   const pathParts = location.pathname.split('/');
   const section = pathParts[3] || 'overview'; // Default to overview if no section specified
 
-  if (!account) {
-    return <div>Account not found</div>;
+  if (!customer) {
+    return <div>Customer not found</div>;
   }
 
   // Get section title and breadcrumb
   const getSectionInfo = () => {
     const sections = {
-      'overview': { title: 'Account Overview', breadcrumb: 'Overview' },
-      'sites': { title: 'Customer Sites', breadcrumb: 'Sites' },
+      'overview': { title: 'Customer Overview', breadcrumb: 'Overview' },
+      'service-addresses': { title: 'Customer Service Addresses', breadcrumb: 'Service Addresses' },
       'appointments': { title: 'Appointments', breadcrumb: 'Appointments' },
       'service-history': { title: 'Service History', breadcrumb: 'Service History' },
       'invoices': { title: 'Invoices', breadcrumb: 'Invoices' },
@@ -97,26 +98,26 @@ const AccountDetail = () => {
   // Render section content based on current section
   const renderSectionContent = () => {
     switch (section) {
-      case 'sites':
+      case 'service-addresses':
         return (
           <div className="row">
             <div className="col-12">
               <div className="card">
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between mb-3">
-                    <h5 className="card-title mb-0">Customer Sites</h5>
+                    <h5 className="card-title mb-0">Customer Service Addresses</h5>
                     <button className="btn btn-success btn-sm" onClick={() => open({
                       id: 0,
                     })}>
                       <i className="bx bx-plus me-1"></i>
-                      Add Site
+                      Add Service Address
                     </button>
                   </div>
                   <div className="table-responsive">
                     <table className="table align-middle table-nowrap table-hover">
                       <thead className="table-light">
                         <tr>
-                          <th>Site Name</th>
+                          <th>Service Address Name</th>
                           <th>Type</th>
                           <th>Address</th>
                           <th>Contact</th>
@@ -125,33 +126,33 @@ const AccountDetail = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {accountSites.map((site) => (
-                          <tr key={site.id}>
+                        {customerServiceAddresses.map((serviceAddress) => (
+                          <tr key={serviceAddress.id}>
                             <td>
                               <h5 className="font-size-14 mb-0">
-                                <Link to={`/sites/${site.id}`} className="text-body">
-                                  {site.siteName}
+                                <Link to={`/service-addresses/${serviceAddress.id}`} className="text-body">
+                                  {serviceAddress.serviceAddressName}
                                 </Link>
                               </h5>
                             </td>
-                            <td>{site.siteType}</td>
-                            <td>{site.address}</td>
+                            <td>{serviceAddress.serviceAddressType}</td>
+                            <td>{serviceAddress.address}</td>
                             <td>
-                              <div>{site.contactName}</div>
-                              <div className="text-muted font-size-12">{site.contactPhone}</div>
+                              <div>{serviceAddress.contactName}</div>
+                              <div className="text-muted font-size-12">{serviceAddress.contactPhone}</div>
                             </td>
                             <td>
-                              <span className={`badge badge-soft-${site.isActive ? 'success' : 'danger'}`}>
-                                {site.isActive ? 'Active' : 'Inactive'}
+                              <span className={`badge badge-soft-${serviceAddress.isActive ? 'success' : 'danger'}`}>
+                                {serviceAddress.isActive ? 'Active' : 'Inactive'}
                               </span>
                             </td>
                             <td>
                               <div className="d-flex gap-3">
-                                <Link to={`/sites/${site.id}`} className="text-success" title="View">
+                                <Link to={`/service-addresses/${serviceAddress.id}`} className="text-success" title="View">
                                   <i className="mdi mdi-eye font-size-18"></i>
                                 </Link>
                                 <button
-                                  onClick={() => open(site)}
+                                  onClick={() => open(serviceAddress)}
                                   className="btn btn-link text-primary p-0"
                                   title="Edit"
                                 >
@@ -164,10 +165,10 @@ const AccountDetail = () => {
                       </tbody>
                     </table>
                   </div>
-                  {accountSites.length === 0 && (
+                  {customerServiceAddresses.length === 0 && (
                     <div className="text-center py-4">
                       <i className="mdi mdi-home-map-marker font-size-48 text-muted"></i>
-                      <p className="text-muted mt-2">No sites found for this customer</p>
+                      <p className="text-muted mt-2">No service addresses found for this customer</p>
                     </div>
                   )}
                 </div>
@@ -194,7 +195,7 @@ const AccountDetail = () => {
                       <thead className="table-light">
                         <tr>
                           <th>ID</th>
-                          <th>Site</th>
+                          <th>Service Address</th>
                           <th>Service Type</th>
                           <th>Date & Time</th>
                           <th>Status</th>
@@ -202,8 +203,8 @@ const AccountDetail = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {accountAppointments.map((appointment) => {
-                          const site = accountSites.find(s => s.id === appointment.siteId);
+                        {customerAppointments.map((appointment) => {
+                          const serviceAddress = customerServiceAddresses.find(s => s.id === appointment.serviceAddressId);
                           const getStatusBadgeClass = (status) => {
                             switch (status) {
                               case 'Completed': return 'badge-soft-success';
@@ -216,7 +217,7 @@ const AccountDetail = () => {
                           return (
                             <tr key={appointment.id}>
                               <td><span className="fw-bold">#{appointment.id}</span></td>
-                              <td>{site?.siteName || 'N/A'}</td>
+                              <td>{serviceAddress?.serviceAddressName || 'N/A'}</td>
                               <td>{appointment.serviceType}</td>
                               <td>
                                 <div>{appointment.scheduledDate}</div>
@@ -246,7 +247,7 @@ const AccountDetail = () => {
                       </tbody>
                     </table>
                   </div>
-                  {accountAppointments.length === 0 && (
+                  {customerAppointments.length === 0 && (
                     <div className="text-center py-4">
                       <i className="mdi mdi-calendar-remove font-size-48 text-muted"></i>
                       <p className="text-muted mt-2">No appointments found for this customer</p>
@@ -270,7 +271,7 @@ const AccountDetail = () => {
                       <thead className="table-light">
                         <tr>
                           <th>Date</th>
-                          <th>Site</th>
+                          <th>Service Address</th>
                           <th>Service Type</th>
                           <th>Technician</th>
                           <th>Duration</th>
@@ -278,12 +279,12 @@ const AccountDetail = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {accountAppointments.filter(apt => apt.status === 'Completed').map((appointment) => {
-                          const site = accountSites.find(s => s.id === appointment.siteId);
+                        {customerAppointments.filter(apt => apt.status === 'Completed').map((appointment) => {
+                          const serviceAddress = customerServiceAddresses.find(s => s.id === appointment.serviceAddressId);
                           return (
                             <tr key={appointment.id}>
                               <td>{appointment.scheduledDate}</td>
-                              <td>{site?.siteName || 'N/A'}</td>
+                              <td>{serviceAddress?.serviceAddressName || 'N/A'}</td>
                               <td>{appointment.serviceType}</td>
                               <td>Technician #{appointment.technicianId}</td>
                               <td>{appointment.duration || '2h'}</td>
@@ -296,7 +297,7 @@ const AccountDetail = () => {
                       </tbody>
                     </table>
                   </div>
-                  {accountAppointments.filter(apt => apt.status === 'Completed').length === 0 && (
+                  {customerAppointments.filter(apt => apt.status === 'Completed').length === 0 && (
                     <div className="text-center py-4">
                       <i className="mdi mdi-history font-size-48 text-muted"></i>
                       <p className="text-muted mt-2">No service history available</p>
@@ -316,7 +317,7 @@ const AccountDetail = () => {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between mb-3">
                     <h5 className="card-title mb-0">Invoices</h5>
-                    <Link to={`/accounts/${id}/create-invoice`} className="btn btn-primary btn-sm">
+                    <Link to={`/customers/${id}/create-invoice`} className="btn btn-primary btn-sm">
                       <i className="bx bx-file-add me-1"></i>
                       Create Invoice
                     </Link>
@@ -455,7 +456,7 @@ const AccountDetail = () => {
           }
         };
 
-        const filteredProposals = accountProposals.filter((proposal) => {
+        const filteredProposals = customerProposals.filter((proposal) => {
           const q = proposalSearchTerm.toLowerCase();
           return (
             (proposal.proposalTitle && proposal.proposalTitle.toLowerCase().includes(q)) ||
@@ -706,7 +707,7 @@ const AccountDetail = () => {
                       <div className="col-md-9">
                         <select className="form-select">
                           <option value="">Choose service...</option>
-                          {accountAppointments.filter(apt => apt.status === 'Completed').map(apt => (
+                          {customerAppointments.filter(apt => apt.status === 'Completed').map(apt => (
                             <option key={apt.id} value={apt.id}>
                               {apt.serviceType} - {apt.scheduledDate}
                             </option>
@@ -735,7 +736,7 @@ const AccountDetail = () => {
                           <i className="bx bx-check me-1"></i>
                           Create Invoice
                         </button>
-                        <Link to={`/accounts/${id}/invoices`} className="btn btn-secondary">
+                        <Link to={`/customers/${id}/invoices`} className="btn btn-secondary">
                           Cancel
                         </Link>
                       </div>
@@ -757,37 +758,37 @@ const AccountDetail = () => {
                   <div className="card-body">
                     <div className="d-flex align-items-start mb-4">
                       <div className="flex-grow-1">
-                        <h5 className="font-size-16 mb-1">{account.name}</h5>
-                        <p className="text-muted mb-0">{account.accountNum}</p>
+                        <h5 className="font-size-16 mb-1">{customer.name}</h5>
+                        <p className="text-muted mb-0">{customer.customerNum}</p>
                       </div>
                       <div className="flex-shrink-0">
-                        <span className={`badge badge-soft-${account.isActive ? 'success' : 'danger'} font-size-12`}>
-                          {account.isActive ? 'Active' : 'Inactive'}
+                        <span className={`badge badge-soft-${customer.isActive ? 'success' : 'danger'} font-size-12`}>
+                          {customer.isActive ? 'Active' : 'Inactive'}
                         </span>
                       </div>
                     </div>
 
                     <div className="row">
                       <div className="col-md-6">
-                        <h6 className="font-size-14 mb-3">Account Information</h6>
+                        <h6 className="font-size-14 mb-3">Customer Information</h6>
                         <div className="table-responsive">
                           <table className="table table-borderless mb-0">
                             <tbody>
                               <tr>
-                                <th className="text-muted" scope="row">Account Type:</th>
-                                <td>{account.accountType === 1 ? 'Residential' : 'Commercial'}</td>
+                                <th className="text-muted" scope="row">Customer Type:</th>
+                                <td>{customer.customerType === 1 ? 'Residential' : 'Commercial'}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Registration #:</th>
-                                <td>{account.registrationNum}</td>
+                                <td>{customer.registrationNum}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Send Invoice:</th>
-                                <td>{account.sendInvoice ? 'Yes' : 'No'}</td>
+                                <td>{customer.sendInvoice ? 'Yes' : 'No'}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Email Invoice:</th>
-                                <td>{account.emailInvoice ? 'Yes' : 'No'}</td>
+                                <td>{customer.emailInvoice ? 'Yes' : 'No'}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -801,15 +802,15 @@ const AccountDetail = () => {
                             <tbody>
                               <tr>
                                 <th className="text-muted" scope="row">Name:</th>
-                                <td>{account.billingContact?.name || account.primaryContactPerson}</td>
+                                <td>{customer.billingContact?.name || customer.primaryContactPerson}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Email:</th>
-                                <td>{account.billingContact?.email || account.email}</td>
+                                <td>{customer.billingContact?.email || customer.email}</td>
                               </tr>
                               <tr>
                                 <th className="text-muted" scope="row">Phone:</th>
-                                <td>{account.billingContact?.phone || account.phone}</td>
+                                <td>{customer.billingContact?.phone || customer.phone}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -820,22 +821,22 @@ const AccountDetail = () => {
                     <div className="mt-4">
                       <h6 className="font-size-14 mb-3">Billing Address</h6>
                       <p className="mb-0">
-                        {account.billingAddress?.street || ''}<br />
-                        {account.billingAddress?.city || ''}, {account.billingAddress?.state || ''} {account.billingAddress?.zip || ''}
+                        {customer.billingAddress?.street || ''}<br />
+                        {customer.billingAddress?.city || ''}, {customer.billingAddress?.state || ''} {customer.billingAddress?.zip || ''}
                       </p>
                     </div>
 
-                    {account.instructions && (
+                    {customer.instructions && (
                       <div className="mt-4">
                         <h6 className="font-size-14 mb-3">Instructions</h6>
-                        <p className="text-muted mb-0">{account.instructions}</p>
+                        <p className="text-muted mb-0">{customer.instructions}</p>
                       </div>
                     )}
 
-                    {account.primaryNote && (
+                    {customer.primaryNote && (
                       <div className="mt-4">
                         <h6 className="font-size-14 mb-3">Notes</h6>
-                        <p className="text-muted mb-0">{account.primaryNote}</p>
+                        <p className="text-muted mb-0">{customer.primaryNote}</p>
                       </div>
                     )}
                   </div>
@@ -843,12 +844,12 @@ const AccountDetail = () => {
 
                 <div className="card">
                   <div className="card-body">
-                    <h5 className="card-title mb-3">Associated Sites</h5>
+                    <h5 className="card-title mb-3">Associated Service Addresses</h5>
                     <div className="table-responsive">
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
                           <tr>
-                            <th>Site Name</th>
+                            <th>Service Address Name</th>
                             <th>Type</th>
                             <th>Address</th>
                             <th>Status</th>
@@ -856,24 +857,24 @@ const AccountDetail = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {accountSites.map((site) => (
-                            <tr key={site.id}>
+                          {customerServiceAddresses.map((serviceAddress) => (
+                            <tr key={serviceAddress.id}>
                               <td>
-                                <Link to={`/sites/${site.id}`} className="text-body">
-                                  {site.siteName}
+                                <Link to={`/service-addresses/${serviceAddress.id}`} className="text-body">
+                                  {serviceAddress.serviceAddressName}
                                 </Link>
                               </td>
-                              <td>{site.siteType}</td>
-                              <td>{site.address}</td>
+                              <td>{serviceAddress.serviceAddressType}</td>
+                              <td>{serviceAddress.address}</td>
                               <td>
-                                <span className={`badge badge-soft-${site.isActive ? 'success' : 'danger'}`}>
-                                  {site.isActive ? 'Active' : 'Inactive'}
+                                <span className={`badge badge-soft-${serviceAddress.isActive ? 'success' : 'danger'}`}>
+                                  {serviceAddress.isActive ? 'Active' : 'Inactive'}
                                 </span>
                               </td>
                               <td>
                                 <button
                                   className="btn btn-sm btn-primary"
-                                  onClick={() => open(site)}
+                                  onClick={() => open(serviceAddress)}
                                 >
                                   <i className="mdi mdi-pencil me-1"></i>
                                   Edit
@@ -893,13 +894,13 @@ const AccountDetail = () => {
                   <div className="card-body">
                     <h5 className="card-title mb-3">Actions</h5>
                     <div className="d-grid gap-2">
-                      <button className="btn btn-primary" onClick={() => addEditCustomer.open(account)}>
+                      <button className="btn btn-primary" onClick={() => addEditCustomer.open(customer)}>
                         <i className="bx bx-edit me-1"></i>
-                        Edit Account
+                        Edit Customer
                       </button>
                       <button className="btn btn-success" onClick={() => open({ id: 0 })}>
                         <i className="bx bx-plus me-1"></i>
-                        Add Site
+                        Add Service Address
                       </button>
                       <button className="btn btn-info" onClick={scheduleService.open}>
                         <i className="bx bx-calendar me-1"></i>
@@ -920,14 +921,14 @@ const AccountDetail = () => {
                       <div className="row">
                         <div className="col-6">
                           <div className="mt-4">
-                            <p className="text-muted mb-1">Total Sites</p>
-                            <h5>{accountSites.length}</h5>
+                            <p className="text-muted mb-1">Total Service Addresses</p>
+                            <h5>{customerServiceAddresses.length}</h5>
                           </div>
                         </div>
                         <div className="col-6">
                           <div className="mt-4">
-                            <p className="text-muted mb-1">Active Sites</p>
-                            <h5>{accountSites.filter(s => s.isActive).length}</h5>
+                            <p className="text-muted mb-1">Active Service Addresses</p>
+                            <h5>{customerServiceAddresses.filter(s => s.isActive).length}</h5>
                           </div>
                         </div>
                       </div>
@@ -950,10 +951,10 @@ const AccountDetail = () => {
             <div className="page-title-right">
               <ol className="breadcrumb m-0">
                 <li className="breadcrumb-item">
-                  <Link to="/accounts">Accounts</Link>
+                  <Link to="/customers">Customers</Link>
                 </li>
                 <li className="breadcrumb-item">
-                  <Link to={`/accounts/${id}`}>{account.accountNum}</Link>
+                  <Link to={`/customers/${id}`}>{customer.customerNum}</Link>
                 </li>
                 <li className="breadcrumb-item active">{sectionInfo.breadcrumb}</li>
               </ol>
@@ -974,17 +975,17 @@ const AccountDetail = () => {
         onSave={() => addEditCustomer.onSaveHandle((data) => {
           let updatedCustomer = null;
           if (data.id && data.id !== 0) {
-            updatedCustomer = updateAccount(data.id, data);
+            updatedCustomer = updateCustomer(data.id, data);
           }
           else {
-            updatedCustomer = addAccount(data);
+            updatedCustomer = addCustomer(data);
           }
-          loadAccounts();
+          loadCustomers();
           return updatedCustomer;
         })}
       />
 
-      <AddEditSite
+      <AddEditServiceAddress
         isOpen={isOpen}
         formData={formData}
         errors={errors}
@@ -992,15 +993,15 @@ const AccountDetail = () => {
         onUpdateField={onUpdateFieldHandle}
         onClose={close}
         onSave={() => onSaveHandle((data) => {
-          let updatedSite = null;
+          let updatedServiceAddress = null;
           if (data.id && data.id !== 0) {
-            updatedSite = updateSite(data.id, data);
+            updatedServiceAddress = updateServiceAddress(data.id, data);
           }
           else {
-            updatedSite = addSite(data);
+            updatedServiceAddress = addServiceAddress(data);
           }
-          loadSites();
-          return updatedSite;
+          loadServiceAddresses();
+          return updatedServiceAddress;
         })}
       />
 
@@ -1009,7 +1010,7 @@ const AccountDetail = () => {
         formData={scheduleService.formData}
         errors={scheduleService.errors}
         isSaving={scheduleService.isSaving}
-        accountSites={accountSites}
+        customerServiceAddresses={customerServiceAddresses}
         onUpdateField={scheduleService.updateField}
         onClose={scheduleService.close}
         onSave={() => scheduleService.save((data) => {
@@ -1026,7 +1027,7 @@ const AccountDetail = () => {
         onUpdateDateRange={viewReports.updateDateRange}
         onClose={viewReports.close}
         onGenerate={viewReports.generateReport}
-        accountId={parseInt(id)}
+        customerId={parseInt(id)}
       />
 
       <AddEditProposalModal
@@ -1051,4 +1052,4 @@ const AccountDetail = () => {
   );
 };
 
-export default AccountDetail;
+export default CustomerDetail;

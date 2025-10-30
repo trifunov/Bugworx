@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { accounts, sites, appointments } from '../data/mockData';
+import { customers, serviceAddresses, appointments } from '../data/mockData';
 import * as ls from '../utils/localStorage';
 
 const ConfigurationDetails = () => {
@@ -378,13 +378,13 @@ const sectionInfo = getSectionInfo();
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Custom Fields</h5>
-                  <p className="text-muted">Add user-defined fields for Customers, Sites, or Work Orders.</p>
+                  <p className="text-muted">Add user-defined fields for Customers, Service Addresses, or Work Orders.</p>
 
                   <div className="mb-3">
                     <label className="form-label">Apply to</label>
                     <select ref={customFieldAppliesRef} className="form-select">
                       <option>Customers</option>
-                      <option>Sites</option>
+                      <option>Service Addresses</option>
                       <option>Work Orders</option>
                     </select>
                   </div>
@@ -535,12 +535,12 @@ const sectionInfo = getSectionInfo();
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Bulk Import</h5>
-                  <p className="text-muted">Bulk upload master data (customers, sites, assets).</p>
+                  <p className="text-muted">Bulk upload master data (customers, service addresses, assets).</p>
                   <div className="mb-3">
                     <label className="form-label">Entity</label>
                     <select ref={importEntityRef} className="form-select">
                       <option>Customers</option>
-                      <option>Sites</option>
+                      <option>Service Addresses</option>
                       <option>Assets</option>
                       <option>Work Orders</option>
                     </select>
@@ -564,7 +564,7 @@ const sectionInfo = getSectionInfo();
                     <label className="form-label">Entity</label>
                     <select ref={exportEntityRef} className="form-select">
                       <option>Customers</option>
-                      <option>Sites</option>
+                      <option>Service Addresses</option>
                       <option>Assets</option>
                       <option>Work Orders</option>
                     </select>
