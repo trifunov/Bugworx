@@ -5,7 +5,7 @@ import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEd
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import { getCustomers, addCustomer, updateCustomer } from '../utils/localStorage';
 
-const Accounts = () => {
+const Customers = () => {
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditCustomer();
@@ -174,4 +174,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default Customers;

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { getConfiguration } from '../utils/localStorage';
 
-const useAddEditProposal = (accountId = null) => {
+const useAddEditProposal = (customerId = null) => {
   const config = getConfiguration();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     id: 0,
-    customerId: accountId || '',
+    customerId: customerId || '',
     proposalTitle: '',
     scopeOfWork: '',
     servicesProposed: '',
@@ -27,7 +27,7 @@ const useAddEditProposal = (accountId = null) => {
       const config = getConfiguration();
       setFormData({
         id: 0,
-        customerId: accountId || '',
+        customerId: customerId || '',
         proposalTitle: '',
         scopeOfWork: '',
         servicesProposed: '',
@@ -46,7 +46,7 @@ const useAddEditProposal = (accountId = null) => {
     const config = getConfiguration();
     setFormData({
       id: 0,
-      customerId: accountId || '',
+      customerId: customerId || '',
       proposalTitle: '',
       scopeOfWork: '',
       servicesProposed: '',

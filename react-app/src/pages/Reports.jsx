@@ -64,7 +64,7 @@ const Reports = () => {
         id: apt.id,
         date: apt.scheduledDate,
         time: apt.scheduledTime,
-        account: customer?.companyName || 'Unknown',
+        customer: customer?.companyName || 'Unknown',
         site: serviceAddress?.serviceAddressName || 'Unknown',
         serviceType: apt.serviceType,
         technician: tech?.name || 'Unassigned',
@@ -102,7 +102,7 @@ const Reports = () => {
         id: apt.id,
         date: apt.scheduledDate,
         time: apt.scheduledTime,
-        account: customer?.companyName || 'Unknown',
+        customer: customer?.companyName || 'Unknown',
         site: serviceAddress?.serviceAddressName || 'Unknown',
         serviceType: apt.serviceType,
         technician: tech?.name || 'Unassigned',
@@ -167,7 +167,7 @@ const Reports = () => {
           id: `BS-${serviceAddress.id}-${i}`,
           stationNumber: `BS-${String(i).padStart(3, '0')}`,
           site: serviceAddress.serviceAddressName,
-          account: customer?.companyName || 'Unknown',
+          customer: customer?.companyName || 'Unknown',
           location: `Zone ${String.fromCharCode(65 + Math.floor(Math.random() * 4))}`,
           lastInspection: lastInspection.toISOString().split('T')[0],
           nextInspection: nextInspection.toISOString().split('T')[0],
@@ -534,7 +534,7 @@ const Reports = () => {
                                 <tr key={row.id}>
                                   <td>{row.date}</td>
                                   <td>{row.time}</td>
-                                  <td>{row.account}</td>
+                                  <td>{row.customer}</td>
                                   <td>{row.site}</td>
                                   <td>{row.serviceType}</td>
                                   <td>{row.technician}</td>
@@ -572,7 +572,7 @@ const Reports = () => {
                                 <tr key={row.id}>
                                   <td>{row.date}</td>
                                   <td>{row.time}</td>
-                                  <td>{row.account}</td>
+                                  <td>{row.customer}</td>
                                   <td>{row.site}</td>
                                   <td>{row.serviceType}</td>
                                   <td>{row.technician}</td>
@@ -663,7 +663,7 @@ const Reports = () => {
                                 <tr key={row.id}>
                                   <td><strong>{row.stationNumber}</strong></td>
                                   <td>{row.site}</td>
-                                  <td>{row.account}</td>
+                                  <td>{row.customer}</td>
                                   <td>{row.location}</td>
                                   <td>{row.lastInspection}</td>
                                   <td>{row.nextInspection}</td>

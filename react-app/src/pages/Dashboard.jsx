@@ -53,7 +53,7 @@ const Dashboard = () => {
 
       <div className="row">
         <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/accounts" style={{ textDecoration: 'none' }}>
+          <Link to="/customers" style={{ textDecoration: 'none' }}>
             <div className="card border border-primary card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
               <div className="card-header bg-transparent border-primary">
                 <h4 className="my-0 text-primary font-size-24"><i className="mdi mdi-account-circle me-3"></i>Customers</h4>

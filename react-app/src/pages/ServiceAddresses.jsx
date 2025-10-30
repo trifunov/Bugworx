@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { serviceAddresses, customers } from '../data/mockData';
 
-const Sites = () => {
+const ServiceAddresses = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredServiceAddresses = serviceAddresses.filter(serviceAddress =>
@@ -20,7 +20,7 @@ const Sites = () => {
       <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0 font-size-18">Sites</h4>
+            <h4 className="mb-sm-0 font-size-18">Service Addresses</h4>
             <div className="page-title-right">
               <button className="btn btn-primary">
                 <i className="bx bx-plus me-1"></i>
@@ -41,7 +41,7 @@ const Sites = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search sites..."
+                      placeholder="Search service addresses..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -73,7 +73,7 @@ const Sites = () => {
                           </Link>
                         </td>
                         <td>
-                          <Link to={`/accounts/${serviceAddress.customerId}`}>
+                          <Link to={`/customers/${serviceAddress.customerId}`}>
                             {getCustomerName(serviceAddress.customerId)}
                           </Link>
                         </td>
@@ -123,4 +123,4 @@ const Sites = () => {
   );
 };
 
-export default Sites;
+export default ServiceAddresses;

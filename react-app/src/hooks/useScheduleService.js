@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-const useScheduleService = (accountId) => {
+const useScheduleService = (customerId) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
-    accountId: accountId,
+    customerId: customerId,
     siteId: '',
     serviceType: '',
     scheduledDate: '',
@@ -19,7 +19,7 @@ const useScheduleService = (accountId) => {
 
   const open = () => {
     setFormData({
-      accountId: accountId,
+      customerId: customerId,
       siteId: '',
       serviceType: '',
       scheduledDate: '',
@@ -57,7 +57,7 @@ const useScheduleService = (accountId) => {
     const newErrors = {};
 
     if (!formData.siteId) {
-      newErrors.siteId = 'Please select a site';
+      newErrors.siteId = 'Please select a service address';
     }
 
     if (!formData.serviceType?.trim()) {

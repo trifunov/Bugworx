@@ -1,6 +1,6 @@
 import { getServiceTypes } from '../../utils/localStorage';
 
-const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, accountSites, onUpdateField, onClose, onSave }) => {
+const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, customerServiceAddresses, onUpdateField, onClose, onSave }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
@@ -38,8 +38,8 @@ const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, accountSites
                 disabled={isSaving}
               >
                 <option value="">Choose site...</option>
-                {accountSites && accountSites.map(site => (
-                  <option key={site.id} value={site.id}>{site.siteName || site.address}</option>
+                {customerServiceAddresses && customerServiceAddresses.map(site => (
+                  <option key={site.id} value={site.id}>{site.serviceAddressName || site.address}</option>
                 ))}
               </select>
               {errors.siteId && <div className="invalid-feedback">{errors.siteId}</div>}

@@ -324,13 +324,13 @@ export const generateRouteWithStrategy = (appointments, technicianLocation, star
     estimatedDuration: apt.estimatedDuration,
     priority: apt.priority,
     serviceType: apt.serviceType,
-    siteName: apt.siteName,
+    serviceAddressName: apt.serviceAddressName,
     customerTier: apt.site?.customerTier,
     scheduledTime: apt.scheduledTime
   }));
 
   console.log(`📍 Input stops (${stops.length}):`, stops.map(s => ({
-    name: s.siteName,
+    name: s.serviceAddressName,
     priority: s.priority,
     tier: s.customerTier,
     time: s.scheduledTime
@@ -384,7 +384,7 @@ export const generateRouteWithStrategy = (appointments, technicianLocation, star
     optimizedStops = optimizeRouteWithConstraints(stops, technicianLocation, startTime);
   }
 
-  console.log(`✅ Optimized stop order:`, optimizedStops.map((s, i) => `${i+1}. ${s.siteName}`));
+  console.log(`✅ Optimized stop order:`, optimizedStops.map((s, i) => `${i+1}. ${s.serviceAddressName}`));
 
   // Calculate estimated arrival/departure times
   const [hours, minutes] = startTime.split(':').map(Number);

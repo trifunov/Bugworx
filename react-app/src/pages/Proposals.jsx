@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getProposals, getCustomers, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
 import useAddEditProposal from '../hooks/useAddEditProposal';
-import AddEditProposalModal from '../components/AccountActions/AddEditProposalModal';
+import AddEditProposalModal from '../components/CustomerActions/AddEditProposalModal';
 import AddNewButton from '../components/Common/AddNewButton';
 
 const Proposals = () => {
@@ -22,7 +22,7 @@ const Proposals = () => {
     setCustomers(getCustomers());
   };
 
-  const getAccountName = (customerId) => {
+  const getCustomerName = (customerId) => {
     const customer = customers.find(c => c.id === customerId);
     return customer ? customer.name : 'N/A';
   };
@@ -31,7 +31,7 @@ const Proposals = () => {
     const matchesSearch =
       proposal.proposalTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       proposal.proposalNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getAccountName(proposal.customerId).toLowerCase().includes(searchTerm.toLowerCase());
+      getCustomerName(proposal.customerId).toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = statusFilter === 'all' || proposal.status === statusFilter;
 
@@ -162,7 +162,7 @@ const Proposals = () => {
                         </td>
                         <td>
                           <h5 className="font-size-14 mb-0">
-                            {getAccountName(proposal.customerId)}
+                            {getCustomerName(proposal.customerId)}
                           </h5>
                         </td>
                         <td>{proposal.proposalTitle}</td>

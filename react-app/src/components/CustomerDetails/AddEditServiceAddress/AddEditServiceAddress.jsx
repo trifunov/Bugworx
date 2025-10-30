@@ -1,4 +1,4 @@
-const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave }) => {
+const AddEditServiceAddress = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
@@ -18,32 +18,32 @@ const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
         <div className="offcanvas-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="siteName" className="form-label">Service Address Name</label>
+              <label htmlFor="serviceAddressName" className="form-label">Service Address Name</label>
               <input
                 type="text"
-                className={`form-control ${errors.siteName ? 'is-invalid' : ''}`}
-                id="siteName"
-                value={formData.siteName || ''}
-                onChange={(e) => onUpdateField('siteName', e.target.value)}
+                className={`form-control ${errors.serviceAddressName ? 'is-invalid' : ''}`}
+                id="serviceAddressName"
+                value={formData.serviceAddressName || ''}
+                onChange={(e) => onUpdateField('serviceAddressName', e.target.value)}
                 disabled={isSaving}
               />
-              {errors.siteName && <div className="invalid-feedback">{errors.siteName}</div>}
+              {errors.serviceAddressName && <div className="invalid-feedback">{errors.serviceAddressName}</div>}
             </div>
 
             <div className="mb-3">
-              <label htmlFor="siteType" className="form-label">Property Type</label>
+              <label htmlFor="serviceAddressType" className="form-label">Property Type</label>
               <select
-                className={`form-select ${errors.siteType ? 'is-invalid' : ''}`}
-                id="siteType"
-                value={formData.siteType || ''}
-                onChange={(e) => onUpdateField('siteType', e.target.value)}
+                className={`form-select ${errors.serviceAddressType ? 'is-invalid' : ''}`}
+                id="serviceAddressType"
+                value={formData.serviceAddressType || ''}
+                onChange={(e) => onUpdateField('serviceAddressType', e.target.value)}
                 disabled={isSaving}
               >
                 <option value="">Select type...</option>
                 <option value="Warehouse">Warehouse</option>
                 <option value="Residential building">Residential building</option>
               </select>
-              {errors.siteType && <div className="invalid-feedback">{errors.siteType}</div>}
+              {errors.serviceAddressType && <div className="invalid-feedback">{errors.serviceAddressType}</div>}
             </div>
 
             <div className="mb-3">
@@ -179,4 +179,4 @@ const AddEditSite = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
   );
 };
 
-export default AddEditSite;
+export default AddEditServiceAddress;

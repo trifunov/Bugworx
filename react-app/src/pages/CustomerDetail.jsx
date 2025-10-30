@@ -2,19 +2,19 @@ import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { appointments } from '../data/mockData';
 import { getServiceAddressesByCustomerId, addServiceAddress, updateServiceAddress, addAppointment, getCustomers, addCustomer, updateCustomer, getProposalsByCustomerId, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
-import useAddEditSite from '../components/CustomerDetails/AddEditSite/useAddEditSite';
+import useAddEditServiceAddress from '../components/CustomerDetails/AddEditServiceAddress/useAddEditServiceAddress';
 import useScheduleService from '../hooks/useScheduleService';
 import useViewReports from '../hooks/useViewReports';
 import useAddEditProposal from '../hooks/useAddEditProposal';
-import AddEditSite from '../components/CustomerDetails/AddEditSite/AddEditSite';
-import ScheduleServiceModal from '../components/AccountActions/ScheduleServiceModal';
-import ViewReportsModal from '../components/AccountActions/ViewReportsModal';
-import AddEditProposalModal from '../components/AccountActions/AddEditProposalModal';
+import AddEditServiceAddress from '../components/CustomerDetails/AddEditServiceAddress/AddEditServiceAddress';
+import ScheduleServiceModal from '../components/CustomerActions/ScheduleServiceModal';
+import ViewReportsModal from '../components/CustomerActions/ViewReportsModal';
+import AddEditProposalModal from '../components/CustomerActions/AddEditProposalModal';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
 import AddNewButton from '../components/Common/AddNewButton';
 
-const AccountDetail = () => {
+const CustomerDetail = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const AccountDetail = () => {
   const customer = customers.find(a => a.id === parseInt(id));
 
   const addEditCustomer = useAddEditCustomer();
-  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditSite(parseInt(id));
+  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditServiceAddress(parseInt(id));
   const scheduleService = useScheduleService(parseInt(id));
   const viewReports = useViewReports(parseInt(id));
   const proposalModal = useAddEditProposal(parseInt(id));
@@ -52,7 +52,8 @@ const AccountDetail = () => {
       scheduleService.open();
       navigate(`/customers/${id}`, { replace: true });
     }
-  }, [location.search, scheduleService, navigate, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, navigate, id]);
 
   const loadCustomers = () => {
     const customers = getCustomers();
@@ -984,7 +985,7 @@ const AccountDetail = () => {
         })}
       />
 
-      <AddEditSite
+      <AddEditServiceAddress
         isOpen={isOpen}
         formData={formData}
         errors={errors}
@@ -1009,7 +1010,7 @@ const AccountDetail = () => {
         formData={scheduleService.formData}
         errors={scheduleService.errors}
         isSaving={scheduleService.isSaving}
-        accountSites={customerServiceAddresses}
+        customerServiceAddresses={customerServiceAddresses}
         onUpdateField={scheduleService.updateField}
         onClose={scheduleService.close}
         onSave={() => scheduleService.save((data) => {
@@ -1051,4 +1052,4 @@ const AccountDetail = () => {
   );
 };
 
-export default AccountDetail;
+export default CustomerDetail;

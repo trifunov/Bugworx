@@ -169,9 +169,9 @@ const Routing = () => {
       return null;
     }
 
-    const serviceAddress = serviceAddresses.find(s => s.id === apt.siteId);
+    const serviceAddress = serviceAddresses.find(s => s.id === apt.serviceAddressId);
     if (!serviceAddress) {
-      console.warn('Service address not found for appointment:', apt.siteId);
+      console.warn('Service address not found for appointment:', apt.serviceAddressId);
       return null;
     }
 
@@ -183,7 +183,7 @@ const Routing = () => {
     return {
       ...apt,
       site: serviceAddress,
-      siteId: apt.siteId,
+      serviceAddressId: apt.serviceAddressId,
       coordinates: serviceAddress.coordinates
     };
   };
@@ -286,8 +286,8 @@ const Routing = () => {
         distance: generatedRoute.totalDistance,
         duration: generatedRoute.totalDuration,
         stops: generatedRoute.stops.length,
-        firstStop: generatedRoute.stops[0]?.siteName,
-        lastStop: generatedRoute.stops[generatedRoute.stops.length - 1]?.siteName
+        firstStop: generatedRoute.stops[0]?.serviceAddressName,
+        lastStop: generatedRoute.stops[generatedRoute.stops.length - 1]?.serviceAddressName
       });
 
       // Calculate efficiency
