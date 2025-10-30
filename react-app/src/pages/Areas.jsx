@@ -1,20 +1,23 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import AddNewButton from '../components/CustomerDetails/AddNewButton';
-import AddEditArea from '../components/CustomerDetails/AddEditArea';
+import AddNewButton from '../components/Common/AddNewButton';
+import AddEditArea from '../components/CustomerDetails/Area/AddEditArea/AddEditArea';
 import { addArea, updateArea, getAreas, getFacilitiesByAccountId, getSitesByAccountId } from '../utils/localStorage';
+import useAddEditArea from '../components/CustomerDetails/Area/AddEditArea/useAddEditArea';
 
 const Areas = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    const [selectedArea, setSelectedArea] = useState(null);
     const { id } = useParams();
     const accountId = parseInt(id);
+    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditArea();
 
     // Load dynamic data from localStorage helpers so saved changes persist
     const facilities = getFacilitiesByAccountId(accountId);
     const sites = getSitesByAccountId(accountId);
-    const areas = getAreas().filter(a => facilities.some(f => f.id === a.facilityId));
+
+    const computeAreasForAccount = () => getAreas().filter(a => facilities.some(f => f.id === a.facilityId));
+    const [areas, setAreas] = useState(computeAreasForAccount());
 
     const getFacility = (facilityId) => facilities.find((f) => f.id === facilityId) || null;
 
@@ -37,18 +40,14 @@ const Areas = () => {
         );
     });
 
-    const handleSave = (updatedArea) => {
-        if (!updatedArea) return;
-
-        if (updatedArea.id > 0) {
-            updateArea(updatedArea.id, updatedArea);
+    const handleSave = () => onSaveHandle((data) => {
+        if (data.id > 0) {
+            updateArea(data.id, data);
         } else {
-            addArea(updatedArea);
+            addArea(data);
         }
-
-        // close the offcanvas
-        setSelectedArea(null);
-    };
+        setAreas(computeAreasForAccount());
+    });
 
     return (
         <>
@@ -67,9 +66,12 @@ const Areas = () => {
             </div>
 
             <AddEditArea
-                area={selectedArea}
-                show={selectedArea !== null}
-                onClose={() => setSelectedArea(null)}
+                isOpen={isOpen}
+                formData={formData}
+                errors={errors}
+                isSaving={isSaving}
+                onUpdateField={onUpdateFieldHandle}
+                onClose={close}
                 onSave={handleSave}
                 accountId={accountId}
             />
@@ -96,9 +98,7 @@ const Areas = () => {
                                         </div>
 
                                         <div className="mt-2 mt-md-0">
-                                            <AddNewButton handleAddNew={() => {
-                                                setSelectedArea({ id: 0, name: '', facilityId: '' });
-                                            }} />
+                                            <AddNewButton handleAddNew={() => open({ id: 0 })} />
                                         </div>
                                     </div>
                                 </div>
@@ -131,9 +131,7 @@ const Areas = () => {
                                                                 <i className="mdi mdi-eye font-size-18"></i>
                                                             </a>
                                                             <a href="#" className="text-primary" title="Edit"
-                                                                onClick={() => {
-                                                                    setSelectedArea(a);
-                                                                }}>
+                                                                onClick={() => open(a)}>
                                                                 <i className="mdi mdi-pencil font-size-18"></i>
                                                             </a>
                                                             <a href="#" className="text-danger" title="Delete">

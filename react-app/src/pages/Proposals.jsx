@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getProposals, getAccounts, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
 import useAddEditProposal from '../hooks/useAddEditProposal';
 import AddEditProposalModal from '../components/AccountActions/AddEditProposalModal';
-import AddNewButton from '../components/CustomerDetails/AddNewButton';
+import AddNewButton from '../components/Common/AddNewButton';
 
 const Proposals = () => {
   const [proposals, setProposals] = useState([]);

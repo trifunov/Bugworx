@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { sites, inspectionPoints as inspectionPointsData, areas, facilities } from '../data/mockData';
 import { statusIntToHtmlBadge } from '../utils/inspectionPointUtils';
-import AddNewButton from '../components/CustomerDetails/AddNewButton';
+import AddNewButton from '../components/Common/AddNewButton';
 
 const InspectionPoints = () => {
     const [searchTerm, setSearchTerm] = useState('');

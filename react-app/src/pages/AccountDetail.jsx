@@ -2,17 +2,17 @@ import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { appointments } from '../data/mockData';
 import { getSitesByAccountId, addSite, updateSite, addAppointment, getAccounts, addAccount, updateAccount, getProposalsByAccountId, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
-import useAddEditSite from '../hooks/useAddEditSite';
+import useAddEditSite from '../components/CustomerDetails/AddEditSite/useAddEditSite';
 import useScheduleService from '../hooks/useScheduleService';
 import useViewReports from '../hooks/useViewReports';
 import useAddEditProposal from '../hooks/useAddEditProposal';
-import AddEditSite from '../components/AccountActions/AddEditSite';
+import AddEditSite from '../components/CustomerDetails/AddEditSite/AddEditSite';
 import ScheduleServiceModal from '../components/AccountActions/ScheduleServiceModal';
 import ViewReportsModal from '../components/AccountActions/ViewReportsModal';
 import AddEditProposalModal from '../components/AccountActions/AddEditProposalModal';
-import useAddEditCustomer from '../hooks/useAddEditCustomer';
-import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
-import AddNewButton from '../components/CustomerDetails/AddNewButton';
+import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
+import AddNewButton from '../components/Common/AddNewButton';
 
 const AccountDetail = () => {
   const { id } = useParams();
