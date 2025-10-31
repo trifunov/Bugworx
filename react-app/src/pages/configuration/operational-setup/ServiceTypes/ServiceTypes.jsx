@@ -1,30 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { getServiceTypesSetup, saveServiceTypes } from '../../../utils/localStorage';
+import React from 'react';
+import { useServiceTypes } from './useServiceTypes';
 
 const ServiceTypes = () => {
-    const [items, setItems] = useState([]);
-    const [form, setForm] = useState({ name: '', templateType: 'Scheduled Visit', durationMins: 60, notes: '' });
-
-    useEffect(() => setItems(getServiceTypesSetup()), []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: name === 'durationMins' ? Number(value) : value }));
-    };
-
-    const addItem = () => {
-        if (!form.name.trim()) return;
-        const updated = [...items, { id: Date.now(), ...form }];
-        setItems(updated);
-        saveServiceTypes(updated);
-        setForm({ name: '', templateType: 'Scheduled Visit', durationMins: 60, notes: '' });
-    };
-
-    const removeItem = (id) => {
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveServiceTypes(updated);
-    };
+    const { items, form, handleChange, addItem, removeItem } = useServiceTypes();
 
     return (
         <div className="card">
@@ -40,7 +18,6 @@ const ServiceTypes = () => {
                         <select className="form-control" name="templateType" value={form.templateType} onChange={handleChange}>
                             <option>Scheduled Visit</option>
                             <option>Inspection</option>
-                            <option>Treament</option>
                             <option>Treatment</option>
                         </select>
                     </div>

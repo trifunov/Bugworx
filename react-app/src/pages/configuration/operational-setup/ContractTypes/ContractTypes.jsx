@@ -1,30 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { getContractTypes, saveContractTypes } from '../../../utils/localStorage';
+import React from 'react';
+import { useContractTypes } from './useContractTypes';
 
 const ContractTypes = () => {
-    const [items, setItems] = useState([]);
-    const [form, setForm] = useState({ name: '', description: '', billingCycle: 'Monthly', active: true });
-
-    useEffect(() => { setItems(getContractTypes()); }, []);
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-    };
-
-    const addItem = () => {
-        if (!form.name.trim()) return;
-        const updated = [...items, { id: Date.now(), ...form }];
-        setItems(updated);
-        saveContractTypes(updated);
-        setForm({ name: '', description: '', billingCycle: 'Monthly', active: true });
-    };
-
-    const removeItem = (id) => {
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveContractTypes(updated);
-    };
+    const { items, form, handleChange, addItem, removeItem } = useContractTypes();
 
     return (
         <div className="card">

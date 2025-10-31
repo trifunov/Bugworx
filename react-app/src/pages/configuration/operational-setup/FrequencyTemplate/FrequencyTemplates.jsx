@@ -1,23 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { getJobSettings, saveJobSettings } from '../../../utils/localStorage';
+import React from 'react';
+import { useFrequencyTemplates } from './useFrequencyTemplates';
 
-const JobSettings = () => {
-    const [settings, setSettings] = useState({ defaultStatus: 'Open', numberingFormat: 'JOB-{YYYY}-{SEQ}', slaHours: 48, escalations: '' });
-
-    useEffect(() => {
-        const s = getJobSettings();
-        setSettings(Object.keys(s).length ? s : settings);
-    }, []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSettings(prev => ({ ...prev, [name]: name === 'slaHours' ? Number(value) : value }));
-    };
-
-    const save = () => {
-        saveJobSettings(settings);
-        // Optionally show a toast (not implemented here)
-    };
+const FrequencyTemplates = () => {
+    const { settings, handleChange, save } = useFrequencyTemplates();
 
     return (
         <div className="card">
@@ -55,4 +40,4 @@ const JobSettings = () => {
     );
 }
 
-export default JobSettings;
+export default FrequencyTemplates;

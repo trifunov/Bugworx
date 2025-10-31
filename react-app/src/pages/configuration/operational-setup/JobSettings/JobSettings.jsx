@@ -1,23 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { getJobSettings, saveJobSettings } from '../../../utils/localStorage';
+import React from 'react';
+import { useJobSettings } from './useJobSettings';
 
 const JobSettings = () => {
-    const [settings, setSettings] = useState({ defaultStatus: 'Open', numberingFormat: 'JOB-{YYYY}-{SEQ}', slaHours: 48, escalations: '' });
-
-    useEffect(() => {
-        const s = getJobSettings();
-        setSettings(Object.keys(s).length ? s : settings);
-    }, []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSettings(prev => ({ ...prev, [name]: name === 'slaHours' ? Number(value) : value }));
-    };
-
-    const save = () => {
-        saveJobSettings(settings);
-        // Optionally show a toast (not implemented here)
-    };
+    const { settings, handleChange, save } = useJobSettings();
 
     return (
         <div className="card">

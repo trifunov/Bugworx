@@ -30,8 +30,8 @@ import RolesPermissions from './pages/configuration/user-access/RolesPermissions
 import TeamsBranches from './pages/configuration/user-access/TeamsBranches';
 import UserActivityLog from './pages/configuration/user-access/UserActivityLog';
 
-import ContractTypes from './pages/configuration/operational-setup/ContractTypes';
-import FrequencyTemplates from './pages/configuration/operational-setup/FrequencyTemplates';
+import ContractTypes from './pages/configuration/operational-setup/ContractTypes/ContractTypes';
+import FrequencyTemplates from './pages/configuration/operational-setup/FrequencyTemplate/FrequencyTemplates';
 import JobSettings from './pages/configuration/operational-setup/JobSettings';
 import OperationZones from './pages/configuration/operational-setup/OperationZones';
 import RouteConfiguration from './pages/configuration/operational-setup/RouteConfiguration';
