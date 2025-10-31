@@ -1,5 +1,5 @@
 import React from 'react';
-import { getAccounts, getServiceTypes } from '../../../utils/localStorage';
+import { getCustomers, getServiceTypes } from '../../../utils/localStorage';
 import { employees, sources, leadStatuses } from '../../../data/mockData';
 
 // Offcanvas form for adding/editing a Lead
@@ -12,7 +12,7 @@ const AddEditLead = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
         onSave();
     };
 
-    const accounts = getAccounts() || [];
+    const customers = getCustomers() || [];
     const serviceTypes = getServiceTypes() || [];
 
     return (
@@ -49,8 +49,8 @@ const AddEditLead = ({ isOpen, formData, errors, isSaving, onUpdateField, onClos
                                 disabled={isSaving}
                             >
                                 <option value="">Select a customer</option>
-                                {accounts.map((acc) => (
-                                    <option key={acc.id} value={acc.id}>{acc.name}</option>
+                                {customers.map((customer) => (
+                                    <option key={customer.id} value={customer.id}>{customer.name}</option>
                                 ))}
                             </select>
                             {errors.customerId && <div className="invalid-feedback">{errors.customerId}</div>}

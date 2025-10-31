@@ -35,7 +35,7 @@ export const users = [
     name: 'Michael Chen',
     role: 'Manager',
     avatar: '/assets/images/users/avatar-3.jpg',
-    permissions: ['accounts', 'billing', 'reports', 'analytics', 'inventory', 'technicians'],
+    permissions: ['customers', 'billing', 'reports', 'analytics', 'inventory', 'technicians'],
     phone: '555-1234',
     createdAt: '2024-02-01',
     lastLogin: null

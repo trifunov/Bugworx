@@ -2,41 +2,41 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import AddEditArea from '../components/CustomerDetails/Area/AddEditArea/AddEditArea';
-import { addArea, updateArea, getAreas, getFacilitiesByAccountId, getSitesByAccountId } from '../utils/localStorage';
+import { addArea, updateArea, getAreas, getFacilitiesByCustomerId, getServiceAddressesByCustomerId } from '../utils/localStorage';
 import useAddEditArea from '../components/CustomerDetails/Area/AddEditArea/useAddEditArea';
 
 const Areas = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const { id } = useParams();
-    const accountId = parseInt(id);
+    const customerId = parseInt(id);
     const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditArea();
 
     // Load dynamic data from localStorage helpers so saved changes persist
-    const facilities = getFacilitiesByAccountId(accountId);
-    const sites = getSitesByAccountId(accountId);
+    const facilities = getFacilitiesByCustomerId(customerId);
+    const serviceAddresses = getServiceAddressesByCustomerId(customerId);
 
-    const computeAreasForAccount = () => getAreas().filter(a => facilities.some(f => f.id === a.facilityId));
-    const [areas, setAreas] = useState(computeAreasForAccount());
+    const computeAreasForCustomer = () => getAreas().filter(a => facilities.some(f => f.id === a.facilityId));
+    const [areas, setAreas] = useState(computeAreasForCustomer());
 
     const getFacility = (facilityId) => facilities.find((f) => f.id === facilityId) || null;
 
-    const getSiteAddress = (facility) => {
+    const getServiceAddressAddress = (facility) => {
         if (!facility) return 'N/A';
-        const site = sites.find((s) => s.id === facility.siteId);
-        return site ? site.address : 'N/A';
+        const serviceAddress = serviceAddresses.find((s) => s.id === facility.serviceAddressId);
+        return serviceAddress ? serviceAddress.address : 'N/A';
     };
 
     const filtered = areas.filter((a) => {
         const q = searchTerm.toLowerCase();
         const facility = getFacility(a.facilityId);
         const facilityName = facility ? facility.name : '';
-        const siteAddress = getSiteAddress(facility);
+        const serviceAddressAddress = getServiceAddressAddress(facility);
 
         return (
             (a.name && a.name.toLowerCase().includes(q)) ||
             (facilityName && facilityName.toLowerCase().includes(q)) ||
-            (siteAddress && siteAddress.toLowerCase().includes(q))
+            (serviceAddressAddress && serviceAddressAddress.toLowerCase().includes(q))
         );
     });
 
@@ -46,7 +46,7 @@ const Areas = () => {
         } else {
             addArea(data);
         }
-        setAreas(computeAreasForAccount());
+        setAreas(computeAreasForCustomer());
     });
 
     return (
@@ -73,7 +73,7 @@ const Areas = () => {
                 onUpdateField={onUpdateFieldHandle}
                 onClose={close}
                 onSave={handleSave}
-                accountId={accountId}
+                customerId={customerId}
             />
 
             <div className="row">
@@ -117,10 +117,10 @@ const Areas = () => {
                                     <tbody>
                                         {filtered.map((a) => {
                                             const facility = getFacility(a.facilityId);
-                                            const siteAddress = getSiteAddress(facility);
+                                            const serviceAddressAddress = getServiceAddressAddress(facility);
                                             return (
                                                 <tr key={a.id}>
-                                                    <td>{siteAddress}</td>
+                                                    <td>{serviceAddressAddress}</td>
                                                     <td>{facility ? facility.name : '-'}</td>
                                                     <td>
                                                         {a.name}

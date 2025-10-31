@@ -5,9 +5,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import {
   appointments as initialAppointments,
-  sites as initialSites,
+  serviceAddresses as initialServiceAddresses,
   technicians as initialTechnicians,
-  accounts as initialAccounts,
+  customers as initialCustomers,
   priorities,
   appointmentStatuses,
   inventory as initialInventory
@@ -18,8 +18,8 @@ import {
   addAppointment,
   updateAppointment,
   deleteAppointment,
-  getAccounts,
-  getSites,
+  getCustomers,
+  getServiceAddresses,
   getTechnicians,
   isTechnicianAvailable,
   suggestTechnicians,
@@ -34,8 +34,8 @@ const Scheduler = () => {
 
   // Data state from localStorage
   const [appointments, setAppointmentsState] = useState([]);
-  const [accounts, setAccounts] = useState([]);
-  const [sites, setSitesState] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [serviceAddresses, setServiceAddresses] = useState([]);
   const [technicians, setTechniciansState] = useState([]);
 
   const serviceTypes = getServiceTypes();
@@ -66,8 +66,8 @@ const Scheduler = () => {
 
   // Appointment form state
   const [appointmentForm, setAppointmentForm] = useState({
-    accountId: '',
-    siteId: '',
+    customerId: '',
+    serviceAddressId: '',
     technicianId: '',
     scheduledDate: '',
     scheduledTime: '',
@@ -82,8 +82,8 @@ const Scheduler = () => {
   useEffect(() => {
     initializeStorage({
       appointments: initialAppointments,
-      accounts: initialAccounts,
-      sites: initialSites,
+      customers: initialCustomers,
+      serviceAddresses: initialServiceAddresses,
       technicians: initialTechnicians,
       inventory: initialInventory
     });
@@ -93,8 +93,8 @@ const Scheduler = () => {
   // Load data from localStorage
   const loadData = () => {
     setAppointmentsState(getAppointments());
-    setAccounts(getAccounts());
-    setSitesState(getSites());
+    setCustomers(getCustomers());
+    setServiceAddresses(getServiceAddresses());
     setTechniciansState(getTechnicians());
   };
 
@@ -111,16 +111,16 @@ const Scheduler = () => {
   }, [showModal]);
 
   // Helper functions
-  const getSiteName = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    return site ? site.siteName : 'N/A';
+  const getServiceAddressName = (serviceAddressId) => {
+    const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
+    return serviceAddress ? serviceAddress.serviceAddressName : 'N/A';
   };
 
-  const getAccountName = (siteId) => {
-    const site = sites.find(s => s.id === siteId);
-    if (!site) return 'N/A';
-    const account = accounts.find(a => a.id === site.accountId);
-    return account ? account.name : 'N/A';
+  const getCustomerName = (serviceAddressId) => {
+    const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
+    if (!serviceAddress) return 'N/A';
+    const customer = customers.find(a => a.id === serviceAddress.customerId);
+    return customer ? customer.name : 'N/A';
   };
 
   const getTechnicianName = (technicianId) => {
@@ -156,23 +156,23 @@ const Scheduler = () => {
 
     return {
       id: apt.id,
-      title: `${getAccountName(apt.siteId)} - ${apt.serviceType}`,
+      title: `${getCustomerName(apt.serviceAddressId)} - ${apt.serviceType}`,
       start: `${apt.scheduledDate}T${apt.scheduledTime}`,
       end: endTime,
       className: className,
       extendedProps: {
         appointment: apt,
         technician: getTechnicianName(apt.technicianId),
-        site: getSiteName(apt.siteId),
+        serviceAddress: getServiceAddressName(apt.serviceAddressId),
         duration: apt.estimatedDuration,
         priority: apt.priority
       }
     };
   });
 
-  // Get sites for selected account
-  const availableSites = appointmentForm.accountId
-    ? sites.filter(s => s.accountId === parseInt(appointmentForm.accountId))
+  // Get service addresses for selected customer
+  const availableSites = appointmentForm.customerId
+    ? serviceAddresses.filter(s => s.customerId === parseInt(appointmentForm.customerId))
     : [];
 
   // Modal handlers
@@ -180,8 +180,8 @@ const Scheduler = () => {
     setModalMode('create');
     setSelectedAppointment(null);
     setAppointmentForm({
-      accountId: '',
-      siteId: '',
+      customerId: '',
+      serviceAddressId: '',
       technicianId: '',
       scheduledDate: dateInfo ? dateInfo.dateStr : '',
       scheduledTime: dateInfo ? '09:00' : '',
@@ -197,10 +197,10 @@ const Scheduler = () => {
   const openEditModal = (appointment) => {
     setModalMode('edit');
     setSelectedAppointment(appointment);
-    const site = sites.find(s => s.id === appointment.siteId);
+    const serviceAddress = serviceAddresses.find(s => s.id === appointment.serviceAddressId);
     setAppointmentForm({
-      accountId: site ? site.accountId : '',
-      siteId: appointment.siteId,
+      customerId: serviceAddress ? serviceAddress.customerId : '',
+      serviceAddressId: appointment.serviceAddressId,
       technicianId: appointment.technicianId || '',
       scheduledDate: appointment.scheduledDate,
       scheduledTime: appointment.scheduledTime,
@@ -225,8 +225,8 @@ const Scheduler = () => {
       endDate: ''
     });
     setAppointmentForm({
-      accountId: '',
-      siteId: '',
+      customerId: '',
+      serviceAddressId: '',
       technicianId: '',
       scheduledDate: '',
       scheduledTime: '',
@@ -244,8 +244,8 @@ const Scheduler = () => {
       alert('Please select a service type first');
       return;
     }
-    if (!appointmentForm.siteId) {
-      alert('Please select a site first');
+    if (!appointmentForm.serviceAddressId) {
+      alert('Please select a service address first');
       return;
     }
     if (!appointmentForm.scheduledDate) {
@@ -259,7 +259,7 @@ const Scheduler = () => {
 
     const suggestions = suggestTechnicians(
       appointmentForm.serviceType,
-      parseInt(appointmentForm.siteId),
+      parseInt(appointmentForm.serviceAddressId),
       appointmentForm.scheduledDate,
       appointmentForm.scheduledTime,
       appointmentForm.estimatedDuration
@@ -424,9 +424,9 @@ const Scheduler = () => {
     setAppointmentForm(prev => {
       const updated = { ...prev, [field]: value };
 
-      // Reset siteId when accountId changes
-      if (field === 'accountId') {
-        updated.siteId = '';
+      // Reset serviceAddressId when customerId changes
+      if (field === 'customerId') {
+        updated.serviceAddressId = '';
       }
 
       return updated;
@@ -434,12 +434,12 @@ const Scheduler = () => {
   };
 
   const validateForm = () => {
-    if (!appointmentForm.accountId) {
+    if (!appointmentForm.customerId) {
       alert('Please select a customer');
       return false;
     }
-    if (!appointmentForm.siteId) {
-      alert('Please select a site');
+    if (!appointmentForm.serviceAddressId) {
+      alert('Please select a service address');
       return false;
     }
     if (!appointmentForm.serviceType) {
@@ -480,7 +480,7 @@ const Scheduler = () => {
     if (!validateForm()) return;
 
     const appointmentData = {
-      siteId: parseInt(appointmentForm.siteId),
+      serviceAddressId: parseInt(appointmentForm.serviceAddressId),
       technicianId: appointmentForm.technicianId ? parseInt(appointmentForm.technicianId) : null,
       scheduledDate: appointmentForm.scheduledDate,
       scheduledTime: appointmentForm.scheduledTime,
@@ -717,7 +717,7 @@ const Scheduler = () => {
                             </div>
                           </div>
                           <div className="flex-grow-1 ms-3">
-                            <h6 className="mb-1 font-size-12">{getAccountName(apt.siteId)}</h6>
+                            <h6 className="mb-1 font-size-12">{getCustomerName(apt.serviceAddressId)}</h6>
                             <p className="text-muted mb-0 font-size-11">{apt.scheduledDate} {apt.scheduledTime}</p>
                           </div>
                         </div>
@@ -900,7 +900,7 @@ const Scheduler = () => {
                         </th>
                         <th>Date & Time</th>
                         <th>Customer</th>
-                        <th>Site</th>
+                        <th>Service Address</th>
                         <th>Service Type</th>
                         <th>Technician</th>
                         <th>Status</th>
@@ -934,8 +934,8 @@ const Scheduler = () => {
                               <div className="fw-medium">{new Date(apt.scheduledDate).toLocaleDateString()}</div>
                               <small className="text-muted">{apt.scheduledTime} ({apt.estimatedDuration} min)</small>
                             </td>
-                            <td>{getAccountName(apt.siteId)}</td>
-                            <td>{getSiteName(apt.siteId)}</td>
+                            <td>{getCustomerName(apt.serviceAddressId)}</td>
+                            <td>{getServiceAddressName(apt.serviceAddressId)}</td>
                             <td>
                               <span className="badge badge-soft-info">{apt.serviceType}</span>
                             </td>
@@ -1003,33 +1003,33 @@ const Scheduler = () => {
                     <label className="form-label">Customer <span className="text-danger">*</span></label>
                     <select
                       className="form-select"
-                      value={appointmentForm.accountId}
-                      onChange={(e) => handleFormChange('accountId', e.target.value)}
+                      value={appointmentForm.customerId}
+                      onChange={(e) => handleFormChange('customerId', e.target.value)}
                       required
                     >
                       <option value="">Select Customer...</option>
-                      {accounts.map(acc => (
-                        <option key={acc.id} value={acc.id}>{acc.name}</option>
+                      {customers.map(cust => (
+                        <option key={cust.id} value={cust.id}>{cust.name}</option>
                       ))}
                     </select>
                   </div>
 
                   {/* Site Selection */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label">Site <span className="text-danger">*</span></label>
+                    <label className="form-label">Service Address <span className="text-danger">*</span></label>
                     <select
                       className="form-select"
-                      value={appointmentForm.siteId}
-                      onChange={(e) => handleFormChange('siteId', e.target.value)}
+                      value={appointmentForm.serviceAddressId}
+                      onChange={(e) => handleFormChange('serviceAddressId', e.target.value)}
                       required
-                      disabled={!appointmentForm.accountId}
+                      disabled={!appointmentForm.customerId}
                     >
-                      <option value="">Select Site...</option>
-                      {availableSites.map(site => (
-                        <option key={site.id} value={site.id}>{site.siteName}</option>
+                      <option value="">Select Service Address...</option>
+                      {availableSites.map(serviceAddress => (
+                        <option key={serviceAddress.id} value={serviceAddress.id}>{serviceAddress.serviceAddressName}</option>
                       ))}
                     </select>
-                    {!appointmentForm.accountId && (
+                    {!appointmentForm.customerId && (
                       <small className="text-muted">Please select a customer first</small>
                     )}
                   </div>

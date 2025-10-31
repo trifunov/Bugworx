@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { save, updateField } from '../../../../utils/addEditFormUtils'
 
-const useAddEditFacility = (accountId) => {
+const useAddEditFacility = (customerId) => {
     const [isOpen, setIsOpen] = useState(false);
     const defaultForm = {
         id: 0,
         name: '',
-        siteId: null, // required
+        serviceAddressId: null, // required
         drawing: {
             id: '',
             name: '',
@@ -21,7 +21,7 @@ const useAddEditFacility = (accountId) => {
         setFormData({
             id: facility?.id || 0,
             name: facility?.name || '',
-            siteId: facility?.siteId ?? null,
+            serviceAddressId: facility?.serviceAddressId ?? null,
             drawing: {
                 id: facility?.drawing?.id || '',
                 name: facility?.drawing?.name || '',
@@ -49,8 +49,8 @@ const useAddEditFacility = (accountId) => {
             newErrors.name = 'Facility name is required';
         }
 
-        if (formData.siteId === null || formData.siteId === undefined || formData.siteId === '') {
-            newErrors.siteId = 'Site is required';
+        if (formData.serviceAddressId === null || formData.serviceAddressId === undefined || formData.serviceAddressId === '') {
+            newErrors.serviceAddressId = 'Service address is required';
         }
 
         setErrors(newErrors);

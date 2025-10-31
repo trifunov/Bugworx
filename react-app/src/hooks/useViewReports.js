@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useViewReports = (accountId) => {
+const useViewReports = (customerId) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedReportType, setSelectedReportType] = useState(null);
   const [dateRange, setDateRange] = useState({
@@ -32,7 +32,7 @@ const useViewReports = (accountId) => {
   const generateReport = async (onGenerateCallback) => {
     if (onGenerateCallback && selectedReportType) {
       await onGenerateCallback({
-        accountId,
+        customerId,
         reportType: selectedReportType,
         ...dateRange
       });

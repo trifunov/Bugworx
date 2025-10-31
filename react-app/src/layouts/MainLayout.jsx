@@ -3,7 +3,6 @@ import Header from './Header';
 import Sidebar from './Sidebar/Sidebar';
 import ConfigurationSidebar from './SidebarConfiguration/SidebarConfiguration';
 import Footer from './Footer';
-import { useEffect } from 'react';
 import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
 

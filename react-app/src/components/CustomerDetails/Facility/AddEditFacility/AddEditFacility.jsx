@@ -1,7 +1,7 @@
 import React from 'react';
-import { getSites, getSitesByAccountId } from '../../../../utils/localStorage';
+import { getServiceAddresses, getServiceAddressesByCustomerId } from '../../../../utils/localStorage';
 
-const AddEditFacility = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave, accountId }) => {
+const AddEditFacility = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave, customerId }) => {
     if (!isOpen) return null;
 
     const handleSubmit = (e) => {
@@ -9,7 +9,7 @@ const AddEditFacility = ({ isOpen, formData, errors, isSaving, onUpdateField, on
         onSave();
     };
 
-    const sites = accountId ? getSitesByAccountId(accountId) : getSites();
+    const serviceAddresses = customerId ? getServiceAddressesByCustomerId(customerId) : getServiceAddresses();
 
     return (
         <>
@@ -34,20 +34,20 @@ const AddEditFacility = ({ isOpen, formData, errors, isSaving, onUpdateField, on
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="siteId" className="form-label">Service address</label>
+                            <label htmlFor="serviceAddressId" className="form-label">Service address</label>
                             <select
-                                className={`form-select ${errors.siteId ? 'is-invalid' : ''}`}
-                                id="siteId"
-                                value={formData.siteId ?? ''}
-                                onChange={(e) => onUpdateField('siteId', e.target.value)}
+                                className={`form-select ${errors.serviceAddressId ? 'is-invalid' : ''}`}
+                                id="serviceAddressId"
+                                value={formData.serviceAddressId ?? ''}
+                                onChange={(e) => onUpdateField('serviceAddressId', e.target.value)}
                                 disabled={isSaving}
                             >
                                 <option value="">Select a service address</option>
-                                {sites.map(site => (
-                                    <option key={site.id} value={site.id}>{site.address}</option>
+                                {serviceAddresses.map(serviceAddress => (
+                                    <option key={serviceAddress.id} value={serviceAddress.id}>{serviceAddress.address}</option>
                                 ))}
                             </select>
-                            {errors.siteId && <div className="invalid-feedback">{errors.siteId}</div>}
+                            {errors.serviceAddressId && <div className="invalid-feedback">{errors.serviceAddressId}</div>}
                         </div>
 
                         {errors.submit && (
