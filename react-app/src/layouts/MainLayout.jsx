@@ -1,11 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import Sidebar from './Sidebar';
-import ConfigurationSidebar from './ConfigurationSidebar';
+import Sidebar from './Sidebar/Sidebar';
+import ConfigurationSidebar from './SidebarConfiguration/SidebarConfiguration';
 import Footer from './Footer';
-import { useEffect } from 'react';
-import useSidebar from '../hooks/useSidebar';
-import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
+import useSidebar from './Sidebar/useSidebar';
+import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
 
 const MainLayout = () => {
   const { showSidebar } = useSidebar();

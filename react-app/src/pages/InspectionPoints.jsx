@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { sites, inspectionPoints as inspectionPointsData, areas, facilities } from '../data/mockData';
+import { serviceAddresses, inspectionPoints as inspectionPointsData, areas, facilities } from '../data/mockData';
 import { statusIntToHtmlBadge } from '../utils/inspectionPointUtils';
-import AddNewButton from '../components/CustomerDetails/AddNewButton';
+import AddNewButton from '../components/Common/AddNewButton';
 
 const InspectionPoints = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -13,8 +13,8 @@ const InspectionPoints = () => {
     const getServiceAddress = (areaId) => {
         const area = areas.find((a) => a.id === areaId);
         const facility = area ? facilities.find((f) => f.id === area.facilityId) : null;
-        const site = facility ? sites.find((s) => s.id === facility.siteId) : null;
-        return site ? site.address : 'N/A';
+        const serviceAddress = facility ? serviceAddresses.find((s) => s.id === facility.serviceAddressId) : null;
+        return serviceAddress ? serviceAddress.address : 'N/A';
     };
 
     const getAreaName = (areaId) => {

@@ -1,22 +1,26 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import useSidebar from '../hooks/useSidebar';
-import useConfigurationSidebar from '../hooks/useConfigurationSidebar';
-import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer';
-import { getAccounts, addAccount, updateAccount } from '../utils/localStorage';
-import useAddEditCustomer from '../hooks/useAddEditCustomer';
+import useSidebar from './Sidebar/useSidebar';
+import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
+import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
+import { getCustomers, addCustomer, updateCustomer, addLead, updateLead } from '../utils/localStorage';
+import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
+import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showSidebar, toggleSidebar } = useSidebar();
   const { showConfigurationSidebar } = useConfigurationSidebar();
   const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const [accounts, setAccounts] = useState(getAccounts());
+  const [customers, setCustomers] = useState(getCustomers());
   const addEditCustomer = useAddEditCustomer();
+  const addEditLead = useAddEditLead();
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -56,7 +60,7 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/accounts?q=${encodeURIComponent(searchQuery)}`);
+      navigate(`/customers?q=${encodeURIComponent(searchQuery)}`);
       setSearchQuery('');
       setShowSearchDropdown(false);
     }
@@ -67,11 +71,11 @@ const Header = () => {
     setSearchQuery(query);
 
     if (query.trim()) {
-      const filtered = accounts
+      const filtered = customers
         .filter(
-          (account) =>
-            account.name.toLowerCase().includes(query.toLowerCase()) ||
-            account.accountNum.toLowerCase().includes(query.toLowerCase())
+          (customer) =>
+            customer.name.toLowerCase().includes(query.toLowerCase()) ||
+            customer.customerNum.toLowerCase().includes(query.toLowerCase())
         )
         .slice(0, 5);
       setSearchResults(filtered);
@@ -82,20 +86,30 @@ const Header = () => {
     }
   };
 
-  const handleCustomerSelect = (accountId) => {
-    navigate(`/accounts/${accountId}`);
-    setSearchQuery('');
-    setShowSearchDropdown(false);
-  };
-
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  const loadAccounts = () => {
-    const accounts = getAccounts();
-    setAccounts(accounts);
+  const loadCustomers = () => {
+    const customers = getCustomers();
+    setCustomers(customers);
+  };
+
+  const handleCreateInvoice = (e) => {
+    e.preventDefault();
+    // Check if we're on a customer detail page
+    const pathParts = location.pathname.split('/');
+    if (pathParts[1] === 'customers' && pathParts[2]) {
+      const customerId = pathParts[2];
+      // Navigate to the customer page with create-invoice action
+      navigate(`/customers/${customerId}?action=create-invoice`);
+    } else {
+      // If not on a customer page, navigate to customers list
+      // User can then select a customer and create invoice from there
+      alert('Please select a customer first to create an invoice.');
+      navigate('/customers');
+    }
   };
 
   return (
@@ -113,13 +127,32 @@ const Header = () => {
             onSave={() => addEditCustomer.onSaveHandle((data) => {
               let updatedCustomer = null;
               if (data.id && data.id !== 0) {
-                updatedCustomer = updateAccount(data.id, data);
+                updatedCustomer = updateCustomer(data.id, data);
               }
               else {
-                updatedCustomer = addAccount(data);
+                updatedCustomer = addCustomer(data);
               }
-              loadAccounts();
+              loadCustomers();
               return updatedCustomer;
+            })}
+          />
+
+          <AddEditLead
+            isOpen={addEditLead.isOpen}
+            formData={addEditLead.formData}
+            errors={addEditLead.errors}
+            isSaving={addEditLead.isSaving}
+            onUpdateField={addEditLead.onUpdateFieldHandle}
+            onClose={addEditLead.close}
+            onSave={() => addEditLead.onSaveHandle((data) => {
+              let updatedLead = null;
+              if (data.id && data.id !== 0) {
+                updatedLead = updateLead(data.id, data);
+              }
+              else {
+                updatedLead = addLead(data);
+              }
+              return updatedLead;
             })}
           />
 
@@ -168,39 +201,35 @@ const Header = () => {
               {/* Search Results Dropdown */}
               {showSearchDropdown && searchResults.length > 0 && (
                 <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px' }}>
-                  {searchResults.map((account) => (
-                    <a
-                      key={account.id}
-                      href="#"
+                  {searchResults.map((customer) => (
+                    <Link
+                      key={customer.id}
+                      to={`/customers/${customer.id}`}
                       className="dropdown-item"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleCustomerSelect(account.id);
+                      onClick={() => {
+                        setSearchQuery('');
+                        setShowSearchDropdown(false);
                       }}
                     >
                       <div className="d-flex align-items-center">
                         <div className="flex-grow-1">
-                          <h6 className="mb-0">{account.name}</h6>
-                          <p className="text-muted mb-0 font-size-12">{account.accountNum}</p>
+                          <h6 className="mb-0">{customer.name}</h6>
+                          <p className="text-muted mb-0 font-size-12">{customer.customerNum}</p>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                   <div className="dropdown-divider"></div>
-                  <a
-                    href="#"
+                  <Link
+                    to={searchQuery.trim() ? `/customers?q=${encodeURIComponent(searchQuery)}` : '#'}
                     className="dropdown-item text-center"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (searchQuery.trim()) {
-                        navigate(`/accounts?q=${encodeURIComponent(searchQuery)}`);
-                        setSearchQuery('');
-                        setShowSearchDropdown(false);
-                      }
+                    onClick={() => {
+                      setSearchQuery('');
+                      setShowSearchDropdown(false);
                     }}
                   >
                     View all results
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -290,15 +319,15 @@ const Header = () => {
               <span>Add New</span>
             </button>
             <div className="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-add-new-dropdown">
-              <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>Lead</a>
+              <a className="dropdown-item" href="#" onClick={() => addEditLead.open({ id: 0 })}><i className="mdi mdi-account-convert me-2"></i>Lead</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</a>
+              <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</Link>
               <a className="dropdown-item" href="#"
                 onClick={() => addEditCustomer.open({ id: 0 })}
               ><i className="mdi mdi-account-plus me-2"></i>Customer</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>Service</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>Invoice</a>
+              <a className="dropdown-item" href="#" onClick={handleCreateInvoice}><i className="mdi mdi-receipt me-2"></i>Invoice</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-cash me-2"></i>Payment</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-outline me-2"></i>Document</a>
             </div>
@@ -316,13 +345,13 @@ const Header = () => {
               <i className="mdi mdi-plus"></i>
             </button>
             <div className="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-add-new-dropdown-mobile">
-              <a className="dropdown-item" href="#"><i className="mdi mdi-account-convert me-2"></i>New Lead</a>
+              <a className="dropdown-item" href="#" onClick={() => addEditLead.open({ id: 0 })}><i className="mdi mdi-account-convert me-2"></i>New Lead</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>New Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>New Estimate</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-account-plus me-2"></i>New Customer</a>
+              <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>New Proposal</Link>
+              <a className="dropdown-item" href="#" onClick={() => addEditCustomer.open({ id: 0 })}><i className="mdi mdi-account-plus me-2"></i>New Customer</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>New Service</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-receipt me-2"></i>New Invoice</a>
+              <a className="dropdown-item" href="#" onClick={handleCreateInvoice}><i className="mdi mdi-receipt me-2"></i>New Invoice</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-cash me-2"></i>New Payment</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-outline me-2"></i>New Document</a>
             </div>
@@ -407,7 +436,7 @@ const Header = () => {
                 <span className="text-muted font-size-12">{user?.role}</span>
               </div>
               <Link className="dropdown-item" to="user-profile"><i className="ri-user-line align-middle me-1"></i> Profile</Link>
-               <Link className="dropdown-item" to="configuration"><i className="ri-settings-2-line align-middle me-1"></i> Settings</Link>
+              <Link className="dropdown-item" to="configuration"><i className="ri-settings-2-line align-middle me-1"></i> Settings</Link>
               <div className="dropdown-divider"></div>
               <button className="dropdown-item text-danger" onClick={handleLogout}>
                 <i className="ri-shut-down-line align-middle me-1 text-danger"></i> Logout
