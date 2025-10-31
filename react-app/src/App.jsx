@@ -24,11 +24,11 @@ import UserProfile from './pages/UserProfile';
 import Proposals from './pages/Proposals';
 import Leads from './pages/Leads';
 
-import Users from './pages/configuration/user-access/Users';
+import Users from './pages/configuration/user-access/Users/Users';
 import EmployeeDirectory from './pages/configuration/user-access/EmployeeDirectory/EmployeeDirectory';
 import RolesPermissions from './pages/configuration/user-access/RolesPermissions/RolesPermissions';
-import TeamsBranches from './pages/configuration/user-access/TeamsBranches';
-import UserActivityLog from './pages/configuration/user-access/UserActivityLog';
+import TeamsBranches from './pages/configuration/user-access/TeamsBranches/TeamsBranches';
+import UserActivityLog from './pages/configuration/user-access/UserActivityLog/UserActivityLog';
 
 function App() {
   return (

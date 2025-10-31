@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTeamsBranches } from './useTeamsBranches';
+import { useTeamsBranches } from './useTeamBranches';
 
 const TeamsBranches = () => {
   const {
