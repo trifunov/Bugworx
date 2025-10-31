@@ -1,66 +1,22 @@
-// ...existing code...
-import React, { useEffect, useState } from 'react';
-import { getTeams, getEmployees, saveEmployees, addEmployee } from '../../../utils/localStorage';
+import React from 'react';
+import useEmployeeDirectory from './useEmployeeDirectory';
 
 const EmployeeDirectory = () => {
-  const [items, setItems] = useState(() => getEmployees());
-  const [form, setForm] = useState({ name: '', position: '', team: '' });
-  const [editing, setEditing] = useState(null);
-
-  // teams state reads teams created in TeamsBranches
-  const [teams, setTeams] = useState(() => getTeams());
-
-  useEffect(() => {
-    // keep local state persisted whenever items change
-    saveEmployees(items);
-  }, [items]);
-
-  // refresh teams on mount and when TeamsBranches dispatches an update
-  useEffect(() => {
-    const refreshTeams = () => setTeams(getTeams());
-    refreshTeams();
-    window.addEventListener('teams:updated', refreshTeams);
-    return () => window.removeEventListener('teams:updated', refreshTeams);
-  }, []);
-
-  const startAdd = () => {
-    setEditing(null);
-    setForm({
-      name: '',
-      position: '',
-      team: teams && teams.length ? (teams[0].name ?? '') : '',
-    });
-  };
-
-  const editItem = (it) => {
-    setEditing(it.id);
-    setForm({ name: it.name, position: it.position, team: it.team });
-  };
-
-  const saveItem = (e) => {
-    e.preventDefault();
-    if (editing) {
-      const next = items.map(it => (it.id === editing ? { ...it, ...form } : it));
-      setItems(next);
-      // saveEmployees triggered by useEffect but keep explicit save to ensure persistence
-      saveEmployees(next);
-    } else {
-      const newItem = addEmployee({ ...form, active: true, createdAt: new Date().toISOString() });
-      setItems(prev => [newItem, ...prev]);
-    }
-    setEditing(null);
-    setForm({ name: '', position: '', team: '' });
-  };
-
-  const toggleActive = (id) => {
-    const next = items.map(it => (it.id === id ? { ...it, active: !it.active } : it));
-    setItems(next);
-    saveEmployees(next);
-  };
+  const {
+    items,
+    form,
+    editing,
+    teams,
+    startAdd,
+    editItem,
+    saveItem,
+    toggleActive,
+    setForm,
+    setEditing,
+  } = useEmployeeDirectory();
 
   return (
     <>
-      {/* ...existing JSX unchanged ... */}
       <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -158,4 +114,5 @@ const EmployeeDirectory = () => {
     </>
   );
 };
+
 export default EmployeeDirectory;

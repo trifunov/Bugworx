@@ -1,50 +1,21 @@
-// ...existing code...
-import React, { useEffect, useState } from 'react';
-import { getTeams, saveTeams, addTeam } from '../../../utils/localStorage';
+import React from 'react';
+import { useTeamsBranches } from './useTeamsBranches';
 
 const TeamsBranches = () => {
-  const [items, setItems] = useState(() => getTeams());
-  const [form, setForm] = useState({ name: '', region: '' });
-  const [editing, setEditing] = useState(null);
-
-  useEffect(() => {
-    // keep persisted on mount/change
-    setItems(getTeams());
-  }, []);
-
-  const startAdd = () => {
-    setEditing(null);
-    setForm({ name: '', region: '' });
-  };
-
-  const editItem = (it) => {
-    setEditing(it.id);
-    setForm({ name: it.name, region: it.region });
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    if (editing) {
-      const next = items.map(it => (it.id === editing ? { ...it, ...form } : it));
-      setItems(next);
-      saveTeams(next); // will dispatch 'teams:updated'
-    } else {
-      const newItem = addTeam({ ...form });
-      setItems(prev => [newItem, ...prev]);
-    }
-    setEditing(null);
-    setForm({ name: '', region: '' });
-  };
-
-  const removeItem = (id) => {
-    const next = items.filter(it => it.id !== id);
-    setItems(next);
-    saveTeams(next); // will dispatch 'teams:updated'
-  };
+  const {
+    items,
+    form,
+    editing,
+    setForm,
+    startAdd,
+    editItem,
+    cancelEdit,
+    handleSave,
+    removeItem,
+  } = useTeamsBranches();
 
   return (
     <>
-      {/* ...existing JSX unchanged ... */}
       <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -102,7 +73,7 @@ const TeamsBranches = () => {
                 </div>
                 <div className="d-flex gap-2">
                   <button type="submit" className="btn btn-primary">Save</button>
-                  <button type="button" className="btn btn-light" onClick={() => { setEditing(null); setForm({ name: '', region: '' }); }}>Cancel</button>
+                  <button type="button" className="btn btn-light" onClick={cancelEdit}>Cancel</button>
                 </div>
               </form>
             </div>

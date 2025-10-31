@@ -966,8 +966,6 @@ export default {
   getFacilitiesByCustomerId,
   getCurrentUser,
   updateCurrentUser,
-  addAccount,
-  updateAccount,
   getUsers,
   saveUsers,
   addUser,

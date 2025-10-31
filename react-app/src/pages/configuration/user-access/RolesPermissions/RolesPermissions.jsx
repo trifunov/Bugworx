@@ -1,51 +1,21 @@
-// ...existing code...
-import React, { useEffect, useState } from 'react';
-import { getRoles, saveRoles, addRole } from '../../../utils/localStorage';
+import React from 'react';
+import { useRolesPermissions } from './useRolesPermissions';
 
 const RolesPermissions = () => {
-  const [roles, setRoles] = useState(() => getRoles());
-  const [form, setForm] = useState({ name: '', permissions: '' });
-  const [editing, setEditing] = useState(null);
-
-  useEffect(() => {
-    // keep roles in sync if other parts update storage externally
-    setRoles(getRoles());
-  }, []);
-
-  const startAdd = () => {
-    setEditing(null);
-    setForm({ name: '', permissions: '' });
-  };
-
-  const startEdit = (r) => {
-    setEditing(r.id);
-    setForm({ name: r.name, permissions: (r.permissions || []).join(', ') });
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    const perms = form.permissions.split(',').map(s => s.trim()).filter(Boolean);
-    if (editing) {
-      const next = roles.map(r => (r.id === editing ? { ...r, name: form.name, permissions: perms } : r));
-      setRoles(next);
-      saveRoles(next);
-    } else {
-      const newRole = addRole({ name: form.name, permissions: perms });
-      setRoles(prev => [newRole, ...prev]);
-    }
-    setEditing(null);
-    setForm({ name: '', permissions: '' });
-  };
-
-  const removeRole = (id) => {
-    const next = roles.filter(r => r.id !== id);
-    setRoles(next);
-    saveRoles(next);
-  };
+  const {
+    roles,
+    form,
+    editing,
+    setForm,
+    startAdd,
+    startEdit,
+    cancelEdit,
+    handleSave,
+    removeRole,
+  } = useRolesPermissions();
 
   return (
     <>
-      {/* ...existing JSX unchanged ... */}
       <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -103,7 +73,7 @@ const RolesPermissions = () => {
                 </div>
                 <div className="d-flex gap-2">
                   <button type="submit" className="btn btn-primary">Save</button>
-                  <button type="button" className="btn btn-light" onClick={() => { setEditing(null); setForm({ name: '', permissions: '' }); }}>Cancel</button>
+                  <button type="button" className="btn btn-light" onClick={cancelEdit}>Cancel</button>
                 </div>
               </form>
             </div>
