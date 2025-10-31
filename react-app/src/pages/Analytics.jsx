@@ -14,7 +14,7 @@ import {
   RadialLinearScale
 } from 'chart.js';
 import { Line, Bar, Doughnut, Pie, PolarArea } from 'react-chartjs-2';
-import { appointments, accounts } from '../data/mockData';
+import { appointments, customers } from '../data/mockData';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 // Register Chart.js components
