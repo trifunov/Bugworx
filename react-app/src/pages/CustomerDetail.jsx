@@ -199,7 +199,9 @@ const CustomerDetail = () => {
                                   .toLowerCase()
                                   .includes(q)) ||
                               (serviceAddress.address &&
-                                serviceAddress.address.toLowerCase().includes(q)) ||
+                                serviceAddress.address
+                                  .toLowerCase()
+                                  .includes(q)) ||
                               (serviceAddress.contactName &&
                                 serviceAddress.contactName
                                   .toLowerCase()
@@ -208,62 +210,68 @@ const CustomerDetail = () => {
                           })
                           .map((serviceAddress) => (
                             <tr key={serviceAddress.id}>
-                            <td>
-                              <h5 className="font-size-14 mb-0">
-                                <Link
-                                  to={`/service-addresses/${serviceAddress.id}`}
-                                  className="text-body"
+                              <td>
+                                <h5 className="font-size-14 mb-0">
+                                  <Link
+                                    to={`/service-addresses/${serviceAddress.id}`}
+                                    className="text-body"
+                                  >
+                                    {serviceAddress.serviceAddressName}
+                                  </Link>
+                                </h5>
+                              </td>
+                              <td>{serviceAddress.serviceAddressType}</td>
+                              <td>{serviceAddress.address}</td>
+                              <td>
+                                <div>{serviceAddress.contactName}</div>
+                                <div className="text-muted font-size-12">
+                                  {serviceAddress.contactPhone}
+                                </div>
+                              </td>
+                              <td>
+                                <span
+                                  className={`badge badge-soft-${
+                                    serviceAddress.isActive
+                                      ? "success"
+                                      : "danger"
+                                  }`}
                                 >
-                                  {serviceAddress.serviceAddressName}
-                                </Link>
-                              </h5>
-                            </td>
-                            <td>{serviceAddress.serviceAddressType}</td>
-                            <td>{serviceAddress.address}</td>
-                            <td>
-                              <div>{serviceAddress.contactName}</div>
-                              <div className="text-muted font-size-12">
-                                {serviceAddress.contactPhone}
-                              </div>
-                            </td>
-                            <td>
-                              <span
-                                className={`badge badge-soft-${
-                                  serviceAddress.isActive ? "success" : "danger"
-                                }`}
-                              >
-                                {serviceAddress.isActive
-                                  ? "Active"
-                                  : "Inactive"}
-                              </span>
-                            </td>
-                            <td>
-                              <div className="d-flex gap-3">
-                                <Link
-                                  to={`/service-addresses/${serviceAddress.id}`}
-                                  className="text-success"
-                                  title="View"
-                                >
-                                  <i className="mdi mdi-eye font-size-18"></i>
-                                </Link>
-                                <a
-                                  href="#"
-                                  className="text-primary"
-                                  title="Edit"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    open(serviceAddress);
-                                  }}
-                                >
-                                  <i className="mdi mdi-pencil font-size-18"></i>
-                                </a>
-                                <a href="#" className="text-danger" title="Delete">
-                                  <i className="mdi mdi-delete font-size-18"></i>
-                                </a>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
+                                  {serviceAddress.isActive
+                                    ? "Active"
+                                    : "Inactive"}
+                                </span>
+                              </td>
+                              <td>
+                                <div className="d-flex gap-3">
+                                  <Link
+                                    to={`/service-addresses/${serviceAddress.id}`}
+                                    className="text-success"
+                                    title="View"
+                                  >
+                                    <i className="mdi mdi-eye font-size-18"></i>
+                                  </Link>
+                                  <a
+                                    href="#"
+                                    className="text-primary"
+                                    title="Edit"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      open(serviceAddress);
+                                    }}
+                                  >
+                                    <i className="mdi mdi-pencil font-size-18"></i>
+                                  </a>
+                                  <a
+                                    href="#"
+                                    className="text-danger"
+                                    title="Delete"
+                                  >
+                                    <i className="mdi mdi-delete font-size-18"></i>
+                                  </a>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </div>
@@ -323,9 +331,7 @@ const CustomerDetail = () => {
                         </div>
 
                         <div className="mt-2 mt-md-0">
-                          <AddNewButton
-                            handleAddNew={scheduleService.open}
-                          />
+                          <AddNewButton handleAddNew={scheduleService.open} />
                         </div>
                       </div>
                     </div>
@@ -346,9 +352,10 @@ const CustomerDetail = () => {
                         {customerAppointments
                           .filter((appointment) => {
                             const q = appointmentSearchTerm.toLowerCase();
-                            const serviceAddress = customerServiceAddresses.find(
-                              (s) => s.id === appointment.serviceAddressId
-                            );
+                            const serviceAddress =
+                              customerServiceAddresses.find(
+                                (s) => s.id === appointment.serviceAddressId
+                              );
                             return (
                               appointment.id.toString().includes(q) ||
                               (serviceAddress?.serviceAddressName &&
@@ -356,85 +363,90 @@ const CustomerDetail = () => {
                                   .toLowerCase()
                                   .includes(q)) ||
                               (appointment.serviceType &&
-                                appointment.serviceType.toLowerCase().includes(q)) ||
+                                appointment.serviceType
+                                  .toLowerCase()
+                                  .includes(q)) ||
                               (appointment.scheduledDate &&
-                                appointment.scheduledDate.toLowerCase().includes(q)) ||
+                                appointment.scheduledDate
+                                  .toLowerCase()
+                                  .includes(q)) ||
                               (appointment.status &&
                                 appointment.status.toLowerCase().includes(q))
                             );
                           })
                           .map((appointment) => {
-                            const serviceAddress = customerServiceAddresses.find(
-                              (s) => s.id === appointment.serviceAddressId
+                            const serviceAddress =
+                              customerServiceAddresses.find(
+                                (s) => s.id === appointment.serviceAddressId
+                              );
+                            const getStatusBadgeClass = (status) => {
+                              switch (status) {
+                                case "Completed":
+                                  return "badge-soft-success";
+                                case "Scheduled":
+                                  return "badge-soft-primary";
+                                case "In Progress":
+                                  return "badge-soft-warning";
+                                case "Cancelled":
+                                  return "badge-soft-danger";
+                                default:
+                                  return "badge-soft-secondary";
+                              }
+                            };
+                            return (
+                              <tr key={appointment.id}>
+                                <td>
+                                  <span className="fw-bold">
+                                    #{appointment.id}
+                                  </span>
+                                </td>
+                                <td>
+                                  {serviceAddress?.serviceAddressName || "N/A"}
+                                </td>
+                                <td>{appointment.serviceType}</td>
+                                <td>
+                                  <div>{appointment.scheduledDate}</div>
+                                  <div className="text-muted font-size-12">
+                                    {appointment.scheduledTime}
+                                  </div>
+                                </td>
+                                <td>
+                                  <span
+                                    className={`badge ${getStatusBadgeClass(
+                                      appointment.status
+                                    )}`}
+                                  >
+                                    {appointment.status}
+                                  </span>
+                                </td>
+                                <td>
+                                  <div className="d-flex gap-3">
+                                    <a
+                                      href="#"
+                                      className="text-success"
+                                      title="View"
+                                    >
+                                      <i className="mdi mdi-eye font-size-18"></i>
+                                    </a>
+                                    <a
+                                      href="#"
+                                      className="text-primary"
+                                      title="Edit"
+                                    >
+                                      <i className="mdi mdi-pencil font-size-18"></i>
+                                    </a>
+                                    <a
+                                      href="#"
+                                      className="text-danger"
+                                      title="Cancel"
+                                    >
+                                      <i className="mdi mdi-close-circle font-size-18"></i>
+                                    </a>
+                                  </div>
+                                </td>
+                              </tr>
                             );
-                          const getStatusBadgeClass = (status) => {
-                            switch (status) {
-                              case "Completed":
-                                return "badge-soft-success";
-                              case "Scheduled":
-                                return "badge-soft-primary";
-                              case "In Progress":
-                                return "badge-soft-warning";
-                              case "Cancelled":
-                                return "badge-soft-danger";
-                              default:
-                                return "badge-soft-secondary";
-                            }
-                          };
-                          return (
-                            <tr key={appointment.id}>
-                              <td>
-                                <span className="fw-bold">
-                                  #{appointment.id}
-                                </span>
-                              </td>
-                              <td>
-                                {serviceAddress?.serviceAddressName || "N/A"}
-                              </td>
-                              <td>{appointment.serviceType}</td>
-                              <td>
-                                <div>{appointment.scheduledDate}</div>
-                                <div className="text-muted font-size-12">
-                                  {appointment.scheduledTime}
-                                </div>
-                              </td>
-                              <td>
-                                <span
-                                  className={`badge ${getStatusBadgeClass(
-                                    appointment.status
-                                  )}`}
-                                >
-                                  {appointment.status}
-                                </span>
-                              </td>
-                              <td>
-                                <div className="d-flex gap-3">
-                                  <a
-                                    href="#"
-                                    className="text-success"
-                                    title="View"
-                                  >
-                                    <i className="mdi mdi-eye font-size-18"></i>
-                                  </a>
-                                  <a
-                                    href="#"
-                                    className="text-primary"
-                                    title="Edit"
-                                  >
-                                    <i className="mdi mdi-pencil font-size-18"></i>
-                                  </a>
-                                  <a
-                                    href="#"
-                                    className="text-danger"
-                                    title="Cancel"
-                                  >
-                                    <i className="mdi mdi-close-circle font-size-18"></i>
-                                  </a>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                          })}
                       </tbody>
                     </table>
                   </div>
@@ -459,9 +471,7 @@ const CustomerDetail = () => {
                   }).length === 0 && (
                     <div className="text-center py-4">
                       <i className="mdi mdi-calendar-remove font-size-48 text-muted"></i>
-                      <p className="text-muted mt-2">
-                        No appointments found
-                      </p>
+                      <p className="text-muted mt-2">No appointments found</p>
                     </div>
                   )}
                 </div>
@@ -514,9 +524,10 @@ const CustomerDetail = () => {
                           .filter((apt) => {
                             if (apt.status !== "Completed") return false;
                             const q = serviceHistorySearchTerm.toLowerCase();
-                            const serviceAddress = customerServiceAddresses.find(
-                              (s) => s.id === apt.serviceAddressId
-                            );
+                            const serviceAddress =
+                              customerServiceAddresses.find(
+                                (s) => s.id === apt.serviceAddressId
+                              );
                             return (
                               (apt.scheduledDate &&
                                 apt.scheduledDate.toLowerCase().includes(q)) ||
@@ -528,7 +539,8 @@ const CustomerDetail = () => {
                                 apt.serviceType.toLowerCase().includes(q)) ||
                               (apt.technicianId &&
                                 apt.technicianId.toString().includes(q)) ||
-                              (apt.duration && apt.duration.toLowerCase().includes(q))
+                              (apt.duration &&
+                                apt.duration.toLowerCase().includes(q))
                             );
                           })
                           .map((appointment) => {
@@ -611,9 +623,7 @@ const CustomerDetail = () => {
                         </div>
 
                         <div className="mt-2 mt-md-0">
-                          <AddNewButton
-                            handleAddNew={createInvoice.open}
-                          />
+                          <AddNewButton handleAddNew={createInvoice.open} />
                         </div>
                       </div>
                     </div>
@@ -1083,32 +1093,38 @@ const CustomerDetail = () => {
                           <table className="table table-borderless mb-0">
                             <tbody>
                               <tr>
-                                <th className="text-muted" scope="row">
+                                <th className="text-muted ps-0" scope="row">
                                   Customer Type:
                                 </th>
-                                <td>
+                                <td className="pe-0">
                                   {customer.customerType === 1
                                     ? "Residential"
                                     : "Commercial"}
                                 </td>
                               </tr>
                               <tr>
-                                <th className="text-muted" scope="row">
+                                <th className="text-muted ps-0" scope="row">
                                   Registration #:
                                 </th>
-                                <td>{customer.registrationNum}</td>
+                                <td className="pe-0">
+                                  {customer.registrationNum}
+                                </td>
                               </tr>
                               <tr>
-                                <th className="text-muted" scope="row">
+                                <th className="text-muted ps-0" scope="row">
                                   Send Invoice:
                                 </th>
-                                <td>{customer.sendInvoice ? "Yes" : "No"}</td>
+                                <td className="pe-0">
+                                  {customer.sendInvoice ? "Yes" : "No"}
+                                </td>
                               </tr>
                               <tr>
-                                <th className="text-muted" scope="row">
+                                <th className="text-muted ps-0" scope="row">
                                   Email Invoice:
                                 </th>
-                                <td>{customer.emailInvoice ? "Yes" : "No"}</td>
+                                <td className="pe-0">
+                                  {customer.emailInvoice ? "Yes" : "No"}
+                                </td>
                               </tr>
                             </tbody>
                           </table>
@@ -1119,30 +1135,34 @@ const CustomerDetail = () => {
                         <h6 className="font-size-14 mb-3">Billing Contact</h6>
                         <div className="table-responsive">
                           <table className="table table-borderless mb-0">
+                            <colgroup>
+                              <col style={{ width: "35%" }} />
+                              <col style={{ width: "65%" }} />
+                            </colgroup>
                             <tbody>
                               <tr>
-                                <th className="text-muted" scope="row">
+                                <th className="text-muted ps-0" scope="row">
                                   Name:
                                 </th>
-                                <td>
+                                <td className="pe-0">
                                   {customer.billingContact?.name ||
                                     customer.primaryContactPerson}
                                 </td>
                               </tr>
                               <tr>
-                                <th className="text-muted" scope="row">
+                                <th className="text-muted ps-0" scope="row">
                                   Email:
                                 </th>
-                                <td>
+                                <td className="pe-0">
                                   {customer.billingContact?.email ||
                                     customer.email}
                                 </td>
                               </tr>
                               <tr>
-                                <th className="text-muted" scope="row">
+                                <th className="text-muted ps-0" scope="row">
                                   Phone:
                                 </th>
-                                <td>
+                                <td className="pe-0">
                                   {customer.billingContact?.phone ||
                                     customer.phone}
                                 </td>
@@ -1540,13 +1560,15 @@ const CustomerDetail = () => {
         formData={createInvoice.formData}
         errors={createInvoice.errors}
         isSaving={createInvoice.isSaving}
-        completedAppointments={customerAppointments.filter((apt) => apt.status === "Completed")}
+        completedAppointments={customerAppointments.filter(
+          (apt) => apt.status === "Completed"
+        )}
         onUpdateField={createInvoice.updateField}
         onClose={createInvoice.close}
         onSave={() =>
           createInvoice.save((data) => {
             // TODO: Add invoice to localStorage when invoice storage is implemented
-            console.log('Invoice created:', data);
+            console.log("Invoice created:", data);
           })
         }
       />
