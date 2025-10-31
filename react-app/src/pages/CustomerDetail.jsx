@@ -1,5 +1,5 @@
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { appointments } from "../data/mockData";
 import {
   getServiceAddressesByCustomerId,
@@ -27,8 +27,10 @@ import CreateInvoiceModal from "../components/CustomerActions/CreateInvoiceModal
 import useAddEditCustomer from "../components/CustomerDetails/AddEditCustomer/useAddEditCustomer";
 import AddEditCustomer from "../components/CustomerDetails/AddEditCustomer/AddEditCustomer";
 import AddNewButton from "../components/Common/AddNewButton";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 
 const CustomerDetail = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,7 +41,13 @@ const CustomerDetail = () => {
   const [serviceAddressSearchTerm, setServiceAddressSearchTerm] = useState("");
   const [appointmentSearchTerm, setAppointmentSearchTerm] = useState("");
   const [serviceHistorySearchTerm, setServiceHistorySearchTerm] = useState("");
-  const customer = customers.find((a) => a.id === parseInt(id));
+  
+  // CHANGE 1: Memoize the customer object itself.
+  // This ensures that `customer` is stable unless the `id` or `customers` list changes.
+  const customer = useMemo(() => 
+    customers.find((c) => c.id === parseInt(id)),
+    [customers, id]
+  );
 
   const addEditCustomer = useAddEditCustomer();
   const {
@@ -101,12 +109,8 @@ const CustomerDetail = () => {
   const pathParts = location.pathname.split("/");
   const section = pathParts[3] || "overview"; // Default to overview if no section specified
 
-  if (!customer) {
-    return <div>Customer not found</div>;
-  }
-
-  // Get section title and breadcrumb
-  const getSectionInfo = () => {
+  // Memoize the sectionInfo object to prevent infinite loops
+  const sectionInfo = useMemo(() => {
     const sections = {
       overview: { title: "Customer Overview", breadcrumb: "Overview" },
       "service-addresses": {
@@ -129,9 +133,33 @@ const CustomerDetail = () => {
       },
     };
     return sections[section] || sections["overview"];
-  };
+  }, [section]); // Only re-calculate when the section changes
 
-  const sectionInfo = getSectionInfo();
+
+  // The dependency array is now correct and will trigger updates properly.
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: sectionInfo.title,
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: sectionInfo.breadcrumb }
+        ]
+      });
+    }
+    // The cleanup function is essential to prevent stale headers on other pages.
+    return () => {
+      setPageSubHeader({
+        title: '',
+        breadcrumbs: []
+      });
+    };
+  }, [setPageSubHeader, customer, id, sectionInfo]);
+
+  if (!customer) {
+    return <div>Customer not found</div>;
+  }
 
   // Render section content based on current section
   const renderSectionContent = () => {
@@ -1442,27 +1470,6 @@ const CustomerDetail = () => {
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0 font-size-18">{sectionInfo.title}</h4>
-            <div className="page-title-right">
-              <ol className="breadcrumb m-0">
-                <li className="breadcrumb-item">
-                  <Link to="/customers">Customers</Link>
-                </li>
-                <li className="breadcrumb-item">
-                  <Link to={`/customers/${id}`}>{customer.customerNum}</Link>
-                </li>
-                <li className="breadcrumb-item active">
-                  {sectionInfo.breadcrumb}
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {renderSectionContent()}
 
       <AddEditCustomer

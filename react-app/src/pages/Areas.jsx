@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import AddEditArea from '../components/CustomerDetails/Area/AddEditArea/AddEditArea';
-import { addArea, updateArea, getAreas, getFacilitiesByCustomerId, getServiceAddressesByCustomerId } from '../utils/localStorage';
+import { addArea, updateArea, getAreas, getFacilitiesByCustomerId, getServiceAddressesByCustomerId, getCustomerById } from '../utils/localStorage';
 import useAddEditArea from '../components/CustomerDetails/Area/AddEditArea/useAddEditArea';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
@@ -13,6 +13,7 @@ const Areas = () => {
     const { id } = useParams();
     const customerId = parseInt(id);
     const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditArea();
+    const customer = getCustomerById(customerId);
 
     // Load dynamic data from localStorage helpers so saved changes persist
     const facilities = getFacilitiesByCustomerId(customerId);
@@ -55,8 +56,8 @@ const Areas = () => {
         setPageSubHeader({
             title: 'Areas',
             breadcrumbs: [
-                { label: 'Accounts', path: '/accounts' },
-                { label: searchTerm, path: `/accounts/${id}` },
+                { label: 'Customers', path: '/customers' },
+                { label: customer.customerNum, path: `/customers/${id}` },
                 { label: 'Areas' }
             ]
         });
@@ -64,20 +65,6 @@ const Areas = () => {
 
     return (
         <>
-            <div className="row">
-                <div className="col-12">
-                    <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 className="mb-sm-0 font-size-18">Areas</h4>
-                        <div className="page-title-right">
-                            <ol className="breadcrumb m-0">
-                                <li className="breadcrumb-item"><Link to="/">Bugworx</Link></li>
-                                <li className="breadcrumb-item active">Areas</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <AddEditArea
                 isOpen={isOpen}
                 formData={formData}
