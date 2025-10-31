@@ -6,15 +6,15 @@ import Footer from './Footer';
 import { useEffect } from 'react';
 import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
-import { BreadcrumbProvider } from '../contexts/BreadcrumbContext';
-import Breadcrumb from '../components/Common/Breadcrumb';
+import { PageSubHeaderProvider } from '../contexts/PageSubHeaderContext';
+import PageSubHeader from '../components/Common/PageSubHeader';
 
 const MainLayout = () => {
   const { showSidebar } = useSidebar();
   const { showConfigurationSidebar } = useConfigurationSidebar();
 
   return (
-    <BreadcrumbProvider>
+    <PageSubHeaderProvider>
       <div id="layout-wrapper">
         <Header />
         {showSidebar && <Sidebar />}
@@ -22,15 +22,15 @@ const MainLayout = () => {
 
         <div className={showSidebar || showConfigurationSidebar ? "main-content" : "main-content main-content-no-margin"}>
           <div className="page-content">
-            {/* <Breadcrumb /> */}
             <div className="container-fluid">
+              <PageSubHeader />
               <Outlet />
             </div>
           </div>
           <Footer />
         </div>
       </div>
-    </BreadcrumbProvider>
+    </PageSubHeaderProvider>
   );
 };
 

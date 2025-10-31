@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import AddEditArea from '../components/CustomerDetails/Area/AddEditArea/AddEditArea';
 import { addArea, updateArea, getAreas, getFacilitiesByAccountId, getSitesByAccountId } from '../utils/localStorage';
 import useAddEditArea from '../components/CustomerDetails/Area/AddEditArea/useAddEditArea';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Areas = () => {
+    const { setPageSubHeader } = usePageSubHeader();
     const [searchTerm, setSearchTerm] = useState('');
 
     const { id } = useParams();
@@ -48,6 +50,17 @@ const Areas = () => {
         }
         setAreas(computeAreasForAccount());
     });
+
+    useEffect(() => {
+        setPageSubHeader({
+            title: 'Areas',
+            breadcrumbs: [
+                { label: 'Accounts', path: '/accounts' },
+                { label: searchTerm, path: `/accounts/${id}` },
+                { label: 'Areas' }
+            ]
+        });
+    }, [setPageSubHeader, id, searchTerm]);
 
     return (
         <>

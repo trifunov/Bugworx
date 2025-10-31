@@ -1,4 +1,17 @@
+import { useState, useEffect } from 'react';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
+
 const Billing = () => {
+  const { setPageSubHeader } = usePageSubHeader();
+  useEffect(() => {
+    setPageSubHeader({
+      title: 'Billing & Invoices',
+      breadcrumbs: [
+        { label: 'Billing & Invoices', path: '/billing' } 
+      ]
+    });
+  }, [setPageSubHeader]);
+
   const invoices = [
     { id: 'INV-2024-001', customer: 'Smith Residence', amount: 125.00, date: '2024-01-15', status: 'Paid' },
     { id: 'INV-2024-002', customer: 'Johnson Corp', amount: 450.00, date: '2024-01-16', status: 'Pending' },
@@ -8,22 +21,14 @@ const Billing = () => {
 
   return (
     <>
-      {/* start page title */}
-      <div className="row">
-        <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">Billing & Invoices</h4>
-
-            <div className="page-title-right">
-              <button className="btn btn-primary">
-                <i className="mdi mdi-plus me-1"></i>
-                Create Invoice
-              </button>
-            </div>
-          </div>
+        <div className="row mb-4">
+        <div className="col-12 text-sm-end">
+          <button className="btn btn-primary">
+            <i className="mdi mdi-plus me-1"></i>
+            Create Invoice
+          </button>
         </div>
       </div>
-      {/* end page title */}
 
       <div className="row">
         <div className="col-xl-3 col-md-6">

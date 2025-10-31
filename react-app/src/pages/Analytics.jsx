@@ -15,6 +15,7 @@ import {
 } from 'chart.js';
 import { Line, Bar, Doughnut, Pie, PolarArea } from 'react-chartjs-2';
 import { appointments, accounts } from '../data/mockData';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 // Register Chart.js components
 ChartJS.register(
@@ -32,6 +33,8 @@ ChartJS.register(
 );
 
 const Analytics = () => {
+  const { setPageSubHeader } = usePageSubHeader();
+
   const [dateRange, setDateRange] = useState('month');
   const [stats, setStats] = useState({
     totalRevenue: 0,
@@ -45,8 +48,14 @@ const Analytics = () => {
   });
 
   useEffect(() => {
+   setPageSubHeader({
+      title: 'Analytics Dashboard',
+      breadcrumbs: [
+        { label: 'Analytics Dashboard', path: '/analytics' }
+      ]
+    });
     calculateStats();
-  }, []);
+  }, [setPageSubHeader]);
 
   const calculateStats = () => {
     const completedAppointments = appointments.filter(a => a.status === 'Completed');
@@ -305,7 +314,6 @@ const Analytics = () => {
       <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0 font-size-18">Analytics Dashboard</h4>
             <div className="page-title-right">
               <div className="btn-group">
                 <button

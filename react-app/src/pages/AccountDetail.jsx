@@ -1,5 +1,5 @@
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { appointments } from '../data/mockData';
 import { getSitesByAccountId, addSite, updateSite, addAppointment, getAccounts, addAccount, updateAccount, getProposalsByAccountId, addProposal, updateProposal, deleteProposal } from '../utils/localStorage';
 import useAddEditSite from '../components/CustomerDetails/AddEditSite/useAddEditSite';
@@ -13,8 +13,10 @@ import AddEditProposalModal from '../components/AccountActions/AddEditProposalMo
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
 import AddNewButton from '../components/Common/AddNewButton';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const AccountDetail = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -74,8 +76,8 @@ const AccountDetail = () => {
     return <div>Account not found</div>;
   }
 
-  // Get section title and breadcrumb
-  const getSectionInfo = () => {
+   // Memoize the result of getSectionInfo. This is the key change.
+  const sectionInfo = useMemo(() => {
     const sections = {
       'overview': { title: 'Account Overview', breadcrumb: 'Overview' },
       'sites': { title: 'Customer Sites', breadcrumb: 'Sites' },
@@ -90,9 +92,20 @@ const AccountDetail = () => {
       'inspection-points': { title: 'Inspection Points', breadcrumb: 'Inspection Points' }
     };
     return sections[section] || sections['overview'];
-  };
+  }, [section]); // Only re-calculate when the section changes
 
-  const sectionInfo = getSectionInfo();
+  useEffect(() => {
+    if (account) {
+      setPageSubHeader({
+        title: sectionInfo.title,
+        breadcrumbs: [
+          { label: 'Accounts', path: '/accounts' },
+          { label: account.accountNum, path: `/accounts/${id}` },
+          { label: sectionInfo.breadcrumb }
+        ]
+      });
+    }
+  }, [setPageSubHeader, account, id, sectionInfo]);
 
   // Render section content based on current section
   const renderSectionContent = () => {
@@ -943,24 +956,6 @@ const AccountDetail = () => {
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0 font-size-18">{sectionInfo.title}</h4>
-            <div className="page-title-right">
-              <ol className="breadcrumb m-0">
-                <li className="breadcrumb-item">
-                  <Link to="/accounts">Accounts</Link>
-                </li>
-                <li className="breadcrumb-item">
-                  <Link to={`/accounts/${id}`}>{account.accountNum}</Link>
-                </li>
-                <li className="breadcrumb-item active">{sectionInfo.breadcrumb}</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {renderSectionContent()}
 
