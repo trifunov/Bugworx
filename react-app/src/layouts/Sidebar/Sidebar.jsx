@@ -134,7 +134,7 @@ const Sidebar = () => {
             </li>
 
             <li>
-              <Link to={`/customers/${customerId}/create-invoice`} className="waves-effect">
+              <Link to={`/customers/${customerId}?action=create-invoice`} className="waves-effect">
                 <i className="ri-file-add-line"></i>
                 <span>Create Invoice</span>
               </Link>
