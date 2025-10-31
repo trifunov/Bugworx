@@ -4,7 +4,7 @@ import AddNewButton from '../components/Common/AddNewButton';
 import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import { employees, sources, leadStatuses } from '../data/mockData';
-import { getAccounts, getLeads, addLead, updateLead, deleteLead } from '../utils/localStorage';
+import { getCustomers, getLeads, addLead, updateLead, deleteLead } from '../utils/localStorage';
 
 const Leads = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -12,10 +12,10 @@ const Leads = () => {
 
     // Initialize from local storage
     const [leads, setLeads] = useState(getLeads() || []);
-    const accounts = getAccounts() || [];
+    const customers = getCustomers() || [];
 
     const statusLabel = (statusId) => leadStatuses.find(s => s.id === Number(statusId))?.label || '-';
-    const customerName = (customerId) => accounts.find(a => a.id === customerId)?.name || 'N/A';
+    const customerName = (customerId) => customers.find(c => c.id === customerId)?.name || 'N/A';
     const employeeName = (empId) => employees.find(e => e.id === empId)?.name || '-';
     const sourceName = (srcId) => sources.find(s => s.id === srcId)?.name || '-';
 

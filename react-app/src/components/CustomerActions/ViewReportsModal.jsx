@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 
-const ViewReportsModal = ({ isOpen, selectedReportType, dateRange, onSelectReportType, onUpdateDateRange, onClose, onGenerate, accountId }) => {
+const ViewReportsModal = ({ isOpen, selectedReportType, dateRange, onSelectReportType, onUpdateDateRange, onClose, onGenerate, customerId }) => {
   const navigate = useNavigate();
 
   if (!isOpen) return null;
 
   const reportTypes = [
-    { id: 'service-history', name: 'Service History', icon: 'mdi-history', description: 'Complete service history for this account' },
-    { id: 'upcoming-services', name: 'Upcoming Services', icon: 'mdi-calendar-clock', description: 'Scheduled services for this account' },
+    { id: 'service-history', name: 'Service History', icon: 'mdi-history', description: 'Complete service history for this customer' },
+    { id: 'upcoming-services', name: 'Upcoming Services', icon: 'mdi-calendar-clock', description: 'Scheduled services for this customer' },
     { id: 'invoices', name: 'Invoice Report', icon: 'mdi-receipt', description: 'Invoice history and status' },
-    { id: 'chemical-usage', name: 'Chemical Usage', icon: 'mdi-flask-outline', description: 'Chemicals used at account sites' },
-    { id: 'site-summary', name: 'Site Summary', icon: 'mdi-map-marker-multiple', description: 'Summary of all sites for this account' }
+    { id: 'chemical-usage', name: 'Chemical Usage', icon: 'mdi-flask-outline', description: 'Chemicals used at customer service addresses' },
+    { id: 'service-address-summary', name: 'Service Address Summary', icon: 'mdi-map-marker-multiple', description: 'Summary of all service addresses for this customer' }
   ];
 
   const handleViewFullReports = () => {
@@ -30,12 +30,12 @@ const ViewReportsModal = ({ isOpen, selectedReportType, dateRange, onSelectRepor
     <>
       <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden', width: '500px' }}>
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title">Account Reports</h5>
+          <h5 className="offcanvas-title">Customer Reports</h5>
           <button type="button" className="btn-close" onClick={onClose}></button>
         </div>
         <div className="offcanvas-body">
           <div className="mb-4">
-            <p className="text-muted">Generate reports for this account or view all reports.</p>
+            <p className="text-muted">Generate reports for this customer or view all reports.</p>
           </div>
 
           <div className="mb-4">

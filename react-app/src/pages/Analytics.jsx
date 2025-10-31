@@ -64,7 +64,7 @@ const Analytics = () => {
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const newCustomers = accounts.filter(acc => {
+    const newCustomers = customers.filter(acc => {
       const createdDate = new Date(acc.createdDate || '2024-01-01');
       return createdDate >= thirtyDaysAgo;
     }).length;

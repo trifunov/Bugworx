@@ -1,6 +1,6 @@
 import { getServiceTypes } from '../../utils/localStorage';
 
-const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, accountSites, onUpdateField, onClose, onSave }) => {
+const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, customerServiceAddresses, onUpdateField, onClose, onSave }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
@@ -29,20 +29,20 @@ const ScheduleServiceModal = ({ isOpen, formData, errors, isSaving, accountSites
         <div className="offcanvas-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="siteId" className="form-label">Select Site <span className="text-danger">*</span></label>
+              <label htmlFor="serviceAddressId" className="form-label">Select Service Address <span className="text-danger">*</span></label>
               <select
-                className={`form-select ${errors.siteId ? 'is-invalid' : ''}`}
-                id="siteId"
-                value={formData.siteId || ''}
-                onChange={(e) => onUpdateField('siteId', parseInt(e.target.value))}
+                className={`form-select ${errors.serviceAddressId ? 'is-invalid' : ''}`}
+                id="serviceAddressId"
+                value={formData.serviceAddressId || ''}
+                onChange={(e) => onUpdateField('serviceAddressId', parseInt(e.target.value))}
                 disabled={isSaving}
               >
-                <option value="">Choose site...</option>
-                {accountSites && accountSites.map(site => (
-                  <option key={site.id} value={site.id}>{site.siteName || site.address}</option>
+                <option value="">Choose service address...</option>
+                {customerServiceAddresses && customerServiceAddresses.map(serviceAddress => (
+                  <option key={serviceAddress.id} value={serviceAddress.id}>{serviceAddress.serviceAddressName || serviceAddress.address}</option>
                 ))}
               </select>
-              {errors.siteId && <div className="invalid-feedback">{errors.siteId}</div>}
+              {errors.serviceAddressId && <div className="invalid-feedback">{errors.serviceAddressId}</div>}
             </div>
 
             <div className="mb-3">

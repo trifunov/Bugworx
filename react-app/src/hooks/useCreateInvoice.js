@@ -1,34 +1,30 @@
 import { useState } from 'react';
 
-const useScheduleService = (customerId) => {
+const useCreateInvoice = (customerId) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     customerId: customerId,
-    serviceAddressId: '',
-    serviceType: '',
-    scheduledDate: '',
-    scheduledTime: '',
-    estimatedDuration: 60,
-    priority: 'Normal',
-    technicianId: '',
-    specialInstructions: '',
-    status: 'Scheduled'
+    invoiceDate: '',
+    dueDate: '',
+    relatedServiceId: '',
+    amount: '',
+    description: ''
   });
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
 
   const open = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 30); // Default to 30 days from now
+
     setFormData({
       customerId: customerId,
-      serviceAddressId: '',
-      serviceType: '',
-      scheduledDate: '',
-      scheduledTime: '',
-      estimatedDuration: 60,
-      priority: 'Normal',
-      technicianId: '',
-      specialInstructions: '',
-      status: 'Scheduled'
+      invoiceDate: today,
+      dueDate: dueDate.toISOString().split('T')[0],
+      relatedServiceId: '',
+      amount: '',
+      description: ''
     });
     setErrors({});
     setIsOpen(true);
@@ -56,20 +52,20 @@ const useScheduleService = (customerId) => {
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.serviceAddressId) {
-      newErrors.serviceAddressId = 'Please select a service address';
+    if (!formData.invoiceDate) {
+      newErrors.invoiceDate = 'Invoice date is required';
     }
 
-    if (!formData.serviceType?.trim()) {
-      newErrors.serviceType = 'Service type is required';
+    if (!formData.dueDate) {
+      newErrors.dueDate = 'Due date is required';
     }
 
-    if (!formData.scheduledDate) {
-      newErrors.scheduledDate = 'Date is required';
+    if (formData.invoiceDate && formData.dueDate && formData.dueDate < formData.invoiceDate) {
+      newErrors.dueDate = 'Due date must be after invoice date';
     }
 
-    if (!formData.scheduledTime) {
-      newErrors.scheduledTime = 'Time is required';
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      newErrors.amount = 'Amount must be greater than 0';
     }
 
     setErrors(newErrors);
@@ -89,7 +85,7 @@ const useScheduleService = (customerId) => {
       close();
       return true;
     } catch (error) {
-      setErrors({ submit: error.message || 'Failed to schedule service' });
+      setErrors({ submit: error.message || 'Failed to create invoice' });
       return false;
     } finally {
       setIsSaving(false);
@@ -108,4 +104,4 @@ const useScheduleService = (customerId) => {
   };
 };
 
-export default useScheduleService;
+export default useCreateInvoice;

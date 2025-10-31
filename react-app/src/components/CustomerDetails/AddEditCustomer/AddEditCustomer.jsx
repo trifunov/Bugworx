@@ -135,7 +135,7 @@ const AddEditCustomer = ({ isOpen, formData, errors, isSaving, onUpdateField, on
                                 <option value="Prospect">Prospect</option>
                                 <option value="Suspended">Suspended</option>
                             </select>
-                            {errors.siteType && <div className="invalid-feedback">{errors.siteType}</div>}
+                            {errors.serviceAddressType && <div className="invalid-feedback">{errors.serviceAddressType}</div>}
                         </div>
 
                         {errors.submit && (
