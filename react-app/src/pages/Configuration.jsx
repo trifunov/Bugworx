@@ -1,11 +1,9 @@
-// ...existing code...
-import ConfigurationSidebar from '../layouts/ConfigurationSidebar';
- 
+
 const Configuration = () => {
   return (
     <>
       {/* start page title */}
-   <div className="row">
+      <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
             <h4 className="mb-sm-0">Configuration</h4>
@@ -22,7 +20,7 @@ const Configuration = () => {
       {/* end page title */}
 
       <div className="row">
-          <div className="col-12">
+        <div className="col-12">
           <div className="card">
             <div className="card-body">
               <h4 className="card-title mb-4">General Settings</h4>

@@ -1,11 +1,11 @@
 // Mock data for Pest Management System
 
-export const accounts = [
+export const customers = [
   {
     id: 1,
-    accountNum: 'ACC-001',
+    customerNum: 'ACC-001',
     name: 'Smith Residence',
-    accountType: 1,
+    customerType: 1,
     companyId: 1,
     localeId: 1,
     sendInvoice: true,
@@ -19,9 +19,9 @@ export const accounts = [
   },
   {
     id: 2,
-    accountNum: 'ACC-002',
+    customerNum: 'ACC-002',
     name: 'Johnson Commercial Properties',
-    accountType: 2,
+    customerType: 2,
     companyId: 1,
     localeId: 1,
     sendInvoice: true,
@@ -35,9 +35,9 @@ export const accounts = [
   },
   {
     id: 3,
-    accountNum: 'ACC-003',
+    customerNum: 'ACC-003',
     name: 'Downtown Restaurant Group',
-    accountType: 2,
+    customerType: 2,
     companyId: 1,
     localeId: 1,
     sendInvoice: true,
@@ -51,94 +51,94 @@ export const accounts = [
   }
 ];
 
-export const sites = [
+export const serviceAddresses = [
   {
     id: 1,
-    accountId: 1,
-    siteName: 'Main Residence',
+    customerId: 1,
+    serviceAddressName: 'Main Residence',
     address: '123 Main St, Springfield, IL 62701',
     contactName: 'John Smith',
     contactPhone: '555-0101',
-    siteType: 'Residential',
+    serviceAddressType: 'Residential',
     instructions: 'Ring doorbell, dog in backyard',
     isActive: true,
     lastServiceDate: '2024-10-01',
     coordinates: { lat: 39.7817, lng: -89.6501 }, // Springfield downtown
     zone: 'North',
-    siteClosingTime: '18:00', // Closes at 6 PM
+    serviceAddressClosingTime: '18:00', // Closes at 6 PM
     customerTier: 'VIP' // VIP customer
   },
   {
     id: 2,
-    accountId: 2,
-    siteName: 'Office Building A',
+    customerId: 2,
+    serviceAddressName: 'Office Building A',
     address: '456 Business Blvd Suite 100, Springfield, IL 62702',
     contactName: 'Sarah Johnson',
     contactPhone: '555-0102',
-    siteType: 'Commercial',
+    serviceAddressType: 'Commercial',
     instructions: 'Check in with security',
     isActive: true,
     lastServiceDate: '2024-09-15',
     coordinates: { lat: 39.7990, lng: -89.6440 }, // North Springfield
     zone: 'North',
-    siteClosingTime: '17:00', // Closes at 5 PM
+    serviceAddressClosingTime: '17:00', // Closes at 5 PM
     customerTier: 'Contract' // Contract customer
   },
   {
     id: 3,
-    accountId: 2,
-    siteName: 'Warehouse Facility',
+    customerId: 2,
+    serviceAddressName: 'Warehouse Facility',
     address: '789 Industrial Dr, Springfield, IL 62704',
     contactName: 'Tom Wilson',
     contactPhone: '555-0104',
-    siteType: 'Industrial',
+    serviceAddressType: 'Industrial',
     instructions: 'Use loading dock entrance',
     isActive: true,
     lastServiceDate: '2024-09-20',
     coordinates: { lat: 39.7456, lng: -89.6298 }, // South Springfield
     zone: 'South',
-    siteClosingTime: '16:00' // Closes at 4 PM
+    serviceAddressClosingTime: '16:00' // Closes at 4 PM
   },
   {
     id: 4,
-    accountId: 3,
-    siteName: 'Main Restaurant',
+    customerId: 3,
+    serviceAddressName: 'Main Restaurant',
     address: '789 Restaurant Row, Springfield, IL 62703',
     contactName: 'Mike Chen',
     contactPhone: '555-0103',
-    siteType: 'Food Service',
+    serviceAddressType: 'Food Service',
     instructions: 'Service before opening hours',
     isActive: true,
     lastServiceDate: '2024-10-10',
     coordinates: { lat: 39.8017, lng: -89.6537 }, // West Springfield
     zone: 'West',
-    siteClosingTime: '10:00', // Service must be done before 10 AM opening
+    serviceAddressClosingTime: '10:00', // Service must be done before 10 AM opening
     customerTier: 'VIP'
   },
   {
     id: 5,
-    accountId: 1,
-    siteName: 'Luxury Apartments - East Wing',
+    customerId: 1,
+    serviceAddressName: 'Luxury Apartments - East Wing',
     address: '500 Riverside Dr, Springfield, IL 62703',
     contactName: 'Patricia Davis',
     contactPhone: '555-0105',
-    siteType: 'Multi-Family',
+    serviceAddressType: 'Multi-Family',
     instructions: 'Use service elevator, notify building manager',
     isActive: true,
     lastServiceDate: '2024-10-12',
     coordinates: { lat: 39.7920, lng: -89.6380 }, // East Springfield
     zone: 'East',
-    siteClosingTime: '17:00',
+    serviceAddressClosingTime: '17:00',
     customerTier: 'Contract'
   },
   {
     id: 6,
-    accountId: 3,
-    siteName: 'Shopping Mall - Food Court',
+    customerId: 3,
+    serviceAddressName: 'Shopping Mall - Food Court',
     address: '1200 Shopping Plaza, Springfield, IL 62704',
     contactName: 'Robert Lee',
     contactPhone: '555-0106',
-    siteType: 'Food Service',
+    serviceAddressType: 'Food Service',
     instructions: 'Service after closing at 9 PM',
     isActive: true,
     lastServiceDate: '2024-10-08',
@@ -147,33 +147,106 @@ export const sites = [
   },
   {
     id: 7,
-    accountId: 2,
-    siteName: 'Medical Center',
+    customerId: 2,
+    serviceAddressName: 'Medical Center',
     address: '850 Hospital Rd, Springfield, IL 62702',
     contactName: 'Dr. Amanda Foster',
     contactPhone: '555-0107',
-    siteType: 'Healthcare',
+    serviceAddressType: 'Healthcare',
     instructions: 'URGENT: Active pest issue in kitchen area',
     isActive: true,
     lastServiceDate: '2024-09-28',
     coordinates: { lat: 39.8100, lng: -89.6520 }, // North West
     zone: 'North',
     customerTier: 'VIP',
-    siteClosingTime: '20:00' // Open late but prefers service before 8 PM
+    serviceAddressClosingTime: '20:00' // Open late but prefers service before 8 PM
   },
   {
     id: 8,
-    accountId: 1,
-    siteName: 'Storage Facility - Units A-F',
+    customerId: 1,
+    serviceAddressName: 'Storage Facility - Units A-F',
     address: '3400 Storage Lane, Springfield, IL 62701',
     contactName: 'James Mitchell',
     contactPhone: '555-0108',
-    siteType: 'Storage',
+    serviceAddressType: 'Storage',
     instructions: 'Gate code: 4521, check all units',
     isActive: true,
     lastServiceDate: '2024-10-05',
     coordinates: { lat: 39.7550, lng: -89.6800 }, // Far West
     zone: 'West'
+  }
+];
+
+export const employees = [
+  {
+    id: 1,
+    name: 'Alice Johnson',
+    email: 'alice.johnson@example.com',
+    phone: '555-0121',
+    position: 'Sales Representative',
+    isActive: true
+  },
+  {
+    id: 2,
+    name: 'Bob Smith',
+    email: 'bob.smith@example.com',
+    phone: '555-0122',
+    position: 'Operator',
+    isActive: true
+  },
+  {
+    id: 3,
+    name: 'Charlie Brown',
+    email: 'charlie.brown@example.com',
+    phone: '555-0123',
+    position: 'Customer Support',
+    isActive: true
+  }
+];
+
+export const sources = [
+  { id: 1, name: 'Website' },
+  { id: 2, name: 'Call' },
+  { id: 3, name: 'Email Campaign' },
+  { id: 4, name: 'Social Media' },
+  { id: 5, name: 'Referral' }
+];
+
+export const leadStatuses = [
+  { id: 1, label: 'New' },
+  { id: 2, label: 'Contacted' }
+];
+
+export const leads = [
+  {
+    id: 1,
+    name: 'Lead 1',
+    status: 1, // New
+    dateCreated: '2024-09-01',
+    customerId: 1,
+    serviceInterest: 'General Pest Control',
+    assignedSalesRep: 1,
+    sourceId: 1
+  },
+  {
+    id: 3,
+    name: 'Lead 3',
+    status: 2, // Contacted
+    dateCreated: '2024-09-01',
+    customerId: 1,
+    serviceInterest: 'Termite Treatment',
+    assignedSalesRep: 1,
+    sourceId: 2
+  },
+  {
+    id: 2,
+    name: 'Lead 2',
+    status: 2, // Contacted
+    dateCreated: '2024-09-02',
+    customerId: 2,
+    serviceInterest: 'Termite Treatment',
+    assignedSalesRep: 1,
+    sourceId: 3
   }
 ];
 
@@ -244,7 +317,7 @@ export const facilities = [
   {
     id: 1,
     name: 'Main Residence - Facility A',
-    siteId: 1,
+    serviceAddressId: 1,
     drawing: {
       id: 'DRAW-001',
       name: 'Main Residence - Drawing A',
@@ -254,7 +327,7 @@ export const facilities = [
   {
     id: 3,
     name: 'Main Residence - Facility B',
-    siteId: 1,
+    serviceAddressId: 1,
     drawing: {
       id: 'DRAW-003',
       name: 'Main Residence - Drawing B',
@@ -264,7 +337,7 @@ export const facilities = [
   {
     id: 2,
     name: 'Main Restaurant - Facility A',
-    siteId: 2,
+    serviceAddressId: 2,
     drawing: {
       id: 'DRAW-002',
       name: 'Main Restaurant - Drawing A',
@@ -274,7 +347,7 @@ export const facilities = [
   {
     id: 4,
     name: 'Main Restaurant - Facility B',
-    siteId: 2,
+    serviceAddressId: 2,
     drawing: {
       id: 'DRAW-004',
       name: 'Main Restaurant - Drawing B',
@@ -371,7 +444,7 @@ export const appointments = [
   // EMERGENCY scheduled for LATER in the day - Should trigger "emergency delayed" alert
   {
     id: 1,
-    siteId: 7, // Medical Center - VIP
+    serviceAddressId: 7, // Medical Center - VIP
     technicianId: 1,
     scheduledDate: formatDate(today),
     scheduledTime: '14:00', // 2 PM
@@ -389,7 +462,7 @@ export const appointments = [
   // Normal appointment - early morning
   {
     id: 2,
-    siteId: 1, // Main Residence - VIP
+    serviceAddressId: 1, // Main Residence - VIP
     technicianId: 1,
     scheduledDate: formatDate(today),
     scheduledTime: '08:30',
@@ -406,7 +479,7 @@ export const appointments = [
   // Urgent appointment with equipment needs
   {
     id: 3,
-    siteId: 3, // Warehouse - closes at 4 PM
+    serviceAddressId: 3, // Warehouse - closes at 4 PM
     technicianId: 1,
     scheduledDate: formatDate(today),
     scheduledTime: '10:00',
@@ -421,10 +494,10 @@ export const appointments = [
     updatedAt: new Date().toISOString()
   },
 
-  // Restaurant - MUST be done before 10 AM (site closes at 10:00)
+  // Restaurant - MUST be done before 10 AM (service address closes at 10:00)
   {
     id: 4,
-    siteId: 4, // Main Restaurant - VIP
+    serviceAddressId: 4, // Main Restaurant - VIP
     technicianId: 1,
     scheduledDate: formatDate(today),
     scheduledTime: '07:00', // Early to avoid conflict
@@ -441,7 +514,7 @@ export const appointments = [
   // Contract customer appointment
   {
     id: 5,
-    siteId: 5, // Luxury Apartments - Contract
+    serviceAddressId: 5, // Luxury Apartments - Contract
     technicianId: 1,
     scheduledDate: formatDate(today),
     scheduledTime: '12:00',
@@ -458,7 +531,7 @@ export const appointments = [
   // UNASSIGNED EMERGENCY - Should trigger "critical" alert (not assigned to David)
   {
     id: 7,
-    siteId: 2, // Office Building - Contract
+    serviceAddressId: 2, // Office Building - Contract
     technicianId: null, // NO TECHNICIAN ASSIGNED
     scheduledDate: formatDate(today),
     scheduledTime: '09:00',
@@ -475,7 +548,7 @@ export const appointments = [
   // Tomorrow's appointments
   {
     id: 9,
-    siteId: 2,
+    serviceAddressId: 2,
     technicianId: 2,
     scheduledDate: formatDate(tomorrow),
     scheduledTime: '10:00',
@@ -490,7 +563,7 @@ export const appointments = [
   },
   {
     id: 10,
-    siteId: 1,
+    serviceAddressId: 1,
     technicianId: 2,
     scheduledDate: formatDate(tomorrow),
     scheduledTime: '13:30',
@@ -505,7 +578,7 @@ export const appointments = [
   },
   {
     id: 11,
-    siteId: 4,
+    serviceAddressId: 4,
     technicianId: 2,
     scheduledDate: formatDate(tomorrow),
     scheduledTime: '15:30',
@@ -521,7 +594,7 @@ export const appointments = [
   // Day after tomorrow's appointments
   {
     id: 12,
-    siteId: 3,
+    serviceAddressId: 3,
     technicianId: 3,
     scheduledDate: formatDate(dayAfterTomorrow),
     scheduledTime: '08:30',
@@ -536,7 +609,7 @@ export const appointments = [
   },
   {
     id: 13,
-    siteId: 1,
+    serviceAddressId: 1,
     technicianId: 3,
     scheduledDate: formatDate(dayAfterTomorrow),
     scheduledTime: '11:00',
@@ -551,7 +624,7 @@ export const appointments = [
   },
   {
     id: 14,
-    siteId: 2,
+    serviceAddressId: 2,
     technicianId: 3,
     scheduledDate: formatDate(dayAfterTomorrow),
     scheduledTime: '14:00',
@@ -567,7 +640,7 @@ export const appointments = [
   // Next week - unassigned
   {
     id: 15,
-    siteId: 4,
+    serviceAddressId: 4,
     technicianId: null,
     scheduledDate: formatDate(nextWeek),
     scheduledTime: '10:00',
@@ -582,7 +655,7 @@ export const appointments = [
   },
   {
     id: 16,
-    siteId: 1,
+    serviceAddressId: 1,
     technicianId: null,
     scheduledDate: formatDate(nextWeek),
     scheduledTime: '13:00',
@@ -598,7 +671,7 @@ export const appointments = [
   // Completed appointments from the past 30 days
   {
     id: 101,
-    siteId: 1,
+    serviceAddressId: 1,
     technicianId: 1,
     scheduledDate: '2024-10-20',
     scheduledTime: '09:00',
@@ -613,7 +686,7 @@ export const appointments = [
   },
   {
     id: 102,
-    siteId: 2,
+    serviceAddressId: 2,
     technicianId: 2,
     scheduledDate: '2024-10-18',
     scheduledTime: '14:00',
@@ -628,7 +701,7 @@ export const appointments = [
   },
   {
     id: 103,
-    siteId: 3,
+    serviceAddressId: 3,
     technicianId: 3,
     scheduledDate: '2024-10-15',
     scheduledTime: '10:30',
@@ -643,7 +716,7 @@ export const appointments = [
   },
   {
     id: 104,
-    siteId: 4,
+    serviceAddressId: 4,
     technicianId: 1,
     scheduledDate: '2024-10-12',
     scheduledTime: '08:00',
@@ -658,7 +731,7 @@ export const appointments = [
   },
   {
     id: 105,
-    siteId: 1,
+    serviceAddressId: 1,
     technicianId: 2,
     scheduledDate: '2024-10-08',
     scheduledTime: '11:00',
@@ -673,7 +746,7 @@ export const appointments = [
   },
   {
     id: 106,
-    siteId: 2,
+    serviceAddressId: 2,
     technicianId: 3,
     scheduledDate: '2024-10-05',
     scheduledTime: '13:30',
@@ -688,7 +761,7 @@ export const appointments = [
   },
   {
     id: 107,
-    siteId: 3,
+    serviceAddressId: 3,
     technicianId: 1,
     scheduledDate: '2024-10-01',
     scheduledTime: '09:30',
@@ -703,7 +776,7 @@ export const appointments = [
   },
   {
     id: 108,
-    siteId: 4,
+    serviceAddressId: 4,
     technicianId: 2,
     scheduledDate: '2024-09-28',
     scheduledTime: '07:30',
@@ -739,8 +812,8 @@ export const priorities = ['Normal', 'Urgent', 'Emergency'];
 export const appointmentStatuses = ['Scheduled', 'In Progress', 'Completed', 'Cancelled'];
 
 export const dashboardStats = {
-  totalAccounts: 156,
-  totalSites: 423,
+  totalCustomers: 156,
+  totalServiceAddresses: 423,
   totalTechnicians: 12,
   scheduledToday: 18,
   completedThisWeek: 67,
@@ -931,8 +1004,8 @@ export const recentActivity = [
   },
   {
     id: 2,
-    type: 'account',
-    description: 'New account created: ABC Corp',
+    type: 'customer',
+    description: 'New customer created: ABC Corp',
     timestamp: '2024-10-25T11:15:00',
     user: 'Admin'
   },

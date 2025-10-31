@@ -1,13 +1,31 @@
 import { useState } from 'react';
 
-const useEditAccount = (account) => {
+const useCreateInvoice = (customerId) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState(account || {});
+  const [formData, setFormData] = useState({
+    customerId: customerId,
+    invoiceDate: '',
+    dueDate: '',
+    relatedServiceId: '',
+    amount: '',
+    description: ''
+  });
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
 
   const open = () => {
-    setFormData(account);
+    const today = new Date().toISOString().split('T')[0];
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 30); // Default to 30 days from now
+
+    setFormData({
+      customerId: customerId,
+      invoiceDate: today,
+      dueDate: dueDate.toISOString().split('T')[0],
+      relatedServiceId: '',
+      amount: '',
+      description: ''
+    });
     setErrors({});
     setIsOpen(true);
   };
@@ -34,14 +52,20 @@ const useEditAccount = (account) => {
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.name?.trim()) {
-      newErrors.name = 'Account name is required';
+    if (!formData.invoiceDate) {
+      newErrors.invoiceDate = 'Invoice date is required';
     }
 
-    if (!formData.billingContact?.email?.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.billingContact.email)) {
-      newErrors.email = 'Email is invalid';
+    if (!formData.dueDate) {
+      newErrors.dueDate = 'Due date is required';
+    }
+
+    if (formData.invoiceDate && formData.dueDate && formData.dueDate < formData.invoiceDate) {
+      newErrors.dueDate = 'Due date must be after invoice date';
+    }
+
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      newErrors.amount = 'Amount must be greater than 0';
     }
 
     setErrors(newErrors);
@@ -61,7 +85,7 @@ const useEditAccount = (account) => {
       close();
       return true;
     } catch (error) {
-      setErrors({ submit: error.message || 'Failed to save account' });
+      setErrors({ submit: error.message || 'Failed to create invoice' });
       return false;
     } finally {
       setIsSaving(false);
@@ -80,4 +104,4 @@ const useEditAccount = (account) => {
   };
 };
 
-export default useEditAccount;
+export default useCreateInvoice;

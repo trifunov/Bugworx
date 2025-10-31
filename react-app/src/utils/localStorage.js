@@ -3,8 +3,8 @@ import { users as staticUsers } from '../data/users';
 
 const STORAGE_KEYS = {
   APPOINTMENTS: 'bugworx_appointments',
-  ACCOUNTS: 'bugworx_accounts',
-  SITES: 'bugworx_sites',
+  CUSTOMERS: 'bugworx_customers',
+  SERVICE_ADDRESSES: 'bugworx_service_addresses',
   TECHNICIANS: 'bugworx_technicians',
   INVENTORY: 'bugworx_inventory',
   VEHICLES: 'bugworx_vehicles',
@@ -18,7 +18,11 @@ const STORAGE_KEYS = {
   ROLES_KEY: 'bugworx_roles',
   TEAMS_KEY: 'bugworx_teams_branches',
   EMPLOYEES_KEY: 'bugworx_employees',
-  ACTIVITY_KEY: 'bugworx_activity_log'
+  ACTIVITY_KEY: 'bugworx_activity_log',
+  LEADS: 'bugworx_leads',
+  SERVICE_TYPES: 'bugworx_service_types',
+  PROPOSALS: 'bugworx_proposals',
+  CONFIGURATION: 'bugworx_configuration'
 };
 
 // Generic storage functions
@@ -111,84 +115,84 @@ export const getAppointmentById = (id) => {
   return appointments.find(apt => apt.id === id);
 };
 
-// Account-specific functions
-export const getAccounts = () => {
-  return getFromStorage(STORAGE_KEYS.ACCOUNTS, []);
+// Customer-specific functions
+export const getCustomers = () => {
+  return getFromStorage(STORAGE_KEYS.CUSTOMERS, []);
 };
 
-export const setAccounts = (accounts) => {
-  return setToStorage(STORAGE_KEYS.ACCOUNTS, accounts);
+export const setCustomers = (customers) => {
+  return setToStorage(STORAGE_KEYS.CUSTOMERS, customers);
 };
 
-// Site-specific functions
-export const getSites = () => {
-  return getFromStorage(STORAGE_KEYS.SITES, []);
+// ServiceAddress-specific functions
+export const getServiceAddresses = () => {
+  return getFromStorage(STORAGE_KEYS.SERVICE_ADDRESSES, []);
 };
 
-export const setSites = (sites) => {
-  return setToStorage(STORAGE_KEYS.SITES, sites);
+export const setServiceAddresses = (serviceAddresses) => {
+  return setToStorage(STORAGE_KEYS.SERVICE_ADDRESSES, serviceAddresses);
 };
 
-export const addAccount = (account) => {
-  const accounts = getAccounts();
-  const newAccount = {
-    ...account,
+export const addCustomer = (customer) => {
+  const customers = getCustomers();
+  const newCustomer = {
+    ...customer,
     id: Date.now(),
-    accountNum: `ACC-${Date.now()}`,
+    customerNum: `ACC-${Date.now()}`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-  accounts.push(newAccount);
-  setAccounts(accounts);
-  return newAccount;
+  customers.push(newCustomer);
+  setCustomers(customers);
+  return newCustomer;
 };
 
-export const updateAccount = (id, updates) => {
-  const accounts = getAccounts();
-  const index = accounts.findIndex(acc => acc.id === id);
+export const updateCustomer = (id, updates) => {
+  const customers = getCustomers();
+  const index = customers.findIndex(cust => cust.id === id);
   if (index !== -1) {
-    accounts[index] = {
-      ...accounts[index],
+    customers[index] = {
+      ...customers[index],
       ...updates,
       updatedAt: new Date().toISOString()
     };
-    setAccounts(accounts);
-    return accounts[index];
+    setCustomers(customers);
+    return customers[index];
   }
   return null;
 };
 
-export const addSite = (site) => {
-  const sites = getSites();
-  const newSite = {
-    ...site,
+export const addServiceAddress = (serviceAddress) => {
+  const serviceAddresses = getServiceAddresses();
+  const newServiceAddress = {
+    ...serviceAddress,
     id: Date.now(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-  sites.push(newSite);
-  setSites(sites);
-  return newSite;
+  serviceAddresses.push(newServiceAddress);
+  setServiceAddresses(serviceAddresses);
+  return newServiceAddress;
 };
 
-export const updateSite = (id, updates) => {
-  const sites = getSites();
-  const index = sites.findIndex(s => s.id === id);
+export const updateServiceAddress = (id, updates) => {
+  const serviceAddresses = getServiceAddresses();
+  const index = serviceAddresses.findIndex(s => s.id === id);
   if (index !== -1) {
-    sites[index] = {
-      ...sites[index],
+    serviceAddresses[index] = {
+      ...serviceAddresses[index],
       ...updates,
       updatedAt: new Date().toISOString()
     };
-    setSites(sites);
-    return sites[index];
+    setServiceAddresses(serviceAddresses);
+    return serviceAddresses[index];
   }
   return null;
 };
 
-export const getSitesByAccountId = (accountId) => {
-  const sites = getSites();
-  return sites.filter(site => site.accountId === accountId);
+export const getServiceAddressesByCustomerId = (customerId) => {
+  const serviceAddresses = getServiceAddresses();
+  return serviceAddresses.filter(serviceAddress => serviceAddress.customerId === customerId);
 };
 
 const DEFAULT_SERVICE_TYPES = [
@@ -362,16 +366,16 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, accounts, sites, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints } = mockData;
+  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
   }
-  if (getAccounts().length === 0) {
-    setAccounts(accounts);
+  if (getCustomers().length === 0) {
+    setCustomers(customers);
   }
-  if (getSites().length === 0) {
-    setSites(sites);
+  if (getServiceAddresses().length === 0) {
+    setServiceAddresses(serviceAddresses);
   }
   if (getTechnicians().length === 0) {
     setTechnicians(technicians);
@@ -397,6 +401,9 @@ export const initializeStorage = (mockData) => {
   }
   if (getInspectionPoints().length === 0 && inspectionPoints) {
     setInspectionPoints(inspectionPoints);
+  }
+  if (getLeads().length === 0 && leads) {
+    setLeads(leads);
   }
 };
 
@@ -446,13 +453,13 @@ export const getTechnicianWorkload = (technicianId, date) => {
 };
 
 // Smart technician suggestion algorithm
-export const suggestTechnicians = (serviceType, siteId, date, startTime, duration) => {
+export const suggestTechnicians = (serviceType, serviceAddressId, date, startTime, duration) => {
   const technicians = getTechnicians();
-  const sites = getSites();
+  const serviceAddresses = getServiceAddresses();
   const appointments = getAppointments();
 
-  const site = sites.find(s => s.id === siteId);
-  if (!site) return [];
+  const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
+  if (!serviceAddress) return [];
 
   const activeTechs = technicians.filter(t => t.isActive);
 
@@ -477,9 +484,9 @@ export const suggestTechnicians = (serviceType, siteId, date, startTime, duratio
     }
 
     // 3. Zone Preference (20 points)
-    if (site.zone && tech.preferredZones && tech.preferredZones.includes(site.zone)) {
+    if (serviceAddress.zone && tech.preferredZones && tech.preferredZones.includes(serviceAddress.zone)) {
       score += 20;
-      reasons.push(`Prefers ${site.zone} zone`);
+      reasons.push(`Prefers ${serviceAddress.zone} zone`);
     }
 
     // 4. Availability (REQUIRED - 0 points but eliminates if unavailable)
@@ -525,8 +532,8 @@ export const suggestTechnicians = (serviceType, siteId, date, startTime, duratio
 };
 
 // Get suggested technician (top choice)
-export const getSuggestedTechnician = (serviceType, siteId, date, startTime, duration) => {
-  const suggestions = suggestTechnicians(serviceType, siteId, date, startTime, duration);
+export const getSuggestedTechnician = (serviceType, serviceAddressId, date, startTime, duration) => {
+  const suggestions = suggestTechnicians(serviceType, serviceAddressId, date, startTime, duration);
   return suggestions.length > 0 ? suggestions[0] : null;
 };
 
@@ -586,6 +593,55 @@ export const addInspectionPoint = (inspectionPoint) => {
   setInspectionPoints(inspectionPoints);
   return newInspectionPoint;
 }
+
+// Lead-specific functions
+export const getLeads = () => {
+  return getFromStorage(STORAGE_KEYS.LEADS, []);
+};
+
+export const setLeads = (leads) => {
+  return setToStorage(STORAGE_KEYS.LEADS, leads);
+};
+
+export const addLead = (lead) => {
+  const leads = getLeads();
+  const newLead = {
+    ...lead,
+    id: Date.now(),
+    dateCreated: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  leads.unshift(newLead);
+  setLeads(leads);
+  return newLead;
+};
+
+export const updateLead = (id, updates) => {
+  const leads = getLeads();
+  const index = leads.findIndex(l => l.id === id);
+  if (index !== -1) {
+    leads[index] = {
+      ...leads[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setLeads(leads);
+    return leads[index];
+  }
+  return null;
+};
+
+export const deleteLead = (id) => {
+  const leads = getLeads();
+  const filtered = leads.filter(l => l.id !== id);
+  setLeads(filtered);
+  return filtered.length < leads.length;
+};
+
+export const getLeadById = (id) => {
+  const leads = getLeads();
+  return leads.find(l => l.id === id);
+};
 
 export const updateFacility = (id, updates) => {
   const facilities = getFacilities();
@@ -650,10 +706,10 @@ export const deleteInspectionPoint = (id) => {
   return filtered.length < inspectionPoints.length;
 };
 
-export const getFacilitiesByAccountId = (accountId) => {
-  const sitesByAccountId = getSitesByAccountId(accountId).map(site => site.id);
+export const getFacilitiesByCustomerId = (customerId) => {
+  const serviceAddressesByCustomerId = getServiceAddressesByCustomerId(customerId).map(serviceAddress => serviceAddress.id);
   const facilities = getFacilities();
-  return facilities.filter(facility => sitesByAccountId.includes(facility.siteId));
+  return facilities.filter(facility => serviceAddressesByCustomerId.includes(facility.serviceAddressId));
 };
 
 export const getCurrentUser = () => {
@@ -734,6 +790,109 @@ export const addActivityLog = ({ user = '', action = '', details = '' } = {}) =>
   return entry;
 };
 export const clearActivityLogs = () => setToStorage(STORAGE_KEYS.ACTIVITY_KEY, []);
+// Proposal-specific functions
+export const getProposals = () => {
+  return getFromStorage(STORAGE_KEYS.PROPOSALS, []);
+};
+
+export const setProposals = (proposals) => {
+  return setToStorage(STORAGE_KEYS.PROPOSALS, proposals);
+};
+
+export const addProposal = (proposal) => {
+  const proposals = getProposals();
+  const newProposal = {
+    ...proposal,
+    id: Date.now(),
+    proposalNumber: `PROP-${String(Date.now()).slice(-6)}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  proposals.push(newProposal);
+  setProposals(proposals);
+  return newProposal;
+};
+
+export const updateProposal = (id, updates) => {
+  const proposals = getProposals();
+  const index = proposals.findIndex(p => p.id === id);
+  if (index !== -1) {
+    proposals[index] = {
+      ...proposals[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setProposals(proposals);
+    return proposals[index];
+  }
+  return null;
+};
+
+export const deleteProposal = (id) => {
+  const proposals = getProposals();
+  const filtered = proposals.filter(p => p.id !== id);
+  setProposals(filtered);
+  return filtered.length < proposals.length;
+};
+
+export const getProposalById = (id) => {
+  const proposals = getProposals();
+  return proposals.find(p => p.id === id);
+};
+
+export const getProposalsByCustomerId = (customerId) => {
+  const proposals = getProposals();
+  return proposals.filter(p => p.customerId === customerId);
+};
+
+// Configuration-specific functions
+const DEFAULT_CONFIGURATION = {
+  defaultTermsAndConditions: `1. Payment Terms: Net 30 days from invoice date.
+
+2. Service Agreement: This proposal is valid for 30 days from the date of issuance. Services will be performed according to the scope of work outlined above.
+
+3. Cancellation Policy: Client may cancel services with 48 hours written notice. Cancellations with less than 48 hours notice may incur a cancellation fee.
+
+4. Liability: Company maintains comprehensive liability insurance. We are not responsible for damage to property caused by pests or pre-existing conditions.
+
+5. Access: Client agrees to provide access to property for scheduled services. If access is denied, rescheduling fees may apply.
+
+6. Treatment Guarantee: Services are guaranteed when client follows all recommendations and maintains regular service schedule.
+
+7. Chemical Safety: All products used are EPA registered and applied according to label directions by licensed technicians.
+
+8. Contract Terms: This proposal, once accepted, constitutes a binding agreement between the parties.`,
+  companyInfo: {
+    name: 'Bugworx Pest Management',
+    address: '',
+    phone: '',
+    email: '',
+    license: ''
+  }
+};
+
+export const getConfiguration = () => {
+  const config = getFromStorage(STORAGE_KEYS.CONFIGURATION, null);
+  if (!config) {
+    setConfiguration(DEFAULT_CONFIGURATION);
+    return DEFAULT_CONFIGURATION;
+  }
+  return config;
+};
+
+export const setConfiguration = (configuration) => {
+  return setToStorage(STORAGE_KEYS.CONFIGURATION, configuration);
+};
+
+export const updateConfiguration = (updates) => {
+  const config = getConfiguration();
+  const updatedConfig = {
+    ...config,
+    ...updates
+  };
+  setConfiguration(updatedConfig);
+  return updatedConfig;
+};
 
 export default {
   STORAGE_KEYS,
@@ -747,13 +906,13 @@ export default {
   updateAppointment,
   deleteAppointment,
   getAppointmentById,
-  getAccounts,
-  setAccounts,
-  getSites,
-  setSites,
-  addSite,
-  updateSite,
-  getSitesByAccountId,
+  getCustomers,
+  setCustomers,
+  getServiceAddresses,
+  setServiceAddresses,
+  addServiceAddress,
+  updateServiceAddress,
+  getServiceAddressesByCustomerId,
   getServiceTypes,
   setServiceTypes,
   addServiceType,
@@ -792,13 +951,19 @@ export default {
   addFacility,
   addArea,
   addInspectionPoint,
+  getLeads,
+  setLeads,
+  addLead,
+  updateLead,
+  deleteLead,
+  getLeadById,
   updateFacility,
   updateArea,
   updateInspectionPoint,
   deleteFacility,
   deleteArea,
   deleteInspectionPoint,
-  getFacilitiesByAccountId,
+  getFacilitiesByCustomerId,
   getCurrentUser,
   updateCurrentUser,
   addAccount,
@@ -817,5 +982,17 @@ export default {
   addEmployee,
   getActivityLogs,
   addActivityLog,
-  clearActivityLogs
+  clearActivityLogs,
+  addCustomer,
+  updateCustomer,
+  getProposals,
+  setProposals,
+  addProposal,
+  updateProposal,
+  deleteProposal,
+  getProposalById,
+  getProposalsByCustomerId,
+  getConfiguration,
+  setConfiguration,
+  updateConfiguration
 };

@@ -1,54 +1,53 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import AddNewButton from '../components/CustomerDetails/AddNewButton';
-import AddEditArea from '../components/CustomerDetails/AddEditArea';
-import { addArea, updateArea, getAreas, getFacilitiesByAccountId, getSitesByAccountId } from '../utils/localStorage';
+import AddNewButton from '../components/Common/AddNewButton';
+import AddEditArea from '../components/CustomerDetails/Area/AddEditArea/AddEditArea';
+import { addArea, updateArea, getAreas, getFacilitiesByCustomerId, getServiceAddressesByCustomerId } from '../utils/localStorage';
+import useAddEditArea from '../components/CustomerDetails/Area/AddEditArea/useAddEditArea';
 
 const Areas = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    const [selectedArea, setSelectedArea] = useState(null);
     const { id } = useParams();
-    const accountId = parseInt(id);
+    const customerId = parseInt(id);
+    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditArea();
 
     // Load dynamic data from localStorage helpers so saved changes persist
-    const facilities = getFacilitiesByAccountId(accountId);
-    const sites = getSitesByAccountId(accountId);
-    const areas = getAreas().filter(a => facilities.some(f => f.id === a.facilityId));
+    const facilities = getFacilitiesByCustomerId(customerId);
+    const serviceAddresses = getServiceAddressesByCustomerId(customerId);
+
+    const computeAreasForCustomer = () => getAreas().filter(a => facilities.some(f => f.id === a.facilityId));
+    const [areas, setAreas] = useState(computeAreasForCustomer());
 
     const getFacility = (facilityId) => facilities.find((f) => f.id === facilityId) || null;
 
-    const getSiteAddress = (facility) => {
+    const getServiceAddressAddress = (facility) => {
         if (!facility) return 'N/A';
-        const site = sites.find((s) => s.id === facility.siteId);
-        return site ? site.address : 'N/A';
+        const serviceAddress = serviceAddresses.find((s) => s.id === facility.serviceAddressId);
+        return serviceAddress ? serviceAddress.address : 'N/A';
     };
 
     const filtered = areas.filter((a) => {
         const q = searchTerm.toLowerCase();
         const facility = getFacility(a.facilityId);
         const facilityName = facility ? facility.name : '';
-        const siteAddress = getSiteAddress(facility);
+        const serviceAddressAddress = getServiceAddressAddress(facility);
 
         return (
             (a.name && a.name.toLowerCase().includes(q)) ||
             (facilityName && facilityName.toLowerCase().includes(q)) ||
-            (siteAddress && siteAddress.toLowerCase().includes(q))
+            (serviceAddressAddress && serviceAddressAddress.toLowerCase().includes(q))
         );
     });
 
-    const handleSave = (updatedArea) => {
-        if (!updatedArea) return;
-
-        if (updatedArea.id > 0) {
-            updateArea(updatedArea.id, updatedArea);
+    const handleSave = () => onSaveHandle((data) => {
+        if (data.id > 0) {
+            updateArea(data.id, data);
         } else {
-            addArea(updatedArea);
+            addArea(data);
         }
-
-        // close the offcanvas
-        setSelectedArea(null);
-    };
+        setAreas(computeAreasForCustomer());
+    });
 
     return (
         <>
@@ -67,11 +66,14 @@ const Areas = () => {
             </div>
 
             <AddEditArea
-                area={selectedArea}
-                show={selectedArea !== null}
-                onClose={() => setSelectedArea(null)}
+                isOpen={isOpen}
+                formData={formData}
+                errors={errors}
+                isSaving={isSaving}
+                onUpdateField={onUpdateFieldHandle}
+                onClose={close}
                 onSave={handleSave}
-                accountId={accountId}
+                customerId={customerId}
             />
 
             <div className="row">
@@ -96,9 +98,7 @@ const Areas = () => {
                                         </div>
 
                                         <div className="mt-2 mt-md-0">
-                                            <AddNewButton handleAddNew={() => {
-                                                setSelectedArea({ id: 0, name: '', facilityId: '' });
-                                            }} />
+                                            <AddNewButton handleAddNew={() => open({ id: 0 })} />
                                         </div>
                                     </div>
                                 </div>
@@ -117,10 +117,10 @@ const Areas = () => {
                                     <tbody>
                                         {filtered.map((a) => {
                                             const facility = getFacility(a.facilityId);
-                                            const siteAddress = getSiteAddress(facility);
+                                            const serviceAddressAddress = getServiceAddressAddress(facility);
                                             return (
                                                 <tr key={a.id}>
-                                                    <td>{siteAddress}</td>
+                                                    <td>{serviceAddressAddress}</td>
                                                     <td>{facility ? facility.name : '-'}</td>
                                                     <td>
                                                         {a.name}
@@ -131,9 +131,7 @@ const Areas = () => {
                                                                 <i className="mdi mdi-eye font-size-18"></i>
                                                             </a>
                                                             <a href="#" className="text-primary" title="Edit"
-                                                                onClick={() => {
-                                                                    setSelectedArea(a);
-                                                                }}>
+                                                                onClick={() => open(a)}>
                                                                 <i className="mdi mdi-pencil font-size-18"></i>
                                                             </a>
                                                             <a href="#" className="text-danger" title="Delete">
