@@ -32,10 +32,10 @@ import UserActivityLog from './pages/configuration/user-access/UserActivityLog/U
 
 import ContractTypes from './pages/configuration/operational-setup/ContractTypes/ContractTypes';
 import FrequencyTemplates from './pages/configuration/operational-setup/FrequencyTemplate/FrequencyTemplates';
-import JobSettings from './pages/configuration/operational-setup/JobSettings';
-import OperationZones from './pages/configuration/operational-setup/OperationZones';
-import RouteConfiguration from './pages/configuration/operational-setup/RouteConfiguration';
-import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes';
+import JobSettings from './pages/configuration/operational-setup/JobSettings/JobSettings';
+import OperationZones from './pages/configuration/operational-setup/OperationZones/OperationZones';
+import RouteConfiguration from './pages/configuration/operational-setup/RouteConfiguration/RouteConfiguration';
+import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes/ServiceTypes';
 
 function App() {
   return (

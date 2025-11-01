@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getOperationalZones, saveOperationalZones } from '../../../utils/localStorage';
+import { getOperationalZones, saveOperationalZones } from '../../../../utils/localStorage';
 
 export const useOperationZones = () => {
     const [items, setItems] = useState(getOperationalZones());

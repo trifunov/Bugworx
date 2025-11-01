@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getRouteConfiguration, saveRouteConfiguration, getOperationalZones } from '../../../utils/localStorage';
+import { getRouteConfiguration, saveRouteConfiguration, getOperationalZones } from '../../../../utils/localStorage';
 
 export const useRouteConfiguration = () => {
     const [items, setItems] = useState(getRouteConfiguration());

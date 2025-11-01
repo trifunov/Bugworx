@@ -6,7 +6,7 @@ const FrequencyTemplates = () => {
 
     return (
         <div className="card">
-            <div className="card-header">Job Settings</div>
+            <div className="card-header">Frequency Templates</div>
             <div className="card-body">
                 <div className="form-grid">
                     <div className="form-group">
@@ -29,6 +29,15 @@ const FrequencyTemplates = () => {
                     <div className="form-group">
                         <label>Escalations</label>
                         <textarea className="form-control" name="escalations" value={settings.escalations} onChange={handleChange} />
+                    </div>
+                    <div className="form-group">
+                        <label>Repeat Schedule</label>
+                        <select className="form-control" name="repeatSchedule" value={settings.repeatSchedule} onChange={handleChange}>
+                            <option value="">Select Schedule</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
                     </div>
                 </div>
 

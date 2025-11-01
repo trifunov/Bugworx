@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getServiceTypesSetup, saveServiceTypes } from '../../../utils/localStorage';
+import { getServiceTypesSetup, saveServiceTypes } from '../../../../utils/localStorage';
 
 export const useServiceTypes = () => {
     const [items, setItems] = useState(getServiceTypesSetup());

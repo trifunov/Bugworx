@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getContractTypes, saveContractTypes } from '../../../utils/localStorage';
+import { getContractTypes, saveContractTypes } from '../../../../utils/localStorage';
 
 export const useContractTypes = () => {
     const [items, setItems] = useState(getContractTypes());

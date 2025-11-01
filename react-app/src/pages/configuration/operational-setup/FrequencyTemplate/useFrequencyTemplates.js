@@ -1,33 +1,26 @@
-import { useState, useEffect } from 'react';
-import { getJobSettings, saveJobSettings } from '../../../utils/localStorage';
-
-const initialSettings = {
-    defaultStatus: 'Open',
-    numberingFormat: 'JOB-{YYYY}-{SEQ}',
-    slaHours: 48,
-    escalations: ''
-};
+import { useState } from 'react';
 
 export const useFrequencyTemplates = () => {
-    const [settings, setSettings] = useState(initialSettings);
+    const [settings, setSettings] = useState({
+        defaultStatus: 'Open',
+        numberingFormat: '',
+        slaHours: 0,
+        escalations: '',
+        repeatSchedule: 'weekly', // Default to weekly
+    });
 
-    useEffect(() => {
-        const s = getJobSettings();
-        setSettings(Object.keys(s).length ? s : initialSettings);
-    }, []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSettings(prev => ({ ...prev, [name]: name === 'slaHours' ? Number(value) : value }));
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setSettings((prevSettings) => ({
+            ...prevSettings,
+            [name]: value,
+        }));
     };
 
     const save = () => {
-        saveJobSettings(settings);
+        // Logic to save settings, e.g., API call
+        console.log('Settings saved:', settings);
     };
 
-    return {
-        settings,
-        handleChange,
-        save,
-    };
+    return { settings, handleChange, save };
 };
