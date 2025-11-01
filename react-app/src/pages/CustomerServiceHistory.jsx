@@ -4,6 +4,7 @@ import useCustomerData from "../hooks/useCustomerData";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import { useSearchFilter } from "../components/Common/SearchBar";
+import { useTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
 import SearchBar from "../components/Common/SearchBar";
 
@@ -20,6 +21,21 @@ const CustomerServiceHistory = () => {
     completedAppointments,
     ['scheduledDate', 'serviceType', 'technicianId', 'duration']
   );
+
+  const {
+    data: paginatedData,
+    sortField,
+    sortDirection,
+    handleSort,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems
+  } = useTable(filteredItems, {
+    defaultSortField: 'scheduledDate',
+    defaultSortDirection: 'desc',
+    pageSize: 10
+  });
 
   if (!customer) {
     return <div>Customer not found</div>;
@@ -39,6 +55,13 @@ const CustomerServiceHistory = () => {
     'Duration',
     'Notes',
   ];
+
+  const sortableColumns = {
+    'Date': 'scheduledDate',
+    'Service Type': 'serviceType',
+    'Technician': 'technicianId',
+    'Duration': 'duration'
+  };
 
   const renderRow = (appointment) => {
     const serviceAddress = serviceAddresses.find(
@@ -85,8 +108,18 @@ const CustomerServiceHistory = () => {
 
               <DataTable
                 columns={columns}
-                data={filteredItems}
+                data={paginatedData}
                 renderRow={renderRow}
+                sortableColumns={sortableColumns}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+                pagination={{
+                  currentPage,
+                  totalPages,
+                  onPageChange: setCurrentPage,
+                  totalItems
+                }}
                 emptyState={{
                   icon: 'mdi mdi-history',
                   message: 'No service history found',

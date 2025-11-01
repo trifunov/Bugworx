@@ -6,6 +6,7 @@ import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
 import useCustomerProposals from "../hooks/useCustomerProposals";
 import { useSearchFilter } from "../components/Common/SearchBar";
+import { useTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
 import SearchBar from "../components/Common/SearchBar";
 import AddNewButton from "../components/Common/AddNewButton";
@@ -20,6 +21,21 @@ const CustomerProposals = () => {
     proposals,
     ['proposalTitle', 'proposalNumber', 'status']
   );
+
+  const {
+    data: paginatedData,
+    sortField,
+    sortDirection,
+    handleSort,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems
+  } = useTable(filteredItems, {
+    defaultSortField: 'createdAt',
+    defaultSortDirection: 'desc',
+    pageSize: 10
+  });
 
   if (!customer) {
     return <div>Customer not found</div>;
@@ -68,6 +84,13 @@ const CustomerProposals = () => {
     'Status',
     'Actions',
   ];
+
+  const sortableColumns = {
+    'Proposal #': 'proposalNumber',
+    'Title': 'proposalTitle',
+    'Created Date': 'createdAt',
+    'Status': 'status'
+  };
 
   const renderRow = (proposal) => (
     <tr key={proposal.id}>
@@ -142,8 +165,18 @@ const CustomerProposals = () => {
 
               <DataTable
                 columns={columns}
-                data={filteredItems}
+                data={paginatedData}
                 renderRow={renderRow}
+                sortableColumns={sortableColumns}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+                pagination={{
+                  currentPage,
+                  totalPages,
+                  onPageChange: setCurrentPage,
+                  totalItems
+                }}
                 emptyState={{
                   icon: 'mdi mdi-file-document-outline',
                   message: 'No proposals found',
