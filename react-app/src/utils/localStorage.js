@@ -19,6 +19,12 @@ const STORAGE_KEYS = {
   TEAMS_KEY: 'bugworx_teams_branches',
   EMPLOYEES_KEY: 'bugworx_employees',
   ACTIVITY_KEY: 'bugworx_activity_log',
+  OPERATIONAL_SETUP_CONTRACT_TYPES: 'bugworx_operational_setup_contract_types',
+  OPERATIONAL_SETUP_SERVICE_TYPES: 'bugworx_operational_setup_service_types',
+  OPERATIONAL_SETUP_FREQUENCY_TEMPLATES: 'bugworx_operational_setup_frequency_templates',
+  OPERATIONAL_SETUP_JOB_SETTINGS: 'bugworx_operational_setup_job_settings',
+  OPERATIONAL_SETUP_ROUTE_CONFIGURATION: 'bugworx_operational_setup_route_configuration',
+  OPERATIONAL_SETUP_ZONES: 'bugworx_operational_setup_zones',
   LEADS: 'bugworx_leads',
   SERVICE_TYPES: 'bugworx_service_types',
   PROPOSALS: 'bugworx_proposals',
@@ -894,6 +900,25 @@ export const updateConfiguration = (updates) => {
   return updatedConfig;
 };
 
+// Generic helpers (used across operational-setup pages)
+export const getContractTypes = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_CONTRACT_TYPES, []);
+export const saveContractTypes = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_CONTRACT_TYPES, items);
+
+export const getServiceTypesSetup = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_SERVICE_TYPES, []);
+export const saveServiceTypes = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_SERVICE_TYPES, items);
+
+export const getFrequencyTemplates = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_FREQUENCY_TEMPLATES, []);
+export const saveFrequencyTemplates = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_FREQUENCY_TEMPLATES, items);
+
+export const getJobSettings = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_JOB_SETTINGS, {});
+export const saveJobSettings = (obj) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_JOB_SETTINGS, obj);
+
+export const getRouteConfiguration = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ROUTE_CONFIGURATION, []);
+export const saveRouteConfiguration = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ROUTE_CONFIGURATION, items);
+
+export const getOperationalZones = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, []);
+export const saveOperationalZones = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, items);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -981,6 +1006,18 @@ export default {
   getActivityLogs,
   addActivityLog,
   clearActivityLogs,
+  getContractTypes,
+  saveContractTypes,
+  getServiceTypesSetup,
+  saveServiceTypes,
+  getFrequencyTemplates,
+  saveFrequencyTemplates,
+  getJobSettings,
+  saveJobSettings,
+  getRouteConfiguration,
+  saveRouteConfiguration,
+  getOperationalZones,
+  saveOperationalZones,
   addCustomer,
   updateCustomer,
   getProposals,
