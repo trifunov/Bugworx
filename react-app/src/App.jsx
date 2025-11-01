@@ -24,6 +24,12 @@ import UserProfile from './pages/UserProfile';
 import Proposals from './pages/Proposals';
 import Leads from './pages/Leads';
 
+import Users from './pages/configuration/user-access/Users/Users';
+import EmployeeDirectory from './pages/configuration/user-access/EmployeeDirectory/EmployeeDirectory';
+import RolesPermissions from './pages/configuration/user-access/RolesPermissions/RolesPermissions';
+import TeamsBranches from './pages/configuration/user-access/TeamsBranches/TeamsBranches';
+import UserActivityLog from './pages/configuration/user-access/UserActivityLog/UserActivityLog';
+
 function App() {
   return (
     <Routes>
@@ -75,6 +81,13 @@ function App() {
         <Route path="configuration/general/audit-trail" element={<ConfigurationDetails />} />
         <Route path="configuration/general/backup-and-restore" element={<ConfigurationDetails />} />
         <Route path="user-profile" element={<UserProfile />} />
+
+        {/* User Access Management Routes */}
+        <Route path="configuration/user-access/users" element={<Users />} />
+        <Route path="configuration/user-access/employee-directory" element={<EmployeeDirectory />} />
+        <Route path="configuration/user-access/roles-permissions" element={<RolesPermissions />} />
+        <Route path="configuration/user-access/teams-branches" element={<TeamsBranches />} />
+        <Route path="configuration/user-access/user-activity-log" element={<UserActivityLog />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}
