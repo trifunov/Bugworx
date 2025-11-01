@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Drawing from '../components/CustomerDetails/Drawing';
 import AddNewButton from '../components/Common/AddNewButton';
 import AddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/AddEditFacility';
-import { addFacility, updateFacility, getFacilitiesByCustomerId, getServiceAddressesByCustomerId } from '../utils/localStorage';
+import { addFacility, updateFacility, getFacilitiesByCustomerId, getServiceAddressesByCustomerId, getCustomerById } from '../utils/localStorage';
 import useAddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/useAddEditFacility';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Facilities = () => {
+    const { setPageSubHeader } = usePageSubHeader();
     const { id } = useParams();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDrawing, setSelectedDrawing] = useState(null);
@@ -15,6 +17,7 @@ const Facilities = () => {
 
     const [facilities, setFacilities] = useState(getFacilitiesByCustomerId(customerId));
     const serviceAddresses = getServiceAddressesByCustomerId(customerId);
+    const customer = getCustomerById(customerId);
 
     const getServiceAddressName = (serviceAddressId) => {
         const serviceAddress = serviceAddresses.find((s) => s.id === serviceAddressId);
@@ -39,22 +42,19 @@ const Facilities = () => {
         setFacilities(getFacilitiesByCustomerId(customerId));
     });
 
+    useEffect(() => {
+        setPageSubHeader({
+            title: 'Facilities',
+            breadcrumbs: [
+                { label: 'Customers', path: '/customers' },
+                { label: customer.customerNum, path: `/customers/${customerId}` },
+                { label: 'Facilities', path: '/facilities' }
+            ]
+        });
+    }, [setPageSubHeader]);
+
     return (
         <>
-            <div className="row">
-                <div className="col-12">
-                    <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 className="mb-sm-0 font-size-18">Facilities</h4>
-                        <div className="page-title-right">
-                            <ol className="breadcrumb m-0">
-                                <li className="breadcrumb-item"><Link to="/">Bugworx</Link></li>
-                                <li className="breadcrumb-item active">Facilities</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <Drawing
                 drawing={selectedDrawing}
                 show={selectedDrawing !== null}

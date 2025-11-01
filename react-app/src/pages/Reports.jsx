@@ -6,8 +6,11 @@ import {
   getServiceAddresses,
   getTechnicians
 } from '../utils/localStorage';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Reports = () => {
+  const { setPageSubHeader } = usePageSubHeader();
+
   const [appointments, setAppointments] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [customers, setCustomers] = useState([]);
@@ -24,6 +27,13 @@ const Reports = () => {
 
   // Load data on mount
   useEffect(() => {
+    setPageSubHeader({
+      title: 'Reports',
+      breadcrumbs: [
+        { label: 'Reports', path: '/reports' }
+      ]
+    });
+
     loadData();
 
     // Set default date range (last 30 days)
@@ -33,7 +43,7 @@ const Reports = () => {
 
     setEndDate(today.toISOString().split('T')[0]);
     setStartDate(thirtyDaysAgo.toISOString().split('T')[0]);
-  }, []);
+  }, [setPageSubHeader]);
 
   const loadData = () => {
     setAppointments(getAppointments());
@@ -258,21 +268,6 @@ const Reports = () => {
 
   return (
     <>
-      {/* Page Title */}
-      <div className="row">
-        <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">Reports</h4>
-            <div className="page-title-right">
-              <ol className="breadcrumb m-0">
-                <li className="breadcrumb-item"><a href="/">Bugworx</a></li>
-                <li className="breadcrumb-item active">Reports</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Date Range Filter */}
       <div className="row mb-4">
         <div className="col-12">

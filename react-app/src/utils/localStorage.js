@@ -168,6 +168,11 @@ export const updateCustomer = (id, updates) => {
   return null;
 };
 
+export const getCustomerById = (id) => {
+  const customers = getCustomers();
+  return customers.find(cust => cust.id === id);
+};
+
 export const addServiceAddress = (serviceAddress) => {
   const serviceAddresses = getServiceAddresses();
   const newServiceAddress = {
@@ -933,6 +938,9 @@ export default {
   getAppointmentById,
   getCustomers,
   setCustomers,
+  getCustomerById,
+  addCustomer,
+  updateCustomer,
   getServiceAddresses,
   setServiceAddresses,
   addServiceAddress,
