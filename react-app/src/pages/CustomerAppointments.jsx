@@ -8,6 +8,7 @@ import useCustomerData from "../hooks/useCustomerData";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import { useSearchFilter } from "../components/Common/SearchBar";
+import { useTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
 import SearchBar from "../components/Common/SearchBar";
 import AddNewButton from "../components/Common/AddNewButton";
@@ -25,6 +26,21 @@ const CustomerAppointments = () => {
     appointments,
     ['id', 'serviceType', 'scheduledDate', 'status']
   );
+
+  const {
+    data: paginatedData,
+    sortField,
+    sortDirection,
+    handleSort,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems
+  } = useTable(filteredItems, {
+    defaultSortField: 'scheduledDate',
+    defaultSortDirection: 'desc',
+    pageSize: 10
+  });
 
   // Auto-open modal when landing on schedule-service route
   useEffect(() => {
@@ -60,6 +76,13 @@ const CustomerAppointments = () => {
     'Status',
     'Actions',
   ];
+
+  const sortableColumns = {
+    'ID': 'id',
+    'Service Type': 'serviceType',
+    'Date & Time': 'scheduledDate',
+    'Status': 'status'
+  };
 
   const getStatusBadgeClass = (status) => {
     switch (status) {
@@ -143,8 +166,18 @@ const CustomerAppointments = () => {
 
               <DataTable
                 columns={columns}
-                data={filteredItems}
+                data={paginatedData}
                 renderRow={renderRow}
+                sortableColumns={sortableColumns}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+                pagination={{
+                  currentPage,
+                  totalPages,
+                  onPageChange: setCurrentPage,
+                  totalItems
+                }}
                 emptyState={{
                   icon: 'mdi mdi-calendar-remove',
                   message: 'No appointments found',

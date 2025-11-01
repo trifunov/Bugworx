@@ -27,6 +27,7 @@ import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import useCustomerProposals from "../hooks/useCustomerProposals";
 import { useSearchFilter } from "../components/Common/SearchBar";
+import { useTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
 import SearchBar from "../components/Common/SearchBar";
 import AddNewButton from "../components/Common/AddNewButton";
@@ -56,6 +57,21 @@ const CustomerOverview = () => {
     serviceAddresses,
     ['serviceAddressName', 'serviceAddressType', 'address', 'contactName']
   );
+
+  const {
+    data: paginatedData,
+    sortField,
+    sortDirection,
+    handleSort,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems
+  } = useTable(filteredItems, {
+    defaultSortField: 'serviceAddressName',
+    defaultSortDirection: 'asc',
+    pageSize: 5
+  });
 
   // Handle URL actions (query parameters)
   useEffect(() => {
@@ -89,6 +105,14 @@ const CustomerOverview = () => {
     'Status',
     'Actions',
   ];
+
+  const sortableColumns = {
+    'Service Address Name': 'serviceAddressName',
+    'Type': 'serviceAddressType',
+    'Address': 'address',
+    'Contact': 'contactName',
+    'Status': 'isActive'
+  };
 
   const renderRow = (serviceAddress) => (
     <tr key={serviceAddress.id}>
@@ -302,8 +326,18 @@ const CustomerOverview = () => {
 
               <DataTable
                 columns={columns}
-                data={filteredItems}
+                data={paginatedData}
                 renderRow={renderRow}
+                sortableColumns={sortableColumns}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+                pagination={{
+                  currentPage,
+                  totalPages,
+                  onPageChange: setCurrentPage,
+                  totalItems
+                }}
                 emptyState={{
                   icon: 'mdi mdi-home-map-marker',
                   message: 'No service addresses found',
