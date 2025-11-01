@@ -4,7 +4,16 @@ import MainLayout from './layouts/MainLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Customers from './pages/Customers';
-import CustomerDetail from './pages/CustomerDetail';
+import CustomerOverview from './pages/CustomerOverview';
+import CustomerServiceAddresses from './pages/CustomerServiceAddresses';
+import CustomerAppointments from './pages/CustomerAppointments';
+import CustomerServiceHistory from './pages/CustomerServiceHistory';
+import CustomerProposals from './pages/CustomerProposals';
+import CustomerInvoices from './pages/CustomerInvoices';
+import CustomerContracts from './pages/CustomerContracts';
+import CustomerDocuments from './pages/CustomerDocuments';
+import CustomerNotes from './pages/CustomerNotes';
+import CustomerInspectionPoints from './pages/CustomerInspectionPoints';
 import ServiceAddresses from './pages/ServiceAddresses';
 import Appointments from './pages/Appointments';
 import Scheduler from './pages/Scheduler';
@@ -17,7 +26,6 @@ import Analytics from './pages/Analytics';
 import Notifications from './pages/Notifications';
 import Configuration from './pages/Configuration';
 import ConfigurationDetails from './pages/ConfigurationDetails';
-import InspectionPoints from './pages/InspectionPoints';
 import Facilities from './pages/Facilities';
 import Areas from './pages/Areas';
 import UserProfile from './pages/UserProfile';
@@ -54,18 +62,18 @@ function App() {
       >
         <Route index element={<Dashboard />} />
         <Route path="customers" element={<Customers />} />
-        <Route path="customers/:id" element={<CustomerDetail />} />
-        <Route path="customers/:id/service-addresses" element={<CustomerDetail />} />
-        <Route path="customers/:id/appointments" element={<CustomerDetail />} />
-        <Route path="customers/:id/service-history" element={<CustomerDetail />} />
-        <Route path="customers/:id/invoices" element={<CustomerDetail />} />
-        <Route path="customers/:id/contracts" element={<CustomerDetail />} />
-        <Route path="customers/:id/proposals" element={<CustomerDetail />} />
-        <Route path="customers/:id/documents" element={<CustomerDetail />} />
-        <Route path="customers/:id/notes" element={<CustomerDetail />} />
-        <Route path="customers/:id/schedule-service" element={<CustomerDetail />} />
-        <Route path="customers/:id/create-invoice" element={<CustomerDetail />} />
-        <Route path="customers/:id/inspection-points" element={<InspectionPoints />} />
+        <Route path="customers/:id" element={<CustomerOverview />} />
+        <Route path="customers/:id/service-addresses" element={<CustomerServiceAddresses />} />
+        <Route path="customers/:id/appointments" element={<CustomerAppointments />} />
+        <Route path="customers/:id/service-history" element={<CustomerServiceHistory />} />
+        <Route path="customers/:id/proposals" element={<CustomerProposals />} />
+        <Route path="customers/:id/invoices" element={<CustomerInvoices />} />
+        <Route path="customers/:id/contracts" element={<CustomerContracts />} />
+        <Route path="customers/:id/documents" element={<CustomerDocuments />} />
+        <Route path="customers/:id/notes" element={<CustomerNotes />} />
+        <Route path="customers/:id/inspection-points" element={<CustomerInspectionPoints />} />
+        <Route path="customers/:id/schedule-service" element={<CustomerAppointments />} />
+        <Route path="customers/:id/create-invoice" element={<CustomerInvoices />} />
         <Route path="customers/:id/facilities" element={<Facilities />} />
         <Route path="customers/:id/areas" element={<Areas />} />
         <Route path="customers/:id/leads" element={<Leads />} />
