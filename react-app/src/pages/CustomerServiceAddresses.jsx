@@ -5,10 +5,10 @@ import AddEditServiceAddress from "../components/CustomerDetails/AddEditServiceA
 import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
 import useServiceAddresses from "../hooks/useServiceAddresses";
-import { useSearchFilter } from "../components/Common/SearchBar";
-import { useTable } from "../components/Common/DataTable";
+import { useTableSearch } from "../components/Common/SearchBar/useTableSearch";
+import { useDataTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
-import SearchBar from "../components/Common/SearchBar";
+import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerServiceAddresses = () => {
@@ -17,7 +17,7 @@ const CustomerServiceAddresses = () => {
   const { serviceAddresses, refresh: refreshServiceAddresses } = useServiceAddresses(id);
   const serviceAddressModal = useAddEditServiceAddress(parseInt(id));
 
-  const { filteredItems, searchTerm, setSearchTerm } = useSearchFilter(
+  const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(
     serviceAddresses,
     ['serviceAddressName', 'serviceAddressType', 'address', 'contactName']
   );
@@ -31,7 +31,7 @@ const CustomerServiceAddresses = () => {
     setCurrentPage,
     totalPages,
     totalItems
-  } = useTable(filteredItems, {
+  } = useDataTable(filteredItems, {
     defaultSortField: 'serviceAddressName',
     defaultSortDirection: 'asc',
     pageSize: 10
@@ -133,7 +133,7 @@ const CustomerServiceAddresses = () => {
                 <div className="col-12">
                   <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
                     <div className="flex-grow-1 w-100 me-md-3">
-                      <SearchBar
+                      <TableSearch
                         value={searchTerm}
                         onChange={setSearchTerm}
                         placeholder="Search service addresses..."

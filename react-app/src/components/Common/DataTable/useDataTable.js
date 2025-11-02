@@ -6,7 +6,7 @@ import { useState, useMemo } from 'react';
  * @param {Object} config - Configuration options
  * @returns {Object} Table state and handlers
  */
-const useTable = (data, config = {}) => {
+const useDataTable = (data, config = {}) => {
   const {
     defaultSortField = null,
     defaultSortDirection = 'asc',
@@ -63,4 +63,4 @@ const useTable = (data, config = {}) => {
   };
 };
 
-export default useTable;
+export default useDataTable;

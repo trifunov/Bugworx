@@ -26,10 +26,10 @@ import useCustomerData from "../hooks/useCustomerData";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import useCustomerProposals from "../hooks/useCustomerProposals";
-import { useSearchFilter } from "../components/Common/SearchBar";
-import { useTable } from "../components/Common/DataTable";
+import { useTableSearch } from "../components/Common/SearchBar/useTableSearch";
+import { useDataTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
-import SearchBar from "../components/Common/SearchBar";
+import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerOverview = () => {
@@ -53,7 +53,7 @@ const CustomerOverview = () => {
   const invoiceModal = useCreateInvoice(parseInt(id));
 
   // Search filter for service addresses
-  const { filteredItems, searchTerm, setSearchTerm } = useSearchFilter(
+  const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(
     serviceAddresses,
     ['serviceAddressName', 'serviceAddressType', 'address', 'contactName']
   );
@@ -67,7 +67,7 @@ const CustomerOverview = () => {
     setCurrentPage,
     totalPages,
     totalItems
-  } = useTable(filteredItems, {
+  } = useDataTable(filteredItems, {
     defaultSortField: 'serviceAddressName',
     defaultSortDirection: 'asc',
     pageSize: 5
@@ -311,7 +311,7 @@ const CustomerOverview = () => {
                 <div className="col-12">
                   <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
                     <div className="flex-grow-1 w-100 me-md-3">
-                      <SearchBar
+                      <TableSearch
                         value={searchTerm}
                         onChange={setSearchTerm}
                         placeholder="Search service addresses..."

@@ -1,4 +1,4 @@
-const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
+const TableSearch = ({ value, onChange, placeholder = "Search..." }) => {
   return (
     <div className="position-relative">
       <input
@@ -14,4 +14,4 @@ const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
   );
 };
 
-export default SearchBar;
+export default TableSearch;

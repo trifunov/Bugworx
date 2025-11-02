@@ -3,14 +3,13 @@ import { useEffect } from "react";
 import { addAppointment } from "../utils/localStorage";
 import useScheduleService from "../hooks/useScheduleService";
 import ScheduleServiceModal from "../components/CustomerActions/ScheduleServiceModal";
-import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
-import { useSearchFilter } from "../components/Common/SearchBar";
-import { useTable } from "../components/Common/DataTable";
+import { useTableSearch } from "../components/Common/SearchBar/useTableSearch";
+import { useDataTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
-import SearchBar from "../components/Common/SearchBar";
+import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerAppointments = () => {
@@ -22,7 +21,7 @@ const CustomerAppointments = () => {
   const { appointments } = useCustomerAppointments(id, serviceAddresses);
   const scheduleServiceModal = useScheduleService(parseInt(id));
 
-  const { filteredItems, searchTerm, setSearchTerm } = useSearchFilter(
+  const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(
     appointments,
     ['id', 'serviceType', 'scheduledDate', 'status']
   );
@@ -36,7 +35,7 @@ const CustomerAppointments = () => {
     setCurrentPage,
     totalPages,
     totalItems
-  } = useTable(filteredItems, {
+  } = useDataTable(filteredItems, {
     defaultSortField: 'scheduledDate',
     defaultSortDirection: 'desc',
     pageSize: 10
@@ -141,8 +140,6 @@ const CustomerAppointments = () => {
 
   return (
     <>
-      <SectionHeader title="Appointments" breadcrumbs={breadcrumbs} />
-
       <div className="row">
         <div className="col-12">
           <div className="card">
@@ -151,7 +148,7 @@ const CustomerAppointments = () => {
                 <div className="col-12">
                   <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
                     <div className="flex-grow-1 w-100 me-md-3">
-                      <SearchBar
+                      <TableSearch
                         value={searchTerm}
                         onChange={setSearchTerm}
                         placeholder="Search appointments..."

@@ -6,7 +6,7 @@ import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
-import SearchBar from "../components/Common/SearchBar";
+import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerInvoices = () => {
@@ -56,7 +56,7 @@ const CustomerInvoices = () => {
                 <div className="col-12">
                   <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
                     <div className="flex-grow-1 w-100 me-md-3">
-                      <SearchBar placeholder="Search invoices..." />
+                      <TableSearch placeholder="Search invoices..." />
                     </div>
                     <div className="mt-2 mt-md-0">
                       <AddNewButton handleAddNew={invoiceModal.open} />

@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react';
  * @param {Array} searchableFields - Fields to search in (e.g., ['name', 'email'])
  * @returns {Object} { filteredItems, searchTerm, setSearchTerm, hasResults }
  */
-const useSearchFilter = (items, searchableFields) => {
+const useTableSearch = (items, searchableFields) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredItems = useMemo(() => {
@@ -38,4 +38,4 @@ const useSearchFilter = (items, searchableFields) => {
   };
 };
 
-export default useSearchFilter;
+export default useTableSearch;

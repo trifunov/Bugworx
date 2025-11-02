@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
-import SearchBar from "../components/Common/SearchBar";
+import TableSearch from "../components/Common/SearchBar/TableSearch";
 
 const CustomerDocuments = () => {
   const { id } = useParams();
@@ -29,7 +29,7 @@ const CustomerDocuments = () => {
                 <div className="col-12">
                   <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
                     <div className="flex-grow-1 w-100 me-md-3">
-                      <SearchBar placeholder="Search documents..." />
+                      <TableSearch placeholder="Search documents..." />
                     </div>
                     <div className="mt-2 mt-md-0">
                       <button className="btn btn-primary btn-sm">
