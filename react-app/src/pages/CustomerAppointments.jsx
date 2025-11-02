@@ -11,8 +11,10 @@ import { useDataTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 
 const CustomerAppointments = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,6 +43,21 @@ const CustomerAppointments = () => {
     pageSize: 10
   });
 
+  // Set breadcrumbs
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: "Appointments",
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: 'Appointments' }
+        ]
+      });
+    }
+    return () => setPageSubHeader({ title: '', breadcrumbs: [] });
+  }, [setPageSubHeader, customer, id]);
+
   // Auto-open modal when landing on schedule-service route
   useEffect(() => {
     if (location.pathname.includes('/schedule-service')) {
@@ -60,12 +77,6 @@ const CustomerAppointments = () => {
   if (!customer) {
     return <div>Customer not found</div>;
   }
-
-  const breadcrumbs = [
-    { label: "Customers", link: "/customers" },
-    { label: customer.customerNum, link: `/customers/${id}` },
-    { label: "Appointments" },
-  ];
 
   const columns = [
     'ID',

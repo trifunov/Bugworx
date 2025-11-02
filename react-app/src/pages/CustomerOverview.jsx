@@ -21,8 +21,8 @@ import AddEditProposalModal from "../components/CustomerActions/AddEditProposalM
 import CreateInvoiceModal from "../components/CustomerActions/CreateInvoiceModal";
 import useAddEditCustomer from "../components/CustomerDetails/AddEditCustomer/useAddEditCustomer";
 import AddEditCustomer from "../components/CustomerDetails/AddEditCustomer/AddEditCustomer";
-import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import useCustomerProposals from "../hooks/useCustomerProposals";
@@ -33,6 +33,7 @@ import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerOverview = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -73,6 +74,21 @@ const CustomerOverview = () => {
     pageSize: 5
   });
 
+  // Set breadcrumbs
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: "Customer Overview",
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: 'Overview' }
+        ]
+      });
+    }
+    return () => setPageSubHeader({ title: '', breadcrumbs: [] });
+  }, [setPageSubHeader, customer, id]);
+
   // Handle URL actions (query parameters)
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -90,12 +106,6 @@ const CustomerOverview = () => {
   if (!customer) {
     return <div>Customer not found</div>;
   }
-
-  const breadcrumbs = [
-    { label: "Customers", link: "/customers" },
-    { label: customer.customerNum, link: `/customers/${id}` },
-    { label: "Overview" },
-  ];
 
   const columns = [
     'Service Address Name',
@@ -173,8 +183,6 @@ const CustomerOverview = () => {
 
   return (
     <>
-      <SectionHeader title="Customer Overview" breadcrumbs={breadcrumbs} />
-
       <div className="row">
         <div className="col-lg-8">
           <div className="card">
