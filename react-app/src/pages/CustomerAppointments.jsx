@@ -7,7 +7,7 @@ import useCustomerData from "../hooks/useCustomerData";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import useTableSearch from "../components/Common/SearchBar/useTableSearch";
-import { useDataTable } from "../components/Common/DataTable";
+import useDataTable from "../components/Common/DataTable/useDataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
