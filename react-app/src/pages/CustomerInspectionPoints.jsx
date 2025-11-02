@@ -1,24 +1,33 @@
 import { useParams, Link } from "react-router-dom";
-import SectionHeader from "../components/Common/SectionHeader";
+import { useEffect } from "react";
 import useCustomerData from "../hooks/useCustomerData";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 
 const CustomerInspectionPoints = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const { customer } = useCustomerData(id);
+
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: "Inspection Points",
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: 'Inspection Points' }
+        ]
+      });
+    }
+    return () => setPageSubHeader({ title: '', breadcrumbs: [] });
+  }, [setPageSubHeader, customer, id]);
 
   if (!customer) {
     return <div>Customer not found</div>;
   }
 
-  const breadcrumbs = [
-    { label: "Customers", link: "/customers" },
-    { label: customer.customerNum, link: `/customers/${id}` },
-    { label: "Inspection Points" },
-  ];
-
   return (
     <>
-      <SectionHeader title="Inspection Points" breadcrumbs={breadcrumbs} />
 
       <div className="row">
         <div className="col-12">

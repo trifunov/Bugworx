@@ -2,14 +2,15 @@ import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import useCreateInvoice from "../hooks/useCreateInvoice";
 import CreateInvoiceModal from "../components/CustomerActions/CreateInvoiceModal";
-import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerInvoices = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,6 +18,21 @@ const CustomerInvoices = () => {
   const { serviceAddresses } = useServiceAddresses(id);
   const { appointments } = useCustomerAppointments(id, serviceAddresses);
   const invoiceModal = useCreateInvoice(parseInt(id));
+
+  // Set breadcrumbs
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: "Invoices",
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: 'Invoices' }
+        ]
+      });
+    }
+    return () => setPageSubHeader({ title: '', breadcrumbs: [] });
+  }, [setPageSubHeader, customer, id]);
 
   // Auto-open modal when landing on create-invoice route
   useEffect(() => {
@@ -38,15 +54,8 @@ const CustomerInvoices = () => {
     return <div>Customer not found</div>;
   }
 
-  const breadcrumbs = [
-    { label: "Customers", link: "/customers" },
-    { label: customer.customerNum, link: `/customers/${id}` },
-    { label: "Invoices" },
-  ];
-
   return (
     <>
-      <SectionHeader title="Invoices" breadcrumbs={breadcrumbs} />
 
       <div className="row">
         <div className="col-12">
