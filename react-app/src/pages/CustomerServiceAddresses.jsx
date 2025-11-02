@@ -7,8 +7,8 @@ import useCustomerData from "../hooks/useCustomerData";
 import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useTableSearch from "../components/Common/SearchBar/useTableSearch";
-import useDataTable from "../components/Common/DataTable/useDataTable";
-import DataTable from "../components/Common/DataTable/DataTable";
+import useTable from "../components/Common/Table/useTable";
+import Table from "../components/Common/Table/Table";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
@@ -33,7 +33,7 @@ const CustomerServiceAddresses = () => {
     setCurrentPage,
     totalPages,
     totalItems
-  } = useDataTable(filteredItems, {
+  } = useTable(filteredItems, {
     defaultSortField: 'serviceAddressName',
     defaultSortDirection: 'asc',
     pageSize: 10
@@ -154,7 +154,7 @@ const CustomerServiceAddresses = () => {
                 </div>
               </div>
 
-              <DataTable
+              <Table
                 columns={columns}
                 data={paginatedData}
                 renderRow={renderRow}

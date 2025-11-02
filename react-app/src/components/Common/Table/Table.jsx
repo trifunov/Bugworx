@@ -2,7 +2,7 @@ import TableHeader from './TableHeader';
 import EmptyState from './EmptyState';
 import Pagination from './Pagination';
 
-const DataTable = ({
+const Table = ({
   columns,
   data,
   renderRow,
@@ -46,4 +46,4 @@ const DataTable = ({
   );
 };
 
-export default DataTable;
+export default Table;

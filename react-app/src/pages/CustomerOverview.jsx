@@ -27,8 +27,8 @@ import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import useCustomerProposals from "../hooks/useCustomerProposals";
 import useTableSearch from "../components/Common/SearchBar/useTableSearch";
-import useDataTable from "../components/Common/DataTable/useDataTable";
-import DataTable from "../components/Common/DataTable/DataTable";
+import useTable from "../components/Common/Table/useTable";
+import Table from "../components/Common/Table/Table";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
@@ -68,7 +68,7 @@ const CustomerOverview = () => {
     setCurrentPage,
     totalPages,
     totalItems
-  } = useDataTable(filteredItems, {
+  } = useTable(filteredItems, {
     defaultSortField: 'serviceAddressName',
     defaultSortDirection: 'asc',
     pageSize: 5
@@ -332,7 +332,7 @@ const CustomerOverview = () => {
                 </div>
               </div>
 
-              <DataTable
+              <Table
                 columns={columns}
                 data={paginatedData}
                 renderRow={renderRow}

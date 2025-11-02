@@ -5,8 +5,8 @@ import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import useTableSearch from "../components/Common/SearchBar/useTableSearch";
-import useDataTable from "../components/Common/DataTable/useDataTable";
-import DataTable from "../components/Common/DataTable/DataTable";
+import useTable from "../components/Common/Table/useTable";
+import Table from "../components/Common/Table/Table";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 
 const CustomerServiceHistory = () => {
@@ -33,7 +33,7 @@ const CustomerServiceHistory = () => {
     setCurrentPage,
     totalPages,
     totalItems
-  } = useDataTable(filteredItems, {
+  } = useTable(filteredItems, {
     defaultSortField: 'scheduledDate',
     defaultSortDirection: 'desc',
     pageSize: 10
@@ -114,7 +114,7 @@ const CustomerServiceHistory = () => {
                 </div>
               </div>
 
-              <DataTable
+              <Table
                 columns={columns}
                 data={paginatedData}
                 renderRow={renderRow}
