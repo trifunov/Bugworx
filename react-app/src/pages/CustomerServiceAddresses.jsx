@@ -6,7 +6,7 @@ import AddEditServiceAddress from "../components/CustomerDetails/AddEditServiceA
 import useCustomerData from "../hooks/useCustomerData";
 import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
-import { useTableSearch } from "../components/Common/SearchBar/useTableSearch";
+import useTableSearch from "../components/Common/SearchBar/useTableSearch";
 import { useDataTable } from "../components/Common/DataTable";
 import DataTable from "../components/Common/DataTable/DataTable";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
