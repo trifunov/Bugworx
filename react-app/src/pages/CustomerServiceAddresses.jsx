@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { addServiceAddress, updateServiceAddress } from "../utils/localStorage";
 import useAddEditServiceAddress from "../components/CustomerDetails/AddEditServiceAddress/useAddEditServiceAddress";
 import AddEditServiceAddress from "../components/CustomerDetails/AddEditServiceAddress/AddEditServiceAddress";
-import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import { useTableSearch } from "../components/Common/SearchBar/useTableSearch";
 import { useDataTable } from "../components/Common/DataTable";
@@ -12,6 +13,7 @@ import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerServiceAddresses = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const { customer } = useCustomerData(id);
   const { serviceAddresses, refresh: refreshServiceAddresses } = useServiceAddresses(id);
@@ -37,15 +39,23 @@ const CustomerServiceAddresses = () => {
     pageSize: 10
   });
 
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: "Customer Service Addresses",
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: 'Service Addresses' }
+        ]
+      });
+    }
+    return () => setPageSubHeader({ title: '', breadcrumbs: [] });
+  }, [setPageSubHeader, customer, id]);
+
   if (!customer) {
     return <div>Customer not found</div>;
   }
-
-  const breadcrumbs = [
-    { label: "Customers", link: "/customers" },
-    { label: customer.customerNum, link: `/customers/${id}` },
-    { label: "Service Addresses" },
-  ];
 
   const columns = [
     'Service Address Name',
@@ -123,8 +133,6 @@ const CustomerServiceAddresses = () => {
 
   return (
     <>
-      <SectionHeader title="Customer Service Addresses" breadcrumbs={breadcrumbs} />
-
       <div className="row">
         <div className="col-12">
           <div className="card">

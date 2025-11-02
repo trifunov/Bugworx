@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import SectionHeader from "../components/Common/SectionHeader";
+import { useEffect } from "react";
 import useCustomerData from "../hooks/useCustomerData";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
 import useCustomerAppointments from "../hooks/useCustomerAppointments";
 import { useTableSearch } from "../components/Common/SearchBar/useTableSearch";
@@ -9,6 +10,7 @@ import DataTable from "../components/Common/DataTable/DataTable";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 
 const CustomerServiceHistory = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const { customer } = useCustomerData(id);
   const { serviceAddresses } = useServiceAddresses(id);
@@ -37,15 +39,23 @@ const CustomerServiceHistory = () => {
     pageSize: 10
   });
 
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: "Service History",
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: 'Service History' }
+        ]
+      });
+    }
+    return () => setPageSubHeader({ title: '', breadcrumbs: [] });
+  }, [setPageSubHeader, customer, id]);
+
   if (!customer) {
     return <div>Customer not found</div>;
   }
-
-  const breadcrumbs = [
-    { label: "Customers", link: "/customers" },
-    { label: customer.customerNum, link: `/customers/${id}` },
-    { label: "Service History" },
-  ];
 
   const columns = [
     'Date',
@@ -86,8 +96,6 @@ const CustomerServiceHistory = () => {
 
   return (
     <>
-      <SectionHeader title="Service History" breadcrumbs={breadcrumbs} />
-
       <div className="row">
         <div className="col-12">
           <div className="card">

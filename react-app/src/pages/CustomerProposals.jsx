@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { addProposal, updateProposal, deleteProposal } from "../utils/localStorage";
 import useAddEditProposal from "../hooks/useAddEditProposal";
 import AddEditProposalModal from "../components/CustomerActions/AddEditProposalModal";
-import SectionHeader from "../components/Common/SectionHeader";
 import useCustomerData from "../hooks/useCustomerData";
+import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useCustomerProposals from "../hooks/useCustomerProposals";
 import { useTableSearch } from "../components/Common/SearchBar/useTableSearch";
 import { useDataTable } from "../components/Common/DataTable";
@@ -12,6 +13,7 @@ import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
 
 const CustomerProposals = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const { id } = useParams();
   const { customer } = useCustomerData(id);
   const { proposals, refresh: refreshProposals } = useCustomerProposals(id);
@@ -37,15 +39,23 @@ const CustomerProposals = () => {
     pageSize: 10
   });
 
+  useEffect(() => {
+    if (customer) {
+      setPageSubHeader({
+        title: "Proposals",
+        breadcrumbs: [
+          { label: 'Customers', path: '/customers' },
+          { label: customer.customerNum, path: `/customers/${id}` },
+          { label: 'Proposals' }
+        ]
+      });
+    }
+    return () => setPageSubHeader({ title: '', breadcrumbs: [] });
+  }, [setPageSubHeader, customer, id]);
+
   if (!customer) {
     return <div>Customer not found</div>;
   }
-
-  const breadcrumbs = [
-    { label: "Customers", link: "/customers" },
-    { label: customer.customerNum, link: `/customers/${id}` },
-    { label: "Proposals" },
-  ];
 
   const getStatusBadgeClass = (status) => {
     switch (status) {
@@ -140,8 +150,6 @@ const CustomerProposals = () => {
 
   return (
     <>
-      <SectionHeader title="Proposals" breadcrumbs={breadcrumbs} />
-
       <div className="row">
         <div className="col-12">
           <div className="card">
