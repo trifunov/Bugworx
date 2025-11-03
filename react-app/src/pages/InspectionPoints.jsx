@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { serviceAddresses, inspectionPoints as inspectionPointsData, areas, facilities } from '../data/mockData';
 import { statusIntToHtmlBadge } from '../utils/inspectionPointUtils';
 import AddNewButton from '../components/Common/AddNewButton';
+import { getCustomerById } from '../utils/localStorage';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const InspectionPoints = () => {
+    const { setPageSubHeader } = usePageSubHeader();
     const [searchTerm, setSearchTerm] = useState('');
-
+    const { id } = useParams();
+    const customerId = parseInt(id);
+    const customer = getCustomerById(customerId);
     // Use the inspectionPoints array from mockData
     const inspectionPoints = inspectionPointsData || [];
 
@@ -38,23 +43,19 @@ const InspectionPoints = () => {
 
         return matchesSearch;
     });
+    useEffect(() => {
+        setPageSubHeader({
+            title: 'Inspection Points',
+            breadcrumbs: [
+                { label: 'Customers', path: '/customers' },
+                { label: customer.customerNum, path: `/customers/${id}` },
+                { label: 'Inspection Points' }
+            ]
+        });
+    }, [setPageSubHeader, id, customer.customerNum]);
 
     return (
         <>
-            <div className="row">
-                <div className="col-12">
-                    <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 className="mb-sm-0 font-size-18">Inspection Points</h4>
-                        <div className="page-title-right">
-                            <ol className="breadcrumb m-0">
-                                <li className="breadcrumb-item"><Link to="/">Bugworx</Link></li>
-                                <li className="breadcrumb-item active">Inspection Points</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div className="row">
                 <div className="col-lg-12">
                     <div className="card">

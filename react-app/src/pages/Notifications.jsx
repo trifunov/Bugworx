@@ -1,12 +1,23 @@
+import { useState, useEffect } from 'react';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
+
 const Notifications = () => {
+  const { setPageSubHeader } = usePageSubHeader();
+  useEffect(() => {
+    setPageSubHeader({
+      title: 'Notification Hub',
+      breadcrumbs: [
+        { label: 'Notification Hub', path: '/notifications' }
+      ]
+    });
+  }, [setPageSubHeader]);
+
   return (
     <>
       {/* start page title */}
       <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">Notification Hub</h4>
-
             <div className="page-title-right">
               <button className="btn btn-primary">
                 <i className="mdi mdi-plus me-1"></i>

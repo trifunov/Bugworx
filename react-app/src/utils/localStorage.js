@@ -1,4 +1,5 @@
 // localStorage utility functions for Bugworx Pest Management System
+import { users as staticUsers } from '../data/users';
 
 const STORAGE_KEYS = {
   APPOINTMENTS: 'bugworx_appointments',
@@ -12,6 +13,18 @@ const STORAGE_KEYS = {
   FACILITIES: 'bugworx_facilities',
   AREAS: 'bugworx_areas',
   INSPECTION_POINTS: 'bugworx_inspection_points',
+  SERVICE_TYPES: 'bugworx_service_types',
+  USERS_KEY: 'bugworx_users',
+  ROLES_KEY: 'bugworx_roles',
+  TEAMS_KEY: 'bugworx_teams_branches',
+  EMPLOYEES_KEY: 'bugworx_employees',
+  ACTIVITY_KEY: 'bugworx_activity_log',
+  OPERATIONAL_SETUP_CONTRACT_TYPES: 'bugworx_operational_setup_contract_types',
+  OPERATIONAL_SETUP_SERVICE_TYPES: 'bugworx_operational_setup_service_types',
+  OPERATIONAL_SETUP_FREQUENCY_TEMPLATES: 'bugworx_operational_setup_frequency_templates',
+  OPERATIONAL_SETUP_JOB_SETTINGS: 'bugworx_operational_setup_job_settings',
+  OPERATIONAL_SETUP_ROUTE_CONFIGURATION: 'bugworx_operational_setup_route_configuration',
+  OPERATIONAL_SETUP_ZONES: 'bugworx_operational_setup_zones',
   LEADS: 'bugworx_leads',
   SERVICE_TYPES: 'bugworx_service_types',
   PROPOSALS: 'bugworx_proposals',
@@ -153,6 +166,11 @@ export const updateCustomer = (id, updates) => {
     return customers[index];
   }
   return null;
+};
+
+export const getCustomerById = (id) => {
+  const customers = getCustomers();
+  return customers.find(cust => cust.id === id);
 };
 
 export const addServiceAddress = (serviceAddress) => {
@@ -717,6 +735,72 @@ export const updateCurrentUser = (userDetaisl) => {
   }
 }
 
+/* ----- Users ----- */
+export const getUsers = () => {
+  const persisted = getFromStorage(STORAGE_KEYS.USERS_KEY, []);
+  // ensure persisted users appear first so newly added users override static ones by username when checking auth
+  return Array.isArray(persisted) ? [...persisted, ...staticUsers] : [...staticUsers];
+};
+
+export const saveUsers = (users) => setToStorage(STORAGE_KEYS.USERS_KEY, users);
+
+export const addUser = (user) => {
+  const newUser = { id: Date.now().toString(), ...user };
+  const existing = getFromStorage(STORAGE_KEYS.USERS_KEY, []);
+  const next = [newUser, ...(Array.isArray(existing) ? existing : [])];
+  saveUsers(next);
+  return newUser;
+};
+
+
+/* ----- Roles ----- */
+export const getRoles = () => getFromStorage(STORAGE_KEYS.ROLES_KEY, []);
+export const saveRoles = (roles) => {
+  const ok = setToStorage(STORAGE_KEYS.ROLES_KEY, roles);
+  // notify listeners that roles changed
+  if (ok) window.dispatchEvent(new Event('roles:updated'));
+  return ok;
+};
+export const addRole = (role) => {
+  const newRole = { id: Date.now().toString(), ...role };
+  const next = [newRole, ...getRoles()];
+  saveRoles(next);
+  return newRole;
+};
+
+/* ----- Teams ----- */
+export const getTeams = () => getFromStorage(STORAGE_KEYS.TEAMS_KEY, []);
+export const saveTeams = (teams) => {
+  const ok = setToStorage(STORAGE_KEYS.TEAMS_KEY, teams);
+  if (ok) window.dispatchEvent(new Event('teams:updated'));
+  return ok;
+};
+export const addTeam = (team) => {
+  const newTeam = { id: Date.now().toString(), ...team };
+  const next = [newTeam, ...getTeams()];
+  saveTeams(next);
+  return newTeam;
+};
+
+/* ----- Employees ----- */
+export const getEmployees = () => getFromStorage(STORAGE_KEYS.EMPLOYEES_KEY, []);
+export const saveEmployees = (employees) => setToStorage(STORAGE_KEYS.EMPLOYEES_KEY, employees);
+export const addEmployee = (employee) => {
+  const newItem = { id: Date.now().toString(), ...employee };
+  const next = [newItem, ...getEmployees()];
+  saveEmployees(next);
+  return newItem;
+};
+
+/* ----- Activity Log ----- */
+export const getActivityLogs = () => getFromStorage(STORAGE_KEYS.ACTIVITY_KEY, []);
+export const addActivityLog = ({ user = '', action = '', details = '' } = {}) => {
+  const entry = { id: Date.now().toString(), timestamp: new Date().toISOString(), user, action, details };
+  const next = [entry, ...getActivityLogs()];
+  setToStorage(STORAGE_KEYS.ACTIVITY_KEY, next);
+  return entry;
+};
+export const clearActivityLogs = () => setToStorage(STORAGE_KEYS.ACTIVITY_KEY, []);
 // Proposal-specific functions
 export const getProposals = () => {
   return getFromStorage(STORAGE_KEYS.PROPOSALS, []);
@@ -821,6 +905,25 @@ export const updateConfiguration = (updates) => {
   return updatedConfig;
 };
 
+// Generic helpers (used across operational-setup pages)
+export const getContractTypes = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_CONTRACT_TYPES, []);
+export const saveContractTypes = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_CONTRACT_TYPES, items);
+
+export const getServiceTypesSetup = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_SERVICE_TYPES, []);
+export const saveServiceTypes = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_SERVICE_TYPES, items);
+
+export const getFrequencyTemplates = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_FREQUENCY_TEMPLATES, []);
+export const saveFrequencyTemplates = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_FREQUENCY_TEMPLATES, items);
+
+export const getJobSettings = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_JOB_SETTINGS, {});
+export const saveJobSettings = (obj) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_JOB_SETTINGS, obj);
+
+export const getRouteConfiguration = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ROUTE_CONFIGURATION, []);
+export const saveRouteConfiguration = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ROUTE_CONFIGURATION, items);
+
+export const getOperationalZones = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, []);
+export const saveOperationalZones = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, items);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -835,6 +938,9 @@ export default {
   getAppointmentById,
   getCustomers,
   setCustomers,
+  getCustomerById,
+  addCustomer,
+  updateCustomer,
   getServiceAddresses,
   setServiceAddresses,
   addServiceAddress,
@@ -893,6 +999,33 @@ export default {
   getFacilitiesByCustomerId,
   getCurrentUser,
   updateCurrentUser,
+  getUsers,
+  saveUsers,
+  addUser,
+  getRoles,
+  saveRoles,
+  addRole,
+  getTeams,
+  saveTeams,
+  addTeam,
+  getEmployees,
+  saveEmployees,
+  addEmployee,
+  getActivityLogs,
+  addActivityLog,
+  clearActivityLogs,
+  getContractTypes,
+  saveContractTypes,
+  getServiceTypesSetup,
+  saveServiceTypes,
+  getFrequencyTemplates,
+  saveFrequencyTemplates,
+  getJobSettings,
+  saveJobSettings,
+  getRouteConfiguration,
+  saveRouteConfiguration,
+  getOperationalZones,
+  saveOperationalZones,
   addCustomer,
   updateCustomer,
   getProposals,

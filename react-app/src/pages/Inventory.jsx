@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getInventory, setInventory } from '../utils/localStorage';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Inventory = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const [inventory, setInventoryState] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
 
@@ -85,7 +87,14 @@ const Inventory = () => {
     });
 
     setFilteredInventory(filtered);
-  }, [inventory, activeView, selectedCategory, searchTerm, sortBy]);
+    setPageSubHeader({
+      title: 'Inventory Management',
+      breadcrumbs: [
+        { label: 'Inventory Management', path: '/inventory' }
+      ]
+    });
+
+  }, [inventory, activeView, selectedCategory, searchTerm, sortBy, setPageSubHeader]);
 
   const loadInventory = () => {
     setInventoryState(getInventory());
@@ -238,7 +247,6 @@ const Inventory = () => {
       <div className="row">
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">Inventory Management</h4>
             <div className="page-title-right">
               <button
                 className="btn btn-success me-2"

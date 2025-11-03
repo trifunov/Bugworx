@@ -36,6 +36,7 @@ import {
   calculateRouteEfficiency,
   generateImprovementSuggestions
 } from '../services/routingAI';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 // Google Maps libraries to load - MUST be defined outside component to prevent re-renders
 const libraries = ['places', 'geometry'];
@@ -59,6 +60,7 @@ const getMarkerIcon = (color) => {
 };
 
 const Routing = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   // Load Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
@@ -118,6 +120,13 @@ const Routing = () => {
 
   // Load data on mount
   useEffect(() => {
+
+    setPageSubHeader({
+      title: 'Routing',
+      breadcrumbs: [
+        { label: 'Routing', path: '/routing' }
+      ]
+    });
     // Initialize all mock data
     initializeStorage({
       appointments: initialAppointments,
@@ -130,7 +139,7 @@ const Routing = () => {
       routeTemplates: initialRouteTemplates
     });
     loadData();
-  }, []);
+  }, [setPageSubHeader]);
 
   const loadData = () => {
     setRoutesState(getRoutes());
@@ -547,21 +556,6 @@ const Routing = () => {
 
   return (
     <>
-      {/* Page Title */}
-      <div className="row">
-        <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">Routing & Fleet Management</h4>
-            <div className="page-title-right">
-              <ol className="breadcrumb m-0">
-                <li className="breadcrumb-item"><a href="/">Bugworx</a></li>
-                <li className="breadcrumb-item active">Routing</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Date Selector and Actions */}
       <div className="row mb-3">
         <div className="col-12">

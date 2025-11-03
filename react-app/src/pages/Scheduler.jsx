@@ -25,8 +25,10 @@ import {
   suggestTechnicians,
   getServiceTypes
 } from '../utils/localStorage';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Scheduler = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const calendarRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('create'); // 'create' or 'edit'
@@ -88,7 +90,13 @@ const Scheduler = () => {
       inventory: initialInventory
     });
     loadData();
-  }, []);
+    setPageSubHeader({
+      title: 'Scheduler & Calendar',
+      breadcrumbs: [
+        { label: 'Scheduler & Calendar', path: '/scheduler' }
+      ]
+    });
+  }, [setPageSubHeader]);
 
   // Load data from localStorage
   const loadData = () => {
@@ -568,7 +576,6 @@ const Scheduler = () => {
         <div className="col-12">
           <div className="page-title-box d-sm-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center gap-3">
-              <h4 className="mb-0">Scheduler & Calendar</h4>
               <div className="btn-group btn-group-sm" role="group">
                 <button
                   type="button"
@@ -585,12 +592,6 @@ const Scheduler = () => {
                   <i className="bx bx-list-ul me-1"></i>List View
                 </button>
               </div>
-            </div>
-            <div className="page-title-right">
-              <ol className="breadcrumb m-0">
-                <li className="breadcrumb-item"><a href="/">Bugworx</a></li>
-                <li className="breadcrumb-item active">Scheduler</li>
-              </ol>
             </div>
           </div>
         </div>
