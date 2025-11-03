@@ -32,6 +32,15 @@ import UserProfile from './pages/UserProfile';
 import Proposals from './pages/Proposals';
 import Leads from './pages/Leads';
 
+import { AuditProvider } from './contexts/AuditContext'; // Corrected from AuthContext
+import ConfigurationLayout from './pages/configuration/ConfigurationLayout';
+import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations'
+import AuditTrail from './pages/configuration/system-settings/audit-trail/AuditTrail';
+import BackupAndRestore from './pages/configuration/system-settings/backup-and-restore/BackupAndRestore';
+import CompanyProfile from './pages/configuration/system-settings/company-profile/CompanyProfile';
+import CustomFields from './pages/configuration/system-settings/custom-fields/CustomFields';
+import DataImportExport from './pages/configuration/system-settings/data-import-export/DataImportExport';
+
 import Users from './pages/configuration/user-access/Users/Users';
 import EmployeeDirectory from './pages/configuration/user-access/EmployeeDirectory/EmployeeDirectory';
 import RolesPermissions from './pages/configuration/user-access/RolesPermissions/RolesPermissions';
@@ -47,6 +56,7 @@ import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes/S
 
 function App() {
   return (
+    <AuditProvider>
     <Routes>
       {/* Public Route */}
       <Route path="/login" element={<Login />} />
@@ -98,6 +108,15 @@ function App() {
         <Route path="user-profile" element={<UserProfile />} />
 
         {/* User Access Management Routes */}
+        <Route path="configuration/general" element={<ConfigurationLayout />} />
+        <Route path="configuration/general/api-integrations" element={<ApiIntegrations />} />
+        <Route path="configuration/general/audit-trail" element={<AuditTrail />} />
+        <Route path="configuration/general/backup-and-restore" element={<BackupAndRestore />} />
+        <Route path="configuration/general/company-profile" element={<CompanyProfile />} />
+        <Route path="configuration/general/custom-fields" element={<CustomFields />} />
+        <Route path="configuration/general/data-import-export" element={<DataImportExport />} />
+        
+        {/* User Access Management Routes */}
         <Route path="configuration/user-access/users" element={<Users />} />
         <Route path="configuration/user-access/employee-directory" element={<EmployeeDirectory />} />
         <Route path="configuration/user-access/roles-permissions" element={<RolesPermissions />} />
@@ -116,6 +135,7 @@ function App() {
       {/* Catch all - redirect to login or dashboard */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </AuditProvider>
   );
 }
 

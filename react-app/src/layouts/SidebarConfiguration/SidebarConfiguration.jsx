@@ -139,12 +139,12 @@ const ConfigurationSidebar = () => {
                 <span>System Settings</span>
               </a>
               <ul className="sub-menu" aria-expanded="false">
-                <li><Link to="/configuration/general/company-profile">Company Profile</Link></li>
-                <li><Link to="/configuration/general/custom-fields">Custom Fields</Link></li>
-                <li><Link to="/configuration/general/api-integrations">API & Integrations</Link></li>
-                <li><Link to="/configuration/general/data-import-export">Data Import / Export</Link></li>
-                <li><Link to="/configuration/general/audit-trail">Audit Trail</Link></li>
-                <li><Link to="/configuration/general/backup-restore">Backup & Restore</Link></li>
+                <li><Link to="/configuration/system-settings/company-profile">Company Profile</Link></li>
+                <li><Link to="/configuration/system-settings/custom-fields">Custom Fields</Link></li>
+                <li><Link to="/configuration/system-settings/api-integrations">API & Integrations</Link></li>
+                <li><Link to="/configuration/system-settings/data-import-export">Data Import / Export</Link></li>
+                <li><Link to="/configuration/system-settings/audit-trail">Audit Trail</Link></li>
+                <li><Link to="/configuration/system-settings/backup-restore">Backup & Restore</Link></li>
               </ul>
             </li>
 
