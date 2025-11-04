@@ -1,28 +1,38 @@
 import { useState, useEffect } from 'react';
-import * as ls from '../../../../utils/localStorage'
-import { useAudit } from '../../../../contexts/AuditContext'
+import { getBackups, saveBackups, getCompanyProfile, getCustomFields, getApiIntegrations, getAuditTrail, saveCompanyProfile, saveCustomFields, saveApiIntegrations, saveAuditTrail } from '../../../../utils/localStorage';
+import { useAudit } from '../../../../contexts/AuditContext';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useBackupAndRestore = () => {
     const { pushAudit, setAuditTrail } = useAudit();
     const [backups, setBackups] = useState([]);
+    const { setPageSubHeader } = usePageSubHeader();
 
     useEffect(() => {
-        setBackups(ls.getFromStorage('backups', []));
-    }, []);
+        setBackups(getBackups());
+        setPageSubHeader({
+            title: "Backup & Restore",
+            breadcrumbs: [
+                { label: "Configuration", path: "/configuration/general" },
+                { label: "System Settings", path: "/configuration/general" },
+                { label: "Backup & Restore", isActive: true }
+            ]
+        });
+    }, [setPageSubHeader]);
 
     const createBackup = () => {
         const snapshot = {
-            companyProfile: ls.getFromStorage('companyProfile', {}),
-            customFields: ls.getFromStorage('customFields', []),
-            apiIntegrations: ls.getFromStorage('apiIntegrations', []),
-            auditTrail: ls.getFromStorage('auditTrail', [])
+            companyProfile: getCompanyProfile(),
+            customFields: getCustomFields(),
+            apiIntegrations: getApiIntegrations(),
+            auditTrail: getAuditTrail()
         };
         const content = JSON.stringify(snapshot, null, 2);
         const name = `backup_${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '_')}.json`;
         const entry = { id: Date.now().toString(), name, date: new Date().toISOString(), size: `${Math.round(content.length / 1024)} KB`, content };
         const next = [entry, ...backups];
         setBackups(next);
-        ls.setToStorage('backups', next);
+        saveBackups(next);
         pushAudit('admin', 'Backup', 'System', name);
         alert('Backup created and saved to local storage.');
     };
@@ -48,13 +58,11 @@ export const useBackupAndRestore = () => {
         if (!b) return;
         try {
             const data = JSON.parse(b.content);
-            // We need a way to update other sections' state. For now, we just update localStorage.
-            // A full implementation would use a global state manager or context to propagate these changes.
-            if (data.companyProfile) ls.setToStorage('companyProfile', data.companyProfile);
-            if (data.customFields) ls.setToStorage('customFields', data.customFields);
-            if (data.apiIntegrations) ls.setToStorage('apiIntegrations', data.apiIntegrations);
+            if (data.companyProfile) saveCompanyProfile(data.companyProfile);
+            if (data.customFields) saveCustomFields(data.customFields);
+            if (data.apiIntegrations) saveApiIntegrations(data.apiIntegrations);
             if (data.auditTrail) {
-                ls.setToStorage('auditTrail', data.auditTrail);
+                saveAuditTrail(data.auditTrail);
                 setAuditTrail(data.auditTrail); // Update context state
             }
             pushAudit('admin', 'Restore', 'Backup', b.name);
@@ -69,7 +77,7 @@ export const useBackupAndRestore = () => {
         const b = backups.find(b => b.id === id);
         const next = backups.filter(b => b.id !== id);
         setBackups(next);
-        ls.setToStorage('backups', next);
+        saveBackups(next);
         pushAudit('admin', 'Delete', 'Backup', b?.name || id);
     };
 
@@ -82,7 +90,7 @@ export const useBackupAndRestore = () => {
             const entry = { id: Date.now().toString(), name, date: new Date().toISOString(), size: `${Math.round(content.length / 1024)} KB`, content };
             const next = [entry, ...backups];
             setBackups(next);
-            ls.setToStorage('backups', next);
+            saveBackups(next);
             pushAudit('admin', 'Upload', 'Backup', name);
             alert('Backup uploaded and stored.');
         };

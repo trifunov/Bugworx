@@ -17,7 +17,6 @@ const CustomFields = () => {
             <div className="col-12">
                 <div className="card">
                     <div className="card-body">
-                        <h5 className="card-title">Custom Fields</h5>
                         <p className="text-muted">Add user-defined fields for Customers, Service Addresses, or Work Orders.</p>
 
                         <div className="mb-3">

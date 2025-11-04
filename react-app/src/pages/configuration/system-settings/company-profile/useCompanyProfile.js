@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import * as ls from '../../../../utils/localStorage'
-import { useAudit } from '../../../../contexts/AuditContext'
+import { getCompanyProfile, saveCompanyProfile } from '../../../../utils/localStorage';
+import { useAudit } from '../../../../contexts/AuditContext';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useCompanyProfile = () => {
     const { pushAudit } = useAudit();
+    const { setPageSubHeader } = usePageSubHeader();
     const [companyProfile, setCompanyProfile] = useState({
         name: '',
         regNumber: '',
@@ -14,16 +16,24 @@ export const useCompanyProfile = () => {
     });
 
     useEffect(() => {
-        const cp = ls.getFromStorage('companyProfile', null);
+        const cp = getCompanyProfile();
         if (cp) setCompanyProfile(cp);
-    }, []);
+        setPageSubHeader({
+            title: "Company Profile",
+            breadcrumbs: [
+                { label: "Configuration", path: "/configuration/general" },
+                { label: "System Settings", path: "/configuration/general" },
+                { label: "Company Profile", isActive: true }
+            ]
+        });
+    }, [setPageSubHeader]);
 
     const handleCompanyChange = (field, value) => {
         setCompanyProfile(prev => ({ ...prev, [field]: value }));
     };
 
-    const saveCompanyProfile = () => {
-        ls.setToStorage('companyProfile', companyProfile);
+    const saveCompanyProfileData = () => {
+        saveCompanyProfile(companyProfile);
         pushAudit('admin', 'Update', 'CompanyProfile', 'Saved company profile');
         alert('Company profile saved to local storage.');
     };
@@ -35,11 +45,11 @@ export const useCompanyProfile = () => {
             const dataUrl = e.target.result;
             const next = { ...companyProfile, logo: dataUrl };
             setCompanyProfile(next);
-            ls.setToStorage('companyProfile', next);
+            saveCompanyProfile(next);
             pushAudit('admin', 'Upload', 'CompanyLogo', file.name);
         };
         reader.readAsDataURL(file);
     };
 
-    return { companyProfile, handleCompanyChange, saveCompanyProfile, handleLogoUpload };
+    return { companyProfile, handleCompanyChange, saveCompanyProfile: saveCompanyProfileData, handleLogoUpload };
 };

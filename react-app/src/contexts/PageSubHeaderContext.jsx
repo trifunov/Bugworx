@@ -1,4 +1,3 @@
-// filepath: c:\Softela\Softela.Dashboard\react-app\src\contexts\PageSubHeaderContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 

@@ -924,6 +924,36 @@ export const saveRouteConfiguration = (items) => setToStorage(STORAGE_KEYS.OPERA
 export const getOperationalZones = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, []);
 export const saveOperationalZones = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, items);
 
+// --- Company Profile ---
+export const getCompanyProfile = () => getFromStorage('companyProfile', null);
+export const saveCompanyProfile = (profile) => setToStorage('companyProfile', profile);
+
+// --- Custom Fields ---
+export const getCustomFields = () => getFromStorage('customFields', []);
+export const saveCustomFields = (fields) => setToStorage('customFields', fields);
+
+// --- API Integrations ---
+const defaultApiIntegrations = [
+    { id: 'gps', name: 'GPS / Telemetry', enabled: true, details: '', type: 'GPS', provider: 'DefaultGPS', clientId: '', clientSecret: '' },
+    { id: 'hrms', name: 'HRMS', enabled: false, details: '', type: 'HRMS', provider: 'DefaultHRMS', clientId: '', clientSecret: '' },
+    { id: 'acct', name: 'Accounting', enabled: false, details: '', type: 'Accounting', provider: 'DefaultAccounting', clientId: '', clientSecret: '' }
+];
+export const getApiIntegrations = () => getFromStorage('apiIntegrations', defaultApiIntegrations);
+export const saveApiIntegrations = (integrations) => setToStorage('apiIntegrations', integrations);
+
+// --- Backups ---
+export const getBackups = () => getFromStorage('backups', []);
+export const saveBackups = (backups) => setToStorage('backups', backups);
+
+// --- Data Import/Export ---
+export const saveImportedFile = (entity, payload) => setToStorage(`import_${entity}`, payload);
+export const getImportedFile = (entity, defaultValue) => getFromStorage(`import_${entity}`, defaultValue);
+export const saveExportRecord = (entity, record) => setToStorage(`export_${entity}`, record);
+
+// --- Audit Trail ---
+export const getAuditTrail = () => getFromStorage('auditTrail', []);
+export const saveAuditTrail = (trail) => setToStorage('auditTrail', trail);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1037,5 +1067,18 @@ export default {
   getProposalsByCustomerId,
   getConfiguration,
   setConfiguration,
-  updateConfiguration
+  updateConfiguration,
+  getCompanyProfile,
+  saveCompanyProfile,
+  getCustomFields,
+  saveCustomFields,
+  getApiIntegrations,
+  saveApiIntegrations,
+  getBackups,
+  saveBackups,
+  saveImportedFile,
+  getImportedFile,
+  saveExportRecord,
+  getAuditTrail,
+  saveAuditTrail
 };

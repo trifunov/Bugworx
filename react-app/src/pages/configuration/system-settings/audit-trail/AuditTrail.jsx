@@ -9,7 +9,6 @@ const AuditTrail = () => {
             <div className="col-12">
                 <div className="card">
                     <div className="card-body">
-                        <h5 className="card-title">Audit Trail</h5>
                         <p className="text-muted">System-wide log of changes.</p>
 
                         <div className="mb-3 row">

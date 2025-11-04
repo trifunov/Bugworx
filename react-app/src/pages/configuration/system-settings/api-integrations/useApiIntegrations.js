@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import * as ls from '../../../../utils/localStorage'
-import { useAudit } from '../../../../contexts/AuditContext'
+import { getApiIntegrations, saveApiIntegrations } from '../../../../utils/localStorage';
+import { useAudit } from '../../../../contexts/AuditContext';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useApiIntegrations = () => {
+    const { setPageSubHeader } = usePageSubHeader();
     const { pushAudit } = useAudit();
     const [apiIntegrations, setApiIntegrations] = useState([]);
     const apiTypeRef = useRef(null);
@@ -13,17 +15,21 @@ export const useApiIntegrations = () => {
     const [credsById, setCredsById] = useState({});
 
     useEffect(() => {
-        setApiIntegrations(ls.getFromStorage('apiIntegrations', [
-            { id: 'gps', name: 'GPS / Telemetry', enabled: true, details: '', type: 'GPS', provider: 'DefaultGPS', clientId: '', clientSecret: '' },
-            { id: 'hrms', name: 'HRMS', enabled: false, details: '', type: 'HRMS', provider: 'DefaultHRMS', clientId: '', clientSecret: '' },
-            { id: 'acct', name: 'Accounting', enabled: false, details: '', type: 'Accounting', provider: 'DefaultAccounting', clientId: '', clientSecret: '' }
-        ]));
-    }, []);
+        setApiIntegrations(getApiIntegrations());
+        setPageSubHeader({
+            title: "API & Integrations",
+            breadcrumbs: [
+                { label: "Configuration", path: "/configuration/general" },
+                { label: "System Settings", path: "/configuration/general" },
+                { label: "API & Integrations", isActive: true }
+            ]
+        });
+    }, [setPageSubHeader]);
 
     const toggleIntegration = (id) => {
         const next = apiIntegrations.map(i => i.id === id ? { ...i, enabled: !i.enabled } : i);
         setApiIntegrations(next);
-        ls.setToStorage('apiIntegrations', next);
+        saveApiIntegrations(next);
         pushAudit('admin', 'Toggle', 'APIIntegration', id);
     };
 
@@ -39,7 +45,7 @@ export const useApiIntegrations = () => {
         const newInt = { id: Date.now().toString(), name: `${type} - ${provider}`, type, provider, enabled: true, clientId, clientSecret };
         const next = [...apiIntegrations, newInt];
         setApiIntegrations(next);
-        ls.setToStorage('apiIntegrations', next);
+        saveApiIntegrations(next);
         pushAudit('admin', 'Create', 'APIIntegration', provider);
         if (apiProviderRef.current) apiProviderRef.current.value = '';
         if (apiClientIdRef.current) apiClientIdRef.current.value = '';
@@ -63,7 +69,7 @@ export const useApiIntegrations = () => {
         const creds = credsById[id] || { clientId: '', clientSecret: '' };
         const next = apiIntegrations.map(i => i.id === id ? { ...i, clientId: creds.clientId, clientSecret: creds.clientSecret } : i);
         setApiIntegrations(next);
-        ls.setToStorage('apiIntegrations', next);
+        saveApiIntegrations(next);
         pushAudit('admin', 'Update', 'APIIntegrationCredentials', id);
         setIntegrationConfigOpen(null);
         alert('Integration credentials saved.');

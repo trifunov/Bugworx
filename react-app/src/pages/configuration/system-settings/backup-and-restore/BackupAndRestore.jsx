@@ -9,7 +9,6 @@ const BackupAndRestore = () => {
             <div className="col-12">
                 <div className="card">
                     <div className="card-body">
-                        <h5 className="card-title">Backup & Restore</h5>
                         <p className="text-muted">Manage database backups and restores.</p>
 
                         <div className="mb-3">

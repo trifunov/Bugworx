@@ -1,7 +1,20 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useAudit } from '../../../../contexts/AuditContext'
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useAuditTrail = () => {
+    const { setPageSubHeader } = usePageSubHeader();
+    useEffect(() => {
+        setPageSubHeader({
+            title: "Audit Trail",
+            breadcrumbs: [
+                { label: "Configuration", path: "/configuration/general" },
+                { label: "System Settings", path: "/configuration/general" },
+                { label: "Audit Trail", isActive: true }
+            ]
+        });
+    }, [setPageSubHeader]);
+
     const { auditTrail } = useAudit();
     const [auditFilter, setAuditFilter] = useState({ user: '', from: '', to: '' });
 

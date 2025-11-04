@@ -10,7 +10,6 @@ const ConfigurationLayout = () => {
                         <div className="page-title-right">
                             <ol className="breadcrumb m-0">
                                 <li className="breadcrumb-item">
-                                    <Link to="/configuration">Configuration</Link>
                                 </li>
                             </ol>
                         </div>

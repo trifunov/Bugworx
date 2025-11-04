@@ -99,22 +99,16 @@ function App() {
         <Route path="analytics" element={<Analytics />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="configuration" element={<Configuration />} />
-        <Route path="configuration/general/company-profile" element={<ConfigurationDetails />} />
-        <Route path="configuration/general/custom-fields" element={<ConfigurationDetails />} />
-        <Route path="configuration/general/api-integrations" element={<ConfigurationDetails />} />
-        <Route path="configuration/general/data-import-export" element={<ConfigurationDetails />} />
-        <Route path="configuration/general/audit-trail" element={<ConfigurationDetails />} />
-        <Route path="configuration/general/backup-and-restore" element={<ConfigurationDetails />} />
         <Route path="user-profile" element={<UserProfile />} />
 
         {/* User Access Management Routes */}
         <Route path="configuration/general" element={<ConfigurationLayout />} />
-        <Route path="configuration/general/api-integrations" element={<ApiIntegrations />} />
-        <Route path="configuration/general/audit-trail" element={<AuditTrail />} />
-        <Route path="configuration/general/backup-and-restore" element={<BackupAndRestore />} />
-        <Route path="configuration/general/company-profile" element={<CompanyProfile />} />
-        <Route path="configuration/general/custom-fields" element={<CustomFields />} />
-        <Route path="configuration/general/data-import-export" element={<DataImportExport />} />
+        <Route path="configuration/system-settings/api-integrations" element={<ApiIntegrations />} />
+        <Route path="configuration/system-settings/audit-trail" element={<AuditTrail />} />
+        <Route path="configuration/system-settings/backup-restore" element={<BackupAndRestore />} />
+        <Route path="configuration/system-settings/company-profile" element={<CompanyProfile />} />
+        <Route path="configuration/system-settings/custom-fields" element={<CustomFields />} />
+        <Route path="configuration/system-settings/data-import-export" element={<DataImportExport />} />
         
         {/* User Access Management Routes */}
         <Route path="configuration/user-access/users" element={<Users />} />

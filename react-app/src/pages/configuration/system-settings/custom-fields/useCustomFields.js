@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import * as ls from '../../../../utils/localStorage'
-import { useAudit } from '../../../../contexts/AuditContext'
+import { getCustomFields, saveCustomFields } from '../../../../utils/localStorage';
+import { useAudit } from '../../../../contexts/AuditContext';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useCustomFields = () => {
+    const { setPageSubHeader } = usePageSubHeader();
     const { pushAudit } = useAudit();
     const [customFields, setCustomFields] = useState([]);
     const customFieldLabelRef = useRef(null);
@@ -10,8 +12,16 @@ export const useCustomFields = () => {
     const customFieldTypeRef = useRef(null);
 
     useEffect(() => {
-        setCustomFields(ls.getFromStorage('customFields', []));
-    }, []);
+        setCustomFields(getCustomFields());
+        setPageSubHeader({
+            title: "Custom Fields",
+            breadcrumbs: [
+                { label: "Configuration", path: "/configuration/general" },
+                { label: "System Settings", path: "/configuration/general" },
+                { label: "Custom Fields", isActive: true }
+            ]
+        });
+    }, [setPageSubHeader]);
 
     const addCustomField = () => {
         const label = customFieldLabelRef.current?.value?.trim();
@@ -24,7 +34,7 @@ export const useCustomFields = () => {
         const newField = { id: Date.now().toString(), label, type, applies };
         const next = [...customFields, newField];
         setCustomFields(next);
-        ls.setToStorage('customFields', next);
+        saveCustomFields(next);
         pushAudit('admin', 'Create', 'CustomField', label);
         if (customFieldLabelRef.current) {
             customFieldLabelRef.current.value = '';
@@ -35,7 +45,7 @@ export const useCustomFields = () => {
         if (!window.confirm('Delete this field?')) return;
         const next = customFields.filter(f => f.id !== id);
         setCustomFields(next);
-        ls.setToStorage('customFields', next);
+        saveCustomFields(next);
         pushAudit('admin', 'Delete', 'CustomField', id);
     };
 
@@ -45,7 +55,7 @@ export const useCustomFields = () => {
         if (newLabel === null) return;
         const next = customFields.map(x => x.id === id ? { ...x, label: newLabel } : x);
         setCustomFields(next);
-        ls.setToStorage('customFields', next);
+        saveCustomFields(next);
         pushAudit('admin', 'Update', 'CustomField', id);
     };
 

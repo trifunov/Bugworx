@@ -22,9 +22,7 @@ const ApiIntegrations = () => {
             <div className="col-12">
                 <div className="card">
                     <div className="card-body">
-                        <h5 className="card-title">API Integrations</h5>
                         <p className="text-muted">Configure third-party integrations (GPS, HRMS, Accounting).</p>
-
                         <div className="list-group mb-3">
                             {apiIntegrations.map(i => (
                                 <div key={i.id} className="list-group-item">

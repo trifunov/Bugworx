@@ -9,7 +9,6 @@ const CompanyProfile = () => {
             <div className="col-lg-8">
                 <div className="card">
                     <div className="card-body">
-                        <h5 className="card-title">Legal Entity</h5>
                         <form onSubmit={e => { e.preventDefault(); saveCompanyProfile(); }}>
                             <div className="mb-3">
                                 <label className="form-label">Company Name</label>
