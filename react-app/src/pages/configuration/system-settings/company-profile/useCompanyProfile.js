@@ -32,7 +32,7 @@ export const useCompanyProfile = () => {
         setCompanyProfile(prev => ({ ...prev, [field]: value }));
     };
 
-    const saveCompanyProfileData = () => {
+    const saveProfile = () => {
         saveCompanyProfile(companyProfile);
         pushAudit('admin', 'Update', 'CompanyProfile', 'Saved company profile');
         alert('Company profile saved to local storage.');
@@ -51,5 +51,5 @@ export const useCompanyProfile = () => {
         reader.readAsDataURL(file);
     };
 
-    return { companyProfile, handleCompanyChange, saveCompanyProfile: saveCompanyProfileData, handleLogoUpload };
+    return { companyProfile, handleCompanyChange, saveCompanyProfile: saveProfile, handleLogoUpload };
 };

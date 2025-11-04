@@ -25,7 +25,6 @@ import Reports from './pages/Reports';
 import Analytics from './pages/Analytics';
 import Notifications from './pages/Notifications';
 import Configuration from './pages/Configuration';
-import ConfigurationDetails from './pages/ConfigurationDetails';
 import Facilities from './pages/Facilities';
 import Areas from './pages/Areas';
 import UserProfile from './pages/UserProfile';
