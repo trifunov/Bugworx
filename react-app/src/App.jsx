@@ -33,7 +33,7 @@ import Leads from './pages/Leads';
 
 import { AuditProvider } from './contexts/AuditContext'; // Corrected from AuthContext
 import ConfigurationLayout from './pages/configuration/ConfigurationLayout';
-import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations'
+import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations';
 import AuditTrail from './pages/configuration/system-settings/audit-trail/AuditTrail';
 import BackupAndRestore from './pages/configuration/system-settings/backup-and-restore/BackupAndRestore';
 import CompanyProfile from './pages/configuration/system-settings/company-profile/CompanyProfile';
