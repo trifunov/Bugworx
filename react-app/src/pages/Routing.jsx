@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow, Polyline, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
 import {
   vehicles as initialVehicles,
@@ -23,10 +23,7 @@ import {
   getServiceAddresses
 } from '../utils/localStorage';
 import {
-  generateRouteFromAppointments,
-  generateRouteWithStrategy,
-  calculateDistance,
-  optimizeRouteWithConstraints
+  generateRouteWithStrategy
 } from '../utils/routeUtils';
 import { calculateDirections } from '../services/googleMapsService';
 import {
@@ -103,9 +100,6 @@ const Routing = () => {
   const [emergencyAnalysis, setEmergencyAnalysis] = useState(null);
   const [routeOptions, setRouteOptions] = useState([]);
   const [showRouteOptions, setShowRouteOptions] = useState(false);
-  const [selectedRouteOption, setSelectedRouteOption] = useState(null);
-  const [routeEfficiency, setRouteEfficiency] = useState(null);
-  const [improvementSuggestions, setImprovementSuggestions] = useState([]);
 
   // Map center (Springfield, IL)
   const center = { lat: 39.7817, lng: -89.6501 };
@@ -609,140 +603,8 @@ const Routing = () => {
         </div>
       </div>
 
-      {/* Map View */}
-      <div className="row mb-4">
-        <div className="col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h4 className="card-title mb-0">Route Map</h4>
-                {selectedRoute && (
-                  <button
-                    className="btn btn-sm btn-light"
-                    onClick={handleClearRoute}
-                  >
-                    <i className="mdi mdi-close me-1"></i>
-                    Clear Selection
-                  </button>
-                )}
-              </div>
-
-              <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                center={center}
-                zoom={12}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
-                options={{
-                  zoomControl: true,
-                  streetViewControl: true,
-                  mapTypeControl: true,
-                  fullscreenControl: true,
-                }}
-              >
-                {/* Vehicle markers */}
-                {vehicles.map((vehicle) => (
-                  vehicle.currentLocation && (
-                    <Marker
-                      key={`vehicle-${vehicle.id}`}
-                      position={{ lat: vehicle.currentLocation.lat, lng: vehicle.currentLocation.lng }}
-                      icon={getMarkerIcon('#3b82f6')}
-                      onClick={() => setSelectedMarker({ type: 'vehicle', data: vehicle })}
-                    />
-                  )
-                ))}
-
-                {/* Vehicle info windows */}
-                {selectedMarker?.type === 'vehicle' && (
-                  <InfoWindow
-                    position={{ lat: selectedMarker.data.currentLocation.lat, lng: selectedMarker.data.currentLocation.lng }}
-                    onCloseClick={() => setSelectedMarker(null)}
-                  >
-                    <div>
-                      <strong>{selectedMarker.data.vehicleNumber}</strong><br />
-                      {selectedMarker.data.make} {selectedMarker.data.model}<br />
-                      Status: {selectedMarker.data.status}
-                    </div>
-                  </InfoWindow>
-                )}
-
-                {/* Selected route visualization */}
-                {selectedRoute && selectedRoute.stops && (
-                  <>
-                    {/* Use Google Directions Renderer if available, otherwise use polyline */}
-                    {directionsResponse ? (
-                      <DirectionsRenderer
-                        directions={directionsResponse}
-                        options={{
-                          suppressMarkers: true, // We show our own custom numbered markers
-                          polylineOptions: {
-                            strokeColor: '#2563eb', // Blue color
-                            strokeWeight: 5,
-                            strokeOpacity: 0.9,
-                          },
-                          preserveViewport: false, // Allow fitBounds to work
-                        }}
-                      />
-                    ) : (
-                      <Polyline
-                        path={getRoutePolyline(selectedRoute)}
-                        options={{
-                          strokeColor: '#94a3b8', // Gray color for fallback
-                          strokeWeight: 4,
-                          strokeOpacity: 0.6,
-                          strokeStyle: 'dashed',
-                        }}
-                      />
-                    )}
-
-                    {/* Route stop markers */}
-                    {selectedRoute.stops.map((stop, index) => {
-                      const aptInfo = getAppointmentInfo(stop.appointmentId);
-                      if (!aptInfo?.coordinates) return null;
-
-                      return (
-                        <Marker
-                          key={`stop-${index}-${stop.appointmentId}`}
-                          position={{ lat: aptInfo.coordinates.lat, lng: aptInfo.coordinates.lng }}
-                          icon={getMarkerIcon(index === 0 ? '#10b981' : '#f59e0b')}
-                          label={{
-                            text: `${stop.order}`,
-                            color: 'white',
-                            fontSize: '12px',
-                            fontWeight: 'bold',
-                          }}
-                          onClick={() => setSelectedMarker({ type: 'stop', data: { stop, aptInfo } })}
-                        />
-                      );
-                    })}
-
-                    {/* Stop info window */}
-                    {selectedMarker?.type === 'stop' && (
-                      <InfoWindow
-                        position={{
-                          lat: selectedMarker.data.aptInfo.coordinates.lat,
-                          lng: selectedMarker.data.aptInfo.coordinates.lng
-                        }}
-                        onCloseClick={() => setSelectedMarker(null)}
-                      >
-                        <div>
-                          <strong>Stop #{selectedMarker.data.stop.order}</strong><br />
-                          {getServiceAddressName(selectedMarker.data.aptInfo.serviceAddressId)}<br />
-                          ETA: {selectedMarker.data.stop.estimatedArrival}<br />
-                          Service: {selectedMarker.data.aptInfo.serviceType}
-                        </div>
-                      </InfoWindow>
-                    )}
-                  </>
-                )}
-              </GoogleMap>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Routes and Fleet Tabs */}
-      <div className="row">
+      <div className="row mb-4">
         <div className="col-lg-12">
           <div className="card">
             <div className="card-body">
@@ -888,47 +750,56 @@ const Routing = () => {
                         <thead className="table-light">
                           <tr>
                             <th>Vehicle</th>
-                            <th>Make/Model</th>
-                            <th>License Plate</th>
+                            <th>Type</th>
                             <th>Assigned To</th>
-                            <th>Mileage</th>
                             <th>Status</th>
-                            <th>Next Maintenance</th>
-                            <th>Actions</th>
+                            <th>Location</th>
+                            <th>Fuel</th>
+                            <th>Mileage</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {vehicles.map((vehicle) => (
-                            <tr key={vehicle.id}>
-                              <td>
-                                <strong>{vehicle.vehicleNumber}</strong>
-                              </td>
-                              <td>{vehicle.make} {vehicle.model} {vehicle.year}</td>
-                              <td>{vehicle.licensePlate}</td>
-                              <td>{getTechnicianName(vehicle.assignedTechnicianId)}</td>
-                              <td>{vehicle.mileage.toLocaleString()} mi</td>
-                              <td>
-                                <span className={`badge ${
-                                  vehicle.status === 'Active' ? 'badge-soft-success' :
-                                  vehicle.status === 'Maintenance' ? 'badge-soft-warning' :
-                                  'badge-soft-danger'
-                                }`}>
-                                  {vehicle.status}
-                                </span>
-                              </td>
-                              <td>
-                                <small>{vehicle.nextMaintenance}</small>
-                              </td>
-                              <td>
-                                <button
-                                  className="btn btn-sm btn-soft-info"
-                                  title="View details"
-                                >
-                                  <i className="mdi mdi-information"></i>
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
+                          {vehicles.map((vehicle) => {
+                            const assignedTech = technicians.find(t => t.id === vehicle.assignedTechnicianId);
+                            return (
+                              <tr key={vehicle.id}>
+                                <td><strong>{vehicle.vehicleNumber}</strong></td>
+                                <td>{vehicle.type}</td>
+                                <td>{assignedTech ? assignedTech.name : 'Unassigned'}</td>
+                                <td>
+                                  <span className={`badge ${
+                                    vehicle.status === 'Active' ? 'badge-soft-success' :
+                                    vehicle.status === 'Idle' ? 'badge-soft-warning' :
+                                    'badge-soft-danger'
+                                  }`}>
+                                    {vehicle.status}
+                                  </span>
+                                </td>
+                                <td>
+                                  <small>
+                                    {vehicle.currentLocation ?
+                                      `${vehicle.currentLocation.lat.toFixed(4)}, ${vehicle.currentLocation.lng.toFixed(4)}` :
+                                      'N/A'
+                                    }
+                                  </small>
+                                </td>
+                                <td>
+                                  <div className="progress" style={{ height: '6px' }}>
+                                    <div
+                                      className={`progress-bar ${
+                                        vehicle.fuelLevel > 50 ? 'bg-success' :
+                                        vehicle.fuelLevel > 25 ? 'bg-warning' :
+                                        'bg-danger'
+                                      }`}
+                                      style={{ width: `${vehicle.fuelLevel}%` }}
+                                    ></div>
+                                  </div>
+                                  <small>{vehicle.fuelLevel}%</small>
+                                </td>
+                                <td>{vehicle.mileage?.toLocaleString()} mi</td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -938,7 +809,7 @@ const Routing = () => {
                 {/* Technicians Tab */}
                 {activeTab === 'technicians' && (
                   <div className="tab-pane active">
-                    <h5 className="font-size-16 mb-3">Active Technicians</h5>
+                    <h5 className="font-size-16 mb-3">Technician Overview</h5>
                     <div className="table-responsive">
                       <table className="table table-hover mb-0">
                         <thead className="table-light">
@@ -948,7 +819,7 @@ const Routing = () => {
                             <th>Vehicle</th>
                             <th>Phone</th>
                             <th>Rating</th>
-                            <th>Completed Jobs</th>
+                            <th>Jobs</th>
                             <th>Zones</th>
                             <th>Status</th>
                           </tr>
@@ -984,6 +855,138 @@ const Routing = () => {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Map View */}
+      <div className="row mb-4">
+        <div className="col-lg-12">
+          <div className="card">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h4 className="card-title mb-0">Route Map</h4>
+                {selectedRoute && (
+                  <button
+                    className="btn btn-sm btn-light"
+                    onClick={handleClearRoute}
+                  >
+                    <i className="mdi mdi-close me-1"></i>
+                    Clear Selection
+                  </button>
+                )}
+              </div>
+
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={center}
+                zoom={12}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+                options={{
+                  zoomControl: true,
+                  streetViewControl: true,
+                  mapTypeControl: true,
+                  fullscreenControl: true,
+                }}
+              >
+                {/* Vehicle markers */}
+                {vehicles.map((vehicle) => (
+                  vehicle.currentLocation && (
+                    <Marker
+                      key={`vehicle-${vehicle.id}`}
+                      position={{ lat: vehicle.currentLocation.lat, lng: vehicle.currentLocation.lng }}
+                      icon={getMarkerIcon('#3b82f6')}
+                      onClick={() => setSelectedMarker({ type: 'vehicle', data: vehicle })}
+                    />
+                  )
+                ))}
+
+                {/* Vehicle info windows */}
+                {selectedMarker?.type === 'vehicle' && (
+                  <InfoWindow
+                    position={{ lat: selectedMarker.data.currentLocation.lat, lng: selectedMarker.data.currentLocation.lng }}
+                    onCloseClick={() => setSelectedMarker(null)}
+                  >
+                    <div>
+                      <strong>{selectedMarker.data.vehicleNumber}</strong><br />
+                      {selectedMarker.data.make} {selectedMarker.data.model}<br />
+                      Status: {selectedMarker.data.status}
+                    </div>
+                  </InfoWindow>
+                )}
+
+                {/* Selected route visualization */}
+                {selectedRoute && selectedRoute.stops && (
+                  <>
+                    {/* Use Google Directions Renderer if available, otherwise use polyline */}
+                    {directionsResponse ? (
+                      <DirectionsRenderer
+                        directions={directionsResponse}
+                        options={{
+                          suppressMarkers: true, // We show our own custom numbered markers
+                          polylineOptions: {
+                            strokeColor: '#2563eb', // Blue color
+                            strokeWeight: 5,
+                            strokeOpacity: 0.9,
+                          },
+                          preserveViewport: false, // Allow fitBounds to work
+                        }}
+                      />
+                    ) : (
+                      <Polyline
+                        path={getRoutePolyline(selectedRoute)}
+                        options={{
+                          strokeColor: '#94a3b8', // Gray color for fallback
+                          strokeWeight: 4,
+                          strokeOpacity: 0.6,
+                          strokeStyle: 'dashed',
+                        }}
+                      />
+                    )}
+
+                    {/* Route stop markers */}
+                    {selectedRoute.stops.map((stop, index) => {
+                      const aptInfo = getAppointmentInfo(stop.appointmentId);
+                      if (!aptInfo?.coordinates) return null;
+
+                      return (
+                        <Marker
+                          key={`stop-${index}-${stop.appointmentId}`}
+                          position={{ lat: aptInfo.coordinates.lat, lng: aptInfo.coordinates.lng }}
+                          icon={getMarkerIcon(index === 0 ? '#10b981' : '#f59e0b')}
+                          label={{
+                            text: `${stop.order}`,
+                            color: 'white',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                          }}
+                          onClick={() => setSelectedMarker({ type: 'stop', data: { stop, aptInfo } })}
+                        />
+                      );
+                    })}
+
+                    {/* Stop info window */}
+                    {selectedMarker?.type === 'stop' && (
+                      <InfoWindow
+                        position={{
+                          lat: selectedMarker.data.aptInfo.coordinates.lat,
+                          lng: selectedMarker.data.aptInfo.coordinates.lng
+                        }}
+                        onCloseClick={() => setSelectedMarker(null)}
+                      >
+                        <div>
+                          <strong>Stop #{selectedMarker.data.stop.order}</strong><br />
+                          {getServiceAddressName(selectedMarker.data.aptInfo.serviceAddressId)}<br />
+                          ETA: {selectedMarker.data.stop.estimatedArrival}<br />
+                          Service: {selectedMarker.data.aptInfo.serviceType}
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </>
+                )}
+              </GoogleMap>
             </div>
           </div>
         </div>
@@ -1097,7 +1100,7 @@ const Routing = () => {
                   )}
 
                   {/* Route Options */}
-                  {routeOptions.map((option, index) => (
+                  {routeOptions.map((option) => (
                     <div
                       key={option.id}
                       className="card mb-3"
