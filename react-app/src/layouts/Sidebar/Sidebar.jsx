@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   const { customer } = useCustomerData(customerId);
 
-  // Initialize MetisMenu
+  // Initialize sidebar menu functionality
   useSidebarMenu();
 
   return (

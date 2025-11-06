@@ -36,9 +36,19 @@ const MenuRenderer = ({ items, customerId }) => {
    * Render a parent menu item with nested children
    */
   const renderParentMenuItem = (item) => {
+    const handleClick = (e) => {
+      e.preventDefault();
+    };
+
     return (
       <li key={item.id}>
-        <a href="#" className="has-arrow waves-effect">
+        <a
+          href="#"
+          className="has-arrow waves-effect"
+          onClick={handleClick}
+          role="button"
+          aria-expanded="false"
+        >
           {item.icon && <i className={item.icon}></i>}
           <span>{item.label}</span>
         </a>
