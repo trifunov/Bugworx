@@ -470,33 +470,39 @@ const Routing = () => {
     setSelectedMarker(null);
   };
 
-  // Optimize existing route
-  const handleOptimizeRoute = (routeId) => {
+  const handleSaveRoute = (routeId) => {
     const route = routes.find(r => r.id === routeId);
     if (!route) return;
 
-    const vehicle = vehicles.find(v => v.id === route.vehicleId);
-    if (!vehicle) return;
-
-    // Get stops with coordinates
-    const stopsWithCoords = route.stops.map(stop => {
-      const aptInfo = getAppointmentInfo(stop.appointmentId);
-      return {
-        ...stop,
-        coordinates: aptInfo?.coordinates || vehicle.currentLocation
-      };
-    });
-
-    // Re-optimize
-    const optimized = optimizeRouteWithConstraints(
-      stopsWithCoords,
-      vehicle.currentLocation,
-      route.startTime
+    
+    const routesToRemove = routes.filter(r =>
+      r.technicianId === route.technicianId &&
+      r.date === route.date &&
+      r.id !== routeId
     );
 
-    updateRoute(routeId, { stops: optimized });
+    // Delete all other routes
+    routesToRemove.forEach(r => {
+      deleteRoute(r.id);
+    });
+
+    // Mark the selected route as saved/finalized
+    updateRoute(routeId, {
+      status: 'Planned',
+      savedAt: new Date().toISOString()
+    });
+
     loadData();
-    alert('Route optimized successfully!');
+    alert('Route saved successfully! Other route options have been removed.');
+  };
+
+  // Delete route
+  const handleDeleteRoute = (routeId) => {
+    if (window.confirm('Are you sure you want to delete this route?')) {
+      deleteRoute(routeId);
+      loadData();
+      alert('Route deleted successfully!');
+    }
   };
 
   // Get route polyline coordinates (fallback when Directions API is not available)
@@ -849,10 +855,18 @@ const Routing = () => {
                                     <button
                                       type="button"
                                       className="btn btn-sm btn-success"
-                                      onClick={() => handleOptimizeRoute(route.id)}
-                                      title="Re-optimize"
+                                      onClick={() => handleSaveRoute(route.id)}
+                                      title="Save route"
                                     >
-                                      <i className="mdi mdi-refresh"></i>
+                                      <i className="mdi mdi-content-save"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-danger"
+                                      onClick={() => handleDeleteRoute(route.id)}
+                                      title="Delete route"
+                                    >
+                                      <i className="mdi mdi-delete"></i>
                                     </button>
                                   </div>
                                 </td>
