@@ -80,6 +80,7 @@ const Routing = () => {
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [showRouteGenerator, setShowRouteGenerator] = useState(false);
+  const [activeTab, setActiveTab] = useState('routes');
 
   // Data state
   const [routes, setRoutesState] = useState([]);
@@ -150,11 +151,33 @@ const Routing = () => {
   // Pagination for routes table
   const {
     data: paginatedRoutes,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    totalItems
+    currentPage: routesCurrentPage,
+    setCurrentPage: setRoutesCurrentPage,
+    totalPages: routesTotalPages,
+    totalItems: routesTotalItems
   } = useTable(todayRoutes, {
+    pageSize: 3
+  });
+
+  // Pagination for fleet table
+  const {
+    data: paginatedVehicles,
+    currentPage: fleetCurrentPage,
+    setCurrentPage: setFleetCurrentPage,
+    totalPages: fleetTotalPages,
+    totalItems: fleetTotalItems
+  } = useTable(vehicles, {
+    pageSize: 3
+  });
+
+  // Pagination for technicians table
+  const {
+    data: paginatedTechnicians,
+    currentPage: techCurrentPage,
+    setCurrentPage: setTechCurrentPage,
+    totalPages: techTotalPages,
+    totalItems: techTotalItems
+  } = useTable(technicians.filter(t => t.isActive), {
     pageSize: 3
   });
 
@@ -588,73 +611,190 @@ const Routing = () => {
                   </button>
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label mb-1">Today's Routes</label>
-                  <Table
-                    columns={['Technician', 'Stops', 'Status', 'Actions']}
-                    data={paginatedRoutes}
-                    renderRow={(route) => (
-                      <tr key={route.id}>
-                        <td>{getTechnicianName(route.technicianId)}</td>
-                        <td>{route.stops.length}</td>
-                        <td>
-                          <span className={`badge badge-soft-${
-                            route.status === 'Active' ? 'success' :
-                            route.status === 'Completed' ? 'primary' :
-                            'warning'
-                          }`}>
-                            {route.status}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="d-flex gap-3">
-                            <a
-                              href="#"
-                              className="text-primary"
-                              title="View on map"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleViewRoute(route);
-                              }}
-                            >
-                              <i className="mdi mdi-map-marker font-size-18"></i>
-                            </a>
-                            <a
-                              href="#"
-                              className="text-success"
-                              title="Save route"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleSaveRoute(route.id);
-                              }}
-                            >
-                              <i className="mdi mdi-content-save font-size-18"></i>
-                            </a>
-                            <a
-                              href="#"
-                              className="text-danger"
-                              title="Delete route"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleDeleteRoute(route.id);
-                              }}
-                            >
-                              <i className="mdi mdi-delete font-size-18"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
+                  <ul className="nav nav-tabs nav-tabs-custom mb-3" role="tablist">
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${activeTab === 'routes' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('routes')}
+                        role="tab"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span className="d-none d-md-block">
+                          <i className="mdi mdi-map me-2"></i>Routes
+                        </span>
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${activeTab === 'fleet' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('fleet')}
+                        role="tab"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span className="d-none d-md-block">
+                          <i className="mdi mdi-car me-2"></i>Fleet
+                        </span>
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${activeTab === 'technicians' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('technicians')}
+                        role="tab"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span className="d-none d-md-block">
+                          <i className="mdi mdi-account me-2"></i>Technicians
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+
+                  <div className="tab-content">
+                    {/* Routes Tab */}
+                    {activeTab === 'routes' && (
+                      <div className="tab-pane active">
+                        <Table
+                          columns={['Technician', 'Stops', 'Status', 'Actions']}
+                          data={paginatedRoutes}
+                          renderRow={(route) => (
+                            <tr key={route.id}>
+                              <td>{getTechnicianName(route.technicianId)}</td>
+                              <td>{route.stops.length}</td>
+                              <td>
+                                <span className={`badge badge-soft-${
+                                  route.status === 'Active' ? 'success' :
+                                  route.status === 'Completed' ? 'primary' :
+                                  'warning'
+                                }`}>
+                                  {route.status}
+                                </span>
+                              </td>
+                              <td>
+                                <div className="d-flex gap-3">
+                                  <a
+                                    href="#"
+                                    className="text-primary"
+                                    title="View on map"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleViewRoute(route);
+                                    }}
+                                  >
+                                    <i className="mdi mdi-map-marker font-size-18"></i>
+                                  </a>
+                                  <a
+                                    href="#"
+                                    className="text-success"
+                                    title="Save route"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleSaveRoute(route.id);
+                                    }}
+                                  >
+                                    <i className="mdi mdi-content-save font-size-18"></i>
+                                  </a>
+                                  <a
+                                    href="#"
+                                    className="text-danger"
+                                    title="Delete route"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleDeleteRoute(route.id);
+                                    }}
+                                  >
+                                    <i className="mdi mdi-delete font-size-18"></i>
+                                  </a>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                          emptyState={{
+                            icon: 'mdi mdi-map',
+                            message: 'No routes for this date',
+                          }}
+                          pagination={{
+                            currentPage: routesCurrentPage,
+                            totalPages: routesTotalPages,
+                            onPageChange: setRoutesCurrentPage,
+                            totalItems: routesTotalItems
+                          }}
+                        />
+                      </div>
                     )}
-                    emptyState={{
-                      icon: 'mdi mdi-map',
-                      message: 'No routes for this date',
-                    }}
-                    pagination={{
-                      currentPage,
-                      totalPages,
-                      onPageChange: setCurrentPage,
-                      totalItems
-                    }}
-                  />
+
+                    {/* Fleet Tab */}
+                    {activeTab === 'fleet' && (
+                      <div className="tab-pane active">
+                        <Table
+                          columns={['Vehicle', 'Make/Model', 'Assigned To', 'Mileage', 'Status']}
+                          data={paginatedVehicles}
+                          renderRow={(vehicle) => (
+                            <tr key={vehicle.id}>
+                              <td><strong>{vehicle.vehicleNumber}</strong></td>
+                              <td>{vehicle.make} {vehicle.model} {vehicle.year}</td>
+                              <td>{getTechnicianName(vehicle.assignedTechnicianId)}</td>
+                              <td>{vehicle.mileage.toLocaleString()} mi</td>
+                              <td>
+                                <span className={`badge badge-soft-${
+                                  vehicle.status === 'Active' ? 'success' :
+                                  vehicle.status === 'Maintenance' ? 'warning' :
+                                  'danger'
+                                }`}>
+                                  {vehicle.status}
+                                </span>
+                              </td>
+                            </tr>
+                          )}
+                          emptyState={{
+                            icon: 'mdi mdi-car',
+                            message: 'No vehicles found',
+                          }}
+                          pagination={{
+                            currentPage: fleetCurrentPage,
+                            totalPages: fleetTotalPages,
+                            onPageChange: setFleetCurrentPage,
+                            totalItems: fleetTotalItems
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Technicians Tab */}
+                    {activeTab === 'technicians' && (
+                      <div className="tab-pane active">
+                        <Table
+                          columns={['Name', 'Specialization', 'Vehicle', 'Phone', 'Rating']}
+                          data={paginatedTechnicians}
+                          renderRow={(tech) => {
+                            const vehicle = vehicles.find(v => v.assignedTechnicianId === tech.id);
+                            return (
+                              <tr key={tech.id}>
+                                <td><strong>{tech.name}</strong></td>
+                                <td>{tech.specialization}</td>
+                                <td>{vehicle ? vehicle.vehicleNumber : 'Not Assigned'}</td>
+                                <td>{tech.phone}</td>
+                                <td>
+                                  <i className="mdi mdi-star text-warning me-1"></i>
+                                  {tech.rating}/5.0
+                                </td>
+                              </tr>
+                            );
+                          }}
+                          emptyState={{
+                            icon: 'mdi mdi-account',
+                            message: 'No technicians found',
+                          }}
+                          pagination={{
+                            currentPage: techCurrentPage,
+                            totalPages: techTotalPages,
+                            onPageChange: setTechCurrentPage,
+                            totalItems: techTotalItems
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
