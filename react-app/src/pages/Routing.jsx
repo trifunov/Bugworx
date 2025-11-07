@@ -477,7 +477,7 @@ const Routing = () => {
     setTimeout(() => {
       calculateGoogleDirections(route);
     }, 100);
-
+ 
     // Scroll to map
     const mapElement = document.querySelector('.row.mb-4');
     if (mapElement) {
@@ -494,9 +494,9 @@ const Routing = () => {
   };
 
   const handleSaveRoute = (routeId) => {
+    loadData();
     const route = routes.find(r => r.id === routeId);
     if (!route) return;
-
     
     const routesToRemove = routes.filter(r =>
       r.technicianId === route.technicianId &&
