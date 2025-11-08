@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import { employees, sources, leadStatuses } from '../data/mockData';
@@ -8,7 +8,7 @@ import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Leads = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const { addEditLead, leads, customers } = useEditableFormContext();
+    const { addEditLead, leads, customers, setLeadsState } = useEditableFormContext();
     const { setPageSubHeader } = usePageSubHeader();
 
     useEffect(() => {

@@ -4,12 +4,14 @@ import AddNewButton from '../components/Common/AddNewButton';
 import { getProspects, deleteProspect } from '../utils/localStorage';
 import { employees, sources, prospectStatuses, serviceTypes } from '../data/mockData';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Prospects = () => {
     const [searchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState('');
 
     const { addEditProspect, prospects, customers, setProspectsState } = useEditableFormContext();
+    const { setPageSubHeader } = usePageSubHeader();
 
     useEffect(() => {
         const query = searchParams.get('q');
@@ -29,7 +31,6 @@ const Prospects = () => {
     const findEmployeeName = (id) => employees.find(e => e.id === id)?.name || '';
     const findSourceName = (id) => sources.find(s => s.id === id)?.name || '';
     const findStatusLabel = (id) => prospectStatuses.find(s => s.id === Number(id))?.label || '';
-    const findServiceTypeName = (id) => serviceTypes.find(st => st.id === Number(id))?.name || '';
 
     const filteredProspects = prospects.filter(p => {
         const term = searchTerm.toLowerCase();
@@ -108,7 +109,7 @@ const Prospects = () => {
                                                 <td>
                                                     <span className="badge badge-soft-primary">{findStatusLabel(p.status)}</span>
                                                 </td>
-                                                <td>{findServiceTypeName(p.serviceInterest)}</td>
+                                                <td>{p.serviceInterest}</td>
                                                 <td>{findEmployeeName(p.assignedSalesRep)}</td>
                                                 <td>{findSourceName(p.sourceId)}</td>
                                                 <td>

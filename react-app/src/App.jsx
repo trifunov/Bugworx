@@ -79,7 +79,6 @@ function App() {
         <Route path="customers/:id/schedule-service" element={<CustomerAppointments />} />
         <Route path="customers/:id/create-invoice" element={<CustomerInvoices />} />
         <Route path="customers/:id/facilities" element={<Facilities />} />
-        <Route path="customers/:id/areas" element={<Areas />} />
         <Route path="service-addresses" element={<ServiceAddresses />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="proposals" element={<Proposals />} />
