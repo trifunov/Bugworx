@@ -7,6 +7,8 @@ import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
 import { PageSubHeaderProvider } from '../contexts/PageSubHeaderContext';
 import PageSubHeader from '../components/Common/PageSubHeader';
+import { EditableFormProvider } from '../contexts/EditableFormContext';
+import EditableForms from './EditableForms/EditableForms';
 
 const MainLayout = () => {
   const { showSidebar } = useSidebar();
@@ -14,21 +16,24 @@ const MainLayout = () => {
 
   return (
     <PageSubHeaderProvider>
-      <div id="layout-wrapper">
-        <Header />
-        {showSidebar && <Sidebar />}
-        {showConfigurationSidebar && <ConfigurationSidebar />}
+      <EditableFormProvider>
+        <div id="layout-wrapper">
+          <Header />
+          <EditableForms />
+          {showSidebar && <Sidebar />}
+          {showConfigurationSidebar && <ConfigurationSidebar />}
 
-        <div className={showSidebar || showConfigurationSidebar ? "main-content" : "main-content main-content-no-margin"}>
-          <div className="page-content">
-            <div className="container-fluid">
-              <PageSubHeader />
-              <Outlet />
+          <div className={showSidebar || showConfigurationSidebar ? "main-content" : "main-content main-content-no-margin"}>
+            <div className="page-content">
+              <div className="container-fluid">
+                <PageSubHeader />
+                <Outlet />
+              </div>
             </div>
+            <Footer />
           </div>
-          <Footer />
         </div>
-      </div>
+      </EditableFormProvider>
     </PageSubHeaderProvider>
   );
 };

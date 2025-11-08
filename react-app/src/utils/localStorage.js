@@ -19,6 +19,7 @@ const STORAGE_KEYS = {
   TEAMS_KEY: 'bugworx_teams_branches',
   EMPLOYEES_KEY: 'bugworx_employees',
   ACTIVITY_KEY: 'bugworx_activity_log',
+  PROSPECTS: 'bugworx_prospects',
   OPERATIONAL_SETUP_CONTRACT_TYPES: 'bugworx_operational_setup_contract_types',
   OPERATIONAL_SETUP_SERVICE_TYPES: 'bugworx_operational_setup_service_types',
   OPERATIONAL_SETUP_FREQUENCY_TEMPLATES: 'bugworx_operational_setup_frequency_templates',
@@ -377,7 +378,7 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads } = mockData;
+  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads, prospects } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
@@ -415,6 +416,9 @@ export const initializeStorage = (mockData) => {
   }
   if (getLeads().length === 0 && leads) {
     setLeads(leads);
+  }
+  if (getProspects().length === 0 && prospects) {
+    setProspects(prospects);
   }
 };
 
@@ -654,6 +658,55 @@ export const getLeadById = (id) => {
   return leads.find(l => l.id === id);
 };
 
+// Prospect-specific functions
+export const getProspects = () => {
+  return getFromStorage(STORAGE_KEYS.PROSPECTS, []);
+};
+
+export const setProspects = (prospects) => {
+  return setToStorage(STORAGE_KEYS.PROSPECTS, prospects);
+};
+
+export const addProspect = (prospect) => {
+  const prospects = getProspects();
+  const newProspect = {
+    ...prospect,
+    id: Date.now(),
+    dateCreated: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  prospects.unshift(newProspect);
+  setProspects(prospects);
+  return newProspect;
+};
+
+export const updateProspect = (id, updates) => {
+  const prospects = getProspects();
+  const index = prospects.findIndex(p => p.id === id);
+  if (index !== -1) {
+    prospects[index] = {
+      ...prospects[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setProspects(prospects);
+    return prospects[index];
+  }
+  return null;
+};
+
+export const deleteProspect = (id) => {
+  const prospects = getProspects();
+  const filtered = prospects.filter(p => p.id !== id);
+  setProspects(filtered);
+  return filtered.length < prospects.length;
+};
+
+export const getProspectById = (id) => {
+  const prospects = getProspects();
+  return prospects.find(p => p.id === id);
+};
+
 export const updateFacility = (id, updates) => {
   const facilities = getFacilities();
   const index = facilities.findIndex(f => f.id === id);
@@ -720,7 +773,7 @@ export const deleteInspectionPoint = (id) => {
 export const getFacilitiesByCustomerId = (customerId) => {
   const serviceAddressesByCustomerId = getServiceAddressesByCustomerId(customerId).map(serviceAddress => serviceAddress.id);
   const facilities = getFacilities();
-  return facilities.filter(facility => serviceAddressesByCustomerId.includes(facility.serviceAddressId));
+  return facilities.filter(facility => serviceAddressesByCustomerId.includes(parseInt(facility.serviceAddressId)));
 };
 
 export const getCurrentUser = () => {
@@ -990,6 +1043,12 @@ export default {
   updateLead,
   deleteLead,
   getLeadById,
+  getProspects,
+  setProspects,
+  addProspect,
+  updateProspect,
+  deleteProspect,
+  getProspectById,
   updateFacility,
   updateArea,
   updateInspectionPoint,

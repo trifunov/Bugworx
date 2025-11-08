@@ -31,6 +31,7 @@ import useTable from "../components/Common/Table/useTable";
 import Table from "../components/Common/Table/Table";
 import TableSearch from "../components/Common/SearchBar/TableSearch";
 import AddNewButton from "../components/Common/AddNewButton";
+import { useEditableFormContext } from "../contexts/EditableFormContext";
 
 const CustomerOverview = () => {
   const { setPageSubHeader } = usePageSubHeader();
@@ -47,7 +48,7 @@ const CustomerOverview = () => {
 
   // Modals
   const serviceAddressModal = useAddEditServiceAddress(parseInt(id));
-  const customerModal = useAddEditCustomer();
+  const { addEditCustomer } = useEditableFormContext();
   const scheduleServiceModal = useScheduleService(parseInt(id));
   const viewReportsModal = useViewReports(parseInt(id));
   const proposalModal = useAddEditProposal(parseInt(id));
@@ -146,9 +147,8 @@ const CustomerOverview = () => {
       </td>
       <td>
         <span
-          className={`badge badge-soft-${
-            serviceAddress.isActive ? 'success' : 'danger'
-          }`}
+          className={`badge badge-soft-${serviceAddress.isActive ? 'success' : 'danger'
+            }`}
         >
           {serviceAddress.isActive ? 'Active' : 'Inactive'}
         </span>
@@ -194,9 +194,8 @@ const CustomerOverview = () => {
                 </div>
                 <div className="flex-shrink-0">
                   <span
-                    className={`badge badge-soft-${
-                      customer.isActive ? 'success' : 'danger'
-                    } font-size-12`}
+                    className={`badge badge-soft-${customer.isActive ? 'success' : 'danger'
+                      } font-size-12`}
                   >
                     {customer.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -360,7 +359,7 @@ const CustomerOverview = () => {
             <div className="card-body">
               <h5 className="card-title mb-3">Actions</h5>
               <div className="d-grid gap-2">
-                <button className="btn btn-primary" onClick={() => customerModal.open(customer)}>
+                <button className="btn btn-primary" onClick={() => addEditCustomer.open(customer)}>
                   <i className="bx bx-edit me-1"></i>
                   Edit Customer
                 </button>
@@ -410,26 +409,6 @@ const CustomerOverview = () => {
       </div>
 
       {/* Modals */}
-      <AddEditCustomer
-        isOpen={customerModal.isOpen}
-        formData={customerModal.formData}
-        errors={customerModal.errors}
-        isSaving={customerModal.isSaving}
-        onUpdateField={customerModal.onUpdateFieldHandle}
-        onClose={customerModal.close}
-        onSave={() =>
-          customerModal.onSaveHandle((data) => {
-            let updatedCustomer = null;
-            if (data.id && data.id !== 0) {
-              updatedCustomer = updateCustomer(data.id, data);
-            } else {
-              updatedCustomer = addCustomer(data);
-            }
-            refreshCustomer();
-            return updatedCustomer;
-          })
-        }
-      />
 
       <AddEditServiceAddress
         isOpen={serviceAddressModal.isOpen}

@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
-import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
-import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
-import { getCustomers, addCustomer, updateCustomer } from '../utils/localStorage';
+import { useEditableFormContext } from '../contexts/EditableFormContext';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Customers = () => {
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditCustomer();
-  const [customers, setCustomers] = useState(getCustomers());
+  const { addEditCustomer, customers } = useEditableFormContext();
+  const { setPageSubHeader } = usePageSubHeader();
 
   useEffect(() => {
     // Get search query from URL if present
@@ -18,6 +17,15 @@ const Customers = () => {
       setSearchTerm(query);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    setPageSubHeader({
+      title: 'Customers',
+      breadcrumbs: [
+        { label: 'Customers', path: '/customers' }
+      ]
+    });
+  }, [setPageSubHeader]);
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -47,16 +55,6 @@ const Customers = () => {
       phone: data.phone || '',
       jobTitle: data.jobTitle || ''
     }
-  });
-
-  const handleSave = () => onSaveHandle((data) => {
-    const mapped = mapFormToCustomer(data);
-    if (data.id && data.id > 0) {
-      updateCustomer(data.id, mapped);
-    } else {
-      addCustomer(mapped);
-    }
-    setCustomers(getCustomers());
   });
 
   return (
@@ -91,7 +89,7 @@ const Customers = () => {
                       </div>
                     </div>
                     <div className="mt-2 mt-md-0">
-                      <AddNewButton handleAddNew={() => open({ id: 0 })} />
+                      <AddNewButton handleAddNew={() => addEditCustomer.open({ id: 0 })} />
                     </div>
                   </div>
                 </div>
@@ -119,9 +117,8 @@ const Customers = () => {
                         </td>
                         <td>{customer.name}</td>
                         <td>
-                          <span className={`badge badge-soft-${
-                            customer.customerType === 1 ? 'primary' : 'success'
-                          }`}>
+                          <span className={`badge badge-soft-${customer.customerType === 1 ? 'primary' : 'success'
+                            }`}>
                             {customer.customerType === 1 ? 'Residential' : 'Commercial'}
                           </span>
                         </td>
@@ -132,9 +129,8 @@ const Customers = () => {
                           </div>
                         </td>
                         <td>
-                          <span className={`badge badge-soft-${
-                            customer.isActive ? 'success' : 'danger'
-                          }`}>
+                          <span className={`badge badge-soft-${customer.isActive ? 'success' : 'danger'
+                            }`}>
                             {customer.isActive ? 'Active' : 'Inactive'}
                           </span>
                         </td>
@@ -143,7 +139,7 @@ const Customers = () => {
                             <Link to={`/customers/${customer.id}`} className="text-success">
                               <i className="mdi mdi-eye font-size-18"></i>
                             </Link>
-                            <a href="#" className="text-primary" onClick={() => open(mapCustomerToForm(customer))}>
+                            <a href="#" className="text-primary" onClick={() => addEditCustomer.open(mapCustomerToForm(customer))}>
                               <i className="mdi mdi-pencil font-size-18"></i>
                             </a>
                             <a href="#" className="text-danger">
@@ -160,16 +156,6 @@ const Customers = () => {
           </div>
         </div>
       </div>
-
-      <AddEditCustomer
-        isOpen={isOpen}
-        formData={formData}
-        errors={errors}
-        isSaving={isSaving}
-        onUpdateField={onUpdateFieldHandle}
-        onClose={close}
-        onSave={handleSave}
-      />
     </>
   );
 };
