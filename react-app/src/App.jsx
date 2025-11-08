@@ -4,6 +4,7 @@ import MainLayout from './layouts/MainLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Customers from './pages/Customers';
+import Prospects from './pages/Prospects';
 import CustomerOverview from './pages/CustomerOverview';
 import CustomerServiceAddresses from './pages/CustomerServiceAddresses';
 import CustomerAppointments from './pages/CustomerAppointments';
@@ -62,6 +63,8 @@ function App() {
       >
         <Route index element={<Dashboard />} />
         <Route path="customers" element={<Customers />} />
+        <Route path="prospects" element={<Prospects />} />
+        <Route path="leads" element={<Leads />} />
         <Route path="customers/:id" element={<CustomerOverview />} />
         <Route path="customers/:id/service-addresses" element={<CustomerServiceAddresses />} />
         <Route path="customers/:id/appointments" element={<CustomerAppointments />} />
@@ -76,7 +79,6 @@ function App() {
         <Route path="customers/:id/create-invoice" element={<CustomerInvoices />} />
         <Route path="customers/:id/facilities" element={<Facilities />} />
         <Route path="customers/:id/areas" element={<Areas />} />
-        <Route path="customers/:id/leads" element={<Leads />} />
         <Route path="service-addresses" element={<ServiceAddresses />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="proposals" element={<Proposals />} />

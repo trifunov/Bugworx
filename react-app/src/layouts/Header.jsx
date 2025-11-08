@@ -3,11 +3,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
-import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
-import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
+import { useEditableFormContext } from '../contexts/EditableFormContext';
 import { getCustomers, addCustomer, updateCustomer, addLead, updateLead } from '../utils/localStorage';
-import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
-import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,9 +15,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const [customers, setCustomers] = useState(getCustomers());
-  const addEditCustomer = useAddEditCustomer();
-  const addEditLead = useAddEditLead();
+  const { addEditCustomer, addEditLead, addEditProspect } = useEditableFormContext();
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -71,7 +66,7 @@ const Header = () => {
     setSearchQuery(query);
 
     if (query.trim()) {
-      const filtered = customers
+      const filtered = getCustomers()
         .filter(
           (customer) =>
             customer.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -89,11 +84,6 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
-  };
-
-  const loadCustomers = () => {
-    const customers = getCustomers();
-    setCustomers(customers);
   };
 
   const handleCreateInvoice = (e) => {
@@ -116,45 +106,6 @@ const Header = () => {
     <header id="page-topbar">
       <div className="navbar-header">
         <div className="d-flex">
-
-          <AddEditCustomer
-            isOpen={addEditCustomer.isOpen}
-            formData={addEditCustomer.formData}
-            errors={addEditCustomer.errors}
-            isSaving={addEditCustomer.isSaving}
-            onUpdateField={addEditCustomer.onUpdateFieldHandle}
-            onClose={addEditCustomer.close}
-            onSave={() => addEditCustomer.onSaveHandle((data) => {
-              let updatedCustomer = null;
-              if (data.id && data.id !== 0) {
-                updatedCustomer = updateCustomer(data.id, data);
-              }
-              else {
-                updatedCustomer = addCustomer(data);
-              }
-              loadCustomers();
-              return updatedCustomer;
-            })}
-          />
-
-          <AddEditLead
-            isOpen={addEditLead.isOpen}
-            formData={addEditLead.formData}
-            errors={addEditLead.errors}
-            isSaving={addEditLead.isSaving}
-            onUpdateField={addEditLead.onUpdateFieldHandle}
-            onClose={addEditLead.close}
-            onSave={() => addEditLead.onSaveHandle((data) => {
-              let updatedLead = null;
-              if (data.id && data.id !== 0) {
-                updatedLead = updateLead(data.id, data);
-              }
-              else {
-                updatedLead = addLead(data);
-              }
-              return updatedLead;
-            })}
-          />
 
           {/* LOGO */}
           <div className="navbar-brand-box">
@@ -320,7 +271,7 @@ const Header = () => {
             </button>
             <div className="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-add-new-dropdown">
               <a className="dropdown-item" href="#" onClick={() => addEditLead.open({ id: 0 })}><i className="mdi mdi-account-convert me-2"></i>Lead</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
+              <a className="dropdown-item" href="#" onClick={() => addEditProspect.open({ id: 0 })}><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
               <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</Link>
               <a className="dropdown-item" href="#"

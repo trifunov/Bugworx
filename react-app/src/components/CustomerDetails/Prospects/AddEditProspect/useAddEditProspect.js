@@ -1,43 +1,34 @@
 import { useState } from 'react';
 import { save, updateField } from '../../../../utils/addEditFormUtils';
 
-// InspectionPoint shape (from mockData):
-// {
-//   id,
-//   pointName,
-//   barcode,
-//   areaId,
-//   type,
-//   typeCategory,
-//   status
-// }
-
-const useAddEditInspectionPoint = () => {
+const useAddEditProspect = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const defaultForm = {
         id: 0,
-        pointName: '',
-        barcode: '',
-        areaId: null,
-        type: '',
-        typeCategory: '',
-        status: 0
+        name: '',
+        status: 1,
+        dateCreated: '',
+        customerId: null,
+        serviceInterest: '',
+        assignedSalesRep: null,
+        sourceId: null
     };
 
     const [formData, setFormData] = useState(defaultForm);
     const [errors, setErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
 
-    const open = (inspectionPoint) => {
+    const open = (prospect) => {
         setFormData({
-            id: inspectionPoint?.id || 0,
-            pointName: inspectionPoint?.pointName || '',
-            barcode: inspectionPoint?.barcode || '',
-            areaId: inspectionPoint?.areaId ?? null,
-            type: inspectionPoint?.type || '',
-            typeCategory: inspectionPoint?.typeCategory || '',
-            status: inspectionPoint?.status ?? 0
+            id: prospect?.id || 0,
+            name: prospect?.name || '',
+            status: prospect?.status ?? 1,
+            dateCreated: prospect?.dateCreated || '',
+            customerId: prospect?.customerId ?? null,
+            serviceInterest: prospect?.serviceInterest || '',
+            assignedSalesRep: prospect?.assignedSalesRep ?? null,
+            sourceId: prospect?.sourceId ?? null
         });
         setErrors({});
         setIsOpen(true);
@@ -56,12 +47,12 @@ const useAddEditInspectionPoint = () => {
     const validate = () => {
         const newErrors = {};
 
-        if (!formData.pointName?.trim()) {
-            newErrors.pointName = 'Inspection point name is required';
+        if (!formData.name?.trim()) {
+            newErrors.name = 'Prospect name is required';
         }
 
-        if (formData.areaId === null || formData.areaId === undefined || formData.areaId === '') {
-            newErrors.areaId = 'Area is required';
+        if (formData.customerId === null || formData.customerId === undefined || formData.customerId === '') {
+            newErrors.customerId = 'Customer is required';
         }
 
         setErrors(newErrors);
@@ -84,4 +75,5 @@ const useAddEditInspectionPoint = () => {
     };
 };
 
-export default useAddEditInspectionPoint;
+export default useAddEditProspect;
+

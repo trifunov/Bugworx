@@ -1,18 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
-import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
-import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import { employees, sources, leadStatuses } from '../data/mockData';
-import { getCustomers, getLeads, addLead, updateLead, deleteLead } from '../utils/localStorage';
+import { getLeads, deleteLead } from '../utils/localStorage';
+import { useEditableFormContext } from '../contexts/EditableFormContext';
 
 const Leads = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditLead();
-
-    // Initialize from local storage
-    const [leads, setLeads] = useState(getLeads() || []);
-    const customers = getCustomers() || [];
+    const { addEditLead, leads, customers } = useEditableFormContext();
 
     const statusLabel = (statusId) => leadStatuses.find(s => s.id === Number(statusId))?.label || '-';
     const customerName = (customerId) => customers.find(c => c.id === customerId)?.name || 'N/A';
@@ -32,15 +27,6 @@ const Leads = () => {
         );
     });
 
-    const handleSave = () => onSaveHandle((data) => {
-        if (data.id && data.id > 0) {
-            updateLead(data.id, data);
-        } else {
-            addLead(data);
-        }
-        setLeads(getLeads());
-    });
-
     return (
         <>
             <div className="row">
@@ -56,16 +42,6 @@ const Leads = () => {
                     </div>
                 </div>
             </div>
-
-            <AddEditLead
-                isOpen={isOpen}
-                formData={formData}
-                errors={errors}
-                isSaving={isSaving}
-                onUpdateField={onUpdateFieldHandle}
-                onClose={close}
-                onSave={handleSave}
-            />
 
             <div className="row">
                 <div className="col-lg-12">
@@ -89,7 +65,7 @@ const Leads = () => {
                                         </div>
 
                                         <div className="mt-2 mt-md-0">
-                                            <AddNewButton handleAddNew={() => open({ id: 0 })} />
+                                            <AddNewButton handleAddNew={() => addEditLead.open({ id: 0 })} />
                                         </div>
                                     </div>
                                 </div>
@@ -128,7 +104,7 @@ const Leads = () => {
                                                         <a href="#" className="text-success" title="View">
                                                             <i className="mdi mdi-eye font-size-18"></i>
                                                         </a>
-                                                        <a href="#" className="text-primary" title="Edit" onClick={() => open(l)}>
+                                                        <a href="#" className="text-primary" title="Edit" onClick={() => addEditLead.open(l)}>
                                                             <i className="mdi mdi-pencil font-size-18"></i>
                                                         </a>
                                                         <a href="#" className="text-danger" title="Delete" onClick={() => { deleteLead(l.id); setLeads(getLeads()); }}>

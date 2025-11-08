@@ -214,7 +214,27 @@ export const sources = [
 
 export const leadStatuses = [
   { id: 1, label: 'New' },
-  { id: 2, label: 'Contacted' }
+  { id: 2, label: 'Contacted' },
+  { id: 3, label: 'Qualified' },
+  { id: 4, label: 'Quote Sent' },
+  { id: 5, label: 'Won' },
+  { id: 6, label: 'Lost' },
+  { id: 7, label: 'Disqualified' }
+];
+
+export const prospectStatuses = [
+  { id: 1, label: 'New' },
+  { id: 2, label: 'Contacted' },
+  { id: 3, label: 'Qualified' },
+  { id: 4, label: 'Lost' }
+];
+
+export const inspectionPointStatuses = [
+  { id: 0, label: 'Inactive' },
+  { id: 1, label: 'Active' },
+  { id: 2, label: 'Needs Attention' },
+  { id: 3, label: 'Warning' },
+  { id: 4, label: 'Critical' }
 ];
 
 export const leads = [
@@ -424,6 +444,73 @@ export const inspectionPoints = [
     type: 'Rodent Boxes',
     typeCategory: 'Monitoring Devices',
     status: 0
+  }
+];
+
+// ---- Inspection Point Helper Functions (mutable in-memory; use localStorage CRUD for persistence in app) ----
+export const getInspectionPoints = () => inspectionPoints;
+
+export const getInspectionPointsByCustomerId = (customerId) => {
+  if (customerId === undefined || customerId === null) return [...inspectionPoints];
+  return inspectionPoints.filter(ip => {
+    const area = areas.find(a => a.id === ip.areaId);
+    if (!area) return false;
+    const facility = facilities.find(f => f.id === area.facilityId);
+    if (!facility) return false;
+    const serviceAddress = serviceAddresses.find(sa => sa.id === facility.serviceAddressId);
+    if (!serviceAddress) return false;
+    return serviceAddress.customerId === customerId;
+  });
+};
+
+export const setInspectionPoints = (points) => {
+  // Replace contents without reassigning reference (to keep existing imports reactive)
+  inspectionPoints.length = 0;
+  points.forEach(p => inspectionPoints.push(p));
+  return inspectionPoints;
+};
+
+export const addInspectionPoint = (point) => {
+  const nextId = point.id && point.id > 0 ? point.id : (inspectionPoints.reduce((m, p) => Math.max(m, p.id), 0) + 1);
+  const newPoint = { ...point, id: nextId };
+  inspectionPoints.push(newPoint);
+  return newPoint;
+};
+
+export const updateInspectionPoint = (id, updated) => {
+  const idx = inspectionPoints.findIndex(p => p.id === id);
+  if (idx === -1) return null;
+  inspectionPoints[idx] = { ...inspectionPoints[idx], ...updated, id };
+  return inspectionPoints[idx];
+};
+
+export const deleteInspectionPoint = (id) => {
+  const idx = inspectionPoints.findIndex(p => p.id === id);
+  if (idx === -1) return null;
+  const [removed] = inspectionPoints.splice(idx, 1);
+  return removed;
+};
+
+export const prospects = [
+  {
+    id: 1,
+    name: 'Prospect 1',
+    status: 1, // New
+    dateCreated: '2024-09-01',
+    customerId: 1,
+    serviceInterest: 'General Pest Control',
+    assignedSalesRep: 1,
+    sourceId: 1
+  },
+  {
+    id: 2,
+    name: 'Prospect 2',
+    status: 3, // Qualified
+    dateCreated: '2024-09-05',
+    customerId: 1,
+    serviceInterest: 'Rodent Control',
+    assignedSalesRep: 2,
+    sourceId: 4
   }
 ];
 
