@@ -1,4 +1,3 @@
-import React from 'react';
 import { getAreas, getFacilities, getFacilitiesByCustomerId } from '../../../../utils/localStorage';
 import { inspectionPointStatuses } from '../../../../data/mockData';
 

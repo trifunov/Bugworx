@@ -1,4 +1,3 @@
-import React from 'react';
 import { getCustomers, getServiceTypes } from '../../../../utils/localStorage';
 import { employees, sources, prospectStatuses } from '../../../../data/mockData';
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import { getProspects, deleteProspect } from '../utils/localStorage';
-import { employees, sources, prospectStatuses, serviceTypes } from '../data/mockData';
+import { employees, sources, prospectStatuses } from '../data/mockData';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
