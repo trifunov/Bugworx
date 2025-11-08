@@ -4,10 +4,21 @@ import AddNewButton from '../components/Common/AddNewButton';
 import { employees, sources, leadStatuses } from '../data/mockData';
 import { getLeads, deleteLead } from '../utils/localStorage';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Leads = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const { addEditLead, leads, customers } = useEditableFormContext();
+    const { setPageSubHeader } = usePageSubHeader();
+
+    useEffect(() => {
+        setPageSubHeader({
+            title: 'Leads',
+            breadcrumbs: [
+                { label: 'Leads', path: '/leads' }
+            ]
+        });
+    }, [setPageSubHeader]);
 
     const statusLabel = (statusId) => leadStatuses.find(s => s.id === Number(statusId))?.label || '-';
     const customerName = (customerId) => customers.find(c => c.id === customerId)?.name || 'N/A';
@@ -26,6 +37,13 @@ const Leads = () => {
             (l.dateCreated && l.dateCreated.toLowerCase().includes(q))
         );
     });
+
+    const handleDelete = (id) => {
+        if (window.confirm('Delete this lead?')) {
+            deleteLead(id);
+            setLeadsState(getLeads());
+        }
+    };
 
     return (
         <>
@@ -107,7 +125,7 @@ const Leads = () => {
                                                         <a href="#" className="text-primary" title="Edit" onClick={() => addEditLead.open(l)}>
                                                             <i className="mdi mdi-pencil font-size-18"></i>
                                                         </a>
-                                                        <a href="#" className="text-danger" title="Delete" onClick={() => { deleteLead(l.id); setLeads(getLeads()); }}>
+                                                        <a href="#" className="text-danger" title="Delete" onClick={() => handleDelete(l.id)}>
                                                             <i className="mdi mdi-delete font-size-18"></i>
                                                         </a>
                                                     </div>

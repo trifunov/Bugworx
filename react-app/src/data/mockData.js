@@ -540,7 +540,7 @@ export const appointments = [
     estimatedDuration: 60, // Reduced from 90
     actualDuration: null,
     priority: 'Emergency',
-    notes: '🚨 CRITICAL: Active cockroach infestation in hospital kitchen - health code violation',
+    notes: 'CRITICAL: Active cockroach infestation in hospital kitchen - health code violation',
     requiredEquipment: ['Commercial Sprayer', 'Heavy-Duty Chemicals', 'Safety Gear'],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -880,23 +880,32 @@ export const appointments = [
 
 // Service types available
 export const serviceTypes = [
-  'General Pest Control',
-  'Termite Treatment',
-  'Termite Inspection',
-  'Rodent Control',
-  'Bed Bug Treatment',
-  'Wildlife Removal',
-  'Mosquito Control',
-  'Ant Control',
-  'Cockroach Treatment',
-  'Flea & Tick Treatment'
+  { id: 1, name: 'General Pest Control' },
+  { id: 2, name: 'Termite Treatment' },
+  { id: 3, name: 'Termite Inspection' },
+  { id: 4, name: 'Rodent Control' },
+  { id: 5, name: 'Bed Bug Treatment' },
+  { id: 6, name: 'Wildlife Removal' },
+  { id: 7, name: 'Mosquito Control' },
+  { id: 8, name: 'Ant Control' },
+  { id: 9, name: 'Cockroach Treatment' },
+  { id: 10, name: 'Flea & Tick Treatment' }
 ];
 
 // Appointment priorities
-export const priorities = ['Normal', 'Urgent', 'Emergency'];
+export const priorities = [
+  { id: 1, name: 'Normal' },
+  { id: 2, name: 'Urgent' },
+  { id: 3, name: 'Emergency' }
+];
 
 // Appointment statuses
-export const appointmentStatuses = ['Scheduled', 'In Progress', 'Completed', 'Cancelled'];
+export const appointmentStatuses = [
+  { id: 1, name: 'Scheduled' },
+  { id: 2, name: 'In Progress' },
+  { id: 3, name: 'Completed' },
+  { id: 4, name: 'Cancelled' }
+];
 
 export const dashboardStats = {
   totalCustomers: 156,

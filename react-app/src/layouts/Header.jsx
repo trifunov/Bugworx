@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
-import { getCustomers, addCustomer, updateCustomer, addLead, updateLead } from '../utils/localStorage';
+import { getCustomers } from '../utils/localStorage';
 
 const Header = () => {
   const navigate = useNavigate();

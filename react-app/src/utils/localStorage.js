@@ -773,7 +773,7 @@ export const deleteInspectionPoint = (id) => {
 export const getFacilitiesByCustomerId = (customerId) => {
   const serviceAddressesByCustomerId = getServiceAddressesByCustomerId(customerId).map(serviceAddress => serviceAddress.id);
   const facilities = getFacilities();
-  return facilities.filter(facility => serviceAddressesByCustomerId.includes(facility.serviceAddressId));
+  return facilities.filter(facility => serviceAddressesByCustomerId.includes(parseInt(facility.serviceAddressId)));
 };
 
 export const getCurrentUser = () => {

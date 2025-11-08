@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import { getProspects, deleteProspect } from '../utils/localStorage';
-import { employees, sources, prospectStatuses } from '../data/mockData';
+import { employees, sources, prospectStatuses, serviceTypes } from '../data/mockData';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
 
 const Prospects = () => {
@@ -16,10 +16,20 @@ const Prospects = () => {
         if (query) setSearchTerm(query);
     }, [searchParams]);
 
+    useEffect(() => {
+        setPageSubHeader({
+            title: 'Prospects',
+            breadcrumbs: [
+                { label: 'Prospects', path: '/prospects' }
+            ]
+        });
+    }, [setPageSubHeader]);
+
     const findCustomerName = (id) => customers.find(c => c.id === id)?.name || '';
     const findEmployeeName = (id) => employees.find(e => e.id === id)?.name || '';
     const findSourceName = (id) => sources.find(s => s.id === id)?.name || '';
     const findStatusLabel = (id) => prospectStatuses.find(s => s.id === Number(id))?.label || '';
+    const findServiceTypeName = (id) => serviceTypes.find(st => st.id === Number(id))?.name || '';
 
     const filteredProspects = prospects.filter(p => {
         const term = searchTerm.toLowerCase();
@@ -98,7 +108,7 @@ const Prospects = () => {
                                                 <td>
                                                     <span className="badge badge-soft-primary">{findStatusLabel(p.status)}</span>
                                                 </td>
-                                                <td>{p.serviceInterest}</td>
+                                                <td>{findServiceTypeName(p.serviceInterest)}</td>
                                                 <td>{findEmployeeName(p.assignedSalesRep)}</td>
                                                 <td>{findSourceName(p.sourceId)}</td>
                                                 <td>

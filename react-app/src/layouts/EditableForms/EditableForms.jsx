@@ -73,7 +73,7 @@ const EditableForms = () => {
             />
 
         </>
-    )
+    );
 };
 
 export default EditableForms;

@@ -14,7 +14,6 @@ import CustomerInvoices from './pages/CustomerInvoices';
 import CustomerContracts from './pages/CustomerContracts';
 import CustomerDocuments from './pages/CustomerDocuments';
 import CustomerNotes from './pages/CustomerNotes';
-import CustomerInspectionPoints from './pages/CustomerInspectionPoints';
 import ServiceAddresses from './pages/ServiceAddresses';
 import Appointments from './pages/Appointments';
 import Scheduler from './pages/Scheduler';
@@ -45,6 +44,7 @@ import JobSettings from './pages/configuration/operational-setup/JobSettings/Job
 import OperationZones from './pages/configuration/operational-setup/OperationZones/OperationZones';
 import RouteConfiguration from './pages/configuration/operational-setup/RouteConfiguration/RouteConfiguration';
 import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes/ServiceTypes';
+import InspectionPoints from './pages/InspectionPoints';
 
 function App() {
   return (
@@ -74,7 +74,8 @@ function App() {
         <Route path="customers/:id/contracts" element={<CustomerContracts />} />
         <Route path="customers/:id/documents" element={<CustomerDocuments />} />
         <Route path="customers/:id/notes" element={<CustomerNotes />} />
-        <Route path="customers/:id/inspection-points" element={<CustomerInspectionPoints />} />
+        <Route path="customers/:id/inspection-points" element={<InspectionPoints />} />
+        <Route path="customers/:id/areas" element={<Areas />} />
         <Route path="customers/:id/schedule-service" element={<CustomerAppointments />} />
         <Route path="customers/:id/create-invoice" element={<CustomerInvoices />} />
         <Route path="customers/:id/facilities" element={<Facilities />} />

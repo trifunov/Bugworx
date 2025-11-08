@@ -60,14 +60,20 @@ export const customerMenuConfig = [
         icon: 'ri-contacts-line'
       },
       {
-        id: 'facility-maps',
-        label: 'Facility Maps',
+        id: 'facilities',
+        label: 'Facilities',
         route: '/facilities',
         icon: 'ri-layout-line'
       },
       {
+        id: 'areas',
+        label: 'Areas',
+        route: '/areas',
+        icon: 'ri-focus-2-line'
+      },
+      {
         id: 'devices-inspection-points',
-        label: 'Devices & Stations',
+        label: 'Inspection Points',
         route: '/inspection-points',
         icon: 'ri-radar-line'
       }

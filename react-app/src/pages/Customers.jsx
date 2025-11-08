@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
+import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Customers = () => {
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const { addEditCustomer, customers } = useEditableFormContext();
+  const { setPageSubHeader } = usePageSubHeader();
 
   useEffect(() => {
     // Get search query from URL if present
@@ -15,6 +17,15 @@ const Customers = () => {
       setSearchTerm(query);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    setPageSubHeader({
+      title: 'Customers',
+      breadcrumbs: [
+        { label: 'Customers', path: '/customers' }
+      ]
+    });
+  }, [setPageSubHeader]);
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

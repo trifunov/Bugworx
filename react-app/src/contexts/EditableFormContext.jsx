@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import useAddEditProspect from '../components/CustomerDetails/Prospects/AddEditProspect/useAddEditProspect';
-import { getCustomers, setCustomers, getLeads, setLeads, getProspects, setProspects } from '../utils/localStorage';
+import { getCustomers, getLeads, getProspects } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
 
@@ -36,7 +36,7 @@ export const EditableFormProvider = ({ children }) => {
     const loadProspects = () => {
         const prospects = getProspects();
         setProspectsState(prospects);
-    }
+    };
 
     const value = {
         addEditCustomer,

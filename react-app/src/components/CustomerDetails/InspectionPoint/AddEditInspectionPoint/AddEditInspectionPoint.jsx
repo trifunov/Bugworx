@@ -28,7 +28,7 @@ const AddEditInspectionPoint = ({ isOpen, formData, errors, isSaving, onUpdateFi
 
     return (
         <>
-            <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden' }}>
+            <div className="offcanvas offcanvas-end show" tabIndex="-1">
                 <div className="offcanvas-header">
                     <h5 className="offcanvas-title">{formData.id && formData.id !== 0 ? 'Edit Inspection Point' : 'Add Inspection Point'}</h5>
                     <button type="button" className="btn-close" onClick={onClose}></button>
@@ -146,7 +146,7 @@ const AddEditInspectionPoint = ({ isOpen, formData, errors, isSaving, onUpdateFi
                     </form>
                 </div>
             </div>
-            {isOpen && <div className="offcanvas-backdrop fade show" onClick={onClose}></div>}
+            <div className="offcanvas-backdrop fade show" onClick={onClose}></div>
         </>
     );
 };

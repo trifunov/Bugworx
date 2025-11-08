@@ -17,7 +17,7 @@ const AddEditProspect = ({ isOpen, formData, errors, isSaving, onUpdateField, on
 
     return (
         <>
-            <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden' }}>
+            <div className="offcanvas offcanvas-end show" tabIndex="-1">
                 <div className="offcanvas-header">
                     <h5 className="offcanvas-title">{formData.id && formData.id !== 0 ? 'Edit Prospect' : 'Add Prospect'}</h5>
                     <button type="button" className="btn-close" onClick={onClose}></button>
@@ -83,8 +83,8 @@ const AddEditProspect = ({ isOpen, formData, errors, isSaving, onUpdateField, on
                                 disabled={isSaving}
                             >
                                 <option value="">Select a service</option>
-                                {serviceTypes.map((st, idx) => (
-                                    <option key={idx} value={st}>{st}</option>
+                                {serviceTypes.map((st) => (
+                                    <option key={st} value={st}>{st}</option>
                                 ))}
                             </select>
                         </div>
@@ -147,7 +147,7 @@ const AddEditProspect = ({ isOpen, formData, errors, isSaving, onUpdateField, on
                     </form>
                 </div>
             </div>
-            {isOpen && <div className="offcanvas-backdrop fade show" onClick={onClose}></div>}
+            <div className="offcanvas-backdrop fade show" onClick={onClose}></div>
         </>
     );
 };

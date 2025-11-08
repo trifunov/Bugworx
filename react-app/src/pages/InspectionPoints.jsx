@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { serviceAddresses, inspectionPoints as inspectionPointsData, areas, facilities, addInspectionPoint, updateInspectionPoint, setInspectionPoints, getInspectionPointsByCustomerId } from '../data/mockData';
+import { serviceAddresses, areas, facilities, addInspectionPoint, updateInspectionPoint, getInspectionPointsByCustomerId } from '../data/mockData';
 import { statusIntToHtmlBadge } from '../utils/inspectionPointUtils';
 import AddNewButton from '../components/Common/AddNewButton';
 import { getCustomerById } from '../utils/localStorage';
@@ -15,7 +15,7 @@ const InspectionPoints = () => {
     const customerId = parseInt(id);
     const customer = getCustomerById(customerId);
     // Use the inspectionPoints array from mockData
-    const inspectionPoints = inspectionPointsData || [];
+    const [inspectionPoints, setInspectionPointsState] = useState(getInspectionPointsByCustomerId(customerId));
     const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditInspectionPoint();
 
     const getServiceAddress = (areaId) => {
@@ -53,7 +53,7 @@ const InspectionPoints = () => {
         } else {
             addInspectionPoint(data);
         }
-        setInspectionPoints(getInspectionPointsByCustomerId(customerId));
+        setInspectionPointsState(getInspectionPointsByCustomerId(customerId));
     });
 
     useEffect(() => {
