@@ -3,7 +3,7 @@ import { serviceTypes, priorities, appointmentStatuses } from '../data/mockData'
 
 const serviceTypeMap = new Map(serviceTypes.map((st, idx) => [idx, st]));
 const priorityMap = new Map(priorities.map((p, idx) => [idx, p]));
-const statusMap = new Map(appointmentStatuses.map(s => [s.id, s.name]));
+const statusMap = new Map(appointmentStatuses.map((s, idx) => [idx, s]));
 
 export const getServiceTypeName = (id) => serviceTypeMap.get(id) || 'Unknown';
 export const getPriorityName = (id) => priorityMap.get(id) || 'Unknown';
