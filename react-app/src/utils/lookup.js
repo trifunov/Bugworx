@@ -1,7 +1,7 @@
 // Lookup utilities for translating ID fields to display names
 import { serviceTypes, priorities, appointmentStatuses } from '../data/mockData';
 
-const serviceTypeMap = new Map(serviceTypes.map(st => [st.id, st.name]));
+const serviceTypeMap = new Map(serviceTypes.map((st, idx) => [idx, st]));
 const priorityMap = new Map(priorities.map(p => [p.id, p.name]));
 const statusMap = new Map(appointmentStatuses.map(s => [s.id, s.name]));
 
