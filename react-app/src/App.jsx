@@ -32,7 +32,7 @@ import Proposals from './pages/Proposals';
 import Leads from './pages/Leads';
 
 import ConfigurationLayout from './pages/configuration/ConfigurationLayout';
-import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations'
+import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations';
 import AuditTrail from './pages/configuration/system-settings/audit-trail/AuditTrail';
 import BackupAndRestore from './pages/configuration/system-settings/backup-and-restore/BackupAndRestore';
 import CompanyProfile from './pages/configuration/system-settings/company-profile/CompanyProfile';
@@ -98,7 +98,7 @@ function App() {
         <Route path="configuration" element={<Configuration />} />
         <Route path="user-profile" element={<UserProfile />} />
 
-        {/* User Access Management Routes */}
+        {/* Configuration base route */}
         <Route path="configuration/general" element={<ConfigurationLayout />} />
         <Route path="configuration/system-settings/api-integrations" element={<ApiIntegrations />} />
         <Route path="configuration/system-settings/audit-trail" element={<AuditTrail />} />
