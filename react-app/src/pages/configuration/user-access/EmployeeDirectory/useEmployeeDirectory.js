@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getTeams, getEmployees, saveEmployees } from '../../../../utils/localStorage';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 const useEmployeeDirectory = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const [items, setItems] = useState(getEmployees());
   const [form, setForm] = useState({ name: '', position: '', team: '' });
   const [editing, setEditing] = useState(null);
@@ -15,6 +17,14 @@ const useEmployeeDirectory = () => {
     const refreshTeams = () => setTeams(getTeams());
     refreshTeams();
     window.addEventListener('teams:updated', refreshTeams);
+    setPageSubHeader({
+      title: "Employee Directory",
+      breadcrumbs: [
+        { label: "Configuration", path: "/configuration/general" },
+        { label: "User Access", path: "/configuration/user-access" },
+        { label: "Employee Directory", isActive: true }
+      ]
+    });
     return () => window.removeEventListener('teams:updated', refreshTeams);
   }, []);
 

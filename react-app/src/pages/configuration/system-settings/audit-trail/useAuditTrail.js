@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useAudit } from '../../../../contexts/AuditContext'
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useAuditTrail = () => {
@@ -14,20 +13,13 @@ export const useAuditTrail = () => {
             ]
         });
     }, [setPageSubHeader]);
-
-    const { auditTrail } = useAudit();
     const [auditFilter, setAuditFilter] = useState({ user: '', from: '', to: '' });
 
     const handleAuditFilterChange = (field, value) => {
         setAuditFilter({ ...auditFilter, [field]: value });
     };
 
-    const filteredAudit = useMemo(() => auditTrail.filter(entry => {
-        if (auditFilter.user && !entry.user.toLowerCase().includes(auditFilter.user.toLowerCase())) return false;
-        if (auditFilter.from && new Date(entry.timestamp) < new Date(auditFilter.from)) return false;
-        if (auditFilter.to && new Date(entry.timestamp) > new Date(auditFilter.to).setHours(23, 59, 59, 999)) return false;
-        return true;
-    }), [auditTrail, auditFilter]);
+    const filteredAudit = []; // Placeholder for audit trail data filtering logic]
 
     return { auditFilter, handleAuditFilterChange, filteredAudit };
 };

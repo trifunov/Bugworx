@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { addActivityLog } from '../utils/localStorage';
 
 
 const Login = () => {
@@ -58,7 +57,6 @@ const Login = () => {
       const result = await login(username, password);
 
       if (result.success) {
-        addActivityLog({ user: username, action: 'login', details: `User: ${username}, login successful` });
         navigate('/');
       } else {
         setError(result.error);

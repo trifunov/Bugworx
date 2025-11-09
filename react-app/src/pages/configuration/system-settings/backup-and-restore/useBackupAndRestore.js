@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { getBackups, saveBackups, getCompanyProfile, getCustomFields, getApiIntegrations, getAuditTrail, saveCompanyProfile, saveCustomFields, saveApiIntegrations, saveAuditTrail } from '../../../../utils/localStorage';
-import { useAudit } from '../../../../contexts/AuditContext';
+import { getBackups, saveBackups, getCompanyProfile, getCustomFields, getApiIntegrations, getAuditTrail, saveCompanyProfile, saveCustomFields, saveApiIntegrations } from '../../../../utils/localStorage';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useBackupAndRestore = () => {
-    const { pushAudit, setAuditTrail } = useAudit();
     const [backups, setBackups] = useState([]);
     const { setPageSubHeader } = usePageSubHeader();
 
@@ -61,10 +59,6 @@ export const useBackupAndRestore = () => {
             if (data.companyProfile) saveCompanyProfile(data.companyProfile);
             if (data.customFields) saveCustomFields(data.customFields);
             if (data.apiIntegrations) saveApiIntegrations(data.apiIntegrations);
-            if (data.auditTrail) {
-                saveAuditTrail(data.auditTrail);
-                setAuditTrail(data.auditTrail); // Update context state
-            }
             pushAudit('admin', 'Restore', 'Backup', b.name);
             alert('Restore completed. Please refresh the page to see all changes.');
         } catch (e) {

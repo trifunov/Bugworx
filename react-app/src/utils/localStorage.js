@@ -794,12 +794,6 @@ export const addEmployee = (employee) => {
 
 /* ----- Activity Log ----- */
 export const getActivityLogs = () => getFromStorage(STORAGE_KEYS.ACTIVITY_KEY, []);
-export const addActivityLog = ({ user = '', action = '', details = '' } = {}) => {
-  const entry = { id: Date.now().toString(), timestamp: new Date().toISOString(), user, action, details };
-  const next = [entry, ...getActivityLogs()];
-  setToStorage(STORAGE_KEYS.ACTIVITY_KEY, next);
-  return entry;
-};
 export const clearActivityLogs = () => setToStorage(STORAGE_KEYS.ACTIVITY_KEY, []);
 // Proposal-specific functions
 export const getProposals = () => {
@@ -1042,7 +1036,6 @@ export default {
   saveEmployees,
   addEmployee,
   getActivityLogs,
-  addActivityLog,
   clearActivityLogs,
   getContractTypes,
   saveContractTypes,

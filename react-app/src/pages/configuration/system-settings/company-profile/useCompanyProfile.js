@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getCompanyProfile, saveCompanyProfile } from '../../../../utils/localStorage';
-import { useAudit } from '../../../../contexts/AuditContext';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useCompanyProfile = () => {
-    const { pushAudit } = useAudit();
     const { setPageSubHeader } = usePageSubHeader();
     const [companyProfile, setCompanyProfile] = useState({
         name: '',

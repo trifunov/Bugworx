@@ -31,7 +31,6 @@ import UserProfile from './pages/UserProfile';
 import Proposals from './pages/Proposals';
 import Leads from './pages/Leads';
 
-import { AuditProvider } from './contexts/AuditContext'; // Corrected from AuthContext
 import ConfigurationLayout from './pages/configuration/ConfigurationLayout';
 import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations'
 import AuditTrail from './pages/configuration/system-settings/audit-trail/AuditTrail';
@@ -55,7 +54,6 @@ import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes/S
 
 function App() {
   return (
-    <AuditProvider>
     <Routes>
       {/* Public Route */}
       <Route path="/login" element={<Login />} />
@@ -128,7 +126,6 @@ function App() {
       {/* Catch all - redirect to login or dashboard */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-    </AuditProvider>
   );
 }
 

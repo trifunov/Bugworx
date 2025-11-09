@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { getApiIntegrations, saveApiIntegrations } from '../../../../utils/localStorage';
-import { useAudit } from '../../../../contexts/AuditContext';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useApiIntegrations = () => {
     const { setPageSubHeader } = usePageSubHeader();
-    const { pushAudit } = useAudit();
     const [apiIntegrations, setApiIntegrations] = useState([]);
     const apiTypeRef = useRef(null);
     const apiProviderRef = useRef(null);

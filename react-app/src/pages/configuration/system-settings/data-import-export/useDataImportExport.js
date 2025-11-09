@@ -1,10 +1,8 @@
 import { useRef, useEffect } from 'react';
 import { saveImportedFile, getImportedFile, saveExportRecord } from '../../../../utils/localStorage';
-import { useAudit } from '../../../../contexts/AuditContext';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useDataImportExport = () => {
-    const { pushAudit } = useAudit();
     const { setPageSubHeader } = usePageSubHeader();
     const importEntityRef = useRef(null);
     const exportEntityRef = useRef(null);

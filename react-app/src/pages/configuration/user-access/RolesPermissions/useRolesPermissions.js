@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getRoles, saveRoles, addRole } from '../../../../utils/localStorage';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useRolesPermissions = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const [roles, setRoles] = useState(getRoles());
   const [form, setForm] = useState({ name: '', permissions: '' });
   const [editing, setEditing] = useState(null);
@@ -9,6 +11,14 @@ export const useRolesPermissions = () => {
   useEffect(() => {
     // keep roles in sync if other parts update storage externally
     setRoles(getRoles());
+    setPageSubHeader({
+      title: "Roles & Permissions",
+      breadcrumbs: [
+        { label: "Configuration", path: "/configuration/general" },
+        { label: "User Access", path: "/configuration/user-access" },
+        { label: "Roles & Permissions", isActive: true }
+      ]
+    });
   }, []);
 
   const startAdd = () => {

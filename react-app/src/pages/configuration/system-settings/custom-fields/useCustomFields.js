@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { getCustomFields, saveCustomFields } from '../../../../utils/localStorage';
-import { useAudit } from '../../../../contexts/AuditContext';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useCustomFields = () => {
     const { setPageSubHeader } = usePageSubHeader();
-    const { pushAudit } = useAudit();
     const [customFields, setCustomFields] = useState([]);
     const customFieldLabelRef = useRef(null);
     const customFieldAppliesRef = useRef(null);
