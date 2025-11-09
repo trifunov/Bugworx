@@ -31,7 +31,7 @@ import UserProfile from './pages/UserProfile';
 import Proposals from './pages/Proposals';
 import Leads from './pages/Leads';
 
-import { AuditProvider } from './contexts/AuditContext'; // Corrected from AuthContext
+import { AuditProvider } from './contexts/AuditContext';
 import ConfigurationLayout from './pages/configuration/ConfigurationLayout';
 import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations';
 import AuditTrail from './pages/configuration/system-settings/audit-trail/AuditTrail';
