@@ -100,7 +100,7 @@ function App() {
         <Route path="configuration" element={<Configuration />} />
         <Route path="user-profile" element={<UserProfile />} />
 
-        {/* User Access Management Routes */}
+        {/* Configuration base route */}
         <Route path="configuration/general" element={<ConfigurationLayout />} />
         <Route path="configuration/system-settings/api-integrations" element={<ApiIntegrations />} />
         <Route path="configuration/system-settings/audit-trail" element={<AuditTrail />} />
