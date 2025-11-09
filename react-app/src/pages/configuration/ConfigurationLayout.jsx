@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Outlet, useMatches } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 const ConfigurationLayout = () => {
     return (
