@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const PageSubHeaderContext = createContext();
@@ -14,7 +14,7 @@ export const PageSubHeaderProvider = ({ children }) => {
 
   // Reset the sub-header automatically on every route change
   useEffect(() => {
-   setPageSubHeader({ title: '', breadcrumbs: [] });
+    setPageSubHeader({ title: '', breadcrumbs: [] });
   }, [location.pathname]); // This effect runs when the path changes
 
   const value = { pageSubHeader, setPageSubHeader };
