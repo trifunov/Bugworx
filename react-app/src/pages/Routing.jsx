@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow, Polyline, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
+import Table from '../components/Common/Table/Table';
+import useTable from '../components/Common/Table/useTable';
 import {
   vehicles as initialVehicles,
   routes as initialRoutes,
@@ -23,10 +25,7 @@ import {
   getServiceAddresses
 } from '../utils/localStorage';
 import {
-  generateRouteFromAppointments,
-  generateRouteWithStrategy,
-  calculateDistance,
-  optimizeRouteWithConstraints
+  generateRouteWithStrategy
 } from '../utils/routeUtils';
 import { calculateDirections } from '../services/googleMapsService';
 import {
@@ -78,10 +77,10 @@ const Routing = () => {
     }
   }, []);
 
-  const [activeTab, setActiveTab] = useState('routes');
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [showRouteGenerator, setShowRouteGenerator] = useState(false);
+  const [activeTab, setActiveTab] = useState('routes');
 
   // Data state
   const [routes, setRoutesState] = useState([]);
@@ -103,9 +102,6 @@ const Routing = () => {
   const [emergencyAnalysis, setEmergencyAnalysis] = useState(null);
   const [routeOptions, setRouteOptions] = useState([]);
   const [showRouteOptions, setShowRouteOptions] = useState(false);
-  const [selectedRouteOption, setSelectedRouteOption] = useState(null);
-  const [routeEfficiency, setRouteEfficiency] = useState(null);
-  const [improvementSuggestions, setImprovementSuggestions] = useState([]);
 
   // Map center (Springfield, IL)
   const center = { lat: 39.7817, lng: -89.6501 };
@@ -152,16 +148,43 @@ const Routing = () => {
   // Get routes for selected date
   const todayRoutes = getRoutesByDate(selectedDate);
 
+  // Pagination for routes table
+  const {
+    data: paginatedRoutes,
+    currentPage: routesCurrentPage,
+    setCurrentPage: setRoutesCurrentPage,
+    totalPages: routesTotalPages,
+    totalItems: routesTotalItems
+  } = useTable(todayRoutes, {
+    pageSize: 3
+  });
+
+  // Pagination for fleet table
+  const {
+    data: paginatedVehicles,
+    currentPage: fleetCurrentPage,
+    setCurrentPage: setFleetCurrentPage,
+    totalPages: fleetTotalPages,
+    totalItems: fleetTotalItems
+  } = useTable(vehicles, {
+    pageSize: 3
+  });
+
+  // Pagination for technicians table
+  const {
+    data: paginatedTechnicians,
+    currentPage: techCurrentPage,
+    setCurrentPage: setTechCurrentPage,
+    totalPages: techTotalPages,
+    totalItems: techTotalItems
+  } = useTable(technicians.filter(t => t.isActive), {
+    pageSize: 3
+  });
+
   // Get technician name
   const getTechnicianName = (technicianId) => {
     const tech = technicians.find(t => t.id === technicianId);
     return tech ? tech.name : 'Unassigned';
-  };
-
-  // Get vehicle info
-  const getVehicleInfo = (vehicleId) => {
-    const vehicle = vehicles.find(v => v.id === vehicleId);
-    return vehicle ? `${vehicle.vehicleNumber} (${vehicle.make} ${vehicle.model})` : 'N/A';
   };
 
   // Get service address name
@@ -454,7 +477,7 @@ const Routing = () => {
     setTimeout(() => {
       calculateGoogleDirections(route);
     }, 100);
-
+ 
     // Scroll to map
     const mapElement = document.querySelector('.row.mb-4');
     if (mapElement) {
@@ -470,33 +493,39 @@ const Routing = () => {
     setSelectedMarker(null);
   };
 
-  // Optimize existing route
-  const handleOptimizeRoute = (routeId) => {
+  const handleSaveRoute = (routeId) => {
+    loadData();
     const route = routes.find(r => r.id === routeId);
     if (!route) return;
-
-    const vehicle = vehicles.find(v => v.id === route.vehicleId);
-    if (!vehicle) return;
-
-    // Get stops with coordinates
-    const stopsWithCoords = route.stops.map(stop => {
-      const aptInfo = getAppointmentInfo(stop.appointmentId);
-      return {
-        ...stop,
-        coordinates: aptInfo?.coordinates || vehicle.currentLocation
-      };
-    });
-
-    // Re-optimize
-    const optimized = optimizeRouteWithConstraints(
-      stopsWithCoords,
-      vehicle.currentLocation,
-      route.startTime
+    
+    const routesToRemove = routes.filter(r =>
+      r.technicianId === route.technicianId &&
+      r.date === route.date &&
+      r.id !== routeId
     );
 
-    updateRoute(routeId, { stops: optimized });
+    // Delete all other routes
+    routesToRemove.forEach(r => {
+      deleteRoute(r.id);
+    });
+
+    // Mark the selected route as saved/finalized
+    updateRoute(routeId, {
+      status: 'Planned',
+      savedAt: new Date().toISOString()
+    });
+
     loadData();
-    alert('Route optimized successfully!');
+    alert('Route saved successfully! Other route options have been removed.');
+  };
+
+  // Delete route
+  const handleDeleteRoute = (routeId) => {
+    if (window.confirm('Are you sure you want to delete this route?')) {
+      deleteRoute(routeId);
+      loadData();
+      alert('Route deleted successfully!');
+    }
   };
 
   // Get route polyline coordinates (fallback when Directions API is not available)
@@ -561,7 +590,7 @@ const Routing = () => {
         <div className="col-12">
           <div className="card">
             <div className="card-body">
-              <div className="row align-items-center">
+              <div className="row">
                 <div className="col-md-3">
                   <label className="form-label mb-1">Select Date</label>
                   <input
@@ -581,20 +610,190 @@ const Routing = () => {
                     Generate Route
                   </button>
                 </div>
-                <div className="col-md-6 text-end">
-                  <div className="mt-4">
-                    <span className="badge badge-soft-primary me-2">
-                      <i className="mdi mdi-map me-1"></i>
-                      {todayRoutes.length} Routes
-                    </span>
-                    <span className="badge badge-soft-success me-2">
-                      <i className="mdi mdi-car me-1"></i>
-                      {vehicles.filter(v => v.status === 'Active').length} Active Vehicles
-                    </span>
-                    <span className="badge badge-soft-info">
-                      <i className="mdi mdi-account me-1"></i>
-                      {technicians.filter(t => t.isActive).length} Technicians
-                    </span>
+                <div className="col-md-6">
+                  <ul className="nav nav-tabs nav-tabs-custom mb-3" role="tablist">
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${activeTab === 'routes' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('routes')}
+                        role="tab"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span className="d-none d-md-block">
+                          <i className="mdi mdi-map me-2"></i>Routes
+                        </span>
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${activeTab === 'fleet' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('fleet')}
+                        role="tab"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span className="d-none d-md-block">
+                          <i className="mdi mdi-car me-2"></i>Fleet
+                        </span>
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${activeTab === 'technicians' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('technicians')}
+                        role="tab"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span className="d-none d-md-block">
+                          <i className="mdi mdi-account me-2"></i>Technicians
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+
+                  <div className="tab-content">
+                    {/* Routes Tab */}
+                    {activeTab === 'routes' && (
+                      <div className="tab-pane active">
+                        <Table
+                          columns={['Technician', 'Stops', 'Status', 'Actions']}
+                          data={paginatedRoutes}
+                          renderRow={(route) => (
+                            <tr key={route.id}>
+                              <td>{getTechnicianName(route.technicianId)}</td>
+                              <td>{route.stops.length}</td>
+                              <td>
+                                <span className={`badge badge-soft-${
+                                  route.status === 'Active' ? 'success' :
+                                  route.status === 'Completed' ? 'primary' :
+                                  'warning'
+                                }`}>
+                                  {route.status}
+                                </span>
+                              </td>
+                              <td>
+                                <div className="d-flex gap-3">
+                                  <a
+                                    href="#"
+                                    className="text-primary"
+                                    title="View on map"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleViewRoute(route);
+                                    }}
+                                  >
+                                    <i className="mdi mdi-map-marker font-size-18"></i>
+                                  </a>
+                                  <a
+                                    href="#"
+                                    className="text-success"
+                                    title="Save route"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleSaveRoute(route.id);
+                                    }}
+                                  >
+                                    <i className="mdi mdi-content-save font-size-18"></i>
+                                  </a>
+                                  <a
+                                    href="#"
+                                    className="text-danger"
+                                    title="Delete route"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleDeleteRoute(route.id);
+                                    }}
+                                  >
+                                    <i className="mdi mdi-delete font-size-18"></i>
+                                  </a>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                          emptyState={{
+                            icon: 'mdi mdi-map',
+                            message: 'No routes for this date',
+                          }}
+                          pagination={{
+                            currentPage: routesCurrentPage,
+                            totalPages: routesTotalPages,
+                            onPageChange: setRoutesCurrentPage,
+                            totalItems: routesTotalItems
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Fleet Tab */}
+                    {activeTab === 'fleet' && (
+                      <div className="tab-pane active">
+                        <Table
+                          columns={['Vehicle', 'Make/Model', 'Assigned To', 'Mileage', 'Status']}
+                          data={paginatedVehicles}
+                          renderRow={(vehicle) => (
+                            <tr key={vehicle.id}>
+                              <td><strong>{vehicle.vehicleNumber}</strong></td>
+                              <td>{vehicle.make} {vehicle.model} {vehicle.year}</td>
+                              <td>{getTechnicianName(vehicle.assignedTechnicianId)}</td>
+                              <td>{vehicle.mileage.toLocaleString()} mi</td>
+                              <td>
+                                <span className={`badge badge-soft-${
+                                  vehicle.status === 'Active' ? 'success' :
+                                  vehicle.status === 'Maintenance' ? 'warning' :
+                                  'danger'
+                                }`}>
+                                  {vehicle.status}
+                                </span>
+                              </td>
+                            </tr>
+                          )}
+                          emptyState={{
+                            icon: 'mdi mdi-car',
+                            message: 'No vehicles found',
+                          }}
+                          pagination={{
+                            currentPage: fleetCurrentPage,
+                            totalPages: fleetTotalPages,
+                            onPageChange: setFleetCurrentPage,
+                            totalItems: fleetTotalItems
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Technicians Tab */}
+                    {activeTab === 'technicians' && (
+                      <div className="tab-pane active">
+                        <Table
+                          columns={['Name', 'Specialization', 'Vehicle', 'Phone', 'Rating']}
+                          data={paginatedTechnicians}
+                          renderRow={(tech) => {
+                            const vehicle = vehicles.find(v => v.assignedTechnicianId === tech.id);
+                            return (
+                              <tr key={tech.id}>
+                                <td><strong>{tech.name}</strong></td>
+                                <td>{tech.specialization}</td>
+                                <td>{vehicle ? vehicle.vehicleNumber : 'Not Assigned'}</td>
+                                <td>{tech.phone}</td>
+                                <td>
+                                  <i className="mdi mdi-star text-warning me-1"></i>
+                                  {tech.rating}/5.0
+                                </td>
+                              </tr>
+                            );
+                          }}
+                          emptyState={{
+                            icon: 'mdi mdi-account',
+                            message: 'No technicians found',
+                          }}
+                          pagination={{
+                            currentPage: techCurrentPage,
+                            totalPages: techTotalPages,
+                            onPageChange: setTechCurrentPage,
+                            totalItems: techTotalItems
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -735,246 +934,6 @@ const Routing = () => {
         </div>
       </div>
 
-      {/* Routes and Fleet Tabs */}
-      <div className="row">
-        <div className="col-lg-12">
-          <div className="card">
-            <div className="card-body">
-              <ul className="nav nav-tabs nav-tabs-custom" role="tablist">
-                <li className="nav-item">
-                  <a
-                    className={`nav-link ${activeTab === 'routes' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('routes')}
-                    role="tab"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="d-none d-md-block">
-                      <i className="mdi mdi-map me-2"></i>Routes
-                    </span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    className={`nav-link ${activeTab === 'fleet' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('fleet')}
-                    role="tab"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="d-none d-md-block">
-                      <i className="mdi mdi-car me-2"></i>Fleet
-                    </span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    className={`nav-link ${activeTab === 'technicians' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('technicians')}
-                    role="tab"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="d-none d-md-block">
-                      <i className="mdi mdi-account me-2"></i>Technicians
-                    </span>
-                  </a>
-                </li>
-              </ul>
-
-              <div className="tab-content p-3">
-                {/* Routes Tab */}
-                {activeTab === 'routes' && (
-                  <div className="tab-pane active">
-                    <h5 className="font-size-16 mb-3">Routes for {new Date(selectedDate).toLocaleDateString()}</h5>
-                    {todayRoutes.length === 0 ? (
-                      <div className="text-center py-5">
-                        <i className="mdi mdi-map display-4 text-muted"></i>
-                        <p className="text-muted mt-2">No routes for this date. Click "Generate Route" to create one.</p>
-                      </div>
-                    ) : (
-                      <div className="table-responsive">
-                        <table className="table table-hover mb-0">
-                          <thead className="table-light">
-                            <tr>
-                              <th>Technician</th>
-                              <th>Vehicle</th>
-                              <th>Stops</th>
-                              <th>Distance</th>
-                              <th>Duration</th>
-                              <th>Time</th>
-                              <th>Score</th>
-                              <th>Status</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {todayRoutes.map((route) => (
-                              <tr key={route.id}>
-                                <td>{getTechnicianName(route.technicianId)}</td>
-                                <td>
-                                  <small>{getVehicleInfo(route.vehicleId)}</small>
-                                </td>
-                                <td>{route.stops.length}</td>
-                                <td>{route.totalDistance} mi</td>
-                                <td>{Math.floor(route.totalDuration / 60)}h {route.totalDuration % 60}m</td>
-                                <td>
-                                  <small>{route.startTime} - {route.endTime}</small>
-                                </td>
-                                <td>
-                                  <span className={`badge ${
-                                    route.optimizationScore >= 80 ? 'badge-soft-success' :
-                                    route.optimizationScore >= 60 ? 'badge-soft-warning' :
-                                    'badge-soft-danger'
-                                  }`}>
-                                    {route.optimizationScore}%
-                                  </span>
-                                </td>
-                                <td>
-                                  <span className={`badge ${
-                                    route.status === 'Active' ? 'badge-soft-success' :
-                                    route.status === 'Completed' ? 'badge-soft-primary' :
-                                    'badge-soft-warning'
-                                  }`}>
-                                    {route.status}
-                                  </span>
-                                </td>
-                                <td>
-                                  <div className="d-flex gap-2">
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-primary"
-                                      onClick={() => handleViewRoute(route)}
-                                      title="View on map"
-                                    >
-                                      <i className="mdi mdi-map-marker"></i>
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-success"
-                                      onClick={() => handleOptimizeRoute(route.id)}
-                                      title="Re-optimize"
-                                    >
-                                      <i className="mdi mdi-refresh"></i>
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Fleet Tab */}
-                {activeTab === 'fleet' && (
-                  <div className="tab-pane active">
-                    <h5 className="font-size-16 mb-3">Fleet Overview</h5>
-                    <div className="table-responsive">
-                      <table className="table table-hover mb-0">
-                        <thead className="table-light">
-                          <tr>
-                            <th>Vehicle</th>
-                            <th>Make/Model</th>
-                            <th>License Plate</th>
-                            <th>Assigned To</th>
-                            <th>Mileage</th>
-                            <th>Status</th>
-                            <th>Next Maintenance</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {vehicles.map((vehicle) => (
-                            <tr key={vehicle.id}>
-                              <td>
-                                <strong>{vehicle.vehicleNumber}</strong>
-                              </td>
-                              <td>{vehicle.make} {vehicle.model} {vehicle.year}</td>
-                              <td>{vehicle.licensePlate}</td>
-                              <td>{getTechnicianName(vehicle.assignedTechnicianId)}</td>
-                              <td>{vehicle.mileage.toLocaleString()} mi</td>
-                              <td>
-                                <span className={`badge ${
-                                  vehicle.status === 'Active' ? 'badge-soft-success' :
-                                  vehicle.status === 'Maintenance' ? 'badge-soft-warning' :
-                                  'badge-soft-danger'
-                                }`}>
-                                  {vehicle.status}
-                                </span>
-                              </td>
-                              <td>
-                                <small>{vehicle.nextMaintenance}</small>
-                              </td>
-                              <td>
-                                <button
-                                  className="btn btn-sm btn-soft-info"
-                                  title="View details"
-                                >
-                                  <i className="mdi mdi-information"></i>
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-
-                {/* Technicians Tab */}
-                {activeTab === 'technicians' && (
-                  <div className="tab-pane active">
-                    <h5 className="font-size-16 mb-3">Active Technicians</h5>
-                    <div className="table-responsive">
-                      <table className="table table-hover mb-0">
-                        <thead className="table-light">
-                          <tr>
-                            <th>Name</th>
-                            <th>Specialization</th>
-                            <th>Vehicle</th>
-                            <th>Phone</th>
-                            <th>Rating</th>
-                            <th>Completed Jobs</th>
-                            <th>Zones</th>
-                            <th>Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {technicians.filter(t => t.isActive).map((tech) => {
-                            const vehicle = vehicles.find(v => v.assignedTechnicianId === tech.id);
-                            return (
-                              <tr key={tech.id}>
-                                <td><strong>{tech.name}</strong></td>
-                                <td>{tech.specialization}</td>
-                                <td>{vehicle ? vehicle.vehicleNumber : 'Not Assigned'}</td>
-                                <td>{tech.phone}</td>
-                                <td>
-                                  <div className="d-flex align-items-center">
-                                    <i className="mdi mdi-star text-warning me-1"></i>
-                                    {tech.rating}/5.0
-                                  </div>
-                                </td>
-                                <td>{tech.completedJobs}</td>
-                                <td>
-                                  <small>{tech.preferredZones?.join(', ')}</small>
-                                </td>
-                                <td>
-                                  <span className="badge badge-soft-success">Active</span>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Route Generator Modal */}
       {showRouteGenerator && (
         <>
@@ -1083,7 +1042,7 @@ const Routing = () => {
                   )}
 
                   {/* Route Options */}
-                  {routeOptions.map((option, index) => (
+                  {routeOptions.map((option) => (
                     <div
                       key={option.id}
                       className="card mb-3"

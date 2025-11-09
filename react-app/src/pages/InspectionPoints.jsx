@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { serviceAddresses, inspectionPoints as inspectionPointsData, areas, facilities } from '../data/mockData';
+import { useParams } from 'react-router-dom';
+import { serviceAddresses, areas, facilities, addInspectionPoint, updateInspectionPoint, getInspectionPointsByCustomerId } from '../data/mockData';
 import { statusIntToHtmlBadge } from '../utils/inspectionPointUtils';
 import AddNewButton from '../components/Common/AddNewButton';
 import { getCustomerById } from '../utils/localStorage';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
+import AddEditInspectionPoint from '../components/CustomerDetails/InspectionPoint/AddEditInspectionPoint/AddEditInspectionPoint';
+import useAddEditInspectionPoint from '../components/CustomerDetails/InspectionPoint/AddEditInspectionPoint/useAddEditInspectionPoint';
 
 const InspectionPoints = () => {
     const { setPageSubHeader } = usePageSubHeader();
@@ -13,7 +15,8 @@ const InspectionPoints = () => {
     const customerId = parseInt(id);
     const customer = getCustomerById(customerId);
     // Use the inspectionPoints array from mockData
-    const inspectionPoints = inspectionPointsData || [];
+    const [inspectionPoints, setInspectionPointsState] = useState(getInspectionPointsByCustomerId(customerId));
+    const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditInspectionPoint();
 
     const getServiceAddress = (areaId) => {
         const area = areas.find((a) => a.id === areaId);
@@ -43,6 +46,16 @@ const InspectionPoints = () => {
 
         return matchesSearch;
     });
+
+    const handleSave = () => onSaveHandle((data) => {
+        if (data.id > 0) {
+            updateInspectionPoint(data.id, data);
+        } else {
+            addInspectionPoint(data);
+        }
+        setInspectionPointsState(getInspectionPointsByCustomerId(customerId));
+    });
+
     useEffect(() => {
         setPageSubHeader({
             title: 'Inspection Points',
@@ -56,6 +69,17 @@ const InspectionPoints = () => {
 
     return (
         <>
+            <AddEditInspectionPoint
+                isOpen={isOpen}
+                formData={formData}
+                errors={errors}
+                isSaving={isSaving}
+                onUpdateField={onUpdateFieldHandle}
+                onClose={close}
+                onSave={handleSave}
+                customerId={customerId}
+            />
+
             <div className="row">
                 <div className="col-lg-12">
                     <div className="card">
@@ -78,9 +102,7 @@ const InspectionPoints = () => {
                                         </div>
 
                                         <div className="mt-2 mt-md-0">
-                                            <AddNewButton handleAddNew={() => {
-                                                // Handle add new facility action
-                                            }} />
+                                            <AddNewButton handleAddNew={() => open({ id: 0 })} />
                                         </div>
                                     </div>
                                 </div>
