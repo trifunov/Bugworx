@@ -26,7 +26,7 @@ const useEmployeeDirectory = () => {
       ]
     });
     return () => window.removeEventListener('teams:updated', refreshTeams);
-  }, []);
+  }, [setPageSubHeader]);
 
   const startAdd = () => {
     setEditing(null);
