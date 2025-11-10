@@ -16,7 +16,7 @@ export const useAuditTrail = () => {
     const [auditFilter, setAuditFilter] = useState({ user: '', from: '', to: '' });
 
     const handleAuditFilterChange = (field, value) => {
-        setAuditFilter({ ...auditFilter, [field]: value });
+        setAuditFilter(prev => ({ ...prev, [field]: value }));
     };
 
     const filteredAudit = []; // Placeholder for audit trail data filtering logic]
