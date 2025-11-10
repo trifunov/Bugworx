@@ -993,10 +993,12 @@ export const getBackups = () => getFromStorage('backups', []);
 export const saveBackups = (backups) => setToStorage('backups', backups);
 
 // --- Data Import/Export ---
+// Note: The following import/export functions use dynamic keys (e.g., `import_${entity}` and `export_${entity}`).
+// These keys are not tracked in STORAGE_KEYS, so clearing all app data requires special handling.
 export const saveImportedFile = (entity, payload) => setToStorage(`import_${entity}`, payload);
 export const getImportedFile = (entity, defaultValue) => getFromStorage(`import_${entity}`, defaultValue);
 export const saveExportRecord = (entity, record) => setToStorage(`export_${entity}`, record);
-
+export const getExportRecord = (entity, defaultValue) => getFromStorage(`export_${entity}`, defaultValue);
 // --- Audit Trail ---
 export const getAuditTrail = () => getFromStorage('auditTrail', []);
 export const saveAuditTrail = (trail) => setToStorage('auditTrail', trail);
