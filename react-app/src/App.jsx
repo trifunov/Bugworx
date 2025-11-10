@@ -4,7 +4,6 @@ import MainLayout from './layouts/MainLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Customers from './pages/Customers';
-import Prospects from './pages/Prospects';
 import CustomerOverview from './pages/CustomerOverview';
 import CustomerServiceAddresses from './pages/CustomerServiceAddresses';
 import CustomerAppointments from './pages/CustomerAppointments';
@@ -31,6 +30,9 @@ import Areas from './pages/Areas';
 import UserProfile from './pages/UserProfile';
 import Proposals from './pages/Proposals';
 import Leads from './pages/Leads';
+import SearchResults from './pages/SearchResults';
+import InspectionPoints from './pages/InspectionPoints';
+import Prospects from './pages/Prospects';
 
 import Users from './pages/configuration/user-access/Users/Users';
 import EmployeeDirectory from './pages/configuration/user-access/EmployeeDirectory/EmployeeDirectory';
@@ -44,7 +46,6 @@ import JobSettings from './pages/configuration/operational-setup/JobSettings/Job
 import OperationZones from './pages/configuration/operational-setup/OperationZones/OperationZones';
 import RouteConfiguration from './pages/configuration/operational-setup/RouteConfiguration/RouteConfiguration';
 import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes/ServiceTypes';
-import InspectionPoints from './pages/InspectionPoints';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
         }
       >
         <Route index element={<Dashboard />} />
+        <Route path="search-results" element={<SearchResults />} />
         <Route path="customers" element={<Customers />} />
         <Route path="prospects" element={<Prospects />} />
         <Route path="leads" element={<Leads />} />
