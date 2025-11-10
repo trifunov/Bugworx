@@ -8,20 +8,6 @@ const UserActivityLog = () => {
     <>
       <div className="row">
         <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">User Access — Activity Log</h4>
-            <div className="page-title-right">
-              <div className="btn-group">
-                <button className="btn btn-primary" onClick={() => addLog('Manual test entry', 'Created sample log')}><i className="mdi mdi-plus me-1"></i> Add Log</button>
-                <button className="btn btn-light" onClick={clear}><i className="mdi mdi-delete-outline me-1"></i> Clear</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12">
           <div className="card">
             <div className="card-body">
               <h4 className="card-title mb-4">Activity Log</h4>

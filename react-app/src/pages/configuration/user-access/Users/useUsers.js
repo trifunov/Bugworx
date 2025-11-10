@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getUsers, saveUsers, addUser, getRoles } from '../../../../utils/localStorage';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useUsers = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const [users, setUsers] = useState(getUsers());
   const [roles, setRoles] = useState(getRoles());
   const [editing, setEditing] = useState(null);
@@ -16,8 +18,16 @@ export const useUsers = () => {
     const refreshRoles = () => setRoles(getRoles());
     window.addEventListener('roles:updated', refreshRoles);
     refreshRoles(); // Initial fetch
+    setPageSubHeader({
+      title: "Users",
+      breadcrumbs: [
+        { label: "Configuration", path: "/configuration/general" },
+        { label: "User Access", path: "/configuration/user-access" },
+        { label: "Users", isActive: true }
+      ]
+    });
     return () => window.removeEventListener('roles:updated', refreshRoles);
-  }, []);
+  }, [setPageSubHeader]);
 
   const startAdd = () => {
     setEditing(null);

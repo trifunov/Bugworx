@@ -1,16 +1,25 @@
 import { useState, useEffect } from 'react';
-import { getActivityLogs, addActivityLog, clearActivityLogs } from '../../../../utils/localStorage';
+import { getActivityLogs, clearActivityLogs } from '../../../../utils/localStorage';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useUserActivityLog = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const [logs, setLogs] = useState(getActivityLogs());
 
   useEffect(() => {
     setLogs(getActivityLogs());
+    setPageSubHeader({
+      title: "User Activity Log",
+      breadcrumbs: [
+        { label: "Configuration", path: "/configuration/general" },
+        { label: "User Access", path: "/configuration/user-access" },
+        { label: "User Activity Log", isActive: true }
+      ]
+    });
   }, []);
 
   const handleAddLog = (action, details = '') => {
-    const entry = addActivityLog({ action, details });
-    setLogs(prev => [entry, ...prev]);
+    setLogs(prev => [{ id: Date.now(), timestamp: new Date().toISOString(), user: '', action, details }, ...prev]);
   };
 
   const handleClear = () => {

@@ -17,17 +17,6 @@ const TeamsBranches = () => {
   return (
     <>
       <div className="row">
-        <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">User Access — Teams & Branches</h4>
-            <div className="page-title-right">
-              <button className="btn btn-primary" onClick={startAdd}><i className="mdi mdi-plus me-1"></i> Add</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="row">
         <div className="col-lg-8">
           <div className="card">
             <div className="card-body">

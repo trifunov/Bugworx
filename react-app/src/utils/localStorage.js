@@ -847,12 +847,6 @@ export const addEmployee = (employee) => {
 
 /* ----- Activity Log ----- */
 export const getActivityLogs = () => getFromStorage(STORAGE_KEYS.ACTIVITY_KEY, []);
-export const addActivityLog = ({ user = '', action = '', details = '' } = {}) => {
-  const entry = { id: Date.now().toString(), timestamp: new Date().toISOString(), user, action, details };
-  const next = [entry, ...getActivityLogs()];
-  setToStorage(STORAGE_KEYS.ACTIVITY_KEY, next);
-  return entry;
-};
 export const clearActivityLogs = () => setToStorage(STORAGE_KEYS.ACTIVITY_KEY, []);
 // Proposal-specific functions
 export const getProposals = () => {
@@ -977,6 +971,38 @@ export const saveRouteConfiguration = (items) => setToStorage(STORAGE_KEYS.OPERA
 export const getOperationalZones = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, []);
 export const saveOperationalZones = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ZONES, items);
 
+// --- Company Profile ---
+export const getCompanyProfile = () => getFromStorage('companyProfile', null);
+export const saveCompanyProfile = (profile) => setToStorage('companyProfile', profile);
+
+// --- Custom Fields ---
+export const getCustomFields = () => getFromStorage('customFields', []);
+export const saveCustomFields = (fields) => setToStorage('customFields', fields);
+
+// --- API Integrations ---
+const defaultApiIntegrations = [
+    { id: 'gps', name: 'GPS / Telemetry', enabled: true, details: '', type: 'GPS', provider: 'DefaultGPS', clientId: '', clientSecret: '' },
+    { id: 'hrms', name: 'HRMS', enabled: false, details: '', type: 'HRMS', provider: 'DefaultHRMS', clientId: '', clientSecret: '' },
+    { id: 'acct', name: 'Accounting', enabled: false, details: '', type: 'Accounting', provider: 'DefaultAccounting', clientId: '', clientSecret: '' }
+];
+export const getApiIntegrations = () => getFromStorage('apiIntegrations', defaultApiIntegrations);
+export const saveApiIntegrations = (integrations) => setToStorage('apiIntegrations', integrations);
+
+// --- Backups ---
+export const getBackups = () => getFromStorage('backups', []);
+export const saveBackups = (backups) => setToStorage('backups', backups);
+
+// --- Data Import/Export ---
+// Note: The following import/export functions use dynamic keys (e.g., `import_${entity}` and `export_${entity}`).
+// These keys are not tracked in STORAGE_KEYS, so clearing all app data requires special handling.
+export const saveImportedFile = (entity, payload) => setToStorage(`import_${entity}`, payload);
+export const getImportedFile = (entity, defaultValue) => getFromStorage(`import_${entity}`, defaultValue);
+export const saveExportRecord = (entity, record) => setToStorage(`export_${entity}`, record);
+export const getExportRecord = (entity, defaultValue) => getFromStorage(`export_${entity}`, defaultValue);
+// --- Audit Trail ---
+export const getAuditTrail = () => getFromStorage('auditTrail', []);
+export const saveAuditTrail = (trail) => setToStorage('auditTrail', trail);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1071,7 +1097,6 @@ export default {
   saveEmployees,
   addEmployee,
   getActivityLogs,
-  addActivityLog,
   clearActivityLogs,
   getContractTypes,
   saveContractTypes,
@@ -1096,5 +1121,18 @@ export default {
   getProposalsByCustomerId,
   getConfiguration,
   setConfiguration,
-  updateConfiguration
+  updateConfiguration,
+  getCompanyProfile,
+  saveCompanyProfile,
+  getCustomFields,
+  saveCustomFields,
+  getApiIntegrations,
+  saveApiIntegrations,
+  getBackups,
+  saveBackups,
+  saveImportedFile,
+  getImportedFile,
+  saveExportRecord,
+  getAuditTrail,
+  saveAuditTrail
 };
