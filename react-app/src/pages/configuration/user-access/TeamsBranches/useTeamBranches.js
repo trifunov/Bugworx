@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getTeams, saveTeams, addTeam } from '../../../../utils/localStorage';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useTeamsBranches = () => {
+  const { setPageSubHeader } = usePageSubHeader();
   const [items, setItems] = useState(getTeams());
   const [form, setForm] = useState({ name: '', region: '' });
   const [editing, setEditing] = useState(null);
@@ -9,6 +11,14 @@ export const useTeamsBranches = () => {
   useEffect(() => {
     // keep persisted on mount/change
     setItems(getTeams());
+    setPageSubHeader({
+      title: "Teams & Branches",
+      breadcrumbs: [
+        { label: "Configuration", path: "/configuration/general" },
+        { label: "User Access", path: "/configuration/user-access" },
+        { label: "Teams & Branches", isActive: true }
+      ]
+    });
   }, []);
 
   const startAdd = () => {

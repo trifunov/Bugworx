@@ -174,7 +174,7 @@ const Dashboard = () => {
         </div>
 
         <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/configuration" style={{ textDecoration: 'none' }}>
+          <Link to="/configuration/general" style={{ textDecoration: 'none' }}>
             <div className="card border border-dark card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
               <div className="card-header bg-transparent border-dark">
                 <h4 className="my-0 text-dark font-size-24"><i className="mdi mdi-cog me-3"></i>Configuration</h4>
