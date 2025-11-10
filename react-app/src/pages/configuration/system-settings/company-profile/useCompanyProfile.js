@@ -32,7 +32,6 @@ export const useCompanyProfile = () => {
 
     const saveProfile = () => {
         saveCompanyProfile(companyProfile);
-        pushAudit('admin', 'Update', 'CompanyProfile', 'Saved company profile');
         alert('Company profile saved to local storage.');
     };
 
@@ -44,7 +43,6 @@ export const useCompanyProfile = () => {
             const next = { ...companyProfile, logo: dataUrl };
             setCompanyProfile(next);
             saveCompanyProfile(next);
-            pushAudit('admin', 'Upload', 'CompanyLogo', file.name);
         };
         reader.readAsDataURL(file);
     };

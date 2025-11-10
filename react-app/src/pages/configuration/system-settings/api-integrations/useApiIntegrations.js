@@ -28,7 +28,6 @@ export const useApiIntegrations = () => {
         const next = apiIntegrations.map(i => i.id === id ? { ...i, enabled: !i.enabled } : i);
         setApiIntegrations(next);
         saveApiIntegrations(next);
-        pushAudit('admin', 'Toggle', 'APIIntegration', id);
     };
 
     const addIntegration = () => {
@@ -44,7 +43,6 @@ export const useApiIntegrations = () => {
         const next = [...apiIntegrations, newInt];
         setApiIntegrations(next);
         saveApiIntegrations(next);
-        pushAudit('admin', 'Create', 'APIIntegration', provider);
         if (apiProviderRef.current) apiProviderRef.current.value = '';
         if (apiClientIdRef.current) apiClientIdRef.current.value = '';
         if (apiClientSecretRef.current) apiClientSecretRef.current.value = '';
@@ -68,7 +66,6 @@ export const useApiIntegrations = () => {
         const next = apiIntegrations.map(i => i.id === id ? { ...i, clientId: creds.clientId, clientSecret: creds.clientSecret } : i);
         setApiIntegrations(next);
         saveApiIntegrations(next);
-        pushAudit('admin', 'Update', 'APIIntegrationCredentials', id);
         setIntegrationConfigOpen(null);
         alert('Integration credentials saved.');
     };

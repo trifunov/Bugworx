@@ -33,7 +33,6 @@ export const useCustomFields = () => {
         const next = [...customFields, newField];
         setCustomFields(next);
         saveCustomFields(next);
-        pushAudit('admin', 'Create', 'CustomField', label);
         if (customFieldLabelRef.current) {
             customFieldLabelRef.current.value = '';
         }
@@ -44,7 +43,6 @@ export const useCustomFields = () => {
         const next = customFields.filter(f => f.id !== id);
         setCustomFields(next);
         saveCustomFields(next);
-        pushAudit('admin', 'Delete', 'CustomField', id);
     };
 
     const editCustomField = (id) => {
@@ -54,7 +52,6 @@ export const useCustomFields = () => {
         const next = customFields.map(x => x.id === id ? { ...x, label: newLabel } : x);
         setCustomFields(next);
         saveCustomFields(next);
-        pushAudit('admin', 'Update', 'CustomField', id);
     };
 
     return {

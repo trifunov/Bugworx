@@ -31,7 +31,6 @@ export const useBackupAndRestore = () => {
         const next = [entry, ...backups];
         setBackups(next);
         saveBackups(next);
-        pushAudit('admin', 'Backup', 'System', name);
         alert('Backup created and saved to local storage.');
     };
 
@@ -47,7 +46,6 @@ export const useBackupAndRestore = () => {
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
-        pushAudit('admin', 'Download', 'Backup', b.name);
     };
 
     const restoreBackup = (id) => {
@@ -59,7 +57,6 @@ export const useBackupAndRestore = () => {
             if (data.companyProfile) saveCompanyProfile(data.companyProfile);
             if (data.customFields) saveCustomFields(data.customFields);
             if (data.apiIntegrations) saveApiIntegrations(data.apiIntegrations);
-            pushAudit('admin', 'Restore', 'Backup', b.name);
             alert('Restore completed. Please refresh the page to see all changes.');
         } catch (e) {
             alert('Restore failed: invalid backup content.');
@@ -72,7 +69,6 @@ export const useBackupAndRestore = () => {
         const next = backups.filter(b => b.id !== id);
         setBackups(next);
         saveBackups(next);
-        pushAudit('admin', 'Delete', 'Backup', b?.name || id);
     };
 
     const handleBackupUpload = (file) => {
@@ -85,7 +81,6 @@ export const useBackupAndRestore = () => {
             const next = [entry, ...backups];
             setBackups(next);
             saveBackups(next);
-            pushAudit('admin', 'Upload', 'Backup', name);
             alert('Backup uploaded and stored.');
         };
         reader.readAsText(file);

@@ -27,7 +27,6 @@ export const useDataImportExport = () => {
             const entity = importEntityRef.current?.value || 'Customers';
             const payload = { fileName: file.name, content, date: new Date().toISOString() };
             saveImportedFile(entity, payload);
-            pushAudit('admin', 'Import', entity, file.name);
             alert(`Imported ${file.name} for ${entity} and saved to local storage.`);
         };
         reader.readAsText(file);
@@ -62,7 +61,6 @@ export const useDataImportExport = () => {
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
-        pushAudit('admin', 'Export', entity, format);
         saveExportRecord(entity, { exportedAt: new Date().toISOString(), format });
     };
 
