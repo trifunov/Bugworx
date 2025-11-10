@@ -27,7 +27,7 @@ export const useUsers = () => {
       ]
     });
     return () => window.removeEventListener('roles:updated', refreshRoles);
-  }, []);
+  }, [setPageSubHeader]);
 
   const startAdd = () => {
     setEditing(null);
