@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import AddEditArea from '../components/CustomerDetails/Area/AddEditArea/AddEditArea';
+import ViewArea from '../components/CustomerDetails/Area/ViewArea/ViewArea';
 import { addArea, updateArea, getAreas, getFacilitiesByCustomerId, getServiceAddressesByCustomerId, getCustomerById } from '../utils/localStorage';
 import useAddEditArea from '../components/CustomerDetails/Area/AddEditArea/useAddEditArea';
+import useViewArea from '../components/CustomerDetails/Area/ViewArea/useViewArea';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Areas = () => {
@@ -13,6 +15,7 @@ const Areas = () => {
     const { id } = useParams();
     const customerId = parseInt(id);
     const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditArea();
+    const view = useViewArea();
     const customer = getCustomerById(customerId);
 
     // Load dynamic data from localStorage helpers so saved changes persist
@@ -76,6 +79,12 @@ const Areas = () => {
                 customerId={customerId}
             />
 
+            <ViewArea
+                isOpen={view.isOpen}
+                data={view.data}
+                onClose={view.close}
+            />
+
             <div className="row">
                 <div className="col-lg-12">
                     <div className="card">
@@ -127,11 +136,18 @@ const Areas = () => {
                                                     </td>
                                                     <td>
                                                         <div className="d-flex gap-3">
-                                                            <a href="#" className="text-success" title="View">
+                                                            <a href="#" className="text-success" title="View"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    view.open(a);
+                                                                }}>
                                                                 <i className="mdi mdi-eye font-size-18"></i>
                                                             </a>
                                                             <a href="#" className="text-primary" title="Edit"
-                                                                onClick={() => open(a)}>
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    open(a);
+                                                                }}>
                                                                 <i className="mdi mdi-pencil font-size-18"></i>
                                                             </a>
                                                             <a href="#" className="text-danger" title="Delete">
