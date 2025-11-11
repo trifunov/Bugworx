@@ -3,8 +3,10 @@ import { Link, useParams } from 'react-router-dom';
 import Drawing from '../components/CustomerDetails/Drawing';
 import AddNewButton from '../components/Common/AddNewButton';
 import AddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/AddEditFacility';
+import ViewFacility from '../components/CustomerDetails/Facility/ViewFacility/ViewFacility';
 import { addFacility, updateFacility, getFacilitiesByCustomerId, getServiceAddressesByCustomerId, getCustomerById } from '../utils/localStorage';
 import useAddEditFacility from '../components/CustomerDetails/Facility/AddEditFacility/useAddEditFacility';
+import useViewFacility from '../components/CustomerDetails/Facility/ViewFacility/useViewFacility';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Facilities = () => {
@@ -14,6 +16,7 @@ const Facilities = () => {
     const [selectedDrawing, setSelectedDrawing] = useState(null);
     const customerId = parseInt(id);
     const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditFacility(customerId);
+    const view = useViewFacility();
 
     const [facilities, setFacilities] = useState(getFacilitiesByCustomerId(customerId));
     const serviceAddresses = getServiceAddressesByCustomerId(customerId);
@@ -69,6 +72,12 @@ const Facilities = () => {
                 onUpdateField={onUpdateFieldHandle}
                 onClose={close}
                 onSave={handleSave}
+            />
+
+            <ViewFacility
+                isOpen={view.isOpen}
+                data={view.data}
+                onClose={view.close}
             />
 
             <div className="row">
@@ -130,11 +139,18 @@ const Facilities = () => {
                                                 </td>
                                                 <td>
                                                     <div className="d-flex gap-3">
-                                                        <a href="#" className="text-success" title="View">
+                                                        <a href="#" className="text-success" title="View"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                view.open(f);
+                                                            }}>
                                                             <i className="mdi mdi-eye font-size-18"></i>
                                                         </a>
                                                         <a href="#" className="text-primary" title="Edit"
-                                                            onClick={() => open(f)}>
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                open(f);
+                                                            }}>
                                                             <i className="mdi mdi-pencil font-size-18"></i>
                                                         </a>
                                                         <a href="#" className="text-danger" title="Delete">

@@ -6,7 +6,9 @@ import AddNewButton from '../components/Common/AddNewButton';
 import { getCustomerById } from '../utils/localStorage';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 import AddEditInspectionPoint from '../components/CustomerDetails/InspectionPoint/AddEditInspectionPoint/AddEditInspectionPoint';
+import ViewInspectionPoint from '../components/CustomerDetails/InspectionPoint/ViewInspectionPoint/ViewInspectionPoint';
 import useAddEditInspectionPoint from '../components/CustomerDetails/InspectionPoint/AddEditInspectionPoint/useAddEditInspectionPoint';
+import useViewInspectionPoint from '../components/CustomerDetails/InspectionPoint/ViewInspectionPoint/useViewInspectionPoint';
 
 const InspectionPoints = () => {
     const { setPageSubHeader } = usePageSubHeader();
@@ -17,6 +19,7 @@ const InspectionPoints = () => {
     // Use the inspectionPoints array from mockData
     const [inspectionPoints, setInspectionPointsState] = useState(getInspectionPointsByCustomerId(customerId));
     const { isOpen, formData, errors, isSaving, open, close, onUpdateFieldHandle, onSaveHandle } = useAddEditInspectionPoint();
+    const view = useViewInspectionPoint();
 
     const getServiceAddress = (areaId) => {
         const area = areas.find((a) => a.id === areaId);
@@ -80,6 +83,12 @@ const InspectionPoints = () => {
                 customerId={customerId}
             />
 
+            <ViewInspectionPoint
+                isOpen={view.isOpen}
+                data={view.data}
+                onClose={view.close}
+            />
+
             <div className="row">
                 <div className="col-lg-12">
                     <div className="card">
@@ -140,10 +149,18 @@ const InspectionPoints = () => {
                                                 <td>{ip.typeCategory || '-'}</td>
                                                 <td>
                                                     <div className="d-flex gap-3">
-                                                        <a href="#" className="text-success" title="View">
+                                                        <a href="#" className="text-success" title="View"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                view.open(ip);
+                                                            }}>
                                                             <i className="mdi mdi-eye font-size-18"></i>
                                                         </a>
-                                                        <a href="#" className="text-primary" title="Edit">
+                                                        <a href="#" className="text-primary" title="Edit"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                open(ip);
+                                                            }}>
                                                             <i className="mdi mdi-pencil font-size-18"></i>
                                                         </a>
                                                         <a href="#" className="text-danger" title="Delete">
