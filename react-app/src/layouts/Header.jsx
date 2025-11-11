@@ -414,8 +414,6 @@ const Header = () => {
                             type="button"
                             className="dropdown-item text-center text-primary fw-semibold"
                             onClick={() => {
-                              console.log('Header: Navigating with search query:', searchQuery);
-                              // Navigate with query param
                               navigate(`/search-results?companyName=${encodeURIComponent(searchQuery)}`);
                               setShowSearchDropdown(false);
                             }}

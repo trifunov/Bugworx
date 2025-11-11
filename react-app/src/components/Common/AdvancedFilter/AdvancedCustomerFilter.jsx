@@ -24,7 +24,7 @@ const AdvancedCustomerFilter = ({
     <>
       {/* Offcanvas */}
       <div
-        className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`}
+        className="offcanvas offcanvas-end show"
         tabIndex="-1"
         style={{ width: '500px', maxWidth: '90vw' }}
       >
@@ -117,7 +117,7 @@ const AdvancedCustomerFilter = ({
           </div>
         </div>
       </div>
-      {isOpen && <div className="offcanvas-backdrop fade show" onClick={onClose}></div>}
+      <div className="offcanvas-backdrop fade show" onClick={onClose}></div>
     </>
   );
 };

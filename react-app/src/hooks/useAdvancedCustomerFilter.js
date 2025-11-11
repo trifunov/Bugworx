@@ -89,17 +89,13 @@ const useAdvancedCustomerFilter = (data = { customers: [], leads: [], prospects:
    * Apply filters - sets appliedFilters to current filters
    */
   const applyFilters = () => {
-    console.log('Hook: applyFilters called, current filters:', filters);
-    console.log('Hook: companyName filter specifically:', filters.companyName);
     setAppliedFilters({ ...filters });
-    console.log('Hook: appliedFilters will be set to:', filters);
   };
 
   /**
    * Apply specific filters directly (for URL params)
    */
   const applyFiltersDirectly = (filtersToApply) => {
-    console.log('Hook: applyFiltersDirectly called with:', filtersToApply);
     setFilters(filtersToApply);
     setAppliedFilters(filtersToApply);
   };

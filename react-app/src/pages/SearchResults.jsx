@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import AdvancedCustomerFilter from '../components/Common/AdvancedFilter/AdvancedCustomerFilter';
 import useAdvancedCustomerFilter from '../hooks/useAdvancedCustomerFilter';
@@ -22,8 +22,6 @@ const SearchResults = () => {
 
   // Load filters from URL params - runs on mount and when URL params change
   useEffect(() => {
-    console.log('SearchResults: URL params changed', searchParams.toString());
-
     // Start with initial filter structure
     const filtersFromUrl = {
       // Customer Info
@@ -101,17 +99,12 @@ const SearchResults = () => {
       });
     }
 
-    console.log('SearchResults: Final filters from URL', filtersFromUrl);
-
     // Apply filters directly - this sets both filters and appliedFilters atomically
     advancedFilter.applyFiltersDirectly(filtersFromUrl);
-    console.log('SearchResults: Filters applied directly');
-  }, [searchParams]);
+  }, [searchParams, advancedFilter]);
 
-  // Compute results: always use filtered results from the hook
-  const results = useMemo(() => {
-    return advancedFilter.filteredResults;
-  }, [advancedFilter.filteredResults]);
+  // Use filtered results directly from the hook (already memoized)
+  const results = advancedFilter.filteredResults;
 
   // Calculate counts
   const counts = {
@@ -175,6 +168,7 @@ const SearchResults = () => {
                       <button
                         className="btn btn-link btn-sm p-0 ms-2"
                         onClick={advancedFilter.clearFilters}
+                        aria-label="Clear all filters"
                       >
                         Clear all
                       </button>
@@ -186,6 +180,7 @@ const SearchResults = () => {
                 <button
                   className="btn btn-sm btn-primary"
                   onClick={advancedFilter.open}
+                  aria-label="Open advanced filter panel"
                 >
                   <i className="mdi mdi-filter-variant me-1"></i>
                   Refine Filters
