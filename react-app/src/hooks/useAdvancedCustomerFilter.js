@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 /**
  * Hook for managing advanced global filter state and filtering logic
@@ -136,7 +136,7 @@ const useAdvancedCustomerFilter = (data = { customers: [], leads: [], prospects:
    * Generic filter function that works for customers, leads, and prospects
    * Uses appliedFilters instead of filters
    */
-  const filterEntity = (entity, entityType) => {
+  const filterEntity = useCallback((entity, entityType) => {
     // Customer Info filters
     if (appliedFilters.firstName) {
       const contactName = entityType === 'lead' ? entity.name : (entity.billingContact?.name || '');
@@ -259,7 +259,7 @@ const useAdvancedCustomerFilter = (data = { customers: [], leads: [], prospects:
     }
 
     return true;
-  };
+  }, [appliedFilters]);
 
   /**
    * Filter all entity types and combine results
@@ -292,7 +292,7 @@ const useAdvancedCustomerFilter = (data = { customers: [], leads: [], prospects:
         ...filteredProspects.map(p => ({ ...p, entityType: 'prospect' })),
       ]
     };
-  }, [customers, leads, prospects, appliedFilters, hasActiveFilters]);
+  }, [customers, leads, prospects, hasActiveFilters, filterEntity]);
 
   /**
    * Get count of active filters (based on applied filters)
