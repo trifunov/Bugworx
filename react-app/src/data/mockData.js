@@ -14,7 +14,14 @@ export const customers = [
     instructions: 'Please call before arrival',
     primaryNote: 'Regular monthly service',
     registrationNum: 'REG-2024-001',
-    billingContact: { name: 'John Smith', email: 'john@example.com', phone: '555-0101' },
+    billingContact: {
+      firstName: 'John',
+      middleName: '',
+      lastName: 'Smith',
+      email: 'john@example.com',
+      alternateEmails: ['j.smith@personal.com'],
+      phones: [{ type: 'mobile', number: '+15550101' }]
+    },
     billingAddress: { street: '123 Main St', city: 'Springfield', state: 'IL', zip: '62701' }
   },
   {
@@ -30,7 +37,17 @@ export const customers = [
     instructions: 'Service after hours only',
     primaryNote: 'Quarterly inspections required',
     registrationNum: 'REG-2024-002',
-    billingContact: { name: 'Sarah Johnson', email: 'sarah@jcp.com', phone: '555-0102' },
+    billingContact: {
+      firstName: 'Sarah',
+      middleName: '',
+      lastName: 'Johnson',
+      email: 'sarah@jcp.com',
+      alternateEmails: ['sjohnson@company.com'],
+      phones: [
+        { type: 'mobile', number: '+15550102' },
+        { type: 'landline', number: '+15550199' }
+      ]
+    },
     billingAddress: { street: '456 Business Blvd', city: 'Springfield', state: 'IL', zip: '62702' }
   },
   {
@@ -46,7 +63,14 @@ export const customers = [
     instructions: 'Service before 10 AM',
     primaryNote: 'Health inspection compliance',
     registrationNum: 'REG-2024-003',
-    billingContact: { name: 'Mike Chen', email: 'mike@drg.com', phone: '555-0103' },
+    billingContact: {
+      firstName: 'Mike',
+      middleName: '',
+      lastName: 'Chen',
+      email: 'mike@drg.com',
+      alternateEmails: [],
+      phones: [{ type: 'mobile', number: '+15550103' }]
+    },
     billingAddress: { street: '789 Restaurant Row', city: 'Springfield', state: 'IL', zip: '62703' }
   }
 ];

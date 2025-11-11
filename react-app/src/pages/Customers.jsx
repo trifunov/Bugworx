@@ -36,25 +36,16 @@ const Customers = () => {
     id: customer?.id || 0,
     name: customer?.name || '',
     customerType: customer?.customerType === 1 ? 'Residential' : (customer?.customerType === 2 ? 'Commercial' : ''),
-    primaryContactPerson: customer?.billingContact?.name || '',
-    jobTitle: customer?.billingContact?.jobTitle || '',
-    email: customer?.billingContact?.email || '',
-    phone: customer?.billingContact?.phone || '',
+    billingContact: customer?.billingContact || {
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      email: '',
+      alternateEmails: [],
+      phones: [{ type: 'mobile', number: '' }]
+    },
     preferredContactMethod: customer?.preferredContactMethod || '',
     customerStatus: customer?.isActive ? 'Active' : 'Inactive'
-  });
-
-  const mapFormToCustomer = (data) => ({
-    name: data.name,
-    customerType: data.customerType === 'Residential' ? 1 : 2,
-    isActive: data.customerStatus === 'Active',
-    preferredContactMethod: data.preferredContactMethod || '',
-    billingContact: {
-      name: data.primaryContactPerson || '',
-      email: data.email || '',
-      phone: data.phone || '',
-      jobTitle: data.jobTitle || ''
-    }
   });
 
   return (
@@ -124,8 +115,12 @@ const Customers = () => {
                         </td>
                         <td>
                           <div>
-                            <div className="fw-medium">{customer.billingContact?.name}</div>
-                            <div className="text-muted font-size-12">{customer.billingContact?.email}</div>
+                            <div className="fw-medium">
+                              {customer.billingContact?.firstName && customer.billingContact?.lastName
+                                ? `${customer.billingContact.firstName} ${customer.billingContact.lastName}`
+                                : customer.billingContact?.name || '-'}
+                            </div>
+                            <div className="text-muted font-size-12">{customer.billingContact?.email || '-'}</div>
                           </div>
                         </td>
                         <td>

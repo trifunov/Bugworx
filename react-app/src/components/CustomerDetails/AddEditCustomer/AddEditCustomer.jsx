@@ -1,3 +1,5 @@
+import ContactFields from '../../Common/ContactFields/ContactFields';
+
 const AddEditCustomer = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave }) => {
     if (!isOpen) return null;
 
@@ -6,16 +8,24 @@ const AddEditCustomer = ({ isOpen, formData, errors, isSaving, onUpdateField, on
         onSave();
     };
 
+    // Handle updates to nested billingContact fields
+    const handleContactFieldUpdate = (field, value) => {
+        onUpdateField('billingContact', {
+            ...(formData.billingContact || {}),
+            [field]: value
+        });
+    };
+
     return (
         <>
-            <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden' }}>
+            <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden', width: '600px', maxWidth: '90vw' }}>
                 <div className="offcanvas-header">
                     <h5 className="offcanvas-title">
                         {formData.id && formData.id !== 0 ? 'Edit Customer' : 'Add Customer'}
                     </h5>
-                    <button type="button" className="btn-close" onClick={onClose}></button>
+                    <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
                 </div>
-                <div className="offcanvas-body">
+                <div className="offcanvas-body offcanvas-scrollable">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Customer Name</label>
@@ -51,58 +61,20 @@ const AddEditCustomer = ({ isOpen, formData, errors, isSaving, onUpdateField, on
                             {errors.customerType && <div className="invalid-feedback">{errors.customerType}</div>}
                         </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="address" className="form-label">Primary Contact Person</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.primaryContactPerson ? 'is-invalid' : ''}`}
-                                id="primaryContactPerson"
-                                value={formData.primaryContactPerson || ''}
-                                onChange={(e) => onUpdateField('primaryContactPerson', e.target.value)}
-                                disabled={isSaving}
-                            />
-                            {errors.primaryContactPerson && <div className="invalid-feedback">{errors.primaryContactPerson}</div>}
-                        </div>
+                        <h6 className="mt-4 mb-3 text-uppercase text-muted" style={{ fontSize: '13px', letterSpacing: '0.08em' }}>
+                            Billing Contact Information
+                        </h6>
 
-                        <div className="mb-3">
-                            <label htmlFor="address" className="form-label">Job Title / Role</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.jobTitle ? 'is-invalid' : ''}`}
-                                id="jobTitle"
-                                value={formData.jobTitle || ''}
-                                onChange={(e) => onUpdateField('jobTitle', e.target.value)}
-                                disabled={isSaving}
-                            />
-                        </div>
+                        <ContactFields
+                            formData={formData.billingContact || {}}
+                            errors={errors}
+                            onUpdateField={handleContactFieldUpdate}
+                            isSaving={isSaving}
+                            showMiddleName={true}
+                            prefix="billingContact_"
+                        />
 
-                        <div className="mb-3">
-                            <label htmlFor="address" className="form-label">Email</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                                id="email"
-                                value={formData.email || ''}
-                                onChange={(e) => onUpdateField('email', e.target.value)}
-                                disabled={isSaving}
-                            />
-                            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="address" className="form-label">Phone / Mobile number</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
-                                id="phone"
-                                value={formData.phone || ''}
-                                onChange={(e) => onUpdateField('phone', e.target.value)}
-                                disabled={isSaving}
-                            />
-                            {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-                        </div>
-
-                        <div className="mb-3">
+                        <div className="mb-3 mt-4">
                             <label htmlFor="preferredContactMethod" className="form-label">Preferred contact method</label>
                             <select
                                 className={`form-select ${errors.preferredContactMethod ? 'is-invalid' : ''}`}
