@@ -95,7 +95,6 @@ const AdvancedCustomerFilter = ({
               className="btn btn-success"
               onClick={() => {
                 onApply();
-                onClose();
               }}
             >
               Apply Filters
