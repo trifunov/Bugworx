@@ -18,7 +18,7 @@ import ServiceAddresses from './pages/ServiceAddresses';
 import Appointments from './pages/Appointments';
 import Scheduler from './pages/Scheduler';
 import Technicians from './pages/Technicians';
-import Inventory from './pages/Inventory';
+import Inventory from './pages/inventory/Inventory';
 import Routing from './pages/Routing';
 import Billing from './pages/Billing';
 import Reports from './pages/Reports';

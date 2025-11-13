@@ -2,7 +2,8 @@ import { createContext, useContext, useState } from 'react';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import useAddEditProspect from '../components/CustomerDetails/Prospects/AddEditProspect/useAddEditProspect';
-import { getCustomers, getLeads, getProspects } from '../utils/localStorage';
+import useAddEditInventory from '../components/InventoryDetails/useAddEditInventory'
+import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
 
@@ -18,10 +19,12 @@ export const EditableFormProvider = ({ children }) => {
     const addEditCustomer = useAddEditCustomer();
     const addEditLead = useAddEditLead();
     const addEditProspect = useAddEditProspect();
+    const addEditInventory = useAddEditInventory();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
     const [prospects, setProspectsState] = useState(getProspects());
+    const [inventory, setInventoryState] = useState(getInventory());
 
     const loadCustomers = () => {
         const customers = getCustomers();
@@ -32,25 +35,34 @@ export const EditableFormProvider = ({ children }) => {
         const leads = getLeads();
         setLeadsState(leads);
     };
-
+    
     const loadProspects = () => {
         const prospects = getProspects();
         setProspectsState(prospects);
     };
 
+    const loadInventory = () => {
+        const inventory = getInventory();
+        setInventoryState(inventory);
+    }
+
     const value = {
         addEditCustomer,
         addEditLead,
         addEditProspect,
+        addEditInventory,
         loadCustomers,
         loadLeads,
         loadProspects,
+        loadInventory,
         customers,
         leads,
         prospects,
+        inventory,
         setCustomersState,
         setLeadsState,
-        setProspectsState
+        setProspectsState,
+        setInventoryState
     };
 
     return <EditableFormContext.Provider value={value}>{children}</EditableFormContext.Provider>;
