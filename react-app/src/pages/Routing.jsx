@@ -123,6 +123,7 @@ const Routing = () => {
         { label: 'Routing', path: '/routing' }
       ]
     });
+    console.log('Initializing mock data in local storage...');
     // Initialize all mock data
     initializeStorage({
       appointments: initialAppointments,
