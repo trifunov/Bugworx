@@ -44,7 +44,7 @@ export const EditableFormProvider = ({ children }) => {
     const loadInventory = () => {
         const inventory = getInventory();
         setInventoryState(inventory);
-    }
+    };
 
     const value = {
         addEditCustomer,

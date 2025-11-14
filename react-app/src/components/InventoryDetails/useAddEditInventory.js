@@ -24,6 +24,7 @@ const saveInventoryItemApi = async (itemData) => {
         const updatedInventory = [...inventory, savedItem];
         setInventory(updatedInventory);
     }
+    return savedItem;
 };
 
 
