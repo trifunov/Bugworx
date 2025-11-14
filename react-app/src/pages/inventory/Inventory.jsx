@@ -86,7 +86,7 @@ const Inventory = () => {
         <td>
           <div className="d-flex gap-3">
             <a className="text-success"  href="#" title="Restock" onClick={(e) => { e.preventDefault(); setSelectedItem(item); setShowRestockModal(true); }} disabled={!item.trackStock}><i className="mdi mdi-package-variant font-size-18"></i></a>
-            <a className="text-primary" href="#" title="Edit" onClick={(e) => { e.preventDefault(); addEditInventory.onOpenEdit(item); }}><i className="mdi mdi-pencil font-size-18"></i></a>
+            <a className="text-primary" href="#" title="Edit" onClick={(e) => { e.preventDefault(); addEditInventory.open(item); }}><i className="mdi mdi-pencil font-size-18"></i></a>
             <a className="text-danger" href="#" title="Delete" onClick={(e) => { e.preventDefault(); setSelectedItem(item); setShowDeleteModal(true); }}><i className="mdi mdi-delete font-size-18"></i></a>
           </div>
         </td>

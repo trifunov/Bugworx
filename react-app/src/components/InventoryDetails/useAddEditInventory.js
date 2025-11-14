@@ -1,34 +1,10 @@
 import { useState } from 'react';
 import { getInventory, setInventory } from '../../utils/localStorage';
+import { save, updateField } from '../../utils/addEditFormUtils';
 
-const randomint = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+export const useAddEditInventory = () => {
+    const [isOpen, setIsOpen] = useState(false);
 
-// This would typically be in a separate API service file
-const saveInventoryItemApi = async (itemData) => {
-    console.log('Saving item:', itemData);
-
-    // Read the current inventory, update it, and save it back to localStorage
-    const inventory = getInventory() || [];
-    const isExisting = itemData.id != null;
-    let savedItem;
-    console.log('Is existing item:', isExisting);
-    if (isExisting) {
-        const updatedInventory = inventory.map(item =>
-            item.id === itemData.id ? itemData : item
-        );
-        setInventory(updatedInventory);
-        savedItem = itemData;
-    } else {
-        // Assign a new ID for new items
-        savedItem = { ...itemData, id: Date.now() };
-        const updatedInventory = [...inventory, savedItem];
-        setInventory(updatedInventory);
-    }
-    return savedItem;
-};
-
-
-export const useAddEditInventory = (onSuccess) => {
     const initialFormData = {
         id: null,
         itemName: "",
@@ -76,19 +52,57 @@ export const useAddEditInventory = (onSuccess) => {
         notes: ""
     };
 
-    const [isOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
 
-    const open = () => {
-        setFormData(initialFormData);
-        setErrors({});
-        setIsOpen(true);
-    };
-
-    const onOpenEdit = (item) => {
-        setFormData({ ...initialFormData, ...item });
+    const open = (item) => {
+        setFormData({
+            id: item?.id || null,
+            itemName: item?.itemName ||  "", 
+            sku: item?.sku || "",
+            itemType: item?.itemType || "",
+            category: item?.category || "",
+            subCategory: item?.subCategory || "",
+            description: item?.description || "",
+            manufacturer: item?.manufacturer || "",
+            supplier: item?.supplier || "",
+            active: item?.active !== undefined ? item.active : true,
+            // Chemical
+            epa: item?.epa || "",
+            activeIng: item?.activeIng || "",
+            concentration: item?.concentration || "",
+            formulationType: item?.formulationType || "",
+            hazardClassification: item?.hazardClassification || "",
+            sds: item?.sds || null,
+            sdsUrl: item?.sdsUrl || "",
+            expiry: item?.expiry || "",
+            batchEnabled: item?.batchEnabled || false,
+            // Stock
+            trackStock: item?.trackStock !== undefined ? item.trackStock : true,
+            uom: item?.uom || "",
+            quantity: item?.quantity || "",
+            minStock: item?.minStock || "",
+            reorderPoint: item?.reorderPoint || "",
+            reorderQuantity: item?.reorderQuantity || "",
+            cost: item?.cost || "",
+            price: item?.price || "",
+            sellingPricePerUnit: item?.sellingPricePerUnit || "",
+            warehouseLocation: item?.warehouseLocation || "",
+            storageRequirements: item?.storageRequirements || "",
+            barcode: item?.barcode || "",
+            // Usage
+            assignedTo: item?.assignedTo || "",
+            defaultUsageUnit: item?.defaultUsageUnit || "",
+            trackPerSite: item?.trackPerSite || false,
+            returnable: item?.returnable || false,
+            serialized: item?.serialized || false,
+            negativeStock: item?.negativeStock || false,
+            // Admin
+            createdBy: item?.createdBy || "",
+            updatedBy: item?.updatedBy || "",
+            notes: item?.notes || ""
+        });
         setErrors({});
         setIsOpen(true);
     };
@@ -96,11 +110,7 @@ export const useAddEditInventory = (onSuccess) => {
     const close = () => {
         if (isSaving) return;
         setIsOpen(false);
-        // Delay resetting form until after the closing animation
-        setTimeout(() => {
-            setFormData(initialFormData);
-            setErrors({});
-        }, 300);
+        setFormData(initialFormData);
     };
 
     const onUpdateFieldHandle = (field, value) => {
@@ -115,7 +125,7 @@ export const useAddEditInventory = (onSuccess) => {
         }
     };
 
-    const validateForm = () => {
+    const validate = () => {
         const newErrors = {};
         if (!formData.itemName.trim()) {
             newErrors.itemName = 'Item Name is required.';
@@ -135,30 +145,10 @@ export const useAddEditInventory = (onSuccess) => {
         return newErrors;
     };
 
-    const onSaveHandle = async (handler) => {
-        const validationErrors = validateForm();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
-
-        setIsSaving(true);
-        setErrors({});
-
-        try {
-            const savedItem = await saveInventoryItemApi(formData);
-            if (onSuccess) {
-                onSuccess(savedItem); // Notify parent component of success
-            }
-            close();
-        } catch (error) {
-            console.error('Save failed:', error);
-            setErrors({ submit: error.message || 'Could not save the item. Please try again.' });
-        } finally {
-            setIsSaving(false);
-            handler(formData); // Notify context to reload inventory
-        }
-    };
+      const onSaveHandle = async (onSaveCallback) => {
+           save(formData, onSaveCallback, setIsSaving, close, setErrors, validate);
+       };
+   
 
     return {
         // State
@@ -168,7 +158,6 @@ export const useAddEditInventory = (onSuccess) => {
         isSaving,
         // Actions
         open,
-        onOpenEdit,
         close,
         onUpdateFieldHandle,
         onSaveHandle,

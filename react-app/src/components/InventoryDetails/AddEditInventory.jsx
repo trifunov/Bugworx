@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const AccordionItem = ({ id, title, children, isOpen, onToggle, className,  }) => (
+const AccordionItem = ({ id, title, children, isOpen, onToggle, className }) => (
      <div className={`card mb-1 shadow-none ${className || ''}`}>
         <a
             href={`#collapse-${id}`}

@@ -5,7 +5,7 @@ const itemsPerPage = 10;
 
 export const useInventory = () => {
     // --- Core State ---
-    const [inventory, setInventory] = useState(() => getInventory() || []);
+    const [inventory, setInventory] = useState(getInventory() || []);
 
     // --- UI State (Filters, Sorting, Pagination, Modals) ---
     const [activeView, setActiveView] = useState('all');
@@ -88,13 +88,19 @@ export const useInventory = () => {
         setCurrentPage(1);
     };
 
-    const handleSave = (savedItem) => {
-        console.log('Saving item:', savedItem);
+      const handleSave = (savedItem) => {
         setInventory(currentInventory => {
-            const itemExists = currentInventory.some(item => item.id === savedItem.id);
-            return itemExists
-                ? currentInventory.map(item => item.id === savedItem.id ? savedItem : item)
-                : [...currentInventory, savedItem];
+            if (!savedItem.id) {
+                const newItem = { ...savedItem, id: `${Date.now()}` };
+                return [...currentInventory, newItem];
+            } else {
+                if(currentInventory.find(item => item.id === savedItem.id) == null) {
+                    return [...currentInventory, savedItem];
+                }
+                 return currentInventory.map(item =>
+                    item.id === savedItem.id ? savedItem : item
+                );
+            }
         });
     };
 
