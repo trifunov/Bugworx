@@ -33,7 +33,7 @@ export const useAddEditInventory = () => {
         minStock: "",
         reorderPoint: "",
         reorderQuantity: "",
-        cost: "",
+        costPerUnit: "",
         price: "",
         sellingPricePerUnit: "",
         warehouseLocation: "",
