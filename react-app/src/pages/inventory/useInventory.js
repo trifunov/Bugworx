@@ -58,7 +58,8 @@ export const useInventory = () => {
             }
 
             if (typeof valA === 'string') return valA.localeCompare(valB) * direction;
-            if (typeof valA === 'number' || typeof valA === 'boolean') return (valA - valB) * direction;
+            if (typeof valA === 'boolean') return (valA === valB ? 0 : valA ? -1 : 1) * direction;
+            if (typeof valA === 'number') return (valA - valB) * direction;
             return 0;
         });
 
