@@ -27,12 +27,12 @@ const useContactFields = (formData, setFormData, errors, setErrors) => {
     }));
 
     // Clear error for this field
-    if (errors[`alternateEmail_${index}`]) {
-      const newErrors = { ...errors };
+    setErrors(prev => {
+      const newErrors = { ...prev };
       delete newErrors[`alternateEmail_${index}`];
-      setErrors(newErrors);
-    }
-  }, [setFormData, errors, setErrors]);
+      return newErrors;
+    });
+  }, [setFormData, setErrors]);
 
   // Update alternate email at specific index
   const updateEmail = useCallback((index, value) => {
@@ -46,12 +46,12 @@ const useContactFields = (formData, setFormData, errors, setErrors) => {
     });
 
     // Clear error when user types
-    if (errors[`alternateEmail_${index}`]) {
-      const newErrors = { ...errors };
+    setErrors(prev => {
+      const newErrors = { ...prev };
       delete newErrors[`alternateEmail_${index}`];
-      setErrors(newErrors);
-    }
-  }, [setFormData, errors, setErrors]);
+      return newErrors;
+    });
+  }, [setFormData, setErrors]);
 
   // Add a new phone number
   const addPhone = useCallback(() => {
@@ -69,12 +69,12 @@ const useContactFields = (formData, setFormData, errors, setErrors) => {
     }));
 
     // Clear error for this field
-    if (errors[`phone_${index}`]) {
-      const newErrors = { ...errors };
+    setErrors(prev => {
+      const newErrors = { ...prev };
       delete newErrors[`phone_${index}`];
-      setErrors(newErrors);
-    }
-  }, [setFormData, errors, setErrors]);
+      return newErrors;
+    });
+  }, [setFormData, setErrors]);
 
   // Update phone at specific index
   const updatePhone = useCallback((index, phoneData) => {
@@ -87,13 +87,13 @@ const useContactFields = (formData, setFormData, errors, setErrors) => {
       };
     });
 
-    // Clear error when user types
-    if (errors[`phone_${index}`]) {
-      const newErrors = { ...errors };
+    // Clear error when user types 
+    setErrors(prev => {
+      const newErrors = { ...prev };
       delete newErrors[`phone_${index}`];
-      setErrors(newErrors);
-    }
-  }, [setFormData, errors, setErrors]);
+      return newErrors;
+    });
+  }, [setFormData, setErrors]);
 
   // Validate contact data
   const validateContact = useCallback(() => {
@@ -106,13 +106,17 @@ const useContactFields = (formData, setFormData, errors, setErrors) => {
 
   // Initialize contact fields with defaults if needed
   const initializeContactFields = useCallback(() => {
-    if (!formData.alternateEmails) {
-      setFormData(prev => ({ ...prev, alternateEmails: [] }));
-    }
-    if (!formData.phones) {
-      setFormData(prev => ({ ...prev, phones: [{ type: 'mobile', number: '' }] }));
-    }
-  }, [formData, setFormData]);
+    setFormData(prev => {
+      const updates = {};
+      if (!prev.alternateEmails) {
+        updates.alternateEmails = [];
+      }
+      if (!prev.phones) {
+        updates.phones = [{ type: 'mobile', number: '' }];
+      }
+      return Object.keys(updates).length > 0 ? { ...prev, ...updates } : prev;
+    });
+  }, [setFormData]);
 
   return {
     addEmail,

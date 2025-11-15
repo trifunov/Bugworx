@@ -7,8 +7,19 @@
  */
 export const validateEmail = (email) => {
   if (!email) return false;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.trim());
+
+  const trimmedEmail = email.trim();
+
+  if (trimmedEmail.length > 254) return false;
+
+  const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(trimmedEmail)) return false;
+
+  const [localPart] = trimmedEmail.split('@');
+  if (localPart.length > 64) return false;
+
+  return true;
 };
 
 /**

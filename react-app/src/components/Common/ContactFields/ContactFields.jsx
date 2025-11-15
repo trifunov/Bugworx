@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import EmailRow from './EmailRow';
 import PhoneRow from './PhoneRow';
-import useContactFields from './useContactFields';
 
 /**
  * Reusable ContactFields component for managing contact information
@@ -26,16 +25,6 @@ const ContactFields = ({
   const [localFormData, setLocalFormData] = React.useState(formData);
   const [localErrors, setLocalErrors] = React.useState(errors);
 
-  const {
-    addEmail,
-    removeEmail,
-    updateEmail,
-    addPhone,
-    removePhone,
-    updatePhone,
-    initializeContactFields
-  } = useContactFields(localFormData, setLocalFormData, localErrors, setLocalErrors);
-
   // Sync local state with parent formData
   useEffect(() => {
     setLocalFormData(formData);
@@ -48,8 +37,20 @@ const ContactFields = ({
 
   // Initialize contact fields on mount
   useEffect(() => {
-    initializeContactFields();
-  }, []);
+    const updates = {};
+    if (!formData.alternateEmails) {
+      updates.alternateEmails = [];
+    }
+    if (!formData.phones) {
+      updates.phones = [{ type: 'mobile', number: '' }];
+    }
+    if (Object.keys(updates).length > 0) {
+      Object.entries(updates).forEach(([key, value]) => {
+        onUpdateField(key, value);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - run once on mount
 
   // Handle field changes and propagate to parent
   const handleFieldChange = (field, value) => {
@@ -60,46 +61,104 @@ const ContactFields = ({
 
   // Handle email updates
   const handleUpdateEmail = (index, value) => {
-    updateEmail(index, value);
-    // Update parent with new alternateEmails array
+    // Compute new array first to avoid race condition
     const newEmails = [...(localFormData.alternateEmails || [])];
     newEmails[index] = value;
+
+    // Update local state
+    setLocalFormData(prev => ({ ...prev, alternateEmails: newEmails }));
+
+    // Update parent state
     onUpdateField('alternateEmails', newEmails);
+
+    // Clear error when user types
+    if (localErrors[`alternateEmail_${index}`]) {
+      const newErrors = { ...localErrors };
+      delete newErrors[`alternateEmail_${index}`];
+      setLocalErrors(newErrors);
+    }
   };
 
   // Handle phone updates
   const handleUpdatePhone = (index, phoneData) => {
-    updatePhone(index, phoneData);
-    // Update parent with new phones array
+    // Compute new array first to avoid race condition
     const newPhones = [...(localFormData.phones || [])];
     newPhones[index] = phoneData;
+
+    // Update local state
+    setLocalFormData(prev => ({ ...prev, phones: newPhones }));
+
+    // Update parent state
     onUpdateField('phones', newPhones);
+
+    // Clear error when user types
+    if (localErrors[`phone_${index}`]) {
+      const newErrors = { ...localErrors };
+      delete newErrors[`phone_${index}`];
+      setLocalErrors(newErrors);
+    }
   };
 
   // Handle remove email
   const handleRemoveEmail = (index) => {
+    // Compute new array first to avoid race condition
     const newEmails = (localFormData.alternateEmails || []).filter((_, i) => i !== index);
-    removeEmail(index);
+
+    // Update local state
+    setLocalFormData(prev => ({ ...prev, alternateEmails: newEmails }));
+
+    // Update parent state
     onUpdateField('alternateEmails', newEmails);
+
+    // Clear error for this field
+    if (localErrors[`alternateEmail_${index}`]) {
+      const newErrors = { ...localErrors };
+      delete newErrors[`alternateEmail_${index}`];
+      setLocalErrors(newErrors);
+    }
   };
 
   // Handle remove phone
   const handleRemovePhone = (index) => {
+    // Compute new array first to avoid race condition
     const newPhones = (localFormData.phones || []).filter((_, i) => i !== index);
-    removePhone(index);
+
+    // Update local state
+    setLocalFormData(prev => ({ ...prev, phones: newPhones }));
+
+    // Update parent state
     onUpdateField('phones', newPhones);
+
+    // Clear error for this field
+    if (localErrors[`phone_${index}`]) {
+      const newErrors = { ...localErrors };
+      delete newErrors[`phone_${index}`];
+      setLocalErrors(newErrors);
+    }
   };
 
   // Handle add email
   const handleAddEmail = () => {
-    addEmail();
-    onUpdateField('alternateEmails', [...(localFormData.alternateEmails || []), '']);
+
+    const newEmails = [...(localFormData.alternateEmails || []), ''];
+
+    // Update local state
+    setLocalFormData(prev => ({ ...prev, alternateEmails: newEmails }));
+
+    // Update parent state
+    onUpdateField('alternateEmails', newEmails);
   };
 
   // Handle add phone
   const handleAddPhone = () => {
-    addPhone();
-    onUpdateField('phones', [...(localFormData.phones || []), { type: 'mobile', number: '' }]);
+    // Compute new array first to avoid race condition
+    const newPhones = [...(localFormData.phones || []), { type: 'mobile', number: '' }];
+
+    // Update local state
+    setLocalFormData(prev => ({ ...prev, phones: newPhones }));
+
+    // Update parent state
+    onUpdateField('phones', newPhones);
   };
 
   return (

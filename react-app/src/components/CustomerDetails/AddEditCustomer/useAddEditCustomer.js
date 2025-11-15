@@ -30,10 +30,31 @@ const useAddEditCustomer = () => {
 
     // If old format (name, email, phone), migrate to new format
     if (billingContact.name && !billingContact.firstName) {
-      const nameParts = billingContact.name.split(' ');
-      billingContact.firstName = nameParts[0] || '';
-      billingContact.lastName = nameParts.slice(1).join(' ') || '';
-      billingContact.middleName = '';
+
+      const nameParts = billingContact.name.trim().split(/\s+/);
+
+      if (nameParts.length === 1) {
+
+        billingContact.firstName = '';
+        billingContact.lastName = nameParts[0];
+        billingContact.middleName = '';
+        console.warn('Single-word name detected for customer:', customer?.id, 'Name:', billingContact.name);
+      } else if (nameParts.length === 2) {
+        billingContact.firstName = nameParts[0];
+        billingContact.lastName = nameParts[1];
+        billingContact.middleName = '';
+      } else if (nameParts.length === 3) {
+        billingContact.firstName = nameParts[0];
+        billingContact.middleName = nameParts[1];
+        billingContact.lastName = nameParts[2];
+      } else {
+        billingContact.firstName = nameParts[0];
+        billingContact.middleName = nameParts.slice(1, -1).join(' ');
+        billingContact.lastName = nameParts[nameParts.length - 1];
+        console.warn('Complex name format detected for customer:', customer?.id, 'Original:', billingContact.name);
+      }
+
+      billingContact._migrated = true;
     }
 
     // Ensure arrays exist

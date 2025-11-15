@@ -1,5 +1,4 @@
 import React from 'react';
-import { validateEmail } from '../../../utils/contactValidation';
 
 const EmailRow = ({ value, onChange, onRemove, error, disabled }) => {
   const handleChange = (e) => {
