@@ -144,9 +144,9 @@ export const useAddEditInventory = () => {
                 newErrors.costPerUnit = 'Cost Per Unit must be a valid number.';
             }
         }
-        if (formData.price && formData.price.trim() !== "") {
-            if (isNaN(parseFloat(formData.price.trim()))) {
-                newErrors.price = 'Price must be a valid number.';
+        if (formData.sellingPricePerUnit && formData.sellingPricePerUnit.trim() !== "") {
+            if (isNaN(parseFloat(formData.sellingPricePerUnit.trim()))) {
+                newErrors.sellingPricePerUnit = 'Selling Price Per Unit must be a valid number.';
             }
         }
         // Validate reorderPoint and reorderQuantity if trackStock is true
