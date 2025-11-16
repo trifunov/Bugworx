@@ -90,14 +90,12 @@ export const useInventory = () => {
     const handleSort = (field, direction) => {
         setSortConfig(currentConfig => ({
             field,
-            direction: direction
-                ? direction
-                : (currentConfig.field === field && currentConfig.direction === 'asc' ? 'desc' : currentConfig.field === field ? 'asc' : currentConfig.direction)
+            direction: direction || (currentConfig.field === field && currentConfig.direction === 'asc' ? 'desc' : 'asc')
         }));
         setCurrentPage(1);
     };
 
-      const handleSave = (savedItem) => {
+    const handleSave = (savedItem) => {
         setInventory(currentInventory => {
             if (!savedItem.id) {
                 // New item: generate ID and add
@@ -130,15 +128,28 @@ export const useInventory = () => {
         setRestockQuantity(0);
     };
 
+    // Helper to escape CSV values
+    function escapeCSV(value) {
+        const str = value === undefined || value === null ? '' : String(value);
+        return `"${str.replace(/"/g, '""')}"`;
+    }
+
     const exportToCSV = () => {
         const headers = ['SKU', 'Item Name', 'Item Type', 'Category', 'Quantity', 'UOM', 'Cost Per Unit', 'Total Value', 'Supplier', 'Manufacturer', 'Active'];
         const rows = inventory.map(item => [
-            `"${item.sku || ''}"`, `"${item.itemName || ''}"`, `"${item.itemType || ''}"`, `"${item.category || ''}"`,
-            Number(item.quantity) || 0, `"${item.uom || ''}"`, Number(item.costPerUnit) || 0,
-            ((Number(item.quantity) || 0) * (Number(item.costPerUnit) || 0)).toFixed(2),
-            `"${item.supplier || ''}"`, `"${item.manufacturer || ''}"`, item.active ? 'Yes' : 'No'
+            escapeCSV(item.sku || ''),
+            escapeCSV(item.itemName || ''),
+            escapeCSV(item.itemType || ''),
+            escapeCSV(item.category || ''),
+            escapeCSV(Number(item.quantity) || 0),
+            escapeCSV(item.uom || ''),
+            escapeCSV(Number(item.costPerUnit) || 0),
+            escapeCSV(((Number(item.quantity) || 0) * (Number(item.costPerUnit) || 0)).toFixed(2)),
+            escapeCSV(item.supplier || ''),
+            escapeCSV(item.manufacturer || ''),
+            escapeCSV(item.active ? 'Yes' : 'No')
         ].join(','));
-        const csv = [headers.join(','), ...rows].join('\n');
+        const csv = [headers.map(escapeCSV).join(','), ...rows].join('\n');
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

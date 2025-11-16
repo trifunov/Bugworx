@@ -35,9 +35,9 @@ export const EditableFormProvider = ({ children }) => {
         const leads = getLeads();
         setLeadsState(leads);
     };
-    
     const loadProspects = () => {
         const prospects = getProspects();
+        setProspectsState(prospects);
         setProspectsState(prospects);
     };
 
