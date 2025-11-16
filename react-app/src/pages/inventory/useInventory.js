@@ -57,9 +57,16 @@ export const useInventory = () => {
                 valB = (Number(b.quantity) || 0) * (Number(b.costPerUnit) || 0);
             }
 
-            if (typeof valA === 'string') return valA.localeCompare(valB) * direction;
-            if (typeof valA === 'boolean') return (valA === valB ? 0 : valA ? -1 : 1) * direction;
-            if (typeof valA === 'number') return (valA - valB) * direction;
+            // Handle undefined/null values: sort them last in ascending, first in descending
+            const isNullishA = valA === undefined || valA === null;
+            const isNullishB = valB === undefined || valB === null;
+            if (isNullishA && isNullishB) return 0;
+            if (isNullishA) return 1 * direction;
+            if (isNullishB) return -1 * direction;
+
+            if (typeof valA === 'string' && typeof valB === 'string') return valA.localeCompare(valB) * direction;
+            if (typeof valA === 'boolean' && typeof valB === 'boolean') return (valA === valB ? 0 : valA ? -1 : 1) * direction;
+            if (typeof valA === 'number' && typeof valB === 'number') return (valA - valB) * direction;
             return 0;
         });
 
