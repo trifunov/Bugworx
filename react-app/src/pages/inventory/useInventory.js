@@ -94,7 +94,7 @@ export const useInventory = () => {
                 const newItem = { ...savedItem, id: `${Date.now()}` };
                 return [...currentInventory, newItem];
             } else {
-                if(currentInventory.find(item => item.id === savedItem.id) == null) {
+                if(!currentInventory.find(item => item.id === savedItem.id)) {
                     return [...currentInventory, savedItem];
                 }
                  return currentInventory.map(item =>
