@@ -141,6 +141,23 @@ export const useAddEditInventory = () => {
         if (formData.price && isNaN(parseFloat(formData.price))) {
             newErrors.price = 'Price must be a valid number.';
         }
+        // Validate reorderPoint and reorderQuantity if trackStock is true
+        if (formData.trackStock) {
+            if (
+                formData.reorderPoint === "" ||
+                isNaN(Number(formData.reorderPoint)) ||
+                Number(formData.reorderPoint) <= 0
+            ) {
+                newErrors.reorderPoint = 'Reorder Point must be a positive number.';
+            }
+            if (
+                formData.reorderQuantity === "" ||
+                isNaN(Number(formData.reorderQuantity)) ||
+                Number(formData.reorderQuantity) <= 0
+            ) {
+                newErrors.reorderQuantity = 'Reorder Quantity must be a positive number.';
+            }
+        }
         return newErrors;
     };
 
