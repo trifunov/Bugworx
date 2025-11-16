@@ -57,7 +57,6 @@ const Inventory = () => {
             breadcrumbs: [{ label: 'Inventory Management', path: '/inventory' }]
         });
     }, [setPageSubHeader]);
- 
 
     const renderRow = (item) => {
     const quantity = Number(item.quantity) || 0;
