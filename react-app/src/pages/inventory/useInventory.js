@@ -61,8 +61,8 @@ export const useInventory = () => {
             const isNullishA = valA === undefined || valA === null;
             const isNullishB = valB === undefined || valB === null;
             if (isNullishA && isNullishB) return 0;
-            if (isNullishA) return 1 * direction;
-            if (isNullishB) return -1 * direction;
+            if (isNullishA) return 1;
+            if (isNullishB) return -1;
 
             if (typeof valA === 'string' && typeof valB === 'string') return valA.localeCompare(valB) * direction;
             if (typeof valA === 'boolean' && typeof valB === 'boolean') return (valA === valB ? 0 : valA ? -1 : 1) * direction;
