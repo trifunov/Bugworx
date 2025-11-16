@@ -103,10 +103,12 @@ export const useInventory = () => {
                 const newItem = { ...savedItem, id: `${Date.now()}` };
                 return [...currentInventory, newItem];
             } else {
-                if(!currentInventory.find(item => item.id === savedItem.id)) {
-                    return [...currentInventory, savedItem];
+                const exists = currentInventory.some(item => item.id === savedItem.id);
+                if (!exists) {
+                    console.warn(`Attempted to update non-existent item with id: ${savedItem.id}`);
+                    return currentInventory;
                 }
-                 return currentInventory.map(item =>
+                return currentInventory.map(item =>
                     item.id === savedItem.id ? savedItem : item
                 );
             }
