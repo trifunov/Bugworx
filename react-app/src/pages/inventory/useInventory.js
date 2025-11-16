@@ -95,7 +95,7 @@ export const useInventory = () => {
         setCurrentPage(1);
     };
 
-      const handleSave = (savedItem) => {
+    const handleSave = (savedItem) => {
         setInventory(currentInventory => {
             if (!savedItem.id) {
                 // New item: generate ID and add
