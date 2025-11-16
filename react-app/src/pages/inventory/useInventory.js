@@ -87,8 +87,8 @@ export const useInventory = () => {
 
     const stats = useMemo(() => ({
         totalItems: inventory.length,
-        lowStockItems: inventory.filter(item => item.trackStock && (Number(item.quantity) || 0) <= (Number(item.reorderPoint) || 0)).length,
-        outOfStock: inventory.filter(item => item.trackStock && (Number(item.quantity) || 0) === 0).length,
+        lowStockItems: inventory.filter(item => item.trackStock && (Number(item.quantity) || 0) <= (Number(item.reorderPoint) || 0) && Number(item.reorderPoint) > 0).length,
+        outOfStock: inventory.filter(item => item.trackStock && (Number(item.quantity) || 0) === 0 && Number(item.reorderPoint) > 0).length,
         totalValue: inventory.reduce((sum, item) => sum + ((Number(item.quantity) || 0) * (Number(item.costPerUnit) || 0)), 0),
         categories: categories.length - 1
     }), [inventory, categories]);
