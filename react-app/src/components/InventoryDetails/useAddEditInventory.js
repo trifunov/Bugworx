@@ -122,6 +122,12 @@ export const useAddEditInventory = () => {
                 return newErrors;
             });
         }
+        
+        // In onUpdateFieldHandle for 'serialized'
+        if (field === 'serialized' && !value) {
+            setFormData(prev => ({ ...prev, serialized: value, barcode: '' }));
+            return;
+        }
     };
 
     const validate = () => {
