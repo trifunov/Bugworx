@@ -150,7 +150,7 @@ export const useInventory = () => {
     };
 
     const refreshInventory = () => {
-        paginatedInventory = getInventory() || [];
+        setInventory(getInventory() || []);
     };
 
     // Return all state and handlers needed by the UI
