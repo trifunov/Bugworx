@@ -268,17 +268,40 @@ const Inventory = () => {
                       <div className="d-flex justify-content-between"><span>Reorder Point:</span><strong>{selectedItem.reorderPoint || 0} {selectedItem.uom}</strong></div>
                     </div>
                   </div>
-                  <div className="mb-3"><label className="form-label">Restock Quantity *</label><input type="number" className="form-control" value={restockQuantity} onChange={(e) => setRestockQuantity(e.target.value)} min="1" placeholder="Enter quantity to add" /></div>
-                  {restockQuantity > 0 && (
+                  <div className="mb-3">
+                    <label className="form-label">Restock Quantity *</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={restockQuantity}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        // Allow empty string for controlled input, otherwise parse as number
+                        if (val === "") {
+                          setRestockQuantity("");
+                        } else {
+                          const num = Number(val);
+                          if (!isNaN(num) && num > 0 && Number.isFinite(num)) {
+                            setRestockQuantity(num);
+                          } else {
+                            setRestockQuantity("");
+                          }
+                        }
+                      }}
+                      min="1"
+                      placeholder="Enter quantity to add"
+                    />
+                  </div>
+                  {Number(restockQuantity) > 0 && (
                     <div className="alert alert-success">
                       <div className="d-flex justify-content-between"><span>New Stock Level:</span><strong>{Number(selectedItem.quantity || 0) + Number(restockQuantity)} {selectedItem.uom}</strong></div>
-                      <div className="d-flex justify-content-between"><span>Estimated Cost:</span><strong>${(restockQuantity * (selectedItem.costPerUnit || 0)).toFixed(2)}</strong></div>
+                      <div className="d-flex justify-content-between"><span>Estimated Cost:</span><strong>${(Number(restockQuantity) * (selectedItem.costPerUnit || 0)).toFixed(2)}</strong></div>
                     </div>
                   )}
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-light" onClick={() => { setShowRestockModal(false); setSelectedItem(null); setRestockQuantity(0); }}>Cancel</button>
-                  <button type="button" className="btn btn-success" onClick={handleRestock} disabled={!restockQuantity || restockQuantity <= 0}><i className="mdi mdi-package-variant me-1"></i>Confirm Restock</button>
+                  <button type="button" className="btn btn-success" onClick={handleRestock} disabled={Number(restockQuantity) <= 0 || isNaN(Number(restockQuantity))}><i className="mdi mdi-package-variant me-1"></i>Confirm Restock</button>
                 </div>
               </div>
             </div>
