@@ -141,18 +141,6 @@ export const useInventory = () => {
         window.URL.revokeObjectURL(url);
     };
 
-    const updateInventoryItem = (updatedItem) => {
-        setInventory(prev => prev.map(item => item.id === updatedItem.id ? updatedItem : item));
-    };
-
-    const addInventoryItem = (newItem) => {
-        setInventory(prev => [...prev, newItem]);
-    };
-
-    const refreshInventory = () => {
-        paginatedInventory = getInventory() || [];
-    };
-
     // Return all state and handlers needed by the UI
     return {
         paginatedInventory,
@@ -173,9 +161,6 @@ export const useInventory = () => {
         selectedItem, setSelectedItem,
         restockQuantity, setRestockQuantity,
         handleDeleteItem,
-        handleRestock,
-        updateInventoryItem,
-        addInventoryItem,
-        refreshInventory
+        handleRestock
     };
 };
