@@ -58,7 +58,7 @@ export const useAddEditInventory = () => {
     const open = (item) => {
         setFormData({
             id: item?.id || null,
-            itemName: item?.itemName ||  "", 
+            itemName: item?.itemName || "", 
             sku: item?.sku || "",
             itemType: item?.itemType || "",
             category: item?.category || "",
