@@ -30,7 +30,14 @@ export const useInventory = () => {
 
         // Apply filters
         if (activeView === 'lowStock') {
-            filtered = filtered.filter(item => item.trackStock && (Number(item.quantity) || 0) <= (Number(item.reorderPoint) || 0));
+            filtered = filtered.filter(
+                item =>
+                    item.trackStock &&
+                    item.reorderPoint != null &&
+                    !isNaN(Number(item.reorderPoint)) &&
+                    Number(item.reorderPoint) > 0 &&
+                    (Number(item.quantity) || 0) <= Number(item.reorderPoint)
+            );
         } else if (activeView === 'chemicals') {
             filtered = filtered.filter(item => item.itemType === 'Chemical');
         }
