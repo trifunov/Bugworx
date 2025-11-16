@@ -80,10 +80,12 @@ export const useInventory = () => {
     }), [inventory, categories]);
 
     // --- Event Handlers ---
-    const handleSort = (field) => {
+    const handleSort = (field, direction) => {
         setSortConfig(currentConfig => ({
             field,
-            direction: currentConfig.field === field && currentConfig.direction === 'asc' ? 'desc' : 'asc'
+            direction: direction
+                ? direction
+                : (currentConfig.field === field && currentConfig.direction === 'asc' ? 'desc' : currentConfig.field === field ? 'asc' : currentConfig.direction)
         }));
         setCurrentPage(1);
     };
