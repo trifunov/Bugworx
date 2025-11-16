@@ -88,17 +88,17 @@ const useAdvancedCustomerFilter = (data = { customers: [], leads: [], prospects:
   /**
    * Apply filters - sets appliedFilters to current filters
    */
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     setAppliedFilters({ ...filters });
-  };
+  }, [filters]);
 
   /**
    * Apply specific filters directly (for URL params)
    */
-  const applyFiltersDirectly = (filtersToApply) => {
+  const applyFiltersDirectly = useCallback((filtersToApply) => {
     setFilters(filtersToApply);
     setAppliedFilters(filtersToApply);
-  };
+  }, []); // No dependencies - just setting state
 
   /**
    * Clear all filters

@@ -73,12 +73,25 @@ const FilterAddress = ({ filters, onUpdateFilter }) => {
             <div
               className="form-control d-flex align-items-center justify-content-between"
               onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setIsStateDropdownOpen(!isStateDropdownOpen);
+                }
+                if (e.key === 'Escape') {
+                  setIsStateDropdownOpen(false);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-haspopup="listbox"
+              aria-expanded={isStateDropdownOpen}
               style={{ cursor: 'pointer' }}
             >
               <span className={selectedCount === 0 ? 'text-muted' : ''}>
                 {selectedCount === 0 ? 'Select States' : `${selectedCount} selected`}
               </span>
-              <i className={`mdi mdi-chevron-${isStateDropdownOpen ? 'up' : 'down'} font-size-16`}></i>
+              <i className={`mdi mdi-chevron-${isStateDropdownOpen ? 'up' : 'down'} font-size-16`} aria-hidden="true"></i>
             </div>
 
             {isStateDropdownOpen && (

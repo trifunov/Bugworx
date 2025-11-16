@@ -93,9 +93,7 @@ const AdvancedCustomerFilter = ({
             <button
               type="button"
               className="btn btn-success"
-              onClick={() => {
-                onApply();
-              }}
+              onClick={onApply}
             >
               Apply Filters
             </button>

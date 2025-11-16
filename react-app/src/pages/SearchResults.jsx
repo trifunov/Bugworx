@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import AdvancedCustomerFilter from '../components/Common/AdvancedFilter/AdvancedCustomerFilter';
 import useAdvancedCustomerFilter from '../hooks/useAdvancedCustomerFilter';
 import { getCustomers, getLeads } from '../utils/localStorage';
+import { deserializeUrlParamsToFilters, serializeFiltersToUrlParams } from '../utils/filterUrlUtils';
 import Table from '../components/Common/Table/Table';
 
 const SearchResults = () => {
@@ -10,8 +11,15 @@ const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('all');
 
-  const [customers] = useState(getCustomers());
-  const [leads] = useState(getLeads());
+  // Use state setters for customers and leads to allow for dynamic updates
+  const [customers, setCustomers] = useState([]);
+  const [leads, setLeads] = useState([]);
+
+  // Load data on mount
+  useEffect(() => {
+    setCustomers(getCustomers());
+    setLeads(getLeads());
+  }, []);
 
   // Advanced Filter
   const advancedFilter = useAdvancedCustomerFilter({
@@ -20,88 +28,17 @@ const SearchResults = () => {
     prospects: []
   });
 
+  // Extract applyFiltersDirectly to avoid infinite re-renders
+  const { applyFiltersDirectly } = advancedFilter;
+
   // Load filters from URL params - runs on mount and when URL params change
   useEffect(() => {
-    // Start with initial filter structure
-    const filtersFromUrl = {
-      // Customer Info
-      firstName: '',
-      lastName: '',
-      companyName: '',
-      customerNumber: '',
-      email: '',
-      phone: '',
-
-      // Address
-      addressLine1: '',
-      city: '',
-      postalCode: '',
-      state: [],
-
-      // Property Types
-      propertyTypes: {
-        residential: false,
-        commercial: false,
-        industrial: false,
-        mixed: false,
-      },
-
-      // Status & Category
-      statuses: {
-        active: false,
-        inactive: false,
-        prospect: false,
-        lead: false,
-      },
-
-      // Transactions / Work Orders
-      invoiceNumber: '',
-      workOrderNumber: '',
-
-      // Optional
-      lastServiceDate: '',
-      programType: '',
-    };
-
-    // Simple string filters
-    if (searchParams.get('firstName')) filtersFromUrl.firstName = searchParams.get('firstName');
-    if (searchParams.get('lastName')) filtersFromUrl.lastName = searchParams.get('lastName');
-    if (searchParams.get('companyName')) filtersFromUrl.companyName = searchParams.get('companyName');
-    if (searchParams.get('customerNumber')) filtersFromUrl.customerNumber = searchParams.get('customerNumber');
-    if (searchParams.get('email')) filtersFromUrl.email = searchParams.get('email');
-    if (searchParams.get('phone')) filtersFromUrl.phone = searchParams.get('phone');
-    if (searchParams.get('addressLine1')) filtersFromUrl.addressLine1 = searchParams.get('addressLine1');
-    if (searchParams.get('city')) filtersFromUrl.city = searchParams.get('city');
-    if (searchParams.get('postalCode')) filtersFromUrl.postalCode = searchParams.get('postalCode');
-    if (searchParams.get('invoiceNumber')) filtersFromUrl.invoiceNumber = searchParams.get('invoiceNumber');
-    if (searchParams.get('workOrderNumber')) filtersFromUrl.workOrderNumber = searchParams.get('workOrderNumber');
-    if (searchParams.get('lastServiceDate')) filtersFromUrl.lastServiceDate = searchParams.get('lastServiceDate');
-    if (searchParams.get('programType')) filtersFromUrl.programType = searchParams.get('programType');
-
-    // Array filters
-    if (searchParams.get('state')) {
-      filtersFromUrl.state = searchParams.get('state').split(',');
-    }
-
-    // Property types
-    if (searchParams.get('propertyTypes')) {
-      const types = searchParams.get('propertyTypes').split(',');
-      types.forEach(type => {
-        filtersFromUrl.propertyTypes[type] = true;
-      });
-    }
-
-    // Statuses
-    if (searchParams.get('statuses')) {
-      const statuses = searchParams.get('statuses').split(',');
-      statuses.forEach(status => {
-        filtersFromUrl.statuses[status] = true;
-      });
-    }
+    // Deserialize URL params to filters using utility function
+    const filtersFromUrl = deserializeUrlParamsToFilters(searchParams);
 
     // Apply filters directly - this sets both filters and appliedFilters atomically
-    advancedFilter.applyFiltersDirectly(filtersFromUrl);
-  }, [searchParams, advancedFilter]);
+    applyFiltersDirectly(filtersFromUrl);
+  }, [searchParams, applyFiltersDirectly]);
 
   // Use filtered results directly from the hook (already memoized)
   const results = advancedFilter.filteredResults;
@@ -143,8 +80,9 @@ const SearchResults = () => {
               <button
                 className="btn btn-sm btn-outline-primary"
                 onClick={() => navigate(-1)}
+                aria-label="Go back to previous page"
               >
-                <i className="mdi mdi-arrow-left me-1"></i>
+                <i className="mdi mdi-arrow-left me-1" aria-hidden="true"></i>
                 Back
               </button>
             </div>
@@ -311,42 +249,8 @@ const SearchResults = () => {
           // Apply filters to trigger re-computation
           advancedFilter.applyFilters();
 
-          // Update URL params
-          const params = new URLSearchParams();
-
-          // Add simple string filters
-          if (advancedFilter.filters.firstName) params.set('firstName', advancedFilter.filters.firstName);
-          if (advancedFilter.filters.lastName) params.set('lastName', advancedFilter.filters.lastName);
-          if (advancedFilter.filters.companyName) params.set('companyName', advancedFilter.filters.companyName);
-          if (advancedFilter.filters.customerNumber) params.set('customerNumber', advancedFilter.filters.customerNumber);
-          if (advancedFilter.filters.email) params.set('email', advancedFilter.filters.email);
-          if (advancedFilter.filters.phone) params.set('phone', advancedFilter.filters.phone);
-          if (advancedFilter.filters.addressLine1) params.set('addressLine1', advancedFilter.filters.addressLine1);
-          if (advancedFilter.filters.city) params.set('city', advancedFilter.filters.city);
-          if (advancedFilter.filters.postalCode) params.set('postalCode', advancedFilter.filters.postalCode);
-          if (advancedFilter.filters.invoiceNumber) params.set('invoiceNumber', advancedFilter.filters.invoiceNumber);
-          if (advancedFilter.filters.workOrderNumber) params.set('workOrderNumber', advancedFilter.filters.workOrderNumber);
-          if (advancedFilter.filters.lastServiceDate) params.set('lastServiceDate', advancedFilter.filters.lastServiceDate);
-          if (advancedFilter.filters.programType) params.set('programType', advancedFilter.filters.programType);
-
-          // Add array filters
-          if (advancedFilter.filters.state.length > 0) {
-            params.set('state', advancedFilter.filters.state.join(','));
-          }
-
-          // Add nested object filters (propertyTypes)
-          const activePropertyTypes = Object.keys(advancedFilter.filters.propertyTypes)
-            .filter(key => advancedFilter.filters.propertyTypes[key]);
-          if (activePropertyTypes.length > 0) {
-            params.set('propertyTypes', activePropertyTypes.join(','));
-          }
-
-          // Add nested object filters (statuses)
-          const activeStatuses = Object.keys(advancedFilter.filters.statuses)
-            .filter(key => advancedFilter.filters.statuses[key]);
-          if (activeStatuses.length > 0) {
-            params.set('statuses', activeStatuses.join(','));
-          }
+          // Serialize filters to URL params using utility function
+          const params = serializeFiltersToUrlParams(advancedFilter.filters);
 
           // Update URL without navigation
           navigate(`/search-results?${params.toString()}`, { replace: true });

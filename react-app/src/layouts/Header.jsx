@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
@@ -10,6 +10,7 @@ import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/us
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import AdvancedCustomerFilter from '../components/Common/AdvancedFilter/AdvancedCustomerFilter';
 import useAdvancedCustomerFilter from '../hooks/useAdvancedCustomerFilter';
+import { serializeFiltersToUrlParams } from '../utils/filterUrlUtils';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Header = () => {
   const [leads, setLeads] = useState(getLeads());
   const addEditCustomer = useAddEditCustomer();
   const addEditLead = useAddEditLead();
+  const searchDropdownRef = useRef(null);
 
   // Advanced Filter
   const advancedFilter = useAdvancedCustomerFilter({
@@ -66,6 +68,23 @@ const Header = () => {
       });
     }
   }, []);
+
+  // Handle click outside search dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target)) {
+        setShowSearchDropdown(false);
+      }
+    };
+
+    if (showSearchDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSearchDropdown]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -112,42 +131,8 @@ const Header = () => {
     // Apply the filters first
     advancedFilter.applyFilters();
 
-    // Serialize filters to URL params
-    const params = new URLSearchParams();
-
-    // Add simple string filters
-    if (advancedFilter.filters.firstName) params.set('firstName', advancedFilter.filters.firstName);
-    if (advancedFilter.filters.lastName) params.set('lastName', advancedFilter.filters.lastName);
-    if (advancedFilter.filters.companyName) params.set('companyName', advancedFilter.filters.companyName);
-    if (advancedFilter.filters.customerNumber) params.set('customerNumber', advancedFilter.filters.customerNumber);
-    if (advancedFilter.filters.email) params.set('email', advancedFilter.filters.email);
-    if (advancedFilter.filters.phone) params.set('phone', advancedFilter.filters.phone);
-    if (advancedFilter.filters.addressLine1) params.set('addressLine1', advancedFilter.filters.addressLine1);
-    if (advancedFilter.filters.city) params.set('city', advancedFilter.filters.city);
-    if (advancedFilter.filters.postalCode) params.set('postalCode', advancedFilter.filters.postalCode);
-    if (advancedFilter.filters.invoiceNumber) params.set('invoiceNumber', advancedFilter.filters.invoiceNumber);
-    if (advancedFilter.filters.workOrderNumber) params.set('workOrderNumber', advancedFilter.filters.workOrderNumber);
-    if (advancedFilter.filters.lastServiceDate) params.set('lastServiceDate', advancedFilter.filters.lastServiceDate);
-    if (advancedFilter.filters.programType) params.set('programType', advancedFilter.filters.programType);
-
-    // Add array filters
-    if (advancedFilter.filters.state.length > 0) {
-      params.set('state', advancedFilter.filters.state.join(','));
-    }
-
-    // Add nested object filters (propertyTypes)
-    const activePropertyTypes = Object.keys(advancedFilter.filters.propertyTypes)
-      .filter(key => advancedFilter.filters.propertyTypes[key]);
-    if (activePropertyTypes.length > 0) {
-      params.set('propertyTypes', activePropertyTypes.join(','));
-    }
-
-    // Add nested object filters (statuses)
-    const activeStatuses = Object.keys(advancedFilter.filters.statuses)
-      .filter(key => advancedFilter.filters.statuses[key]);
-    if (activeStatuses.length > 0) {
-      params.set('statuses', activeStatuses.join(','));
-    }
+    // Serialize filters to URL params using utility function
+    const params = serializeFiltersToUrlParams(advancedFilter.filters);
 
     // Navigate to search results with query params
     navigate(`/search-results?${params.toString()}`);
@@ -256,7 +241,7 @@ const Header = () => {
 
           {/* App Search */}
           <form className="app-search d-none d-lg-block" onSubmit={handleSearch} style={{ minWidth: '500px', maxWidth: '700px' }}>
-            <div className="position-relative d-flex gap-2">
+            <div className="position-relative d-flex gap-2" ref={searchDropdownRef}>
               <div className="position-relative flex-grow-1">
                 <input
                   type="text"
@@ -265,6 +250,11 @@ const Header = () => {
                   placeholder="Search customer, lead, prospect..."
                   value={searchQuery}
                   onChange={handleSearchChange}
+                  onFocus={() => {
+                    if (searchQuery.trim() && searchResults.length > 0) {
+                      setShowSearchDropdown(true);
+                    }
+                  }}
                   autoComplete="off"
                 />
                 <span className="ri-search-line"></span>
@@ -300,7 +290,7 @@ const Header = () => {
 
                 {/* Search Results Dropdown */}
                 {showSearchDropdown && searchResults.length > 0 && !advancedFilter.isOpen && (
-                  <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px', zIndex: 1040 }}>
+                  <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px', zIndex: 1000 }}>
                     {(() => {
                       // Group results by entity type
                       const customers = searchResults.filter(r => r.entityType === 'customer');
