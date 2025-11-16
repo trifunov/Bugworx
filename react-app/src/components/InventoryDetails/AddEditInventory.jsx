@@ -188,16 +188,40 @@ const AddEditInventory = ({ isOpen, formData, errors, isSaving, onUpdateFieldHan
                             <AccordionItem id="stock" title="Stock & Units" className="custom-accordion" isOpen={openAccordions.stock} onToggle={toggleAccordion}>
                                 <div className="row g-3">
                                     <div className="col-md-6"><label htmlFor="uom" className="form-label">Unit of Measure</label><select id="uom" name="uom" className="form-select" value={formData.uom} onChange={handleFieldChange}><option value="">Select unit…</option><option>Piece</option><option>Pack</option><option>Box</option><option>Litre</option><option>Gallon</option></select></div>
-                                    <div className="col-md-6"><label htmlFor="quantity" className="form-label">Quantity per Unit</label><input id="quantity" name="quantity" className={`form-control ${errors.quantity ? 'is-invalid' : ''}`} type="number" value={formData.quantity} onChange={handleFieldChange} /></div>
-                                    <div className="col-md-6"><label htmlFor="minStock" className="form-label">Minimum Stock Level</label><input id="minStock" name="minStock" className={`form-control ${errors.minStock ? 'is-invalid' : ''}`} type="number" value={formData.minStock} onChange={handleFieldChange} /></div>
-                                      {formData.trackStock && (
+                                    <div className="col-md-6">
+                                        <label htmlFor="quantity" className="form-label">Quantity per Unit</label>
+                                        <input id="quantity" name="quantity" className={`form-control ${errors.quantity ? 'is-invalid' : ''}`} type="number" value={formData.quantity} onChange={handleFieldChange} />
+                                        {errors.quantity && <div className="invalid-feedback">{errors.quantity}</div>}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label htmlFor="minStock" className="form-label">Minimum Stock Level</label>
+                                        <input id="minStock" name="minStock" className={`form-control ${errors.minStock ? 'is-invalid' : ''}`} type="number" value={formData.minStock} onChange={handleFieldChange} />
+                                        {errors.minStock && <div className="invalid-feedback">{errors.minStock}</div>}
+                                    </div>
+                                    {formData.trackStock && (
                                         <>
-                                            <div className="col-md-6"><label htmlFor="reorderPoint" className="form-label">Reorder Point</label><input id="reorderPoint" name="reorderPoint" className={`form-control ${errors.reorderPoint ? 'is-invalid' : ''}`} type="number" value={formData.reorderPoint} onChange={handleFieldChange} /></div>
-                                            <div className="col-md-6"><label htmlFor="reorderQuantity" className="form-label">Reorder Quantity</label><input id="reorderQuantity" name="reorderQuantity" className={`form-control ${errors.reorderQuantity ? 'is-invalid' : ''}`} type="number" value={formData.reorderQuantity} onChange={handleFieldChange} /></div>
+                                            <div className="col-md-6">
+                                                <label htmlFor="reorderPoint" className="form-label">Reorder Point</label>
+                                                <input id="reorderPoint" name="reorderPoint" className={`form-control ${errors.reorderPoint ? 'is-invalid' : ''}`} type="number" value={formData.reorderPoint} onChange={handleFieldChange} />
+                                                {errors.reorderPoint && <div className="invalid-feedback">{errors.reorderPoint}</div>}
+                                            </div>
+                                            <div className="col-md-6">
+                                                <label htmlFor="reorderQuantity" className="form-label">Reorder Quantity</label>
+                                                <input id="reorderQuantity" name="reorderQuantity" className={`form-control ${errors.reorderQuantity ? 'is-invalid' : ''}`} type="number" value={formData.reorderQuantity} onChange={handleFieldChange} />
+                                                {errors.reorderQuantity && <div className="invalid-feedback">{errors.reorderQuantity}</div>}
+                                            </div>
                                         </>
                                     )}
-                                    <div className="col-md-6"><label htmlFor="costPerUnit" className="form-label">Cost per Unit</label><input id="costPerUnit" name="costPerUnit" className={`form-control ${errors.costPerUnit ? 'is-invalid' : ''}`} type="number" step="0.01" value={formData.costPerUnit} onChange={handleFieldChange} /></div>
-                                    <div className="col-md-6"><label htmlFor="sellingPricePerUnit" className="form-label">Selling Price per Unit</label><input id="sellingPricePerUnit" name="sellingPricePerUnit" className={`form-control ${errors.sellingPricePerUnit ? 'is-invalid' : ''}`} type="number" step="0.01" value={formData.sellingPricePerUnit} onChange={handleFieldChange} /></div>
+                                    <div className="col-md-6">
+                                        <label htmlFor="costPerUnit" className="form-label">Cost per Unit</label>
+                                        <input id="costPerUnit" name="costPerUnit" className={`form-control ${errors.costPerUnit ? 'is-invalid' : ''}`} type="number" step="0.01" value={formData.costPerUnit} onChange={handleFieldChange} />
+                                        {errors.costPerUnit && <div className="invalid-feedback">{errors.costPerUnit}</div>}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label htmlFor="sellingPricePerUnit" className="form-label">Selling Price per Unit</label>
+                                        <input id="sellingPricePerUnit" name="sellingPricePerUnit" className={`form-control ${errors.sellingPricePerUnit ? 'is-invalid' : ''}`} type="number" step="0.01" value={formData.sellingPricePerUnit} onChange={handleFieldChange} />
+                                        {errors.sellingPricePerUnit && <div className="invalid-feedback">{errors.sellingPricePerUnit}</div>}
+                                    </div>
                                     <div className="col-md-6"><Switch label="Track Stock Level" name="trackStock" checked={formData.trackStock} onChange={onUpdateFieldHandle} disabled={isSaving} /></div>
                                     <div className="col-md-6">
                                             <label htmlFor="warehouseLocation" className="form-label">Warehouse Location</label>
