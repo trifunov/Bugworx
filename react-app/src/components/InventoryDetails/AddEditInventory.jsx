@@ -188,7 +188,7 @@ const AddEditInventory = ({ isOpen, formData, errors, isSaving, onUpdateFieldHan
                             <AccordionItem id="stock" title="Stock & Units" className="custom-accordion" isOpen={openAccordions.stock} onToggle={toggleAccordion}>
                                 <div className="row g-3">
                                     <div className="col-md-6"><label htmlFor="uom" className="form-label">Unit of Measure</label><select id="uom" name="uom" className="form-select" value={formData.uom} onChange={handleFieldChange}><option value="">Select unit…</option><option>Piece</option><option>Pack</option><option>Box</option><option>Litre</option><option>Gallon</option></select></div>
-                                    <div className="col-md-6"><label htmlFor="quantity" className="form-label">Quantity per Unit</label><input id="quantity" name="quantity" className={`form-control ${errors.quantity ? 'is-invalid' : ''}`} type="number" value={formData.quantity} onChange={handleFieldChange} /></div>
+                                    <div className="col-md-6"><label htmlFor="quantity" className="form-label">Quantity per Unit</label><input id="quantity" name="quantity" className={`form-control`} type="number" value={formData.quantity} onChange={handleFieldChange} /></div>
                                     <div className="col-md-6"><label htmlFor="minStock" className="form-label">Minimum Stock Level</label><input id="minStock" name="minStock" className={`form-control`} type="number" value={formData.minStock} onChange={handleFieldChange} /></div>
                                       {formData.trackStock && (
                                         <>
