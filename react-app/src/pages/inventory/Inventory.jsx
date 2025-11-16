@@ -13,7 +13,7 @@ const columns = [
     { label: 'Category', accessor: 'category', sortable: false },
     { label: 'Quantity', accessor: 'quantity', sortable: true },
     { label: 'Reorder Point', accessor: 'reorderPoint', sortable: false },
-    { label: 'Cost', accessor: 'cost', sortable: true },
+    { label: 'Cost Per Unit', accessor: 'costPerUnit', sortable: true },
     { label: 'Total Value', accessor: 'totalValue', sortable: true },
     { label: 'Status', accessor: 'status', sortable: false },
     { label: 'Actions', accessor: 'actions', sortable: false },
@@ -61,12 +61,11 @@ const Inventory = () => {
 
     const renderRow = (item) => {
     const quantity = Number(item.quantity) || 0;
-    const cost = Number(item.cost) || 0;
+    const costPerUnit = Number(item.costPerUnit) || 0;
     const reorderPoint = Number(item.reorderPoint) || 0;
     const isLowStock = item.trackStock && quantity <= reorderPoint;
     const isOutOfStock = item.trackStock && quantity === 0;
-    const totalValue = quantity * cost;
-
+    const totalValue = quantity * costPerUnit;
     return (
       <tr key={item.id}>
         <td><strong>{item.sku}</strong></td>
@@ -74,7 +73,7 @@ const Inventory = () => {
         <td><span className="badge badge-soft-primary">{item.category}</span></td>
         <td><strong className={isOutOfStock ? 'text-danger' : isLowStock ? 'text-warning' : ''}>{quantity} {item.uom}</strong></td>
         <td>{item.trackStock ? `${reorderPoint} ${item.uom}` : 'N/A'}</td>
-        <td>${cost.toFixed(2)}</td>
+        <td>${costPerUnit.toFixed(2)}</td>
         <td><strong>${totalValue.toFixed(2)}</strong></td>
         <td>
           {!item.trackStock ? (<span className="badge badge-soft-secondary">Untracked</span>)
@@ -260,7 +259,7 @@ const Inventory = () => {
                   {restockQuantity > 0 && (
                     <div className="alert alert-success">
                       <div className="d-flex justify-content-between"><span>New Stock Level:</span><strong>{Number(selectedItem.quantity || 0) + Number(restockQuantity)} {selectedItem.uom}</strong></div>
-                      <div className="d-flex justify-content-between"><span>Estimated Cost:</span><strong>${(restockQuantity * (selectedItem.cost || 0)).toFixed(2)}</strong></div>
+                      <div className="d-flex justify-content-between"><span>Estimated Cost:</span><strong>${(restockQuantity * (selectedItem.costPerUnit || 0)).toFixed(2)}</strong></div>
                     </div>
                   )}
                 </div>

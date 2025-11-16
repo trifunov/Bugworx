@@ -53,8 +53,8 @@ export const useInventory = () => {
             let valA = a[field], valB = b[field];
 
             if (field === 'totalValue') {
-                valA = (Number(a.quantity) || 0) * (Number(a.cost) || 0);
-                valB = (Number(b.quantity) || 0) * (Number(b.cost) || 0);
+                valA = (Number(a.quantity) || 0) * (Number(a.costPerUnit) || 0);
+                valB = (Number(b.quantity) || 0) * (Number(b.costPerUnit) || 0);
             }
 
             if (typeof valA === 'string') return valA.localeCompare(valB) * direction;
@@ -75,7 +75,7 @@ export const useInventory = () => {
         totalItems: inventory.length,
         lowStockItems: inventory.filter(item => item.trackStock && (Number(item.quantity) || 0) <= (Number(item.reorderPoint) || 0)).length,
         outOfStock: inventory.filter(item => item.trackStock && (Number(item.quantity) || 0) === 0).length,
-        totalValue: inventory.reduce((sum, item) => sum + ((Number(item.quantity) || 0) * (Number(item.cost) || 0)), 0),
+        totalValue: inventory.reduce((sum, item) => sum + ((Number(item.quantity) || 0) * (Number(item.costPerUnit) || 0)), 0),
         categories: categories.length - 1
     }), [inventory, categories]);
 
@@ -124,11 +124,11 @@ export const useInventory = () => {
     };
 
     const exportToCSV = () => {
-        const headers = ['SKU', 'Item Name', 'Item Type', 'Category', 'Quantity', 'UOM', 'Cost', 'Total Value', 'Supplier', 'Manufacturer', 'Active'];
+        const headers = ['SKU', 'Item Name', 'Item Type', 'Category', 'Quantity', 'UOM', 'Cost Per Unit', 'Total Value', 'Supplier', 'Manufacturer', 'Active'];
         const rows = inventory.map(item => [
             `"${item.sku || ''}"`, `"${item.itemName || ''}"`, `"${item.itemType || ''}"`, `"${item.category || ''}"`,
-            Number(item.quantity) || 0, `"${item.uom || ''}"`, Number(item.cost) || 0,
-            ((Number(item.quantity) || 0) * (Number(item.cost) || 0)).toFixed(2),
+            Number(item.quantity) || 0, `"${item.uom || ''}"`, Number(item.costPerUnit) || 0,
+            ((Number(item.quantity) || 0) * (Number(item.costPerUnit) || 0)).toFixed(2),
             `"${item.supplier || ''}"`, `"${item.manufacturer || ''}"`, item.active ? 'Yes' : 'No'
         ].join(','));
         const csv = [headers.join(','), ...rows].join('\n');
@@ -139,18 +139,6 @@ export const useInventory = () => {
         a.download = `inventory-${new Date().toISOString().split('T')[0]}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
-    };
-
-    const updateInventoryItem = (updatedItem) => {
-        setInventory(prev => prev.map(item => item.id === updatedItem.id ? updatedItem : item));
-    };
-
-    const addInventoryItem = (newItem) => {
-        setInventory(prev => [...prev, newItem]);
-    };
-
-    const refreshInventory = () => {
-        paginatedInventory = getInventory() || [];
     };
 
     // Return all state and handlers needed by the UI

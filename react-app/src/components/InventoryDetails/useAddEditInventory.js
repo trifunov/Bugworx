@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { getInventory, setInventory } from '../../utils/localStorage';
-import { save, updateField } from '../../utils/addEditFormUtils';
+import { save } from '../../utils/addEditFormUtils';
 
 export const useAddEditInventory = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -85,7 +84,7 @@ export const useAddEditInventory = () => {
             minStock: item?.minStock || "",
             reorderPoint: item?.reorderPoint || "",
             reorderQuantity: item?.reorderQuantity || "",
-            cost: item?.cost || "",
+            costPerUnit: item?.costPerUnit || "",
             price: item?.price || "",
             sellingPricePerUnit: item?.sellingPricePerUnit || "",
             warehouseLocation: item?.warehouseLocation || "",
@@ -136,8 +135,8 @@ export const useAddEditInventory = () => {
         if (!formData.itemType) {
             newErrors.itemType = 'Item Type is required.';
         }
-        if (formData.cost && isNaN(parseFloat(formData.cost))) {
-            newErrors.cost = 'Cost must be a valid number.';
+        if (formData.costPerUnit && isNaN(parseFloat(formData.costPerUnit))) {
+            newErrors.costPerUnit = 'Cost Per Unit must be a valid number.';
         }
         if (formData.price && isNaN(parseFloat(formData.price))) {
             newErrors.price = 'Price must be a valid number.';
