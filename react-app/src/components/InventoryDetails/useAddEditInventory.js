@@ -141,11 +141,15 @@ export const useAddEditInventory = () => {
         if (!formData.itemType) {
             newErrors.itemType = 'Item Type is required.';
         }
-        if (formData.costPerUnit && isNaN(parseFloat(formData.costPerUnit))) {
-            newErrors.costPerUnit = 'Cost Per Unit must be a valid number.';
+        if (formData.costPerUnit && formData.costPerUnit.trim() !== "") {
+            if (isNaN(parseFloat(formData.costPerUnit.trim()))) {
+                newErrors.costPerUnit = 'Cost Per Unit must be a valid number.';
+            }
         }
-        if (formData.price && isNaN(parseFloat(formData.price))) {
-            newErrors.price = 'Price must be a valid number.';
+        if (formData.price && formData.price.trim() !== "") {
+            if (isNaN(parseFloat(formData.price.trim()))) {
+                newErrors.price = 'Price must be a valid number.';
+            }
         }
         // Validate reorderPoint and reorderQuantity if trackStock is true
         if (formData.trackStock) {
