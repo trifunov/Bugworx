@@ -90,9 +90,7 @@ export const useInventory = () => {
     const handleSort = (field, direction) => {
         setSortConfig(currentConfig => ({
             field,
-            direction: direction
-                ? direction
-                : (currentConfig.field === field && currentConfig.direction === 'asc' ? 'desc' : currentConfig.field === field ? 'asc' : currentConfig.direction)
+            direction: direction || (currentConfig.field === field && currentConfig.direction === 'asc' ? 'desc' : 'asc')
         }));
         setCurrentPage(1);
     };
