@@ -98,20 +98,44 @@ const AddEditInventory = ({ isOpen, formData, errors, isSaving, onUpdateFieldHan
                                 <div className="row g-3">
                                     <div className="col-md-6">
                                         <label htmlFor="itemName" className="form-label">Item Name</label>
-                                        <input id="itemName" name="itemName" className={`form-control ${errors.itemName ? 'is-invalid' : ''}`} value={formData.itemName} onChange={handleFieldChange} required />
-                                        {errors.itemName && <div className="invalid-feedback">{errors.itemName}</div>}
+                                        <input
+                                            id="itemName"
+                                            name="itemName"
+                                            className={`form-control ${errors.itemName ? 'is-invalid' : ''}`}
+                                            value={formData.itemName}
+                                            onChange={handleFieldChange}
+                                            required
+                                            aria-describedby={errors.itemName ? "itemName-error" : undefined}
+                                        />
+                                        {errors.itemName && <div className="invalid-feedback" id="itemName-error">{errors.itemName}</div>}
                                     </div>
                                     <div className="col-md-6">
                                         <label htmlFor="sku" className="form-label">Item Code / SKU</label>
-                                        <input id="sku" name="sku" className={`form-control ${errors.sku ? 'is-invalid' : ''}`} value={formData.sku} onChange={handleFieldChange} required />
-                                        {errors.sku && <div className="invalid-feedback">{errors.sku}</div>}
+                                        <input
+                                            id="sku"
+                                            name="sku"
+                                            className={`form-control ${errors.sku ? 'is-invalid' : ''}`}
+                                            value={formData.sku}
+                                            onChange={handleFieldChange}
+                                            required
+                                            aria-describedby={errors.sku ? "sku-error" : undefined}
+                                        />
+                                        {errors.sku && <div className="invalid-feedback" id="sku-error">{errors.sku}</div>}
                                     </div>
                                     <div className="col-md-6">
                                         <label htmlFor="itemType" className="form-label">Item Type</label>
-                                        <select id="itemType" name="itemType" className={`form-select ${errors.itemType ? 'is-invalid' : ''}`} value={formData.itemType} onChange={handleFieldChange} required>
+                                        <select
+                                            id="itemType"
+                                            name="itemType"
+                                            className={`form-select ${errors.itemType ? 'is-invalid' : ''}`}
+                                            value={formData.itemType}
+                                            onChange={handleFieldChange}
+                                            required
+                                            aria-describedby={errors.itemType ? "itemType-error" : undefined}
+                                        >
                                             <option value="">Select type…</option><option>Chemical</option><option>Device</option><option>Trap</option><option>Bait Station</option><option>PPE</option><option>Equipment</option><option>Consumable</option><option>Tool</option><option>Vehicle Supply</option><option>Marketing Material</option><option>Other</option>
                                         </select>
-                                        {errors.itemType && <div className="invalid-feedback">{errors.itemType}</div>}
+                                        {errors.itemType && <div className="invalid-feedback" id="itemType-error">{errors.itemType}</div>}
                                     </div>
                                     <div className="col-md-6">
                                         <label htmlFor="category" className="form-label">Category</label>
