@@ -1022,7 +1022,7 @@ export const inventory = [
     activeIng: 'Bromadiolone 0.005%',
     concentration: 'N/A',
     formulationType: 'Gel',
-    hazardClassification: 'Warning',
+    hazardClassification: 'Toxic',
     sds: null,
     sdsUrl: 'https://example.com/sds/contrac-blox.pdf',
     expiry: '2026-04-30',
