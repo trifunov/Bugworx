@@ -114,6 +114,7 @@ export const useInventory = () => {
                 item.id === savedItem.id ? savedItem : item
             );
         });
+        setCurrentPage(1);
     };
 
     const handleDeleteItem = () => {
