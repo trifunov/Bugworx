@@ -113,7 +113,11 @@ export const useAddEditInventory = () => {
     };
 
     const onUpdateFieldHandle = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        if (field === 'serialized' && !value) {
+            setFormData(prev => ({ ...prev, serialized: value, barcode: '' }));
+        } else {
+            setFormData(prev => ({ ...prev, [field]: value }));
+        }
         // Clear the error for the field being updated
         if (errors[field]) {
             setErrors(prev => {
@@ -121,12 +125,6 @@ export const useAddEditInventory = () => {
                 delete newErrors[field];
                 return newErrors;
             });
-        }
-        
-        // In onUpdateFieldHandle for 'serialized'
-        if (field === 'serialized' && !value) {
-            setFormData(prev => ({ ...prev, serialized: value, barcode: '' }));
-            return;
         }
     };
 

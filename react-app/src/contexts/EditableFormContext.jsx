@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import useAddEditProspect from '../components/CustomerDetails/Prospects/AddEditProspect/useAddEditProspect';
-import useAddEditInventory from '../components/InventoryDetails/useAddEditInventory'
+import useAddEditInventory from '../components/InventoryDetails/useAddEditInventory';
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
