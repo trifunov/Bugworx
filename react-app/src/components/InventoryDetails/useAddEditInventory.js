@@ -144,9 +144,9 @@ export const useAddEditInventory = () => {
         return newErrors;
     };
 
-      const onSaveHandle = async (onSaveCallback) => {
-           save(formData, onSaveCallback, setIsSaving, close, setErrors, validate);
-       };
+    const onSaveHandle = async (onSaveCallback) => {
+        save(formData, onSaveCallback, setIsSaving, close, setErrors, validate);
+    };
    
 
     return {

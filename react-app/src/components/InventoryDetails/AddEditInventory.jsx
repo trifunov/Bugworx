@@ -5,7 +5,6 @@ const AccordionItem = ({ id, title, children, isOpen, onToggle, className }) => 
         <a
             href={`#collapse-${id}`}
             className={`text-dark ${!isOpen ? 'collapsed' : ''}`}
-            data-bs-toggle="collapse"
             onClick={(e) => {
                 e.preventDefault();
                 onToggle(id);
@@ -217,7 +216,7 @@ const AddEditInventory = ({ isOpen, formData, errors, isSaving, onUpdateFieldHan
                                             </select>
                                     </div>
                                      <div className="col-md-6"><label htmlFor="barcode" className="form-label">Barcode / QR Code</label>
-                                        <input id="barcode" name="barcode" className="form-control"  disabled={!formData.serialized} 
+                                        <input id="barcode" name="barcode" className="form-control"  readOnly={!formData.serialized} 
                                             placeholder={!formData.serialized ? 'Enable "Serialized Item" to use' : 'Enter barcode'} value={formData.barcode} onChange={handleFieldChange} />
                                      </div>
                                      <div className="col-12"><Switch label="Serialized Item" name="serialized" checked={formData.serialized} onChange={onUpdateFieldHandle} disabled={isSaving} /></div>
