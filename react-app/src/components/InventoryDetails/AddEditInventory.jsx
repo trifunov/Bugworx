@@ -221,7 +221,7 @@ const AddEditInventory = ({ isOpen, formData, errors, isSaving, onUpdateFieldHan
                                         </>
                                     )}
                                     <div className="col-md-6"><label htmlFor="costPerUnit" className="form-label">Cost per Unit</label><input id="costPerUnit" name="costPerUnit" className={`form-control ${errors.costPerUnit ? 'is-invalid' : ''}`} type="number" step="0.01" value={formData.costPerUnit} onChange={handleFieldChange} /></div>
-                                    <div className="col-md-6"><label htmlFor="sellingPricePerUnit" className="form-label">Selling Price per Unit</label><input id="sellingPricePerUnit" name="sellingPricePerUnit" className={`form-control`} type="number" step="0.01" value={formData.sellingPricePerUnit} onChange={handleFieldChange} /></div>
+                                    <div className="col-md-6"><label htmlFor="sellingPricePerUnit" className="form-label">Selling Price per Unit</label><input id="sellingPricePerUnit" name="sellingPricePerUnit" className={`form-control ${errors.sellingPricePerUnit ? 'is-invalid' : ''}`} type="number" step="0.01" value={formData.sellingPricePerUnit} onChange={handleFieldChange} /></div>
                                     <div className="col-md-6"><Switch label="Track Stock Level" name="trackStock" checked={formData.trackStock} onChange={onUpdateFieldHandle} disabled={isSaving} /></div>
                                     <div className="col-md-6">
                                             <label htmlFor="warehouseLocation" className="form-label">Warehouse Location</label>
