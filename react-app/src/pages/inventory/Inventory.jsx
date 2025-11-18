@@ -313,10 +313,17 @@ const Inventory = () => {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && selectedItem && (
         <>
-          <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1">
+          <div
+            className="modal fade show"
+            style={{ display: 'block' }}
+            tabIndex="-1"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="deleteModalTitle"
+          >
             <div className="modal-dialog">
               <div className="modal-content">
-                <div className="modal-header"><h5 className="modal-title">Confirm Delete</h5><button type="button" className="btn-close" onClick={() => { setShowDeleteModal(false); setSelectedItem(null); }}></button></div>
+                <div className="modal-header"><h5 className="modal-title" id="deleteModalTitle">Confirm Delete</h5><button type="button" className="btn-close" onClick={() => { setShowDeleteModal(false); setSelectedItem(null); }}></button></div>
                 <div className="modal-body">
                   <p>Are you sure you want to delete this item?</p>
                   <div className="alert alert-warning"><strong>{selectedItem.itemName}</strong><br />SKU: {selectedItem.sku}<br />Current Stock: {selectedItem.quantity || 0} {selectedItem.uom}</div>
