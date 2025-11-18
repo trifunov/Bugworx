@@ -257,10 +257,17 @@ const Inventory = () => {
       {/* Restock Modal */}
       {showRestockModal && selectedItem && (
         <>
-          <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1">
+          <div
+            className="modal fade show"
+            style={{ display: 'block' }}
+            tabIndex="-1"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="restock-modal-title"
+          >
             <div className="modal-dialog">
               <div className="modal-content">
-                <div className="modal-header"><h5 className="modal-title">Restock Item</h5><button type="button" className="btn-close" onClick={() => { setShowRestockModal(false); setSelectedItem(null); setRestockQuantity(0); }}></button></div>
+                <div className="modal-header"><h5 className="modal-title" id="restock-modal-title">Restock Item</h5><button type="button" className="btn-close" onClick={() => { setShowRestockModal(false); setSelectedItem(null); setRestockQuantity(0); }}></button></div>
                 <div className="modal-body">
                   <div className="mb-3"><h6>{selectedItem.itemName}</h6><p className="text-muted mb-2">SKU: {selectedItem.sku}</p>
                     <div className="alert alert-info">
