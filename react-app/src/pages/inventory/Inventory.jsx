@@ -308,7 +308,7 @@ const Inventory = () => {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-light" onClick={() => { setShowRestockModal(false); setSelectedItem(null); setRestockQuantity(0); }}>Cancel</button>
-                  <button type="button" className="btn btn-success" onClick={handleRestock} disabled={Number(restockQuantity) <= 0 || isNaN(Number(restockQuantity))}><i className="mdi mdi-package-variant me-1"></i>Confirm Restock</button>
+                  <button type="button" className="btn btn-success" onClick={handleRestock} disabled={Number(restockQuantity) <= 0}><i className="mdi mdi-package-variant me-1"></i>Confirm Restock</button>
                 </div>
               </div>
             </div>
