@@ -1,10 +1,16 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
-import { useEditableFormContext } from '../contexts/EditableFormContext';
-import { getCustomers } from '../utils/localStorage';
+import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
+import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
+import { getCustomers, addCustomer, updateCustomer, addLead, updateLead, getLeads } from '../utils/localStorage';
+import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
+import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
+import AdvancedCustomerFilter from '../components/Common/AdvancedFilter/AdvancedCustomerFilter';
+import useAdvancedCustomerFilter from '../hooks/useAdvancedCustomerFilter';
+import { serializeFiltersToUrlParams } from '../utils/filterUrlUtils';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -15,7 +21,18 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const { addEditCustomer, addEditLead, addEditProspect } = useEditableFormContext();
+  const [customers, setCustomers] = useState(getCustomers());
+  const [leads, setLeads] = useState(getLeads());
+  const addEditCustomer = useAddEditCustomer();
+  const addEditLead = useAddEditLead();
+  const searchDropdownRef = useRef(null);
+
+  // Advanced Filter
+  const advancedFilter = useAdvancedCustomerFilter({
+    customers,
+    leads,
+    prospects: [] // Add prospects when available
+  });
 
   useEffect(() => {
     // Initialize Waves effect on header buttons
@@ -52,6 +69,23 @@ const Header = () => {
     }
   }, []);
 
+  // Handle click outside search dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target)) {
+        setShowSearchDropdown(false);
+      }
+    };
+
+    if (showSearchDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSearchDropdown]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -66,14 +100,26 @@ const Header = () => {
     setSearchQuery(query);
 
     if (query.trim()) {
-      const filtered = getCustomers()
+      // Search across customers and leads
+      const customerResults = customers
         .filter(
           (customer) =>
             customer.name.toLowerCase().includes(query.toLowerCase()) ||
             customer.customerNum.toLowerCase().includes(query.toLowerCase())
         )
-        .slice(0, 5);
-      setSearchResults(filtered);
+        .slice(0, 3)
+        .map(c => ({ ...c, entityType: 'customer' }));
+
+      const leadResults = leads
+        .filter(
+          (lead) =>
+            lead.name.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(0, 2)
+        .map(l => ({ ...l, entityType: 'lead' }));
+
+      const combined = [...customerResults, ...leadResults].slice(0, 5);
+      setSearchResults(combined);
       setShowSearchDropdown(true);
     } else {
       setSearchResults([]);
@@ -81,9 +127,29 @@ const Header = () => {
     }
   };
 
+  const handleAdvancedFilterApply = () => {
+    // Apply the filters first
+    advancedFilter.applyFilters();
+
+    // Serialize filters to URL params using utility function
+    const params = serializeFiltersToUrlParams(advancedFilter.filters);
+
+    // Navigate to search results with query params
+    navigate(`/search-results?${params.toString()}`);
+    setSearchQuery(''); // Clear search query
+    setShowSearchDropdown(false);
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const loadCustomers = () => {
+    const customers = getCustomers();
+    setCustomers(customers);
+    const leads = getLeads();
+    setLeads(leads);
   };
 
   const handleCreateInvoice = (e) => {
@@ -106,6 +172,45 @@ const Header = () => {
     <header id="page-topbar">
       <div className="navbar-header">
         <div className="d-flex">
+
+          <AddEditCustomer
+            isOpen={addEditCustomer.isOpen}
+            formData={addEditCustomer.formData}
+            errors={addEditCustomer.errors}
+            isSaving={addEditCustomer.isSaving}
+            onUpdateField={addEditCustomer.onUpdateFieldHandle}
+            onClose={addEditCustomer.close}
+            onSave={() => addEditCustomer.onSaveHandle((data) => {
+              let updatedCustomer = null;
+              if (data.id && data.id !== 0) {
+                updatedCustomer = updateCustomer(data.id, data);
+              }
+              else {
+                updatedCustomer = addCustomer(data);
+              }
+              loadCustomers();
+              return updatedCustomer;
+            })}
+          />
+
+          <AddEditLead
+            isOpen={addEditLead.isOpen}
+            formData={addEditLead.formData}
+            errors={addEditLead.errors}
+            isSaving={addEditLead.isSaving}
+            onUpdateField={addEditLead.onUpdateFieldHandle}
+            onClose={addEditLead.close}
+            onSave={() => addEditLead.onSaveHandle((data) => {
+              let updatedLead = null;
+              if (data.id && data.id !== 0) {
+                updatedLead = updateLead(data.id, data);
+              }
+              else {
+                updatedLead = addLead(data);
+              }
+              return updatedLead;
+            })}
+          />
 
           {/* LOGO */}
           <div className="navbar-brand-box">
@@ -135,54 +240,200 @@ const Header = () => {
           )}
 
           {/* App Search */}
-          <form className="app-search d-none d-lg-block" onSubmit={handleSearch}>
-            <div className="position-relative">
-              <input
-                type="text"
-                name="searchQuery"
-                className="form-control"
-                placeholder="Search customer..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
-                autoComplete="off"
-              />
-              <span className="ri-search-line"></span>
+          <form className="app-search d-none d-lg-block" onSubmit={handleSearch} style={{ minWidth: '500px', maxWidth: '700px' }}>
+            <div className="position-relative d-flex gap-2" ref={searchDropdownRef}>
+              <div className="position-relative flex-grow-1">
+                <input
+                  type="text"
+                  name="searchQuery"
+                  className="form-control"
+                  placeholder="Search customer, lead, prospect..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onFocus={() => {
+                    if (searchQuery.trim() && searchResults.length > 0) {
+                      setShowSearchDropdown(true);
+                    }
+                  }}
+                  autoComplete="off"
+                />
+                <span className="ri-search-line"></span>
 
-              {/* Search Results Dropdown */}
-              {showSearchDropdown && searchResults.length > 0 && (
-                <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px' }}>
-                  {searchResults.map((customer) => (
-                    <Link
-                      key={customer.id}
-                      to={`/customers/${customer.id}`}
-                      className="dropdown-item"
-                      onClick={() => {
-                        setSearchQuery('');
-                        setShowSearchDropdown(false);
-                      }}
-                    >
-                      <div className="d-flex align-items-center">
-                        <div className="flex-grow-1">
-                          <h6 className="mb-0">{customer.name}</h6>
-                          <p className="text-muted mb-0 font-size-12">{customer.customerNum}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                  <div className="dropdown-divider"></div>
-                  <Link
-                    to={searchQuery.trim() ? `/customers?q=${encodeURIComponent(searchQuery)}` : '#'}
-                    className="dropdown-item text-center"
+                {/* Clear button - only show when there's text */}
+                {searchQuery && (
+                  <button
+                    type="button"
+                    className="btn btn-link position-absolute"
                     onClick={() => {
                       setSearchQuery('');
+                      setSearchResults([]);
                       setShowSearchDropdown(false);
                     }}
+                    style={{
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      padding: '0',
+                      width: '20px',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#6c757d',
+                      zIndex: 1
+                    }}
+                    aria-label="Clear search"
                   >
-                    View all results
-                  </Link>
-                </div>
-              )}
+                    <i className="mdi mdi-close"></i>
+                  </button>
+                )}
+
+                {/* Search Results Dropdown */}
+                {showSearchDropdown && searchResults.length > 0 && !advancedFilter.isOpen && (
+                  <div className="dropdown-menu dropdown-menu-lg show" style={{ width: '100%', marginTop: '8px', zIndex: 1000 }}>
+                    {(() => {
+                      // Group results by entity type
+                      const customers = searchResults.filter(r => r.entityType === 'customer');
+                      const leads = searchResults.filter(r => r.entityType === 'lead');
+                      const prospects = searchResults.filter(r => r.entityType === 'prospect');
+
+                      return (
+                        <>
+                          {/* Customers Section */}
+                          {customers.length > 0 && (
+                            <>
+                              <div className="dropdown-header bg-light">
+                                <i className="mdi mdi-account-multiple me-1"></i>
+                                CUSTOMERS ({customers.length})
+                              </div>
+                              {customers.slice(0, 3).map((result) => (
+                                <Link
+                                  key={`customer-${result.id}`}
+                                  to={`/customers/${result.id}`}
+                                  className="dropdown-item"
+                                  onClick={() => {
+                                    setSearchQuery('');
+                                    setShowSearchDropdown(false);
+                                  }}
+                                >
+                                  <div className="d-flex align-items-center">
+                                    <div className="flex-grow-1">
+                                      <h6 className="mb-0">{result.name}</h6>
+                                      <p className="text-muted mb-0 font-size-12">{result.customerNum}</p>
+                                    </div>
+                                  </div>
+                                </Link>
+                              ))}
+                              {customers.length > 3 && (
+                                <div className="dropdown-item text-muted font-size-12">
+                                  + {customers.length - 3} more customers
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* Leads Section */}
+                          {leads.length > 0 && (
+                            <>
+                              <div className="dropdown-header bg-light">
+                                <i className="mdi mdi-account-convert me-1"></i>
+                                LEADS ({leads.length})
+                              </div>
+                              {leads.slice(0, 3).map((result) => (
+                                <Link
+                                  key={`lead-${result.id}`}
+                                  to={`/leads`}
+                                  className="dropdown-item"
+                                  onClick={() => {
+                                    setSearchQuery('');
+                                    setShowSearchDropdown(false);
+                                  }}
+                                >
+                                  <div className="d-flex align-items-center">
+                                    <div className="flex-grow-1">
+                                      <h6 className="mb-0">{result.name}</h6>
+                                      <p className="text-muted mb-0 font-size-12">Lead ID: {result.id}</p>
+                                    </div>
+                                  </div>
+                                </Link>
+                              ))}
+                              {leads.length > 3 && (
+                                <div className="dropdown-item text-muted font-size-12">
+                                  + {leads.length - 3} more leads
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* Prospects Section */}
+                          {prospects.length > 0 && (
+                            <>
+                              <div className="dropdown-header bg-light">
+                                <i className="mdi mdi-account-question me-1"></i>
+                                PROSPECTS ({prospects.length})
+                              </div>
+                              {prospects.slice(0, 3).map((result) => (
+                                <Link
+                                  key={`prospect-${result.id}`}
+                                  to={`/prospects`}
+                                  className="dropdown-item"
+                                  onClick={() => {
+                                    setSearchQuery('');
+                                    setShowSearchDropdown(false);
+                                  }}
+                                >
+                                  <div className="d-flex align-items-center">
+                                    <div className="flex-grow-1">
+                                      <h6 className="mb-0">{result.name}</h6>
+                                      <p className="text-muted mb-0 font-size-12">Prospect ID: {result.id}</p>
+                                    </div>
+                                  </div>
+                                </Link>
+                              ))}
+                              {prospects.length > 3 && (
+                                <div className="dropdown-item text-muted font-size-12">
+                                  + {prospects.length - 3} more prospects
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* View All Results Button */}
+                          <div className="dropdown-divider"></div>
+                          <button
+                            type="button"
+                            className="dropdown-item text-center text-primary fw-semibold"
+                            onClick={() => {
+                              navigate(`/search-results?companyName=${encodeURIComponent(searchQuery)}`);
+                              setShowSearchDropdown(false);
+                            }}
+                          >
+                            <i className="mdi mdi-arrow-right-circle me-1"></i>
+                            View All Results
+                          </button>
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                className="btn btn-primary position-relative"
+                onClick={() => {
+                  // Close search dropdown when opening filter
+                  setShowSearchDropdown(false);
+                  advancedFilter.open();
+                }}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                <i className="mdi mdi-filter-variant"></i>
+                {advancedFilter.activeFilterCount > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {advancedFilter.activeFilterCount}
+                  </span>
+                )}
+              </button>
             </div>
           </form>
         </div>
@@ -271,7 +522,7 @@ const Header = () => {
             </button>
             <div className="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-add-new-dropdown">
               <a className="dropdown-item" href="#" onClick={() => addEditLead.open({ id: 0 })}><i className="mdi mdi-account-convert me-2"></i>Lead</a>
-              <a className="dropdown-item" href="#" onClick={() => addEditProspect.open({ id: 0 })}><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
+              <a className="dropdown-item" href="#"><i className="mdi mdi-account-question-outline me-2"></i>Prospect</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-calculator me-2"></i>Estimate</a>
               <Link to="/proposals" className="dropdown-item"><i className="mdi mdi-file-document-edit me-2"></i>Proposal</Link>
               <a className="dropdown-item" href="#"
@@ -402,6 +653,17 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      <AdvancedCustomerFilter
+        isOpen={advancedFilter.isOpen}
+        onClose={advancedFilter.close}
+        filters={advancedFilter.filters}
+        onUpdateFilter={advancedFilter.updateFilter}
+        onUpdateNestedFilter={advancedFilter.updateNestedFilter}
+        onApply={handleAdvancedFilterApply}
+        onClearAll={advancedFilter.clearFilters}
+        activeFilterCount={advancedFilter.activeFilterCount}
+      />
     </header>
   );
 };
