@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import EmailRow from './EmailRow';
 import PhoneRow from './PhoneRow';
 
 /**
  * Reusable ContactFields component for managing contact information
  * Includes: First/Middle/Last Name, Primary Email, Alternate Emails, Phone Numbers
+ *
+ * Pure controlled component - all state managed by parent
  *
  * @param {Object} props
  * @param {Object} props.formData - Contact data object
@@ -22,20 +24,7 @@ const ContactFields = ({
   showMiddleName = true,
   prefix = ''
 }) => {
-  const [localFormData, setLocalFormData] = React.useState(formData);
-  const [localErrors, setLocalErrors] = React.useState(errors);
 
-  // Sync local state with parent formData
-  useEffect(() => {
-    setLocalFormData(formData);
-  }, [formData]);
-
-  // Sync local errors with parent errors
-  useEffect(() => {
-    setLocalErrors(errors);
-  }, [errors]);
-
-  // Initialize contact fields on mount
   useEffect(() => {
     const updates = {};
     if (!formData.alternateEmails) {
@@ -52,112 +41,46 @@ const ContactFields = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty deps - run once on mount
 
-  // Handle field changes and propagate to parent
+  // Handle simple field changes
   const handleFieldChange = (field, value) => {
-    const newFormData = { ...localFormData, [field]: value };
-    setLocalFormData(newFormData);
     onUpdateField(field, value);
   };
 
   // Handle email updates
   const handleUpdateEmail = (index, value) => {
-    // Compute new array first to avoid race condition
-    const newEmails = [...(localFormData.alternateEmails || [])];
+    const newEmails = [...(formData.alternateEmails || [])];
     newEmails[index] = value;
-
-    // Update local state
-    setLocalFormData(prev => ({ ...prev, alternateEmails: newEmails }));
-
-    // Update parent state
     onUpdateField('alternateEmails', newEmails);
-
-    // Clear error when user types
-    if (localErrors[`alternateEmail_${index}`]) {
-      const newErrors = { ...localErrors };
-      delete newErrors[`alternateEmail_${index}`];
-      setLocalErrors(newErrors);
-    }
   };
 
   // Handle phone updates
   const handleUpdatePhone = (index, phoneData) => {
-    // Compute new array first to avoid race condition
-    const newPhones = [...(localFormData.phones || [])];
+    const newPhones = [...(formData.phones || [])];
     newPhones[index] = phoneData;
-
-    // Update local state
-    setLocalFormData(prev => ({ ...prev, phones: newPhones }));
-
-    // Update parent state
     onUpdateField('phones', newPhones);
-
-    // Clear error when user types
-    if (localErrors[`phone_${index}`]) {
-      const newErrors = { ...localErrors };
-      delete newErrors[`phone_${index}`];
-      setLocalErrors(newErrors);
-    }
   };
 
   // Handle remove email
   const handleRemoveEmail = (index) => {
-    // Compute new array first to avoid race condition
-    const newEmails = (localFormData.alternateEmails || []).filter((_, i) => i !== index);
-
-    // Update local state
-    setLocalFormData(prev => ({ ...prev, alternateEmails: newEmails }));
-
-    // Update parent state
+    const newEmails = (formData.alternateEmails || []).filter((_, i) => i !== index);
     onUpdateField('alternateEmails', newEmails);
-
-    // Clear error for this field
-    if (localErrors[`alternateEmail_${index}`]) {
-      const newErrors = { ...localErrors };
-      delete newErrors[`alternateEmail_${index}`];
-      setLocalErrors(newErrors);
-    }
   };
 
   // Handle remove phone
   const handleRemovePhone = (index) => {
-    // Compute new array first to avoid race condition
-    const newPhones = (localFormData.phones || []).filter((_, i) => i !== index);
-
-    // Update local state
-    setLocalFormData(prev => ({ ...prev, phones: newPhones }));
-
-    // Update parent state
+    const newPhones = (formData.phones || []).filter((_, i) => i !== index);
     onUpdateField('phones', newPhones);
-
-    // Clear error for this field
-    if (localErrors[`phone_${index}`]) {
-      const newErrors = { ...localErrors };
-      delete newErrors[`phone_${index}`];
-      setLocalErrors(newErrors);
-    }
   };
 
   // Handle add email
   const handleAddEmail = () => {
-
-    const newEmails = [...(localFormData.alternateEmails || []), ''];
-
-    // Update local state
-    setLocalFormData(prev => ({ ...prev, alternateEmails: newEmails }));
-
-    // Update parent state
+    const newEmails = [...(formData.alternateEmails || []), ''];
     onUpdateField('alternateEmails', newEmails);
   };
 
   // Handle add phone
   const handleAddPhone = () => {
-    // Compute new array first to avoid race condition
-    const newPhones = [...(localFormData.phones || []), { type: 'mobile', number: '' }];
-
-    // Update local state
-    setLocalFormData(prev => ({ ...prev, phones: newPhones }));
-
-    // Update parent state
+    const newPhones = [...(formData.phones || []), { type: 'mobile', number: '' }];
     onUpdateField('phones', newPhones);
   };
 
@@ -173,14 +96,14 @@ const ContactFields = ({
             <input
               type="text"
               id={`${prefix}firstName`}
-              className={`form-control ${localErrors.firstName ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
               placeholder="Given name"
-              value={localFormData.firstName || ''}
+              value={formData.firstName || ''}
               onChange={(e) => handleFieldChange('firstName', e.target.value)}
               disabled={isSaving}
             />
-            {localErrors.firstName && (
-              <div className="invalid-feedback">{localErrors.firstName}</div>
+            {errors.firstName && (
+              <div className="invalid-feedback">{errors.firstName}</div>
             )}
           </div>
         </div>
@@ -196,7 +119,7 @@ const ContactFields = ({
                 id={`${prefix}middleName`}
                 className="form-control"
                 placeholder="Middle (optional)"
-                value={localFormData.middleName || ''}
+                value={formData.middleName || ''}
                 onChange={(e) => handleFieldChange('middleName', e.target.value)}
                 disabled={isSaving}
               />
@@ -212,14 +135,14 @@ const ContactFields = ({
             <input
               type="text"
               id={`${prefix}lastName`}
-              className={`form-control ${localErrors.lastName ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
               placeholder="Surname"
-              value={localFormData.lastName || ''}
+              value={formData.lastName || ''}
               onChange={(e) => handleFieldChange('lastName', e.target.value)}
               disabled={isSaving}
             />
-            {localErrors.lastName && (
-              <div className="invalid-feedback">{localErrors.lastName}</div>
+            {errors.lastName && (
+              <div className="invalid-feedback">{errors.lastName}</div>
             )}
           </div>
         </div>
@@ -233,14 +156,14 @@ const ContactFields = ({
         <input
           type="email"
           id={`${prefix}email`}
-          className={`form-control ${localErrors.email ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.email ? 'is-invalid' : ''}`}
           placeholder="name@example.com"
-          value={localFormData.email || ''}
+          value={formData.email || ''}
           onChange={(e) => handleFieldChange('email', e.target.value)}
           disabled={isSaving}
         />
-        {localErrors.email && (
-          <div className="invalid-feedback">{localErrors.email}</div>
+        {errors.email && (
+          <div className="invalid-feedback">{errors.email}</div>
         )}
       </div>
 
@@ -248,13 +171,13 @@ const ContactFields = ({
       <div className="mb-3">
         <label className="form-label">Alternate Emails</label>
         <div className="alternate-emails-section">
-          {(localFormData.alternateEmails || []).map((email, index) => (
+          {(formData.alternateEmails || []).map((email, index) => (
             <EmailRow
               key={index}
               value={email}
               onChange={(value) => handleUpdateEmail(index, value)}
               onRemove={() => handleRemoveEmail(index)}
-              error={localErrors[`alternateEmail_${index}`]}
+              error={errors[`alternateEmail_${index}`]}
               disabled={isSaving}
             />
           ))}
@@ -274,13 +197,13 @@ const ContactFields = ({
       <div className="mb-3">
         <label className="form-label">Phone Numbers</label>
         <div className="phones-section">
-          {(localFormData.phones || []).map((phone, index) => (
+          {(formData.phones || []).map((phone, index) => (
             <PhoneRow
               key={index}
               phone={phone}
               onChange={(phoneData) => handleUpdatePhone(index, phoneData)}
               onRemove={() => handleRemovePhone(index)}
-              error={localErrors[`phone_${index}`]}
+              error={errors[`phone_${index}`]}
               disabled={isSaving}
             />
           ))}
