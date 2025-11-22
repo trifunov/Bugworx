@@ -26,6 +26,13 @@ const STORAGE_KEYS = {
   OPERATIONAL_SETUP_JOB_SETTINGS: 'bugworx_operational_setup_job_settings',
   OPERATIONAL_SETUP_ROUTE_CONFIGURATION: 'bugworx_operational_setup_route_configuration',
   OPERATIONAL_SETUP_ZONES: 'bugworx_operational_setup_zones',
+  SERVICE_INSPECTION_PEST_TYPES: 'bugworx_service_inspection_pest_types',
+  SERVICE_INSPECTION_POINT_TYPES: 'bugworx_service_inspection_point_types',
+  SERVICE_INSPECTION_TREATMENT_TYPES: 'bugworx_service_inspection_treatment_types',
+  SERVICE_INSPECTION_SERVICE_TEMPLATES: 'bugworx_service_inspection_service_templates', 
+  SERVICE_INSPECTION_EQUIPMENT_DEVICES: 'bugworx_service_inspection_equipment_devices',
+  SERVICE_INSPECTION_MATERIAL_SETUP: 'bugworx_service_inspection_material_setup',
+  SERVICE_INSPECTION_INSPECTION_POINT_CATEGORIES: 'bugworx_service_inspection_inspection_point_categories',
   LEADS: 'bugworx_leads',
   SERVICE_TYPES: 'bugworx_service_types',
   PROPOSALS: 'bugworx_proposals',
@@ -1003,6 +1010,28 @@ export const getExportRecord = (entity, defaultValue) => getFromStorage(`export_
 export const getAuditTrail = () => getFromStorage('auditTrail', []);
 export const saveAuditTrail = (trail) => setToStorage('auditTrail', trail);
 
+export const getInspectionPointTypes = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_POINT_TYPES, []);
+export const saveInspectionPointTypes = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_POINT_TYPES, items);
+
+export const getPestTypes = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_PEST_TYPES, []);
+export const savePestTypes = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_PEST_TYPES, items);
+
+export const getTreatmentTypes = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_TREATMENT_TYPES, []);
+export const saveTreatmentTypes = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_TREATMENT_TYPES, items);
+
+export const getServiceTemplates = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_SERVICE_TEMPLATES, []);
+export const saveServiceTemplates = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_SERVICE_TEMPLATES, items);
+
+export const getEquipmentDevices = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_EQUIPMENT_DEVICES, []);
+export const saveEquipmentDevices = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_EQUIPMENT_DEVICES, items);
+  
+export const getInspectionPointCategories = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_INSPECTION_POINT_CATEGORIES, []);
+export const saveInspectionPointCategories = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_INSPECTION_POINT_CATEGORIES, items);
+
+export const getMaterialSetups = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, []);
+export const saveMaterialSetups = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, items);
+  
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1134,5 +1163,17 @@ export default {
   getImportedFile,
   saveExportRecord,
   getAuditTrail,
-  saveAuditTrail
+  saveAuditTrail,
+  getInspectionPointTypes,
+  saveInspectionPointTypes,
+  getPestTypes,
+  savePestTypes,
+  getTreatmentTypes,
+  saveTreatmentTypes,
+  getServiceTemplates,
+  saveServiceTemplates,
+  getEquipmentDevices,
+  saveEquipmentDevices,
+  getInspectionPointCategories,
+  saveInspectionPointCategories
 };
