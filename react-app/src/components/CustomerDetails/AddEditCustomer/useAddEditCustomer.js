@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { save, updateField } from '../../../utils/addEditFormUtils';
+import { isValidContactData } from '../../../utils/contactValidation';
 
 const useAddEditCustomer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,10 +8,14 @@ const useAddEditCustomer = () => {
     id: 0,
     name: '',
     customerType: '', // 'Residential' | 'Commercial'
-    primaryContactPerson: '',
-    jobTitle: '',
-    email: '',
-    phone: '',
+    billingContact: {
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      email: '',
+      alternateEmails: [],
+      phones: [{ type: 'mobile', number: '' }]
+    },
     preferredContactMethod: '', // 'Email' | 'Phone' | 'SMS' | 'Portal'
     customerStatus: 'Active'
   };
@@ -20,14 +25,53 @@ const useAddEditCustomer = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const open = (customer) => {
+    // Handle legacy data format migration
+    const billingContact = customer?.billingContact || {};
+
+    // If old format (name, email, phone), migrate to new format
+    if (billingContact.name && !billingContact.firstName) {
+
+      const nameParts = billingContact.name.trim().split(/\s+/);
+
+      if (nameParts.length === 1) {
+
+        billingContact.firstName = '';
+        billingContact.lastName = nameParts[0];
+        billingContact.middleName = '';
+        console.warn('Single-word name detected for customer:', customer?.id, 'Name:', billingContact.name);
+      } else if (nameParts.length === 2) {
+        billingContact.firstName = nameParts[0];
+        billingContact.lastName = nameParts[1];
+        billingContact.middleName = '';
+      } else if (nameParts.length === 3) {
+        billingContact.firstName = nameParts[0];
+        billingContact.middleName = nameParts[1];
+        billingContact.lastName = nameParts[2];
+      } else {
+        billingContact.firstName = nameParts[0];
+        billingContact.middleName = nameParts.slice(1, -1).join(' ');
+        billingContact.lastName = nameParts[nameParts.length - 1];
+        console.warn('Complex name format detected for customer:', customer?.id, 'Original:', billingContact.name);
+      }
+
+      billingContact._migrated = true;
+    }
+
+    // Ensure arrays exist
+    if (!billingContact.alternateEmails) {
+      billingContact.alternateEmails = [];
+    }
+    if (!billingContact.phones) {
+      billingContact.phones = billingContact.phone ?
+        [{ type: 'mobile', number: billingContact.phone }] :
+        [{ type: 'mobile', number: '' }];
+    }
+
     setFormData({
       id: customer?.id || 0,
       name: customer?.name || '',
       customerType: customer?.customerType || '',
-      primaryContactPerson: customer?.primaryContactPerson || '',
-      jobTitle: customer?.jobTitle || '',
-      email: customer?.email || '',
-      phone: customer?.phone || '',
+      billingContact,
       preferredContactMethod: customer?.preferredContactMethod || '',
       customerStatus: customer?.customerStatus || 'Active'
     });
@@ -56,16 +100,14 @@ const useAddEditCustomer = () => {
       newErrors.customerType = 'Customer type is required';
     }
 
-    if (!formData.primaryContactPerson?.trim()) {
-      newErrors.primaryContactPerson = 'Primary contact name is required';
-    }
-
-    if (!formData.email?.trim()) {
-      newErrors.email = 'Email is required';
-    }
-
-    if (!formData.phone?.trim()) {
-      newErrors.phone = 'Phone is required';
+    // Validate billing contact using contact validation utility
+    if (formData.billingContact) {
+      const contactValidation = isValidContactData(formData.billingContact);
+      if (!contactValidation.isValid) {
+        Object.assign(newErrors, contactValidation.errors);
+      }
+    } else {
+      newErrors.billingContact = 'Billing contact information is required';
     }
 
     setErrors(newErrors);
