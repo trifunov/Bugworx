@@ -33,9 +33,11 @@ export const useInspectionPointTypes = () => {
     };
 
     const removeItem = (id) => {
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveInspectionPointTypes(updated);
+        if (window.confirm('Are you sure you want to delete this item?')) {
+            const updated = items.filter(i => i.id !== id);
+            setItems(updated);
+            saveInspectionPointTypes(updated);
+        }
     };
 
     return {
