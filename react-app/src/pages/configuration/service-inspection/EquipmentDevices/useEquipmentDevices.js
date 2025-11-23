@@ -27,6 +27,7 @@ export const useEquipmentDevices = () => {
     };
 
     const removeItem = (id) => {
+        if(!window.confirm('Are you sure you want to delete this equipment device?')) return;
         const updated = items.filter(i => i.id !== id);
         setItems(updated);
         saveEquipmentDevices(updated);

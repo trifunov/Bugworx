@@ -27,6 +27,7 @@ export const usePestTypes = () => {
     };
 
     const removeItem = (id) => {
+        if(!window.confirm('Are you sure you want to delete this pest type?')) return;
         const updated = items.filter(i => i.id !== id);
         setItems(updated);
         savePestTypes(updated);

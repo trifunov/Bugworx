@@ -26,6 +26,7 @@ export const useInspectionPointCategories = () => {
     };
 
     const removeItem = (id) => {
+        if(!window.confirm('Are you sure you want to delete this inspection point category?')) return;
         const updated = items.filter(i => i.id !== id);
         setItems(updated);
         saveInspectionPointCategories(updated);

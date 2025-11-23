@@ -27,6 +27,7 @@ export const useMaterialSetup = () => {
     };
 
     const removeItem = (id) => {
+        if(!window.confirm('Are you sure you want to delete this material setup?')) return;
         const updated = items.filter(i => i.id !== id);
         setItems(updated);
         saveMaterialSetups(updated);
