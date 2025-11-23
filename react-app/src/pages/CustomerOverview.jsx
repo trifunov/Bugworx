@@ -4,8 +4,6 @@ import {
   addServiceAddress,
   updateServiceAddress,
   addAppointment,
-  addCustomer,
-  updateCustomer,
   addProposal,
   updateProposal,
 } from "../utils/localStorage";
@@ -19,8 +17,6 @@ import ScheduleServiceModal from "../components/CustomerActions/ScheduleServiceM
 import ViewReportsModal from "../components/CustomerActions/ViewReportsModal";
 import AddEditProposalModal from "../components/CustomerActions/AddEditProposalModal";
 import CreateInvoiceModal from "../components/CustomerActions/CreateInvoiceModal";
-import useAddEditCustomer from "../components/CustomerDetails/AddEditCustomer/useAddEditCustomer";
-import AddEditCustomer from "../components/CustomerDetails/AddEditCustomer/AddEditCustomer";
 import useCustomerData from "../hooks/useCustomerData";
 import { usePageSubHeader } from "../contexts/PageSubHeaderContext";
 import useServiceAddresses from "../hooks/useServiceAddresses";
@@ -40,7 +36,7 @@ const CustomerOverview = () => {
   const navigate = useNavigate();
 
   // Data hooks
-  const { customer, refresh: refreshCustomer } = useCustomerData(id);
+  const { customer } = useCustomerData(id);
   const { refresh: refreshServiceAddresses } = useServiceAddresses(id);
   const { serviceAddresses } = useServiceAddresses(id);
   const { appointments } = useCustomerAppointments(id, serviceAddresses);
@@ -259,8 +255,9 @@ const CustomerOverview = () => {
                             Name:
                           </th>
                           <td className="pe-0">
-                            {customer.billingContact?.name ||
-                              customer.primaryContactPerson}
+                            {customer.billingContact?.firstName && customer.billingContact?.lastName
+                              ? `${customer.billingContact.firstName} ${customer.billingContact.middleName ? customer.billingContact.middleName + ' ' : ''}${customer.billingContact.lastName}`
+                              : customer.billingContact?.name || customer.primaryContactPerson}
                           </td>
                         </tr>
                         <tr>
@@ -268,7 +265,17 @@ const CustomerOverview = () => {
                             Email:
                           </th>
                           <td className="pe-0">
-                            {customer.billingContact?.email || customer.email}
+                            <div>{customer.billingContact?.email || customer.email}</div>
+                            {customer.billingContact?.alternateEmails && customer.billingContact.alternateEmails.length > 0 && (
+                              <div className="mt-1">
+                                {customer.billingContact.alternateEmails.map((altEmail, index) => (
+                                  <div key={index} className="text-muted font-size-12">
+                                    <i className="mdi mdi-email-outline me-1"></i>
+                                    {altEmail}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </td>
                         </tr>
                         <tr>
@@ -276,7 +283,20 @@ const CustomerOverview = () => {
                             Phone:
                           </th>
                           <td className="pe-0">
-                            {customer.billingContact?.phone || customer.phone}
+                            {customer.billingContact?.phones && customer.billingContact.phones.length > 0 ? (
+                              <div>
+                                {customer.billingContact.phones.map((phone, index) => (
+                                  <div key={index} className="mb-1">
+                                    <span className="badge badge-soft-primary me-2" style={{ fontSize: '10px' }}>
+                                      {phone.type}
+                                    </span>
+                                    {phone.number}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              customer.billingContact?.phone || customer.phone
+                            )}
                           </td>
                         </tr>
                       </tbody>
