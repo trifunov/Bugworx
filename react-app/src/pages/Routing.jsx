@@ -10,7 +10,10 @@ import {
   customers as initialCustomers,
   serviceAddresses as initialServiceAddresses,
   technicians as initialTechnicians,
-  inventory as initialInventory
+  inventory as initialInventory,
+  programs,
+  services,
+  contracts
 } from '../data/mockData';
 import {
   initializeStorage,
@@ -133,7 +136,10 @@ const Routing = () => {
       inventory: initialInventory,
       vehicles: initialVehicles,
       routes: initialRoutes,
-      routeTemplates: initialRouteTemplates
+      routeTemplates: initialRouteTemplates,
+      programs: programs,
+      services: services,
+      contracts: contracts
     });
     loadData();
   }, [setPageSubHeader]);

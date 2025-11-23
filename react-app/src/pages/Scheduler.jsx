@@ -10,7 +10,10 @@ import {
   customers as initialCustomers,
   priorities,
   appointmentStatuses,
-  inventory as initialInventory
+  inventory as initialInventory,
+  programs,
+  services,
+  contracts
 } from '../data/mockData';
 import {
   initializeStorage,
@@ -87,7 +90,10 @@ const Scheduler = () => {
       customers: initialCustomers,
       serviceAddresses: initialServiceAddresses,
       technicians: initialTechnicians,
-      inventory: initialInventory
+      inventory: initialInventory,
+      programs: programs,
+      services: services,
+      contracts: contracts
     });
     loadData();
     setPageSubHeader({

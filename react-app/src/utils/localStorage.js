@@ -36,7 +36,10 @@ const STORAGE_KEYS = {
   LEADS: 'bugworx_leads',
   SERVICE_TYPES: 'bugworx_service_types',
   PROPOSALS: 'bugworx_proposals',
-  CONFIGURATION: 'bugworx_configuration'
+  CONFIGURATION: 'bugworx_configuration',
+  CONTRACTS: 'bugworx_contracts',
+  PROGRAMS: 'bugworx_programs',
+  SERVICES: 'bugworx_services'
 };
 
 // Generic storage functions
@@ -385,7 +388,7 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads, prospects } = mockData;
+  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads, prospects, programs, services, contracts } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
@@ -426,6 +429,15 @@ export const initializeStorage = (mockData) => {
   }
   if (getProspects().length === 0 && prospects) {
     setProspects(prospects);
+  }
+  if (getPrograms().length === 0 && programs) {
+    setPrograms(programs);
+  }
+  if (getServices().length === 0 && services) {
+    setServices(services);
+  }
+  if (getContracts().length === 0 && contracts) {
+    setContracts(contracts);
   }
 };
 
@@ -1031,6 +1043,164 @@ export const saveInspectionPointCategories = (items) => setToStorage(STORAGE_KEY
 export const getMaterialSetups = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, []);
 export const saveMaterialSetups = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, items);
 
+// Contract-specific functions
+export const getContracts = () => {
+  return getFromStorage(STORAGE_KEYS.CONTRACTS, []);
+};
+
+export const setContracts = (contracts) => {
+  return setToStorage(STORAGE_KEYS.CONTRACTS, contracts);
+};
+
+export const addContract = (contract) => {
+  const contracts = getContracts();
+  const newContract = {
+    ...contract,
+    id: Date.now(),
+    contractNumber: `CONT-${String(Date.now()).slice(-6)}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  contracts.push(newContract);
+  setContracts(contracts);
+  return newContract;
+};
+
+export const updateContract = (id, updates) => {
+  const contracts = getContracts();
+  const index = contracts.findIndex(c => c.id === id);
+  if (index !== -1) {
+    contracts[index] = {
+      ...contracts[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setContracts(contracts);
+    return contracts[index];
+  }
+  return null;
+};
+
+export const deleteContract = (id) => {
+  const contracts = getContracts();
+  const filtered = contracts.filter(c => c.id !== id);
+  setContracts(filtered);
+  return filtered.length < contracts.length;
+};
+
+export const getContractById = (id) => {
+  const contracts = getContracts();
+  return contracts.find(c => c.id === id);
+};
+
+export const getContractsByServiceAddressId = (serviceAddressId) => {
+  const contracts = getContracts();
+  return contracts.filter(c => c.serviceAddressId === serviceAddressId);
+};
+
+// Program-specific functions
+export const getPrograms = () => {
+  return getFromStorage(STORAGE_KEYS.PROGRAMS, []);
+};
+
+export const setPrograms = (programs) => {
+  return setToStorage(STORAGE_KEYS.PROGRAMS, programs);
+};
+
+export const addProgram = (program) => {
+  const programs = getPrograms();
+  const newProgram = {
+    ...program,
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  programs.push(newProgram);
+  setPrograms(programs);
+  return newProgram;
+};
+
+export const updateProgram = (id, updates) => {
+  const programs = getPrograms();
+  const index = programs.findIndex(p => p.id === id);
+  if (index !== -1) {
+    programs[index] = {
+      ...programs[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setPrograms(programs);
+    return programs[index];
+  }
+  return null;
+};
+
+export const deleteProgram = (id) => {
+  const programs = getPrograms();
+  const filtered = programs.filter(p => p.id !== id);
+  setPrograms(filtered);
+  return filtered.length < programs.length;
+};
+
+export const getProgramById = (id) => {
+  const programs = getPrograms();
+  return programs.find(p => p.id === id);
+};
+
+// Service-specific functions
+export const getServices = () => {
+  return getFromStorage(STORAGE_KEYS.SERVICES, []);
+};
+
+export const setServices = (services) => {
+  return setToStorage(STORAGE_KEYS.SERVICES, services);
+};
+
+export const addService = (service) => {
+  const services = getServices();
+  const newService = {
+    ...service,
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  services.push(newService);
+  setServices(services);
+  return newService;
+};
+
+export const updateService = (id, updates) => {
+  const services = getServices();
+  const index = services.findIndex(s => s.id === id);
+  if (index !== -1) {
+    services[index] = {
+      ...services[index],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    setServices(services);
+    return services[index];
+  }
+  return null;
+};
+
+export const deleteService = (id) => {
+  const services = getServices();
+  const filtered = services.filter(s => s.id !== id);
+  setServices(filtered);
+  return filtered.length < services.length;
+};
+
+export const getServiceById = (id) => {
+  const services = getServices();
+  return services.find(s => s.id === id);
+};
+
+export const getServicesByProgramId = (programId) => {
+  const services = getServices();
+  return services.filter(s => s.programId === programId);
+};
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1176,5 +1346,25 @@ export default {
   getInspectionPointCategories,
   saveInspectionPointCategories,
   getMaterialSetups,
-  saveMaterialSetups
+  saveMaterialSetups,
+  getContracts,
+  setContracts,
+  addContract,
+  updateContract,
+  deleteContract,
+  getContractById,
+  getContractsByServiceAddressId,
+  getPrograms,
+  setPrograms,
+  addProgram,
+  updateProgram,
+  deleteProgram,
+  getProgramById,
+  getServices,
+  setServices,
+  addService,
+  updateService,
+  deleteService,
+  getServiceById,
+  getServicesByProgramId
 };
