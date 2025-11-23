@@ -35,7 +35,7 @@ const Users = () => {
 
  const {addEditUser} = useEditableFormContext();
 
-    // Search filter for service addresses
+    // Search filter for users
   const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(
     users,
     ['username', 'email', 'role']
