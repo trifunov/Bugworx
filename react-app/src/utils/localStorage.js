@@ -29,7 +29,7 @@ const STORAGE_KEYS = {
   SERVICE_INSPECTION_PEST_TYPES: 'bugworx_service_inspection_pest_types',
   SERVICE_INSPECTION_POINT_TYPES: 'bugworx_service_inspection_point_types',
   SERVICE_INSPECTION_TREATMENT_TYPES: 'bugworx_service_inspection_treatment_types',
-  SERVICE_INSPECTION_SERVICE_TEMPLATES: 'bugworx_service_inspection_service_templates', 
+  SERVICE_INSPECTION_SERVICE_TEMPLATES: 'bugworx_service_inspection_service_templates',
   SERVICE_INSPECTION_EQUIPMENT_DEVICES: 'bugworx_service_inspection_equipment_devices',
   SERVICE_INSPECTION_MATERIAL_SETUP: 'bugworx_service_inspection_material_setup',
   SERVICE_INSPECTION_INSPECTION_POINT_CATEGORIES: 'bugworx_service_inspection_inspection_point_categories',
@@ -1024,13 +1024,12 @@ export const saveServiceTemplates = (items) => setToStorage(STORAGE_KEYS.SERVICE
 
 export const getEquipmentDevices = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_EQUIPMENT_DEVICES, []);
 export const saveEquipmentDevices = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_EQUIPMENT_DEVICES, items);
-  
+
 export const getInspectionPointCategories = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_INSPECTION_POINT_CATEGORIES, []);
 export const saveInspectionPointCategories = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_INSPECTION_POINT_CATEGORIES, items);
 
 export const getMaterialSetups = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, []);
 export const saveMaterialSetups = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, items);
-  
 
 export default {
   STORAGE_KEYS,
@@ -1175,5 +1174,7 @@ export default {
   getEquipmentDevices,
   saveEquipmentDevices,
   getInspectionPointCategories,
-  saveInspectionPointCategories
+  saveInspectionPointCategories,
+  getMaterialSetups,
+  saveMaterialSetups
 };

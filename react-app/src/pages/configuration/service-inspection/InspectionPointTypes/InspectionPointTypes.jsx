@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useInspectionPointTypes } from './useInspectionPointTypes';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
@@ -7,7 +6,7 @@ const InspectionPointTypes = () => {
     const { items, form, handleChange, addItem, removeItem } = useInspectionPointTypes();
     const { setPageSubHeader } = usePageSubHeader();
 
-      useEffect(() => {
+    useEffect(() => {
         setPageSubHeader({
             title: 'Inspection Point Types',
             breadcrumbs: [
@@ -37,6 +36,7 @@ const InspectionPointTypes = () => {
                                     value={form.targetPests} 
                                     onChange={handleChange} 
                                     placeholder="e.g., Rodents, Insects" 
+                                    required
                                 />
                             </div>
                             <div className="form-group">

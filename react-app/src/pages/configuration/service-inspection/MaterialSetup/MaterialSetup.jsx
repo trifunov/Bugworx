@@ -20,7 +20,6 @@ const MaterialSetup = () => {
     return (
         <div className="configuration-page">
             <div className="page-header">
-                <h2>Material Setup</h2>
                 <p>Link chemicals and materials to inventory and safety data.</p>
             </div>
 
