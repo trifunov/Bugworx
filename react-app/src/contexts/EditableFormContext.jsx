@@ -7,7 +7,9 @@ import useAddEditUser from '../components/Users/useAddEditUser';
 import useAddEditRole from '../components/RolesPermissions/useAddEditRole';
 import useAddEditEmployee from '../components/Configuration/EmployeeDirectory/useAddEditEmployee';
 import useAddEditTeam from '../components/Configuration/TeamBranches/useAddEditTeam';
-
+import useAddEditContractType from '../components/Configuration/OerationalSetup/ContractTypes/useAddEditContractTypes';
+import useAddEditServiceTypes from '../components/Configuration/OerationalSetup/ServiceTypes/useAddEditServiceTypes';
+import useAddEditFrequencyTemplate from '../components/Configuration/OerationalSetup/FrequencyTemplate/useFrequencyTemplate';
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
@@ -30,6 +32,10 @@ export const EditableFormProvider = ({ children }) => {
     const addEditRole = useAddEditRole();
     const addEditEmployee = useAddEditEmployee();
     const addEditTeam = useAddEditTeam();
+
+    const addEditContractType = useAddEditContractType();
+    const addEditServiceTypes = useAddEditServiceTypes();
+    const addEditFrequencyTemplate = useAddEditFrequencyTemplate();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -64,6 +70,9 @@ export const EditableFormProvider = ({ children }) => {
         addEditRole,
         addEditEmployee,
         addEditTeam,
+        addEditContractType,
+        addEditServiceTypes,
+        addEditFrequencyTemplate,
         loadCustomers,
         loadLeads,
         loadProspects,
