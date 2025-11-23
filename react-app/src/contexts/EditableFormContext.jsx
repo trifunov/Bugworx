@@ -3,6 +3,7 @@ import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/us
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import useAddEditProspect from '../components/CustomerDetails/Prospects/AddEditProspect/useAddEditProspect';
 import useAddEditInventory from '../components/InventoryDetails/useAddEditInventory';
+import useAddEditUser from '../components/Users/useAddEditUser';
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
@@ -20,6 +21,7 @@ export const EditableFormProvider = ({ children }) => {
     const addEditLead = useAddEditLead();
     const addEditProspect = useAddEditProspect();
     const addEditInventory = useAddEditInventory();
+    const addEditUser = useAddEditUser();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -50,6 +52,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditLead,
         addEditProspect,
         addEditInventory,
+        addEditUser,
         loadCustomers,
         loadLeads,
         loadProspects,

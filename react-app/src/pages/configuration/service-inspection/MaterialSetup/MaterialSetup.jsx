@@ -22,7 +22,6 @@ const MaterialSetup = () => {
             <div className="page-header">
                 <p>Link chemicals and materials to inventory and safety data.</p>
             </div>
-
             <div className="card form-card">
                 <div className="card-header">Add New Material/Chemical</div>
                 <div className="card-body">
