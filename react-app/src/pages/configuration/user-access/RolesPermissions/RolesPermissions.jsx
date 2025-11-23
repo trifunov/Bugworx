@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRolesPermissions } from './useRolesPermissions';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
-import { EditableFormProvider, useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
 import Table from '../../../../components/Common/Table/Table';
 import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
@@ -20,7 +20,7 @@ const sortableColumns = columns.reduce((acc, col) => {
     return acc;
 }, {});
 
-const RolesPermissionsComponent = () => {
+const RolesPermissions = () => {
   const { roles, handleSave, removeRole } = useRolesPermissions();
   const { addEditRole } = useEditableFormContext();
   const { setPageSubHeader } = usePageSubHeader();
@@ -37,7 +37,16 @@ const RolesPermissionsComponent = () => {
   }, [setPageSubHeader]);
 
   const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(roles, ['name']);
-  const { data: paginatedData, ...tableProps } = useTable(filteredItems, { defaultSortField: 'name' });
+    const { 
+    data: paginatedData, 
+    handleSort, 
+    sortField, 
+    sortDirection,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems
+  } = useTable(filteredItems, { defaultSortField: 'name' });
 
   const renderRow = (role) => (
     <tr key={role.id}>
@@ -67,20 +76,24 @@ const RolesPermissionsComponent = () => {
         onSave={() => addEditRole.onSaveHandle(handleSave)}
       />
 
-      <div className="row">
-        <div className="col-12">
+       <div className="row">
+        <div className="col-lg-12">
           <div className="card">
             <div className="card-body">
               <div className="row mb-3">
-                <div className="col-md-6">
+                <div className="col-12">
+                  <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
+                    <div className="flex-grow-1 w-100 me-md-3">
                   <TableSearch
                     value={searchTerm}
                     onChange={setSearchTerm}
                     placeholder="Search roles..."
                   />
                 </div>
-                <div className="col-md-6 d-flex justify-content-end">
+                <div className="mt-2 mt-md-0">
                   <AddNewButton handleAddNew={() => addEditRole.open()} />
+                </div>
+                </div>
                 </div>
               </div>
 
@@ -89,7 +102,15 @@ const RolesPermissionsComponent = () => {
                 data={paginatedData}
                 renderRow={renderRow}
                 sortableColumns={sortableColumns}
-                {...tableProps}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+                pagination={{
+                  currentPage,
+                  totalPages,
+                  onPageChange: setCurrentPage,
+                  totalItems
+                }}
                 emptyState={{
                   icon: 'mdi mdi-lock-outline',
                   message: 'No roles found. Click "Add New" to create one.'
@@ -102,11 +123,5 @@ const RolesPermissionsComponent = () => {
     </>
   );
 };
-
-const RolesPermissions = () => (
-  <EditableFormProvider>
-    <RolesPermissionsComponent />
-  </EditableFormProvider>
-);
 
 export default RolesPermissions;

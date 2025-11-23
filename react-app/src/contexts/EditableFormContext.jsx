@@ -5,6 +5,7 @@ import useAddEditProspect from '../components/CustomerDetails/Prospects/AddEditP
 import useAddEditInventory from '../components/InventoryDetails/useAddEditInventory';
 import useAddEditUser from '../components/Users/useAddEditUser';
 import useAddEditRole from '../components/RolesPermissions/useAddEditRole';
+import useAddEditEmployee from '../components/Configuration/EmployeeDirectory/useAddEditEmployee';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -25,6 +26,7 @@ export const EditableFormProvider = ({ children }) => {
     const addEditInventory = useAddEditInventory();
     const addEditUser = useAddEditUser();
     const addEditRole = useAddEditRole();
+    const addEditEmployee = useAddEditEmployee();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -57,6 +59,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditInventory,
         addEditUser,
         addEditRole,
+        addEditEmployee,
         loadCustomers,
         loadLeads,
         loadProspects,

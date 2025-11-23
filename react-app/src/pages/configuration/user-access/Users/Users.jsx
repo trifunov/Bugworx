@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useUsers } from './useUsers';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
-import { EditableFormProvider, useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
 import Table from '../../../../components/Common/Table/Table';
 import useTable from "../../../../components/Common/Table/useTable";
 import AddNewButton from '../../../../components/Common/AddNewButton';
@@ -24,7 +24,7 @@ const sortableColumns = columns.reduce((acc, col) => {
     return acc;
 }, {});
 
-const UsersComponent = () => {
+const Users = () => {
    const {
     users,
     roles,
@@ -150,11 +150,5 @@ const UsersComponent = () => {
     </>
   );
 };
-
-const Users = () => (
-  <EditableFormProvider>
-    <UsersComponent />
-  </EditableFormProvider>
-);
 
 export default Users;
