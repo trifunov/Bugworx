@@ -35,36 +35,6 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
     onSave();
   };
 
-  const handleContractSelection = (contractId) => {
-    const currentIds = formData.contractIds || [];
-    if (currentIds.includes(contractId)) {
-      onUpdateField('contractIds', currentIds.filter(id => id !== contractId));
-    } else {
-      onUpdateField('contractIds', [...currentIds, contractId]);
-    }
-  };
-
-  const handleServiceSelection = (serviceId) => {
-    const currentServices = formData.selectedServices || [];
-    const serviceExists = currentServices.find(s => s.id === serviceId);
-
-    if (serviceExists) {
-      onUpdateField('selectedServices', currentServices.filter(s => s.id !== serviceId));
-    } else {
-      const service = availableServices.find(s => s.id === serviceId);
-      if (service) {
-        onUpdateField('selectedServices', [...currentServices, {
-          id: service.id,
-          name: service.name,
-          productionPrice: service.productionPrice,
-          salesPrice: service.salesPrice,
-          taxType: service.taxType,
-          taxValue: service.taxValue
-        }]);
-      }
-    }
-  };
-
   const handleServicePriceChange = (serviceId, field, value) => {
     const currentServices = formData.selectedServices || [];
     const updatedServices = currentServices.map(s => {
@@ -139,18 +109,9 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
         <div className="offcanvas-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="customerId" className="form-label">Customer <span className="text-danger">*</span></label>
-              <SearchableSelect
-                options={customerOptions}
-                value={formData.customerId || ''}
-                onChange={(value) => onUpdateField('customerId', value)}
-                placeholder="Search by name, address, or customer number..."
-                displayKey="label"
-                valueKey="value"
-                searchKeys={['customerNum', 'address', 'phone']}
-                disabled={isSaving || formData.id}
-                error={errors.customerId}
-              />
+              <div className="alert alert-info mb-0">
+                <strong>Customer:</strong> {customerOptions.find(c => c.value === parseInt(formData.customerId))?.label || 'Loading...'}
+              </div>
             </div>
 
             <div className="mb-3">
@@ -160,7 +121,7 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
                 id="serviceAddressId"
                 value={formData.serviceAddressId || ''}
                 onChange={(e) => onUpdateField('serviceAddressId', e.target.value)}
-                disabled={isSaving || !formData.customerId}
+                disabled={isSaving}
               >
                 <option value="">Select Service Address...</option>
                 {serviceAddresses.map(addr => (
@@ -170,75 +131,69 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
                 ))}
               </select>
               {errors.serviceAddressId && <div className="invalid-feedback">{errors.serviceAddressId}</div>}
-              {!formData.customerId && (
-                <small className="text-muted">Please select a customer first</small>
-              )}
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Contracts <span className="text-danger">*</span></label>
-              <div className={`border rounded p-3 ${errors.contractIds ? 'border-danger' : ''}`}>
-                {availableContracts.length === 0 ? (
-                  <div className="text-muted text-center py-2">
-                    {formData.serviceAddressId ? 'No contracts found for this service address' : 'Please select a service address first'}
-                  </div>
-                ) : (
-                  <div className="d-flex flex-column gap-2">
-                    {availableContracts.map(contract => (
-                      <div key={contract.id} className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id={`contract-${contract.id}`}
-                          checked={formData.contractIds?.includes(contract.id) || false}
-                          onChange={() => handleContractSelection(contract.id)}
-                          disabled={isSaving}
-                        />
-                        <label className="form-check-label" htmlFor={`contract-${contract.id}`}>
-                          {contract.contractNumber} - {getProgramName(contract.programId)}
-                          <small className="text-muted ms-2">
-                            ({contract.status} - {contract.startDate} to {contract.endDate})
-                          </small>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {errors.contractIds && <div className="text-danger small mt-1">{errors.contractIds}</div>}
+              <label htmlFor="contractId" className="form-label">Contract <span className="text-danger">*</span></label>
+              <select
+                className={`form-select ${errors.contractIds ? 'is-invalid' : ''}`}
+                id="contractId"
+                value={formData.contractIds?.[0] || ''}
+                onChange={(e) => {
+                  const selectedValue = e.target.value ? [parseInt(e.target.value)] : [];
+                  onUpdateField('contractIds', selectedValue);
+                }}
+                disabled={isSaving || availableContracts.length === 0}
+              >
+                <option value="">{availableContracts.length === 0 ? (formData.serviceAddressId ? 'No contracts found for this service address' : 'Please select a service address first') : 'Select a contract...'}</option>
+                {availableContracts.map(contract => (
+                  <option key={contract.id} value={contract.id}>
+                    {contract.contractNumber} - {getProgramName(contract.programId)} ({contract.status})
+                  </option>
+                ))}
+              </select>
+              {errors.contractIds && <div className="invalid-feedback">{errors.contractIds}</div>}
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Services <span className="text-danger">*</span></label>
-              <div className={`border rounded p-3 ${errors.selectedServices ? 'border-danger' : ''}`}>
+              <label htmlFor="selectedServices" className="form-label">Services <span className="text-danger">*</span></label>
+              <select
+                className={`form-select ${errors.selectedServices ? 'is-invalid' : ''}`}
+                id="selectedServices"
+                multiple
+                size="6"
+                value={formData.selectedServices?.map(s => s.id) || []}
+                onChange={(e) => {
+                  const selectedServiceIds = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                  const updatedServices = selectedServiceIds.map(serviceId => {
+                    const existing = formData.selectedServices?.find(s => s.id === serviceId);
+                    if (existing) return existing;
+                    const service = availableServices.find(s => s.id === serviceId);
+                    return {
+                      id: service.id,
+                      name: service.name,
+                      productionPrice: service.productionPrice,
+                      salesPrice: service.salesPrice,
+                      taxType: service.taxType,
+                      taxValue: service.taxValue
+                    };
+                  });
+                  onUpdateField('selectedServices', updatedServices);
+                }}
+                disabled={isSaving || availableServices.length === 0}
+              >
                 {availableServices.length === 0 ? (
-                  <div className="text-muted text-center py-2">
-                    {formData.contractIds?.length > 0 ? 'No services found for selected contracts' : 'Please select at least one contract first'}
-                  </div>
+                  <option disabled>{formData.contractIds?.length > 0 ? 'No services found for selected contract' : 'Please select a contract first'}</option>
                 ) : (
-                  <div className="d-flex flex-column gap-2">
-                    {availableServices.map(service => (
-                      <div key={service.id} className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id={`service-${service.id}`}
-                          checked={formData.selectedServices?.some(s => s.id === service.id) || false}
-                          onChange={() => handleServiceSelection(service.id)}
-                          disabled={isSaving}
-                        />
-                        <label className="form-check-label" htmlFor={`service-${service.id}`}>
-                          {service.name}
-                          <small className="text-muted ms-2">
-                            (${service.salesPrice})
-                          </small>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
+                  availableServices.map(service => (
+                    <option key={service.id} value={service.id}>
+                      {service.name} (${service.salesPrice})
+                    </option>
+                  ))
                 )}
-              </div>
-              {errors.selectedServices && <div className="text-danger small mt-1">{errors.selectedServices}</div>}
+              </select>
+              {errors.selectedServices && <div className="invalid-feedback">{errors.selectedServices}</div>}
+              <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple services</small>
             </div>
 
             {formData.selectedServices && formData.selectedServices.length > 0 && (

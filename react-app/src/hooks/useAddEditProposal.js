@@ -130,7 +130,7 @@ const useAddEditProposal = (customerId = null) => {
     }
 
     if (!formData.contractIds || formData.contractIds.length === 0) {
-      newErrors.contractIds = 'Please select at least one contract';
+      newErrors.contractIds = 'Please select a contract';
     }
 
     if (!formData.selectedServices || formData.selectedServices.length === 0) {
