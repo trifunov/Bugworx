@@ -7,10 +7,11 @@ const useAddEditProposal = (customerId = null) => {
   const [formData, setFormData] = useState({
     id: 0,
     customerId: customerId || '',
+    serviceAddressId: '',
+    contractIds: [],
+    selectedServices: [],
     proposalTitle: '',
     scopeOfWork: '',
-    servicesProposed: '',
-    pricing: '',
     termsAndConditions: config.defaultTermsAndConditions || '',
     attachments: [],
     status: 'Draft'
@@ -28,10 +29,11 @@ const useAddEditProposal = (customerId = null) => {
       setFormData({
         id: 0,
         customerId: customerId || '',
+        serviceAddressId: '',
+        contractIds: [],
+        selectedServices: [],
         proposalTitle: '',
         scopeOfWork: '',
-        servicesProposed: '',
-        pricing: '',
         termsAndConditions: config.defaultTermsAndConditions || '',
         attachments: [],
         status: 'Draft'
@@ -47,10 +49,11 @@ const useAddEditProposal = (customerId = null) => {
     setFormData({
       id: 0,
       customerId: customerId || '',
+      serviceAddressId: '',
+      contractIds: [],
+      selectedServices: [],
       proposalTitle: '',
       scopeOfWork: '',
-      servicesProposed: '',
-      pricing: '',
       termsAndConditions: config.defaultTermsAndConditions || '',
       attachments: [],
       status: 'Draft'
@@ -122,16 +125,24 @@ const useAddEditProposal = (customerId = null) => {
       newErrors.customerId = 'Please select a customer';
     }
 
+    if (!formData.serviceAddressId) {
+      newErrors.serviceAddressId = 'Please select a service address';
+    }
+
+    if (!formData.contractIds || formData.contractIds.length === 0) {
+      newErrors.contractIds = 'Please select at least one contract';
+    }
+
+    if (!formData.selectedServices || formData.selectedServices.length === 0) {
+      newErrors.selectedServices = 'Please select at least one service';
+    }
+
     if (!formData.proposalTitle?.trim()) {
       newErrors.proposalTitle = 'Proposal title is required';
     }
 
     if (!formData.scopeOfWork?.trim()) {
       newErrors.scopeOfWork = 'Scope of work is required';
-    }
-
-    if (!formData.pricing?.trim()) {
-      newErrors.pricing = 'Pricing is required';
     }
 
     setErrors(newErrors);

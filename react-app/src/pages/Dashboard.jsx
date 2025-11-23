@@ -13,12 +13,14 @@ import {
   inventory as initialInventory,
   facilities,
   areas,
-  inspectionPoints
+  inspectionPoints,
+  programs,
+  services,
+  contracts
 } from '../data/mockData';
 
 const Dashboard = () => {
 
-  // Initialize localStorage on mount
   useEffect(() => {
     initializeStorage({
       appointments: initialAppointments,
@@ -28,7 +30,10 @@ const Dashboard = () => {
       inventory: initialInventory,
       facilities: facilities,
       areas: areas,
-      inspectionPoints: inspectionPoints
+      inspectionPoints: inspectionPoints,
+      programs: programs,
+      services: services,
+      contracts: contracts
     });
   }, []);
 
