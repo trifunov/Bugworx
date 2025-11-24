@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Customer / Site / Program Accordion</title>
+  <link rel="stylesheet" href="./elena3.css" />
+</head>
+
+<body>
+  <main class="wrap">
+    <h1 class="page-title">Record Management</h1>
+
+    <section class="accordion" id="master-accordion">
+
+      <!-- CUSTOMER (merged) -->
+      <article class="acc-item">
+        <h2 class="acc-head">
+          <button class="acc-trigger" id="customer-trigger" aria-expanded="true"
+            aria-controls="customer-panel">CUSTOMER</button>
+          <button type="button" class="enable-toggle" role="switch" aria-checked="true"
+            data-target="customer-panel">Enabled</button>
+        </h2>
+        <div class="acc-panel" id="customer-panel" role="region" aria-labelledby="customer-trigger">
+          <!-- Basic Info -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Basic Info</h3>
+            <div class="grid">
+              <input class="field" placeholder="First name" />
+              <input class="field" placeholder="Middle name" />
+              <input class="field" placeholder="Surname" />
+              <input class="field" placeholder="Customer Number (auto)" />
+              <select class="field select">
+                <option disabled selected>Customer Type</option>
+                <option>Commercial</option>
+                <option>Residential</option>
+              </select>
+              <select class="field select">
+                <option disabled selected>Status</option>
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+              <select class="field select" multiple size="4" aria-label="Customer Category">
+                <option>Lead</option>
+                <option>Prospect</option>
+                <option>Active Customer</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Contact Info</h3>
+            <div class="grid">
+              <input class="field" placeholder="First name" />
+              <input class="field" placeholder="Middle name" />
+              <input class="field" placeholder="Surname" />
+              <input class="field" placeholder="Company name" />
+              <input class="field" placeholder="Email Address" />
+              <input class="field" placeholder="Phone (Main)" />
+              <input class="field" placeholder="Phone (Mobile)" />
+              <input class="field" placeholder="Phone (Fax)" />
+              <select class="field select" multiple size="4" aria-label="Preferred Communication Method">
+                <option>Email</option>
+                <option>SMS</option>
+                <option>Call</option>
+                <option>Main Office</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Billing Details -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Billing Details</h3>
+            <div class="grid">
+              <input class="field" placeholder="Address Line 1" />
+              <input class="field" placeholder="Address Line 2" />
+              <input class="field" placeholder="City" />
+              <input class="field" placeholder="Suburb" />
+              <input class="field" placeholder="Region" />
+              <input class="field" placeholder="Postal Code" />
+              <input class="field" placeholder="Country" />
+              <input class="field" placeholder="Latitude" />
+              <input class="field" placeholder="Longitude" />
+              <input class="field" placeholder="Time Zone" />
+              <input class="field" placeholder="Directions" />
+              <input class="field" placeholder="PO Box" />
+              <input class="field" placeholder="County" />
+              <input class="field" placeholder="Neighbourhood" />
+              <input class="field" placeholder="Building Number" />
+              <input class="field" placeholder="Billing Email" />
+              <select class="field select">
+                <option disabled selected>Tax ID / VAT Number</option>
+                <option>EU VAT</option>
+                <option>US EIN</option>
+              </select>
+              <select class="field select">
+                <option disabled selected>Payment Terms</option>
+                <option>Immediate</option>
+                <option>Net 30</option>
+                <option>Net 60</option>
+              </select>
+              <select class="field select">
+                <option disabled selected>Preferred Payment Method</option>
+                <option>Card</option>
+                <option>Bank Transfer</option>
+                <option>Invoice</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Account Management -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Account Management</h3>
+            <div class="grid">
+              <select class="field select">
+                <option disabled selected>Assigned Account Manager</option>
+                <option>Manager A</option>
+                <option>Manager B</option>
+              </select>
+              <select class="field select">
+                <option disabled selected>Customer Group</option>
+                <option>Referral</option>
+                <option>Campaign</option>
+                <option>VIP</option>
+              </select>
+              <select class="field select">
+                <option disabled selected>Lead Source</option>
+                <option>Website</option>
+                <option>Referral</option>
+                <option>Campaign</option>
+              </select>
+              <textarea class="field" placeholder="Customer Notes"></textarea>
+              <input class="field" placeholder="Labels (comma separated)" />
+              <input class="field" placeholder="Tags (contract, seasonal, etc.)" />
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SITE (merged) -->
+      <article class="acc-item">
+        <h2 class="acc-head">
+          <button class="acc-trigger" id="site-trigger" aria-expanded="false" aria-controls="site-panel">SITE</button>
+          <button type="button" class="enable-toggle" role="switch" aria-checked="true"
+            data-target="site-panel">Enabled</button>
+        </h2>
+        <div class="acc-panel" id="site-panel" role="region" aria-labelledby="site-trigger" hidden>
+          <!-- Site Address -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Site Address</h3>
+            <div class="grid">
+              <input class="field" placeholder='Site Name (e.g. "Warehouse 1")' />
+              <input class="field" placeholder="Reference Number" />
+              <input class="field" placeholder="Address Line 1" />
+              <input class="field" placeholder="Address Line 2" />
+              <input class="field" placeholder="City" />
+              <input class="field" placeholder="Suburb" />
+              <input class="field" placeholder="Region" />
+              <input class="field" placeholder="Postal Code" />
+              <input class="field" placeholder="Country" />
+              <input class="field" placeholder="Latitude" />
+              <input class="field" placeholder="Longitude" />
+              <input class="field" placeholder="Time Zone" />
+              <input class="field" placeholder="Directions" />
+              <input class="field" placeholder="PO Box" />
+              <input class="field" placeholder="County" />
+              <input class="field" placeholder="Neighbourhood" />
+              <input class="field" placeholder="Building Number" />
+              <select class="field select">
+                <option disabled selected>Operative Zone</option>
+                <option>Zone A</option>
+                <option>Zone B</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Property Info -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Property Info</h3>
+            <div class="grid">
+              <select class="field select">
+                <option disabled selected>Property Type</option>
+                <option>Residential</option>
+                <option>Restaurant</option>
+                <option>Warehouse</option>
+                <option>Office</option>
+              </select>
+              <input class="field" placeholder="Size (number)" />
+              <input class="field" placeholder="Number of Units" />
+            </div>
+          </div>
+
+          <!-- Compliance & Safety -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Compliance & Safety</h3>
+            <div class="grid">
+              <textarea class="field" placeholder="Safety Instructions"></textarea>
+              <textarea class="field" placeholder="Pest Sensitive Areas"></textarea>
+              <textarea class="field" placeholder="Site Rules"></textarea>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PROGRAM (merged) -->
+      <article class="acc-item">
+        <h2 class="acc-head">
+          <button class="acc-trigger" id="program-trigger" aria-expanded="false"
+            aria-controls="program-panel">PROGRAM</button>
+          <button type="button" class="enable-toggle" role="switch" aria-checked="true"
+            data-target="program-panel">Enabled</button>
+        </h2>
+        <div class="acc-panel" id="program-panel" role="region" aria-labelledby="program-trigger" hidden>
+          <!-- General Information -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">General Information</h3>
+            <div class="grid">
+              <input class="field" placeholder="Program name" />
+              <input class="field" placeholder="ID (auto)" hidden />
+              <input class="field" placeholder="Service address" />
+              <select class="field select" aria-label="Program Type">
+                <option disabled selected>Program Type</option>
+                <option>Contractual</option>
+                <option>Prepaid</option>
+                <option>On-Demand</option>
+              </select>
+              <select class="field select" aria-label="Status">
+                <option disabled selected>Status</option>
+                <option>Active</option>
+                <option>Pending</option>
+                <option>Suspended</option>
+                <option>Cancelled</option>
+                <option>Completed</option>
+              </select>
+              <input class="field" type="date" aria-label="Start Date" placeholder="Start Date" />
+              <input class="field" type="date" aria-label="End Date" placeholder="End Date" />
+              <input class="field" type="date" aria-label="Renewal Date" placeholder="Renewal Date" />
+              <select class="field select" aria-label="Contract Duration">
+                <option disabled selected>Contract Duration</option>
+                <option>12 months</option>
+                <option>24 months</option>
+                <option>36 months</option>
+              </select>
+              <select class="field select" aria-label="Program Category">
+                <option disabled selected>Program Category</option>
+                <option>Contractual</option>
+                <option>Prepaid</option>
+              </select>
+              <select class="field select" aria-label="Assigned Account Manager">
+                <option disabled selected>Assigned Account Manager</option>
+                <option>Manager A</option>
+                <option>Manager B</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Service Details -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Service & Billing Details</h3>
+            <div class="grid">
+              <select class="field select" aria-label="Service Event">
+                <option disabled selected>Service Event</option>
+                <option>Rodents</option>
+                <option>Insects</option>
+                <option>Bird Control</option>
+                <option>Termites</option>
+                <option>Monitoring</option>
+                <option>Fogging</option>
+              </select>
+              <input class="field" type="date" aria-label="Scheduled Date" placeholder="Scheduled Date" />
+              <input class="field" placeholder="Duration / Time Window" />
+              <select class="field select" aria-label="Frequency / Pattern">
+                <option disabled selected>Frequency / Pattern</option>
+                <option>Weekly</option>
+                <option>Bi-weekly</option>
+                <option>Monthly</option>
+                <option>Quarterly</option>
+                <option>One Time</option>
+              </select>
+              <select class="field select" multiple size="2" aria-label="Assigned Technician(s)">
+                <option disabled selected>Assigned Technician(s)</option>
+                <option>Tech A</option>
+                <option>Tech B</option>
+                <option>Tech C</option>
+                <option>Tech D</option>
+              </select>
+              <select class="field select" multiple size="2" aria-label="Target Pests">
+                <option disabled selected>Target Pests</option>
+                <option>Rodents</option>
+                <option>Roaches</option>
+                <option>Termites</option>
+                <option>Ants</option>
+                <option>Flies</option>
+              </select>
+              <select class="field select" multiple size="2" aria-label="Entry Points">
+                <option disabled selected>Entry Points</option>
+                <option>Doors</option>
+                <option>Windows</option>
+                <option>Vents</option>
+                <option>Cracks</option>
+              </select>
+              <select class="field select" multiple size="2" aria-label="Equipment Required">
+                <option disabled selected>Equipment Required</option>
+                <option>Sprayers</option>
+                <option>Bait Stations</option>
+                <option>Traps</option>
+                <option>Masks</option>
+              </select>
+              <select class="field select" aria-label="Billing Frequency">
+                <option disabled selected>Billing Frequency</option>
+                <option>Monthly</option>
+                <option>Quarterly</option>
+                <option>Annual</option>
+                <option>Per-Visit</option>
+              </select>
+              <select class="field select" aria-label="Pricing Model">
+                <option disabled selected>Pricing Model</option>
+                <option>Flat Fee</option>
+                <option>Per Service</option>
+                <option>Tiered</option>
+                <option>Volume Based</option>
+              </select>
+              <input class="field" aria-label="Billing Amount" placeholder="Billing Amount (decimal)" />
+              <input class="field" aria-label="Tax Type" placeholder="Tax type" />
+              <input class="field" aria-label="Tax Amount" placeholder="Tax amount (decimal)" />
+              <input class="field" aria-label="Sales Amount" placeholder="Sales amount" />
+              <input class="field" aria-label="Production Amount" placeholder="Production amount" />
+              <input class="field" aria-label="Discounts" placeholder="Discounts" />
+              <input class="field" aria-label="Invoice Terms" placeholder="Invoice Terms" />
+              <select class="field select" aria-label="Payment Method">
+                <option disabled selected>Payment Method</option>
+                <option>Card</option>
+                <option>Bank Transfer</option>
+                <option>Invoice</option>
+              </select>
+              <input class="field" aria-label="Price History Reference" placeholder="Price history reference" />
+            </div>
+          </div>
+
+          <!-- Compliance -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Compliance</h3>
+            <div class="grid">
+              <textarea class="field" aria-label="Terms & Conditions / Contract Document"
+                placeholder="Terms & Conditions / Contract Document (link or text)"></textarea>
+              <textarea class="field" aria-label="Regulatory Requirements"
+                placeholder="Regulatory Requirements (local laws)"></textarea>
+              <textarea class="field" aria-label="Health & Safety Guidelines"
+                placeholder="Health & Safety Guidelines"></textarea>
+              <select class="field select" aria-label="Certificates / Licenses Required">
+                <option disabled selected>Certificates / Licenses Required</option>
+                <option>Applicator License</option>
+                <option>Food Safety Cert</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Notifications</h3>
+            <div class="grid">
+              <input class="field" aria-label="Next Service Reminder" placeholder="Next Service Reminder (auto)" />
+              <input class="field" aria-label="Past Due Alerts" placeholder="Past Due Alerts (auto)" />
+              <select class="field select" aria-label="Customer Notification Preferences">
+                <option disabled selected>Customer Notification Preferences</option>
+                <option>Email</option>
+                <option>SMS</option>
+                <option>App Push</option>
+                <option>Phone Call</option>
+              </select>
+              <input class="field" aria-label="Technician Alerts"
+                placeholder="Technician Alerts (schedule / task reminders)" />
+            </div>
+          </div>
+
+          <!-- Notes & Logs -->
+          <div class="subgroup">
+            <h3 class="subgroup-title">Notes & Logs</h3>
+            <div class="grid">
+              <textarea class="field" aria-label="Custom Instructions / Notes"
+                placeholder="Custom Instructions / Notes"></textarea>
+              <textarea class="field" aria-label="Service History Summary"
+                placeholder="Service History Summary (aggregated)"></textarea>
+              <textarea class="field" aria-label="Program Renewal History"
+                placeholder="Program Renewal History"></textarea>
+              <textarea class="field" aria-label="Audit Log Reference" placeholder="Audit Log reference"></textarea>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <div class="form-actions">
+      <button class="btn primary" type="button">Save All</button>
+      <button class="btn neutral" type="reset">Cancel</button>
+    </div>
+  </main>
+
+  <script>
+    // Accordion behavior
+    (function () {
+      const triggers = [...document.querySelectorAll('.acc-trigger')];
+      triggers.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.closest('.acc-item').classList.contains('disabled')) return; // ignore disabled sections
+          const panel = document.getElementById(btn.getAttribute('aria-controls'));
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!open));
+          if (open) { panel.setAttribute('hidden', ''); } else { panel.removeAttribute('hidden'); }
+        });
+        btn.addEventListener('keydown', (e) => {
+          if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+          e.preventDefault();
+          const list = triggers;
+          let idx = list.indexOf(btn);
+          if (e.key === 'ArrowDown') idx = (idx + 1) % list.length;
+          else if (e.key === 'ArrowUp') idx = (idx - 1 + list.length) % list.length;
+          else if (e.key === 'Home') idx = 0;
+          else if (e.key === 'End') idx = list.length - 1;
+          list[idx].focus();
+        });
+      });
+    })();
+
+    // Enable/disable toggle logic
+    (function () {
+      const toggles = [...document.querySelectorAll('.enable-toggle')];
+      toggles.forEach(t => {
+        t.addEventListener('click', () => {
+          const isOn = t.getAttribute('aria-checked') === 'true';
+          const targetPanel = document.getElementById(t.dataset.target);
+          const accItem = t.closest('.acc-item');
+          const trigger = accItem.querySelector('.acc-trigger');
+          if (isOn) {
+            // turn off
+            t.setAttribute('aria-checked', 'false');
+            t.textContent = 'Disabled';
+            accItem.classList.add('disabled');
+            trigger.setAttribute('aria-expanded', 'false');
+            targetPanel.setAttribute('hidden', '');
+            targetPanel.querySelectorAll('input, select, textarea').forEach(el => { el.disabled = true; });
+          } else {
+            // turn on
+            t.setAttribute('aria-checked', 'true');
+            t.textContent = 'Enabled';
+            accItem.classList.remove('disabled');
+            trigger.setAttribute('aria-expanded', 'true');
+            targetPanel.removeAttribute('hidden');
+            targetPanel.querySelectorAll('input, select, textarea').forEach(el => { el.disabled = false; });
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>
