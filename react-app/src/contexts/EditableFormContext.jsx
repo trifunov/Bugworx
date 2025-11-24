@@ -7,9 +7,9 @@ import useAddEditUser from '../components/Users/useAddEditUser';
 import useAddEditRole from '../components/RolesPermissions/useAddEditRole';
 import useAddEditEmployee from '../components/Configuration/EmployeeDirectory/useAddEditEmployee';
 import useAddEditTeam from '../components/Configuration/TeamBranches/useAddEditTeam';
-import useAddEditContractType from '../components/Configuration/OerationalSetup/ContractTypes/useAddEditContractTypes';
-import useAddEditServiceTypes from '../components/Configuration/OerationalSetup/ServiceTypes/useAddEditServiceTypes';
-import useAddEditFrequencyTemplate from '../components/Configuration/OerationalSetup/FrequencyTemplate/useFrequencyTemplate';
+import useAddEditContractType from '../components/Configuration/OperationalSetup/ContractTypes/useAddEditContractTypes';
+import useAddEditServiceTypes from '../components/Configuration/OperationalSetup/ServiceTypes/useAddEditServiceTypes';
+import useAddEditFrequencyTemplate from '../components/Configuration/OperationalSetup/FrequencyTemplate/useFrequencyTemplate';
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);

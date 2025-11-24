@@ -7,7 +7,7 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditFrequencyTemplate from  '../../../../components/Configuration/OerationalSetup/FrequencyTemplate/AddEditFrequencyTemplate';
+import AddEditFrequencyTemplate from  '../../../../components/Configuration/OperationalSetup/FrequencyTemplate/AddEditFrequencyTemplate';
 
 const columns = [
     { label: 'Template Name', accessor: 'name', sortable: true },
