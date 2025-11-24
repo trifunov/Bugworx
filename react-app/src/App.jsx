@@ -54,6 +54,14 @@ import OperationZones from './pages/configuration/operational-setup/OperationZon
 import RouteConfiguration from './pages/configuration/operational-setup/RouteConfiguration/RouteConfiguration';
 import ServiceTypes from './pages/configuration/operational-setup/ServiceTypes/ServiceTypes';
 
+import InspectionPointTypes from './pages/configuration/service-inspection/InspectionPointTypes/InspectionPointTypes';
+import PestTypes from './pages/configuration/service-inspection/PestTypes/PestTypes';
+import TreatmentTypes from './pages/configuration/service-inspection/TreatmentTypes/TreatmentTypes';
+import ServiceTemplates from './pages/configuration/service-inspection/ServiceTemplates/ServiceTemplates';
+import EquipmentDevices from './pages/configuration/service-inspection/EquipmentDevices/EquipmentDevices';
+import MaterialSetup from './pages/configuration/service-inspection/MaterialSetup/MaterialSetup';
+import InspectionPointCategories from './pages/configuration/service-inspection/InspectionPointCategories/InspectionPointCategories';
+
 function App() {
   return (
     <Routes>
@@ -125,6 +133,15 @@ function App() {
         <Route path="configuration/operational-setup/frequency-templates" element={<FrequencyTemplates />} />
         <Route path="configuration/operational-setup/job-settings" element={<JobSettings />} />
         <Route path="configuration/operational-setup/service-types" element={<ServiceTypes />} />
+
+        {/* Service Inspection */}
+        <Route path="configuration/service-inspection/inspection-point-categories" element={<InspectionPointCategories />} />
+        <Route path="configuration/service-inspection/inspection-point-types" element={<InspectionPointTypes />} />
+        <Route path="configuration/service-inspection/pest-types" element={<PestTypes />} />
+        <Route path="configuration/service-inspection/treatment-types" element={<TreatmentTypes />} />
+        <Route path="configuration/service-inspection/service-templates" element={<ServiceTemplates />} />
+        <Route path="configuration/service-inspection/equipment-devices" element={<EquipmentDevices />} />
+        <Route path="configuration/service-inspection/material-setup" element={<MaterialSetup />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}
