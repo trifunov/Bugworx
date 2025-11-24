@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getUsers, saveUsers, addUser, getRoles } from '../../../../utils/localStorage';
-import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useUsers = () => {
-  const { setPageSubHeader } = usePageSubHeader();
   const [users, setUsers] = useState(getUsers());
   const [roles, setRoles] = useState(getRoles());
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ name: '', username: '', email: '', role: '', password: '' });
 
   useEffect(() => {
     const persisted = users.filter(u => typeof u.id === 'string');
@@ -18,53 +14,24 @@ export const useUsers = () => {
     const refreshRoles = () => setRoles(getRoles());
     window.addEventListener('roles:updated', refreshRoles);
     refreshRoles(); // Initial fetch
-    setPageSubHeader({
-      title: "Users",
-      breadcrumbs: [
-        { label: "Configuration", path: "/configuration/general" },
-        { label: "User Access", path: "/configuration/user-access" },
-        { label: "Users", isActive: true }
-      ]
-    });
     return () => window.removeEventListener('roles:updated', refreshRoles);
-  }, [setPageSubHeader]);
+  }, []);
 
-  const startAdd = () => {
-    setEditing(null);
-    setForm({ name: '', username: '', email: '', role: roles.length > 0 ? (roles[0].name ?? '') : '', password: '' });
-  };
-
-  const startEdit = (u) => {
-    setEditing(u.id);
-    setForm({
-      name: u.name ?? '',
-      username: u.username ?? '',
-      email: u.email ?? '',
-      role: u.role ?? '',
-      password: ''
-    });
-  };
-
-  const cancelEdit = () => {
-    setEditing(null);
-    setForm({ name: '', username: '', email: '', role: '', password: '' });
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    if (editing) {
+  const handleSave = (formData) => {
+    if (formData.id) { // Editing existing user
       const next = users.map(u => {
-        if (u.id !== editing) return u;
-        const updated = { ...u, ...form };
-        if (!form.password) delete updated.password;
+        if (u.id !== formData.id) return u;
+        const updated = { ...u, ...formData };
+        if (!formData.password) {
+          delete updated.password; // Don't overwrite password if it's blank
+        }
         return updated;
       });
       setUsers(next);
-    } else {
-      const newUser = addUser({ ...form, active: true, createdAt: new Date().toISOString() });
+    } else { // Adding new user
+      const newUser = addUser({ ...formData, active: true, createdAt: new Date().toISOString() });
       setUsers(prev => [newUser, ...prev]);
     }
-    cancelEdit();
   };
 
   const toggleActive = (id) => {
@@ -76,22 +43,13 @@ export const useUsers = () => {
     if (!window.confirm('Delete this user? This action cannot be undone.')) return;
     const next = users.filter(u => u.id !== id);
     setUsers(next);
-    if (editing === id) {
-      cancelEdit();
-    }
   };
 
   return {
     users,
     roles,
-    editing,
-    form,
-    setForm,
-    startAdd,
-    startEdit,
-    cancelEdit,
     handleSave,
     toggleActive,
-    removeUser,
+    removeUser
   };
 };

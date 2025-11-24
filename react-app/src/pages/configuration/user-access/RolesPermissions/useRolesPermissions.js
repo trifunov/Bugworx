@@ -1,69 +1,35 @@
 import { useState, useEffect } from 'react';
 import { getRoles, saveRoles, addRole } from '../../../../utils/localStorage';
-import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useRolesPermissions = () => {
-  const { setPageSubHeader } = usePageSubHeader();
   const [roles, setRoles] = useState(getRoles());
-  const [form, setForm] = useState({ name: '', permissions: '' });
-  const [editing, setEditing] = useState(null);
 
   useEffect(() => {
-    // keep roles in sync if other parts update storage externally
-    setRoles(getRoles());
-    setPageSubHeader({
-      title: "Roles & Permissions",
-      breadcrumbs: [
-        { label: "Configuration", path: "/configuration/general" },
-        { label: "User Access", path: "/configuration/user-access" },
-        { label: "Roles & Permissions", isActive: true }
-      ]
-    });
-  }, []);
+    saveRoles(roles);
+    // Dispatch an event so the Users page can refresh its roles list
+    window.dispatchEvent(new CustomEvent('roles:updated'));
+  }, [roles]);
 
-  const startAdd = () => {
-    setEditing(null);
-    setForm({ name: '', permissions: '' });
-  };
+  const handleSave = (formData) => {
+    // Convert comma-separated string back to an array of permissions
+    const permissions = formData.permissions ? formData.permissions.split(',').map(p => p.trim()).filter(p => p) : [];
+    const roleData = { ...formData, permissions };
 
-  const startEdit = (r) => {
-    setEditing(r.id);
-    setForm({ name: r.name, permissions: (r.permissions || []).join(', ') });
-  };
-
-  const cancelEdit = () => {
-    setEditing(null);
-    setForm({ name: '', permissions: '' });
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    const perms = form.permissions.split(',').map(s => s.trim()).filter(Boolean);
-    if (editing) {
-      const next = roles.map(r => (r.id === editing ? { ...r, name: form.name, permissions: perms } : r));
-      setRoles(next);
-      saveRoles(next);
-    } else {
-      const newRole = addRole({ name: form.name, permissions: perms });
+    if (roleData.id) { // Editing existing role
+      setRoles(prev => prev.map(r => (r.id === roleData.id ? roleData : r)));
+    } else { // Adding new role
+      const newRole = addRole(roleData);
       setRoles(prev => [newRole, ...prev]);
     }
-    cancelEdit();
   };
 
   const removeRole = (id) => {
-    const next = roles.filter(r => r.id !== id);
-    setRoles(next);
-    saveRoles(next);
+    if (!window.confirm('Are you sure you want to delete this role?')) return;
+    setRoles(prev => prev.filter(r => r.id !== id));
   };
 
   return {
     roles,
-    form,
-    editing,
-    setForm,
-    startAdd,
-    startEdit,
-    cancelEdit,
     handleSave,
     removeRole,
   };
