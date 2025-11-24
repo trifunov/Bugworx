@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useFrequencyTemplates } from './useFrequencyTemplates';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
-import { EditableFormProvider, useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
 import Table from '../../../../components/Common/Table/Table';
 import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
