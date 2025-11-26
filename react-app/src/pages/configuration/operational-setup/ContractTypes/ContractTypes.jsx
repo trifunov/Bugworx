@@ -7,7 +7,7 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditContractType from '../../../../components/Configuration/OerationalSetup/ContractTypes/AddEditContractTypes';
+import AddEditContractType from '../../../../components/Configuration/OperationalSetup/ContractTypes/AddEditContractTypes';
 
 const columns = [
     { label: 'Name', accessor: 'name', sortable: true },

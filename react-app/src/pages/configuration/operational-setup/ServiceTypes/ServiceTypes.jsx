@@ -7,7 +7,7 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditServiceType from '../../../../components/Configuration/OerationalSetup/ServiceTypes/AddEditServiceTypes';
+import AddEditServiceType from '../../../../components/Configuration/OperationalSetup/ServiceTypes/AddEditServiceTypes';
 
 const columns = [
     { label: 'Name', accessor: 'name', sortable: true },

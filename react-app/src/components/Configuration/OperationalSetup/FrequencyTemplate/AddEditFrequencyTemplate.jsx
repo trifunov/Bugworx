@@ -8,18 +8,12 @@ const AddEditFrequencyTemplate = ({
   onUpdateFieldHandle,
   isSaving,
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
+   if (!isOpen) {
+    return null;
+  }
+  
   const isEditing = formData && formData.id;
-
-  useEffect(() => {
-    if (isOpen) {
-      const timer = setTimeout(() => setIsMounted(true), 10);
-      return () => clearTimeout(timer);
-    } else {
-      setIsMounted(false);
-    }
-  }, [isOpen]);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     onUpdateFieldHandle(name, value);
@@ -30,13 +24,9 @@ const AddEditFrequencyTemplate = ({
     onSave();
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
     <>
-      <div className={`offcanvas offcanvas-end ${isMounted ? 'show' : ''}`} style={{ width: '400px' }} tabIndex="-1">
+      <div className={`offcanvas offcanvas-end show`} style={{ width: '400px' }} tabIndex="-1">
         <div className="offcanvas-header">
           <h5 className="offcanvas-title">{isEditing ? 'Edit Template' : 'Add New Template'}</h5>
           <button type="button" className="btn-close text-reset" onClick={onClose} aria-label="Close" disabled={isSaving}></button>
@@ -89,7 +79,7 @@ const AddEditFrequencyTemplate = ({
           </form>
         </div>
       </div>
-      <div className={`offcanvas-backdrop fade ${isMounted ? 'show' : ''}`} onClick={isSaving ? undefined : onClose}></div>
+      <div className={`offcanvas-backdrop fade show`} onClick={isSaving ? undefined : onClose}></div>
     </>
   );
 };

@@ -8,17 +8,11 @@ const AddEditServiceType = ({
   onUpdateFieldHandle,
   isSaving,
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
-  const isEditing = formData && formData.id;
+   if (!isOpen) {
+    return null;
+  }
 
-  useEffect(() => {
-    if (isOpen) {
-      const timer = setTimeout(() => setIsMounted(true), 10);
-      return () => clearTimeout(timer);
-    } else {
-      setIsMounted(false);
-    }
-  }, [isOpen]);
+  const isEditing = formData && formData.id;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,13 +24,9 @@ const AddEditServiceType = ({
     onSave();
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
     <>
-      <div className={`offcanvas offcanvas-end ${isMounted ? 'show' : ''}`} style={{ width: '400px' }} tabIndex="-1">
+      <div className={`offcanvas offcanvas-end show`} style={{ width: '400px' }} tabIndex="-1">
         <div className="offcanvas-header">
           <h5 className="offcanvas-title">{isEditing ? 'Edit Service Type' : 'Add New Service Type'}</h5>
           <button type="button" className="btn-close text-reset" onClick={onClose} aria-label="Close" disabled={isSaving}></button>
@@ -94,7 +84,7 @@ const AddEditServiceType = ({
           </form>
         </div>
       </div>
-      <div className={`offcanvas-backdrop fade ${isMounted ? 'show' : ''}`} onClick={isSaving ? undefined : onClose}></div>
+      <div className={`offcanvas-backdrop fade show`} onClick={isSaving ? undefined : onClose}></div>
     </>
   );
 };
