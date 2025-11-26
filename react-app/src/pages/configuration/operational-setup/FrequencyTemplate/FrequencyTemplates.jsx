@@ -7,18 +7,18 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditFrequencyTemplate from  '../../../../components/Configuration/OperationalSetup/FrequencyTemplate/AddEditFrequencyTemplate';
+import AddEditFrequencyTemplate from '../../../../components/Configuration/OperationalSetup/FrequencyTemplate/AddEditFrequencyTemplate';
 
 const columns = [
-    { label: 'Template Name', accessor: 'name', sortable: true },
-    { label: 'Schedule', accessor: 'repeatSchedule', sortable: true },
-    { label: 'Description', accessor: 'description', sortable: false },
-    { label: 'Actions', accessor: 'actions', sortable: false },
+  { label: 'Template Name', accessor: 'name', sortable: true },
+  { label: 'Schedule', accessor: 'repeatSchedule', sortable: true },
+  { label: 'Description', accessor: 'description', sortable: false },
+  { label: 'Actions', accessor: 'actions', sortable: false },
 ];
 const columnNames = columns.map(c => c.label);
 const sortableColumns = columns.reduce((acc, col) => {
-    if (col.sortable) acc[col.label] = col.accessor;
-    return acc;
+  if (col.sortable) acc[col.label] = col.accessor;
+  return acc;
 }, {});
 
 const FrequencyTemplates = () => {
@@ -28,12 +28,12 @@ const FrequencyTemplates = () => {
 
   useEffect(() => {
     setPageSubHeader({
-        title: 'Frequency Templates',
-        breadcrumbs: [
-            { label: 'Configuration', path: '/configuration' },
-            { label: 'Operational Setup', path: '/configuration/operational-setup' },
-            { label: 'Frequency Templates', active: true },
-        ],
+      title: 'Frequency Templates',
+      breadcrumbs: [
+        { label: 'Configuration', path: '/configuration' },
+        { label: 'Operational Setup', path: '/configuration/operational-setup' },
+        { label: 'Frequency Templates', active: true },
+      ],
     });
   }, [setPageSubHeader]);
 
@@ -69,20 +69,20 @@ const FrequencyTemplates = () => {
         <div className="col-12">
           <div className="card">
             <div className="card-body">
-                <div className="row mb-3">
-                    <div className="col-12">
-                    <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
-                        <div className="flex-grow-1 w-100 me-md-3">
-                    <TableSearch
+              <div className="row mb-3">
+                <div className="col-12">
+                  <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
+                    <div className="flex-grow-1 w-100 me-md-3">
+                      <TableSearch
                         value={searchTerm}
                         onChange={setSearchTerm}
                         placeholder="Search frequency templates..."
-                    />
+                      />
                     </div>
                     <div className="mt-2 mt-md-0">
-                    <AddNewButton handleAddNew={() => addEditFrequencyTemplate.open()} />
+                      <AddNewButton handleAddNew={() => addEditFrequencyTemplate.open()} />
                     </div>
-                </div>
+                  </div>
                 </div>
               </div>
 

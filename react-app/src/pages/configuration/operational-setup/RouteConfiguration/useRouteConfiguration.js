@@ -2,45 +2,34 @@ import { useState, useEffect } from 'react';
 import { getRouteConfiguration, saveRouteConfiguration, getOperationalZones } from '../../../../utils/localStorage';
 
 export const useRouteConfiguration = () => {
-    const [items, setItems] = useState(getRouteConfiguration());
-    const [zones, setZones] = useState(getOperationalZones());
-    const [form, setForm] = useState({ routeName: '', zone: '', defaultTechnician: '', stops: '' });
+  const [items, setItems] = useState(getRouteConfiguration());
+  const [zones, setZones] = useState(getOperationalZones());
+  useEffect(() => {
+    saveRouteConfiguration(items);
+  }, [items]);
 
-    useEffect(() => {
-        // This effect can refresh data if it changes elsewhere, e.g., if zones are updated.
-        setItems(getRouteConfiguration());
-        setZones(getOperationalZones());
-    }, []);
+  const saveItem = (formData) => {
+    // Convert stops string back to an array
+    const stops = formData.stops ? formData.stops.split(',').map(s => s.trim()).filter(s => s) : [];
+    const itemData = { ...formData, stops };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-    };
+    if (itemData.id) {
+      setItems(prev => prev.map(it => (it.id === itemData.id ? itemData : it)));
+    } else {
+      const newItem = { ...itemData, id: Date.now().toString() };
+      setItems(prev => [newItem, ...prev]);
+    }
+  };
 
-    const addItem = () => {
-        if (!form.routeName.trim()) return;
-        const updated = [...items, {
-            id: Date.now(),
-            ...form,
-            stops: form.stops.split(',').map(s => s.trim()).filter(Boolean)
-        }];
-        setItems(updated);
-        saveRouteConfiguration(updated);
-        setForm({ routeName: '', zone: '', defaultTechnician: '', stops: '' });
-    };
+  const removeItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this route?')) return;
+    setItems(prev => prev.filter(it => it.id !== id));
+  };
 
-    const removeItem = (id) => {
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveRouteConfiguration(updated);
-    };
-
-    return {
-        items,
-        zones,
-        form,
-        handleChange,
-        addItem,
-        removeItem,
-    };
+  return {
+    items,
+    zones,
+    saveItem,
+    removeItem,
+  };
 };

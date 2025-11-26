@@ -1,44 +1,32 @@
 import { useState, useEffect } from 'react';
 import { getOperationalZones, saveOperationalZones } from '../../../../utils/localStorage';
 
-export const useOperationZones = () => {
+export const useOperationalZones = () => {
     const [items, setItems] = useState(getOperationalZones());
-    const [form, setForm] = useState({ zoneName: '', description: '', assignedClients: '', assignedSites: '' });
 
     useEffect(() => {
-        setItems(getOperationalZones());
-    }, []);
+        saveOperationalZones(items);
+    }, [items]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-    };
-
-    const addItem = () => {
-        if (!form.zoneName.trim()) return;
-        const updated = [...items, {
-            id: Date.now(),
-            zoneName: form.zoneName,
-            description: form.description,
-            assignedClients: form.assignedClients.split(',').map(s => s.trim()).filter(Boolean),
-            assignedSites: form.assignedSites.split(',').map(s => s.trim()).filter(Boolean)
-        }];
-        setItems(updated);
-        saveOperationalZones(updated);
-        setForm({ zoneName: '', description: '', assignedClients: '', assignedSites: '' });
+    const saveItem = (formData) => {
+        if (formData.id) {
+            setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+        } else {
+            const newItem = { ...formData, id: Date.now().toString() };
+            setItems(prev => [newItem, ...prev]);
+        }
     };
 
     const removeItem = (id) => {
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveOperationalZones(updated);
+        if (!window.confirm('Are you sure you want to delete this zone?')) return;
+        setItems(prev => prev.filter(it => it.id !== id));
     };
 
     return {
         items,
-        form,
-        handleChange,
-        addItem,
+        saveItem,
         removeItem,
     };
 };
+
+export default useOperationalZones;

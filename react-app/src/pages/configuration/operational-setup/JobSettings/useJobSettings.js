@@ -1,37 +1,34 @@
 import { useState, useEffect } from 'react';
 import { getJobSettings, saveJobSettings } from '../../../../utils/localStorage';
 
-const initialSettings = {
-    defaultStatus: 'Open',
-    numberingFormat: 'JOB-{YYYY}-{SEQ}',
-    slaHours: 48,
-    escalations: ''
-};
-
 export const useJobSettings = () => {
-    const [settings, setSettings] = useState(initialSettings);
+  // getJobSettings should now return an array from localStorage
+  const [items, setItems] = useState(getJobSettings());
 
-    useEffect(() => {
-        const s = getJobSettings();
-        if (Object.keys(s).length) {
-            setSettings(s);
-        }
-    }, []);
+  useEffect(() => {
+    // saveJobSettings should now save an array to localStorage
+    saveJobSettings(items);
+  }, [items]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSettings(prev => ({ ...prev, [name]: name === 'slaHours' ? Number(value) : value }));
-    };
+  const saveItem = (formData) => {
+    if (formData.id) {
+      setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+    } else {
+      const newItem = { ...formData, id: Date.now().toString() };
+      setItems(prev => [newItem, ...prev]);
+    }
+  };
 
-    const save = () => {
-        saveJobSettings(settings);
-    };
+  const removeItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this job setting profile?')) return;
+    setItems(prev => prev.filter(it => it.id !== id));
+  };
 
-    return {
-        settings,
-        handleChange,
-        save,
-    };
+  return {
+    items,
+    saveItem,
+    removeItem,
+  };
 };
 
 export default useJobSettings;

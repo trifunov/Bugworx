@@ -969,7 +969,7 @@ export const saveServiceTypes = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL
 export const getFrequencyTemplates = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_FREQUENCY_TEMPLATES, []);
 export const saveFrequencyTemplates = (items) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_FREQUENCY_TEMPLATES, items);
 
-export const getJobSettings = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_JOB_SETTINGS, {});
+export const getJobSettings = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_JOB_SETTINGS, []);
 export const saveJobSettings = (obj) => setToStorage(STORAGE_KEYS.OPERATIONAL_SETUP_JOB_SETTINGS, obj);
 
 export const getRouteConfiguration = () => getFromStorage(STORAGE_KEYS.OPERATIONAL_SETUP_ROUTE_CONFIGURATION, []);
