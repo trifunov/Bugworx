@@ -215,16 +215,16 @@ export const getServiceAddressesByCustomerId = (customerId) => {
 };
 
 const DEFAULT_SERVICE_TYPES = [
-  'General Pest Control',
-  'Termite Treatment',
-  'Rodent Control',
-  'Bed Bug Treatment',
-  'Ant Control',
-  'Cockroach Control',
-  'Spider Control',
-  'Mosquito Control',
-  'Flea & Tick Control',
-  'Wildlife Removal'
+  {id: 1, name: 'General Pest Control'},
+  {id: 2, name: 'Termite Treatment'},
+  {id: 3, name: 'Rodent Control'},
+  {id: 4, name: 'Bed Bug Treatment'},
+  {id: 5, name: 'Ant Control'},
+  {id: 6, name: 'Cockroach Control'},
+  {id: 7, name: 'Spider Control'},
+  {id: 8, name: 'Mosquito Control'},
+  {id: 9, name: 'Flea & Tick Control'},
+  {id: 10, name: 'Wildlife Removal'}
 ];
 
 export const getServiceTypes = () => {

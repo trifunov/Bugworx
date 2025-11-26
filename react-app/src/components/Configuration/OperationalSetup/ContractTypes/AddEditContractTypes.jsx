@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AddEditTeam = ({
+const AddEditContractType = ({
   isOpen,
   onClose,
   onSave,
@@ -15,8 +15,8 @@ const AddEditTeam = ({
   const isEditing = formData && formData.id;
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    onUpdateFieldHandle(name, value);
+    const { name, value, type, checked } = e.target;
+    onUpdateFieldHandle(name, type === 'checkbox' ? checked : value);
   };
 
   const handleSubmit = (e) => {
@@ -28,7 +28,7 @@ const AddEditTeam = ({
     <>
       <div className={`offcanvas offcanvas-end show`} style={{ width: '400px' }} tabIndex="-1">
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title">{isEditing ? 'Edit Team / Branch' : 'Add New Team / Branch'}</h5>
+          <h5 className="offcanvas-title">{isEditing ? 'Edit Contract Type' : 'Add New Contract Type'}</h5>
           <button type="button" className="btn-close text-reset" onClick={onClose} aria-label="Close" disabled={isSaving}></button>
         </div>
         <div className="offcanvas-body">
@@ -44,13 +44,38 @@ const AddEditTeam = ({
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Region</label>
+              <label className="form-label">Billing Cycle</label>
+              <select
+                name="billingCycle"
+                className="form-select"
+                value={formData.billingCycle || 'Monthly'}
+                onChange={handleChange}
+              >
+                <option>Monthly</option>
+                <option>Annual</option>
+                <option>One-time</option>
+                <option>Term</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Description</label>
               <input
-                name="region"
+                name="description"
                 className="form-control"
-                value={formData.region || ''}
+                value={formData.description || ''}
                 onChange={handleChange}
               />
+            </div>
+            <div className="form-check mb-3">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="contract-active-check"
+                name="active"
+                checked={formData.active || false}
+                onChange={handleChange}
+              />
+              <label className="form-check-label" htmlFor="contract-active-check">Active</label>
             </div>
             <div className="d-flex gap-2 mt-4">
               <button type="submit" className="btn btn-primary w-sm" disabled={isSaving}>
@@ -66,4 +91,4 @@ const AddEditTeam = ({
   );
 };
 
-export default AddEditTeam;
+export default AddEditContractType;

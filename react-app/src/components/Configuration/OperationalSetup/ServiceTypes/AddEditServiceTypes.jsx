@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AddEditTeam = ({
+const AddEditServiceType = ({
   isOpen,
   onClose,
   onSave,
@@ -28,7 +28,7 @@ const AddEditTeam = ({
     <>
       <div className={`offcanvas offcanvas-end show`} style={{ width: '400px' }} tabIndex="-1">
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title">{isEditing ? 'Edit Team / Branch' : 'Add New Team / Branch'}</h5>
+          <h5 className="offcanvas-title">{isEditing ? 'Edit Service Type' : 'Add New Service Type'}</h5>
           <button type="button" className="btn-close text-reset" onClick={onClose} aria-label="Close" disabled={isSaving}></button>
         </div>
         <div className="offcanvas-body">
@@ -44,11 +44,34 @@ const AddEditTeam = ({
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Region</label>
+              <label className="form-label">Template Type</label>
+              <select
+                name="templateType"
+                className="form-select"
+                value={formData.templateType || 'Scheduled Visit'}
+                onChange={handleChange}
+              >
+                <option>Scheduled Visit</option>
+                <option>Inspection</option>
+                <option>Treatment</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Duration (mins)</label>
               <input
-                name="region"
+                name="durationMins"
+                type="number"
                 className="form-control"
-                value={formData.region || ''}
+                value={formData.durationMins || ''}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Notes</label>
+              <input
+                name="notes"
+                className="form-control"
+                value={formData.notes || ''}
                 onChange={handleChange}
               />
             </div>
@@ -66,4 +89,4 @@ const AddEditTeam = ({
   );
 };
 
-export default AddEditTeam;
+export default AddEditServiceType;

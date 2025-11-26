@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AddEditTeam = ({
+const AddEditFrequencyTemplate = ({
   isOpen,
   onClose,
   onSave,
@@ -11,9 +11,9 @@ const AddEditTeam = ({
    if (!isOpen) {
     return null;
   }
-
+  
   const isEditing = formData && formData.id;
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     onUpdateFieldHandle(name, value);
@@ -28,28 +28,46 @@ const AddEditTeam = ({
     <>
       <div className={`offcanvas offcanvas-end show`} style={{ width: '400px' }} tabIndex="-1">
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title">{isEditing ? 'Edit Team / Branch' : 'Add New Team / Branch'}</h5>
+          <h5 className="offcanvas-title">{isEditing ? 'Edit Template' : 'Add New Template'}</h5>
           <button type="button" className="btn-close text-reset" onClick={onClose} aria-label="Close" disabled={isSaving}></button>
         </div>
         <div className="offcanvas-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Name</label>
+              <label className="form-label">Template Name</label>
               <input
                 name="name"
                 className="form-control"
                 required
                 value={formData.name || ''}
                 onChange={handleChange}
+                placeholder="e.g., Monthly Service"
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Region</label>
-              <input
-                name="region"
-                className="form-control"
-                value={formData.region || ''}
+              <label className="form-label">Repeat Schedule</label>
+              <select
+                name="repeatSchedule"
+                className="form-select"
+                value={formData.repeatSchedule || 'monthly'}
                 onChange={handleChange}
+              >
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="bi-weekly">Bi-Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="annually">Annually</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Description</label>
+              <textarea
+                name="description"
+                className="form-control"
+                value={formData.description || ''}
+                onChange={handleChange}
+                rows="3"
               />
             </div>
             <div className="d-flex gap-2 mt-4">
@@ -66,4 +84,4 @@ const AddEditTeam = ({
   );
 };
 
-export default AddEditTeam;
+export default AddEditFrequencyTemplate;
