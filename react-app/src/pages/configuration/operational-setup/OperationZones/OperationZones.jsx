@@ -105,8 +105,8 @@ const OperationalZones = () => {
                             />
                         </div>
                     </div>
-                </div >
-            </div >
+                </div>
+            </div>
         </>
     );
 };
