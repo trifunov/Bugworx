@@ -1,4 +1,4 @@
-const AddEditOperationalZone = ({
+const AddEditOperationalZones = ({
     isOpen,
     onClose,
     onSave,
@@ -66,4 +66,4 @@ const AddEditOperationalZone = ({
     );
 };
 
-export default AddEditOperationalZone;
+export default AddEditOperationalZones;
