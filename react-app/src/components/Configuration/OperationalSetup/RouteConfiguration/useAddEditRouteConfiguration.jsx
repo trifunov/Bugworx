@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useAddEditRoute = () => {
+const useAddEditRouteConfiguration = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState({});
@@ -48,4 +48,4 @@ const useAddEditRoute = () => {
     };
 };
 
-export default useAddEditRoute;
+export default useAddEditRouteConfiguration;
