@@ -3,7 +3,7 @@ import { getRouteConfiguration, saveRouteConfiguration, getOperationalZones } fr
 
 export const useRouteConfiguration = () => {
   const [items, setItems] = useState(getRouteConfiguration());
-  const [zones, setZones] = useState(getOperationalZones());
+  const [zones] = useState(getOperationalZones());
   useEffect(() => {
     saveRouteConfiguration(items);
   }, [items]);

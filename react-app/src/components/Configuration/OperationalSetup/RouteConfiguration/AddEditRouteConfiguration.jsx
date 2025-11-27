@@ -16,15 +16,6 @@ const AddEditRoute = ({
 
     const isEditing = formData && formData.id;
 
-    useEffect(() => {
-        if (isOpen) {
-            const timer = setTimeout(() => setIsMounted(true), 10);
-            return () => clearTimeout(timer);
-        } else {
-            setIsMounted(false);
-        }
-    }, [isOpen]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         onUpdateFieldHandle(name, value);

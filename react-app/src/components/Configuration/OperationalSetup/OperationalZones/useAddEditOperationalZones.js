@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useAddEditOperationalZone = () => {
+const useAddEditOperationalZones = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState({});
@@ -43,4 +43,4 @@ const useAddEditOperationalZone = () => {
     };
 };
 
-export default useAddEditOperationalZone;
+export default useAddEditOperationalZones;
