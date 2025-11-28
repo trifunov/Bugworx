@@ -5,13 +5,14 @@ const useAddEditJobSetting = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState({});
 
-    const open = (
-        initialData = {
+    const open = (initialData = {}) => {
+        const data = {
             defaultStatus: 'Open',
             numberingFormat: 'JOB-{YYYY}-{SEQ}',
-            slaHours: 48
-        }) => {
-        setFormData(initialData);
+            slaHours: 48,
+            ...initialData
+        };
+        setFormData(data);
         setIsOpen(true);
     };
 
