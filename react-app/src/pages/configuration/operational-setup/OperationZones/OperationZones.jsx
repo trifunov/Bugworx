@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useOperationalZones } from './useOperationZones';
+import { useOperationalZones } from './useOperationalZones';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
 import Table from '../../../../components/Common/Table/Table';
