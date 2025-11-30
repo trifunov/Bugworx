@@ -1,45 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getTreatmentTypes, saveTreatmentTypes } from '../../../../utils/localStorage';
 
 export const useTreatmentTypes = () => {
-    const [items, setItems] = useState(getTreatmentTypes() || []);
-    
-    const initialFormState = {
-        method: '',
-        chemicals: '',
-        protocols: '',
-    };
+  const [items, setItems] = useState(getTreatmentTypes());
 
-    const [form, setForm] = useState(initialFormState);
+  useEffect(() => {
+    saveTreatmentTypes(items);
+  }, [items]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-    };
+  const saveItem = (formData) => {
+    if (formData.id) {
+      setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+    } else {
+      const newItem = { ...formData, id: Date.now().toString() };
+      setItems(prev => [newItem, ...prev]);
+    }
+  };
 
-    const addItem = () => {
-        if (!form.method.trim()) return;
+  const removeItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this treatment type?')) return;
+    setItems(prev => prev.filter(it => it.id !== id));
+  };
 
-        const updated = [...items, { id: Date.now(), ...form }];
-        setItems(updated);
-        saveTreatmentTypes(updated);
-        setForm(initialFormState); 
-    };
-
-    const removeItem = (id) => {
-        if(!window.confirm('Are you sure you want to delete this treatment type?')) return;
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveTreatmentTypes(updated);
-    };
-
-    return {
-        items,
-        form,
-        handleChange,
-        addItem,
-        removeItem,
-    };
+  return {
+    items,
+    saveItem,
+    removeItem,
+  };
 };
-
-export default useTreatmentTypes;

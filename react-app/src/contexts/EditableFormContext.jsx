@@ -20,6 +20,7 @@ import useAddEditInspectionPointType from '../components/Configuration/ServiceIn
 import useAddEditMaterialSetup from '../components/Configuration/ServiceInspection/MaterialSetup/useAddEditMaterialSetup';
 import useAddEditPestType from '../components/Configuration/ServiceInspection/PestTypes/useAddEditPestType';
 import useAddEditServiceTemplate from '../components/Configuration/ServiceInspection/ServiceTemplates/useAddEditServiceTemplate';
+import useAddEditTreatmentType from '../components/Configuration/ServiceInspection/TreatmentTypes/useAddEditTreatmentType';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -57,6 +58,7 @@ export const EditableFormProvider = ({ children }) => {
     const addEditMaterialSetup = useAddEditMaterialSetup();
     const addEditPestType = useAddEditPestType();
     const addEditServiceTemplate = useAddEditServiceTemplate();
+    const addEditTreatmentType = useAddEditTreatmentType();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -103,6 +105,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditMaterialSetup,
         addEditPestType,
         addEditServiceTemplate,
+        addEditTreatmentType,
         loadCustomers,
         loadLeads,
         loadProspects,
