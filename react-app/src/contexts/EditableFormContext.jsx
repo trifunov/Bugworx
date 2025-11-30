@@ -25,7 +25,7 @@ import useAddEditTreatmentType from '../components/Configuration/ServiceInspecti
 import useAddEditApiIntegration from '../components/Configuration/SystemSettings/ApiIntegrations/useAddEditApiIntegration';
 import useAddEditCustomField from '../components/Configuration/SystemSettings/CustomFields/useAddEditCustomField';
 
-import useAddEditVehicle from '../components/Configuration/FleetManagement/useAddEditVehicle';
+import useAddEditVehicle from '../components/Configuration/FleetManagement/VehicleList/useAddEditVehicle';
 import useAddEditVehicleType from '../components/Configuration/FleetManagement/VehicleType/useAddEditVehicleType';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';

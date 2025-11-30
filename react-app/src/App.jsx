@@ -62,7 +62,7 @@ import EquipmentDevices from './pages/configuration/service-inspection/Equipment
 import MaterialSetup from './pages/configuration/service-inspection/MaterialSetup/MaterialSetup';
 import InspectionPointCategories from './pages/configuration/service-inspection/InspectionPointCategories/InspectionPointCategories';
 
-import VehicleList from './pages/configuration/fleet-management/VehicleList';
+import VehicleList from './pages/configuration/fleet-management/VehicleLists/VehicleList';
 import VehicleTypes from './pages/configuration/fleet-management/VehicleTypes/VehicleTypes';
 
 function App() {

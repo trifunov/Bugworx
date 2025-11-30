@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useVehicles } from './useVehicles';
-import { usePageSubHeader } from '../../../contexts/PageSubHeaderContext';
-import { useEditableFormContext } from '../../../contexts/EditableFormContext';
-import Table from '../../../components/Common/Table/Table';
-import useTable from '../../../components/Common/Table/useTable';
-import AddNewButton from '../../../components/Common/AddNewButton';
-import useTableSearch from '../../../components/Common/SearchBar/useTableSearch';
-import TableSearch from '../../../components/Common/SearchBar/TableSearch';
-import AddEditVehicle from '../../../components/Configuration/FleetManagement/AddEditVehicle';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
+import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import Table from '../../../../components/Common/Table/Table';
+import useTable from '../../../../components/Common/Table/useTable';
+import AddNewButton from '../../../../components/Common/AddNewButton';
+import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
+import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
+import AddEditVehicle from '../../../../components/Configuration/FleetManagement/VehicleList/AddEditVehicle';
 
 const columns = [
   { label: 'Vehicle', accessor: 'name', sortable: true },
