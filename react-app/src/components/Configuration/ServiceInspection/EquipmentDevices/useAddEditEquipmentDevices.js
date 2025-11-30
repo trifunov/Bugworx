@@ -17,7 +17,7 @@ const useAddEditEquipmentDevices = () => {
   };
 
   const onUpdateFieldHandle = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const onSaveHandle = async (saveFunction) => {
@@ -26,7 +26,7 @@ const useAddEditEquipmentDevices = () => {
       await saveFunction(formData);
       close();
     } catch (error) {
-      console.error("Failed to save equipment:", error);
+      console.error('Failed to save equipment:', error);
     } finally {
       setIsSaving(false);
     }
@@ -39,7 +39,7 @@ const useAddEditEquipmentDevices = () => {
     open,
     close,
     onUpdateFieldHandle,
-    onSaveHandle
+    onSaveHandle,
   };
 };
 

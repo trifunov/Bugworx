@@ -27,100 +27,100 @@ import { getCustomers, getLeads, getProspects, getInventory } from '../utils/loc
 const EditableFormContext = createContext(null);
 
 export const useEditableFormContext = () => {
-    const context = useContext(EditableFormContext);
-    if (!context) {
-        throw new Error('useEditableFormContext must be used within an EditableFormProvider');
-    }
-    return context;
+  const context = useContext(EditableFormContext);
+  if (!context) {
+    throw new Error('useEditableFormContext must be used within an EditableFormProvider');
+  }
+  return context;
 };
 
 export const EditableFormProvider = ({ children }) => {
-    const addEditCustomer = useAddEditCustomer();
-    const addEditLead = useAddEditLead();
-    const addEditProspect = useAddEditProspect();
-    const addEditInventory = useAddEditInventory();
+  const addEditCustomer = useAddEditCustomer();
+  const addEditLead = useAddEditLead();
+  const addEditProspect = useAddEditProspect();
+  const addEditInventory = useAddEditInventory();
 
-    const addEditUser = useAddEditUser();
-    const addEditRole = useAddEditRole();
-    const addEditEmployee = useAddEditEmployee();
-    const addEditTeam = useAddEditTeam();
+  const addEditUser = useAddEditUser();
+  const addEditRole = useAddEditRole();
+  const addEditEmployee = useAddEditEmployee();
+  const addEditTeam = useAddEditTeam();
 
-    const addEditContractType = useAddEditContractType();
-    const addEditServiceTypes = useAddEditServiceTypes();
-    const addEditFrequencyTemplate = useAddEditFrequencyTemplate();
-    const addEditJobSetting = useAddEditJobSetting();
-    const addEditRouteConfiguration = useAddEditRouteConfiguration();
-    const addEditOperationalZones = useAddEditOperationalZones();
+  const addEditContractType = useAddEditContractType();
+  const addEditServiceTypes = useAddEditServiceTypes();
+  const addEditFrequencyTemplate = useAddEditFrequencyTemplate();
+  const addEditJobSetting = useAddEditJobSetting();
+  const addEditRouteConfiguration = useAddEditRouteConfiguration();
+  const addEditOperationalZones = useAddEditOperationalZones();
 
-    const addEditEquipmentDevices = useAddEditEquipmentDevices();
-    const addEditInspectionPointCategory = useAddEditInspectionPointCategory();
-    const addEditInspectionPointType = useAddEditInspectionPointType();
-    const addEditMaterialSetup = useAddEditMaterialSetup();
-    const addEditPestType = useAddEditPestType();
-    const addEditServiceTemplate = useAddEditServiceTemplate();
-    const addEditTreatmentType = useAddEditTreatmentType();
+  const addEditEquipmentDevices = useAddEditEquipmentDevices();
+  const addEditInspectionPointCategory = useAddEditInspectionPointCategory();
+  const addEditInspectionPointType = useAddEditInspectionPointType();
+  const addEditMaterialSetup = useAddEditMaterialSetup();
+  const addEditPestType = useAddEditPestType();
+  const addEditServiceTemplate = useAddEditServiceTemplate();
+  const addEditTreatmentType = useAddEditTreatmentType();
 
-    const [customers, setCustomersState] = useState(getCustomers());
-    const [leads, setLeadsState] = useState(getLeads());
-    const [prospects, setProspectsState] = useState(getProspects());
-    const [inventory, setInventoryState] = useState(getInventory());
+  const [customers, setCustomersState] = useState(getCustomers());
+  const [leads, setLeadsState] = useState(getLeads());
+  const [prospects, setProspectsState] = useState(getProspects());
+  const [inventory, setInventoryState] = useState(getInventory());
 
-    const loadCustomers = () => {
-        const customers = getCustomers();
-        setCustomersState(customers);
-    };
+  const loadCustomers = () => {
+    const customers = getCustomers();
+    setCustomersState(customers);
+  };
 
-    const loadLeads = () => {
-        const leads = getLeads();
-        setLeadsState(leads);
-    };
-    const loadProspects = () => {
-        const prospects = getProspects();
-        setProspectsState(prospects);
-    };
+  const loadLeads = () => {
+    const leads = getLeads();
+    setLeadsState(leads);
+  };
+  const loadProspects = () => {
+    const prospects = getProspects();
+    setProspectsState(prospects);
+  };
 
-    const loadInventory = () => {
-        const inventory = getInventory();
-        setInventoryState(inventory);
-    };
+  const loadInventory = () => {
+    const inventory = getInventory();
+    setInventoryState(inventory);
+  };
 
-    const value = {
-        addEditCustomer,
-        addEditLead,
-        addEditProspect,
-        addEditInventory,
-        addEditUser,
-        addEditRole,
-        addEditEmployee,
-        addEditTeam,
-        addEditContractType,
-        addEditServiceTypes,
-        addEditFrequencyTemplate,
-        addEditJobSetting,
-        addEditRouteConfiguration,
-        addEditOperationalZones,
-        addEditEquipmentDevices,
-        addEditInspectionPointCategory,
-        addEditInspectionPointType,
-        addEditMaterialSetup,
-        addEditPestType,
-        addEditServiceTemplate,
-        addEditTreatmentType,
-        loadCustomers,
-        loadLeads,
-        loadProspects,
-        loadInventory,
-        customers,
-        leads,
-        prospects,
-        inventory,
-        setCustomersState,
-        setLeadsState,
-        setProspectsState,
-        setInventoryState
-    };
+  const value = {
+    addEditCustomer,
+    addEditLead,
+    addEditProspect,
+    addEditInventory,
+    addEditUser,
+    addEditRole,
+    addEditEmployee,
+    addEditTeam,
+    addEditContractType,
+    addEditServiceTypes,
+    addEditFrequencyTemplate,
+    addEditJobSetting,
+    addEditRouteConfiguration,
+    addEditOperationalZones,
+    addEditEquipmentDevices,
+    addEditInspectionPointCategory,
+    addEditInspectionPointType,
+    addEditMaterialSetup,
+    addEditPestType,
+    addEditServiceTemplate,
+    addEditTreatmentType,
+    loadCustomers,
+    loadLeads,
+    loadProspects,
+    loadInventory,
+    customers,
+    leads,
+    prospects,
+    inventory,
+    setCustomersState,
+    setLeadsState,
+    setProspectsState,
+    setInventoryState,
+  };
 
-    return <EditableFormContext.Provider value={value}>{children}</EditableFormContext.Provider>;
+  return <EditableFormContext.Provider value={value}>{children}</EditableFormContext.Provider>;
 };
 
 export default EditableFormContext;

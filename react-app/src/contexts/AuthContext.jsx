@@ -31,17 +31,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     const users = getUsers();
-    const foundUser = users.find(
-      u => u.username === username && u.password === password
-    );
+    const foundUser = users.find((u) => u.username === username && u.password === password);
 
     if (foundUser) {
       const userWithoutPassword = {
         ...foundUser,
         password: undefined, // Don't store password in session
-        lastLogin: new Date().toISOString()
+        lastLogin: new Date().toISOString(),
       };
 
       setUser(userWithoutPassword);
@@ -69,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     hasPermission,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

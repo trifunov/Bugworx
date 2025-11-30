@@ -1,4 +1,28 @@
 {
+  // --- Formatting Settings ---
+  // Automatically format the file on save
   "editor.formatOnSave": true,
-  "editor.tabSize": 2
+  // Set the default formatter for JS/JSX/TS/TSX files.
+  // Prettier is a popular choice, but requires the Prettier extension.
+  // 'vscode.typescript-language-features' is the built-in option.
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // --- Indentation Settings ---
+  // The number of spaces a tab is equal to.
+  "editor.tabSize": 2,
+  // Insert spaces when pressing Tab.
+  "editor.insertSpaces": true,
+  // The number of spaces to use for indentation.
+  "editor.indentSize": 2,
+  // Automatically detect indentation settings from the file content.
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never"
+  }
 }

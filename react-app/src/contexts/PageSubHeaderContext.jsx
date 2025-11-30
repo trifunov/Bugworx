@@ -8,7 +8,7 @@ export const usePageSubHeader = () => useContext(PageSubHeaderContext);
 export const PageSubHeaderProvider = ({ children }) => {
   const [pageSubHeader, setPageSubHeader] = useState({
     title: '',
-    breadcrumbs: []
+    breadcrumbs: [],
   });
   const location = useLocation();
 
@@ -19,9 +19,5 @@ export const PageSubHeaderProvider = ({ children }) => {
 
   const value = { pageSubHeader, setPageSubHeader };
 
-  return (
-    <PageSubHeaderContext.Provider value={value}>
-      {children}
-    </PageSubHeaderContext.Provider>
-  );
+  return <PageSubHeaderContext.Provider value={value}>{children}</PageSubHeaderContext.Provider>;
 };
