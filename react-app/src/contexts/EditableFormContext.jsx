@@ -23,6 +23,7 @@ import useAddEditServiceTemplate from '../components/Configuration/ServiceInspec
 import useAddEditTreatmentType from '../components/Configuration/ServiceInspection/TreatmentTypes/useAddEditTreatmentType';
 
 import useAddEditApiIntegration from '../components/Configuration/SystemSettings/ApiIntegrations/useAddEditApiIntegration';
+import useAddEditCustomField from '../components/Configuration/SystemSettings/CustomFields/useAddEditCustomField';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -63,6 +64,7 @@ export const EditableFormProvider = ({ children }) => {
   const addEditTreatmentType = useAddEditTreatmentType();
 
   const addEditApiIntegration = useAddEditApiIntegration();
+  const addEditCustomField = useAddEditCustomField();
 
   const [customers, setCustomersState] = useState(getCustomers());
   const [leads, setLeadsState] = useState(getLeads());
@@ -111,6 +113,7 @@ export const EditableFormProvider = ({ children }) => {
     addEditServiceTemplate,
     addEditTreatmentType,
     addEditApiIntegration,
+    addEditCustomField,
     loadCustomers,
     loadLeads,
     loadProspects,
