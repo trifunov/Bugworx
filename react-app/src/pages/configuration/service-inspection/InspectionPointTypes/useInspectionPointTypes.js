@@ -1,51 +1,32 @@
-import { useState } from 'react';
-// Ensure these utility functions exist in your localStorage utils or replace with generic getItem/setItem
-import { getInspectionPointTypes, saveInspectionPointTypes } from '../../../../utils/localStorage';
+import { useState, useEffect } from 'react';
+import { getInspectionPointTypes, saveInspectionPointTypes, getInspectionPointCategories } from '../../../../utils/localStorage';
 
 export const useInspectionPointTypes = () => {
-    // Fallback to empty array if utility returns null/undefined
-    const [items, setItems] = useState(getInspectionPointTypes() || []);
+  const [items, setItems] = useState(getInspectionPointTypes());
+  const [categories] = useState(getInspectionPointCategories());
 
-    const initialFormState = {
-        targetPests: '',
-        materials: '',
-        equipment: '',
-        observations: '',
-        applicationMethods: '',
-        reasons: ''
-    };
+  useEffect(() => {
+    saveInspectionPointTypes(items);
+  }, [items]);
 
-    const [form, setForm] = useState(initialFormState);
+  const saveItem = (formData) => {
+    if (formData.id) {
+      setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+    } else {
+      const newItem = { ...formData, id: Date.now().toString() };
+      setItems(prev => [newItem, ...prev]);
+    }
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-    };
+  const removeItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this inspection point type?')) return;
+    setItems(prev => prev.filter(it => it.id !== id));
+  };
 
-    const addItem = () => {
-        // Basic validation to ensure at least Target Pests is filled
-        if (!form.targetPests.trim()) return;
-
-        const updated = [...items, { id: Date.now(), ...form }];
-        setItems(updated);
-        saveInspectionPointTypes(updated);
-        setForm(initialFormState); // Reset form
-    };
-
-    const removeItem = (id) => {
-        if(!window.confirm('Are you sure you want to delete this inspection point type?')) return;
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveInspectionPointTypes(updated);
-    };
-
-    return {
-        items,
-        form,
-        handleChange,
-        addItem,
-        removeItem,
-    };
+  return {
+    items,
+    categories,
+    saveItem,
+    removeItem,
+  };
 };
-
-export default useInspectionPointTypes;
