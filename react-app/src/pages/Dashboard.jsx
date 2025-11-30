@@ -1,10 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import {
-  initializeStorage,
-  getCustomers,
-  setCustomers
-} from '../utils/localStorage';
+import { useEffect } from 'react';
+import { initializeStorage } from '../utils/localStorage';
 import {
   appointments as initialAppointments,
   serviceAddresses as initialServiceAddresses,
@@ -14,7 +10,6 @@ import {
   facilities,
   areas,
   inspectionPoints,
-  programs,
   services,
   contracts
 } from '../data/mockData';
@@ -31,7 +26,6 @@ const Dashboard = () => {
       facilities: facilities,
       areas: areas,
       inspectionPoints: inspectionPoints,
-      programs: programs,
       services: services,
       contracts: contracts
     });

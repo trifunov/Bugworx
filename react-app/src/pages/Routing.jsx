@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow, Polyline, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
 import {
   vehicles as initialVehicles,
@@ -9,7 +9,6 @@ import {
   serviceAddresses as initialServiceAddresses,
   technicians as initialTechnicians,
   inventory as initialInventory,
-  programs,
   services,
   contracts
 } from '../data/mockData';
@@ -20,15 +19,12 @@ import {
   getRoutesByDate,
   addRoute,
   updateRoute,
-  deleteRoute,
   getTechnicians,
   getAppointments,
   getServiceAddresses
 } from '../utils/localStorage';
 import {
-  generateRouteFromAppointments,
   generateRouteWithStrategy,
-  calculateDistance,
   optimizeRouteWithConstraints
 } from '../utils/routeUtils';
 import { calculateDirections } from '../services/googleMapsService';
@@ -104,9 +100,6 @@ const Routing = () => {
   const [emergencyAnalysis, setEmergencyAnalysis] = useState(null);
   const [routeOptions, setRouteOptions] = useState([]);
   const [showRouteOptions, setShowRouteOptions] = useState(false);
-  const [selectedRouteOption, setSelectedRouteOption] = useState(null);
-  const [routeEfficiency, setRouteEfficiency] = useState(null);
-  const [improvementSuggestions, setImprovementSuggestions] = useState([]);
 
   // Map center (Springfield, IL)
   const center = { lat: 39.7817, lng: -89.6501 };
@@ -131,7 +124,6 @@ const Routing = () => {
       vehicles: initialVehicles,
       routes: initialRoutes,
       routeTemplates: initialRouteTemplates,
-      programs: programs,
       services: services,
       contracts: contracts
     });
@@ -1095,7 +1087,7 @@ const Routing = () => {
                   )}
 
                   {/* Route Options */}
-                  {routeOptions.map((option, index) => (
+                  {routeOptions.map((option) => (
                     <div
                       key={option.id}
                       className="card mb-3"

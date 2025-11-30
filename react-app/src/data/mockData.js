@@ -1175,42 +1175,11 @@ export const routeTemplates = [
   }
 ];
 
-export const programs = [
-  {
-    id: 1,
-    name: 'Residential Pest Control',
-    description: 'Comprehensive pest control for residential properties',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 2,
-    name: 'Commercial Pest Management',
-    description: 'Professional pest management for commercial properties',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 3,
-    name: 'Termite Protection Plan',
-    description: 'Specialized termite inspection and treatment services',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 4,
-    name: 'Rodent Control Program',
-    description: 'Complete rodent control and prevention',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  }
-];
-
 export const services = [
   {
     id: 1,
     name: 'General Pest Control',
-    programId: 1,
+    contractId: 1,
     productionPrice: 85.00,
     salesPrice: 125.00,
     taxType: 'Sales Tax',
@@ -1221,7 +1190,7 @@ export const services = [
   {
     id: 2,
     name: 'Ant Control',
-    programId: 1,
+    contractId: 1,
     productionPrice: 65.00,
     salesPrice: 95.00,
     taxType: 'Sales Tax',
@@ -1232,7 +1201,7 @@ export const services = [
   {
     id: 3,
     name: 'Cockroach Treatment',
-    programId: 1,
+    contractId: 1,
     productionPrice: 75.00,
     salesPrice: 110.00,
     taxType: 'Sales Tax',
@@ -1243,7 +1212,7 @@ export const services = [
   {
     id: 4,
     name: 'Spider Control',
-    programId: 1,
+    contractId: 1,
     productionPrice: 70.00,
     salesPrice: 100.00,
     taxType: 'Sales Tax',
@@ -1254,7 +1223,7 @@ export const services = [
   {
     id: 5,
     name: 'Commercial Pest Inspection',
-    programId: 2,
+    contractId: 2,
     productionPrice: 120.00,
     salesPrice: 175.00,
     taxType: 'Sales Tax',
@@ -1265,7 +1234,7 @@ export const services = [
   {
     id: 6,
     name: 'Commercial Pest Treatment',
-    programId: 2,
+    contractId: 2,
     productionPrice: 200.00,
     salesPrice: 295.00,
     taxType: 'Sales Tax',
@@ -1276,7 +1245,7 @@ export const services = [
   {
     id: 7,
     name: 'Quarterly Maintenance',
-    programId: 2,
+    contractId: 2,
     productionPrice: 150.00,
     salesPrice: 220.00,
     taxType: 'Sales Tax',
@@ -1287,7 +1256,7 @@ export const services = [
   {
     id: 8,
     name: 'Termite Inspection',
-    programId: 3,
+    contractId: 6,
     productionPrice: 95.00,
     salesPrice: 145.00,
     taxType: 'Sales Tax',
@@ -1298,7 +1267,7 @@ export const services = [
   {
     id: 9,
     name: 'Termite Treatment',
-    programId: 3,
+    contractId: 6,
     productionPrice: 450.00,
     salesPrice: 650.00,
     taxType: 'Sales Tax',
@@ -1309,7 +1278,7 @@ export const services = [
   {
     id: 10,
     name: 'Termite Barrier Installation',
-    programId: 3,
+    contractId: 6,
     productionPrice: 350.00,
     salesPrice: 525.00,
     taxType: 'Sales Tax',
@@ -1320,7 +1289,7 @@ export const services = [
   {
     id: 11,
     name: 'Rodent Inspection',
-    programId: 4,
+    contractId: 8,
     productionPrice: 75.00,
     salesPrice: 110.00,
     taxType: 'Sales Tax',
@@ -1331,7 +1300,7 @@ export const services = [
   {
     id: 12,
     name: 'Rodent Control Treatment',
-    programId: 4,
+    contractId: 8,
     productionPrice: 125.00,
     salesPrice: 185.00,
     taxType: 'Sales Tax',
@@ -1342,7 +1311,7 @@ export const services = [
   {
     id: 13,
     name: 'Bait Station Installation',
-    programId: 4,
+    contractId: 8,
     productionPrice: 95.00,
     salesPrice: 140.00,
     taxType: 'Sales Tax',
@@ -1353,7 +1322,7 @@ export const services = [
   {
     id: 14,
     name: 'Wildlife Removal',
-    programId: 4,
+    contractId: 8,
     productionPrice: 175.00,
     salesPrice: 260.00,
     taxType: 'Sales Tax',
@@ -1367,8 +1336,8 @@ export const contracts = [
   {
     id: 1,
     contractNumber: 'CONT-001',
+    name: 'Residential Pest Control',
     serviceAddressId: 1,
-    programId: 1,
     startDate: '2024-01-01',
     endDate: '2024-12-31',
     status: 'Active',
@@ -1379,8 +1348,8 @@ export const contracts = [
   {
     id: 2,
     contractNumber: 'CONT-002',
+    name: 'Commercial Pest Management',
     serviceAddressId: 2,
-    programId: 2,
     startDate: '2024-01-15',
     endDate: '2024-12-31',
     status: 'Active',
@@ -1391,8 +1360,8 @@ export const contracts = [
   {
     id: 3,
     contractNumber: 'CONT-003',
+    name: 'Commercial Pest Management',
     serviceAddressId: 3,
-    programId: 2,
     startDate: '2024-02-01',
     endDate: '2024-12-31',
     status: 'Active',
@@ -1403,8 +1372,8 @@ export const contracts = [
   {
     id: 4,
     contractNumber: 'CONT-004',
+    name: 'Residential Pest Control',
     serviceAddressId: 4,
-    programId: 1,
     startDate: '2024-03-01',
     endDate: '2024-12-31',
     status: 'Active',
@@ -1415,8 +1384,8 @@ export const contracts = [
   {
     id: 5,
     contractNumber: 'CONT-005',
+    name: 'Residential Pest Control',
     serviceAddressId: 5,
-    programId: 1,
     startDate: '2024-01-10',
     endDate: '2024-12-31',
     status: 'Active',
@@ -1427,8 +1396,8 @@ export const contracts = [
   {
     id: 6,
     contractNumber: 'CONT-006',
+    name: 'Termite Protection Plan',
     serviceAddressId: 1,
-    programId: 3,
     startDate: '2024-06-01',
     endDate: '2025-05-31',
     status: 'Active',
@@ -1439,8 +1408,8 @@ export const contracts = [
   {
     id: 7,
     contractNumber: 'CONT-007',
+    name: 'Commercial Pest Management',
     serviceAddressId: 7,
-    programId: 2,
     startDate: '2024-04-01',
     endDate: '2024-12-31',
     status: 'Active',
@@ -1451,8 +1420,8 @@ export const contracts = [
   {
     id: 8,
     contractNumber: 'CONT-008',
+    name: 'Rodent Control Program',
     serviceAddressId: 3,
-    programId: 4,
     startDate: '2024-05-01',
     endDate: '2024-12-31',
     status: 'Active',

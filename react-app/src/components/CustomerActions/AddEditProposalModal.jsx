@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCustomers, getServiceAddressesByCustomerId, getContractsByServiceAddressId, getServicesByProgramId, getContracts, getPrograms } from '../../utils/localStorage';
-import SearchableSelect from '../Common/SearchableSelect';
+import { getCustomers, getServiceAddressesByCustomerId, getContractsByServiceAddressId, getServicesByContractId } from '../../utils/localStorage';
 
 const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave, onFileUpload, onRemoveAttachment }) => {
   const [availableContracts, setAvailableContracts] = useState([]);
@@ -17,11 +16,7 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
 
   useEffect(() => {
     if (formData.contractIds && formData.contractIds.length > 0) {
-      const allContracts = getContracts();
-      const selectedContracts = allContracts.filter(c => formData.contractIds.includes(c.id));
-      const programIds = selectedContracts.map(c => c.programId);
-      const uniqueProgramIds = [...new Set(programIds)];
-      const services = uniqueProgramIds.flatMap(programId => getServicesByProgramId(programId));
+      const services = formData.contractIds.flatMap(contractId => getServicesByContractId(contractId));
       setAvailableServices(services);
     } else {
       setAvailableServices([]);
@@ -80,7 +75,6 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
 
   const customers = getCustomers();
   const statuses = ['Draft', 'Sent', 'Accepted', 'Rejected', 'Withdrawn'];
-  const programs = getPrograms();
 
   const customerOptions = customers.map(customer => ({
     value: customer.id,
@@ -91,11 +85,6 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
   }));
 
   const serviceAddresses = formData.customerId ? getServiceAddressesByCustomerId(parseInt(formData.customerId)) : [];
-
-  const getProgramName = (programId) => {
-    const program = programs.find(p => p.id === programId);
-    return program ? program.name : 'Unknown Program';
-  };
 
   const { subtotal, taxAmount, total } = calculateTotalPricing();
 
@@ -148,7 +137,7 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
                 <option value="">{availableContracts.length === 0 ? (formData.serviceAddressId ? 'No contracts found for this service address' : 'Please select a service address first') : 'Select a contract...'}</option>
                 {availableContracts.map(contract => (
                   <option key={contract.id} value={contract.id}>
-                    {contract.contractNumber} - {getProgramName(contract.programId)} ({contract.status})
+                    {contract.contractNumber} - {contract.name} ({contract.status})
                   </option>
                 ))}
               </select>

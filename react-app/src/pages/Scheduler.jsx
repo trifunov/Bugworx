@@ -11,7 +11,6 @@ import {
   priorities,
   appointmentStatuses,
   inventory as initialInventory,
-  programs,
   services,
   contracts
 } from '../data/mockData';
@@ -89,7 +88,6 @@ const Scheduler = () => {
       serviceAddresses: initialServiceAddresses,
       technicians: initialTechnicians,
       inventory: initialInventory,
-      programs: programs,
       services: services,
       contracts: contracts
     });

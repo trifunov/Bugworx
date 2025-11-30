@@ -17,7 +17,6 @@ const STORAGE_KEYS = {
   PROPOSALS: 'bugworx_proposals',
   CONFIGURATION: 'bugworx_configuration',
   CONTRACTS: 'bugworx_contracts',
-  PROGRAMS: 'bugworx_programs',
   SERVICES: 'bugworx_services'
 };
 
@@ -362,7 +361,7 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads, programs, services, contracts } = mockData;
+  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads, services, contracts } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
@@ -400,9 +399,6 @@ export const initializeStorage = (mockData) => {
   }
   if (getLeads().length === 0 && leads) {
     setLeads(leads);
-  }
-  if (getPrograms().length === 0 && programs) {
-    setPrograms(programs);
   }
   if (getServices().length === 0 && services) {
     setServices(services);
@@ -461,7 +457,6 @@ export const getTechnicianWorkload = (technicianId, date) => {
 export const suggestTechnicians = (serviceType, serviceAddressId, date, startTime, duration) => {
   const technicians = getTechnicians();
   const serviceAddresses = getServiceAddresses();
-  const appointments = getAppointments();
 
   const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
   if (!serviceAddress) return [];
@@ -887,54 +882,6 @@ export const getContractsByServiceAddressId = (serviceAddressId) => {
   return contracts.filter(c => c.serviceAddressId === serviceAddressId);
 };
 
-export const getPrograms = () => {
-  return getFromStorage(STORAGE_KEYS.PROGRAMS, []);
-};
-
-export const setPrograms = (programs) => {
-  return setToStorage(STORAGE_KEYS.PROGRAMS, programs);
-};
-
-export const addProgram = (program) => {
-  const programs = getPrograms();
-  const newProgram = {
-    ...program,
-    id: Date.now(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-  programs.push(newProgram);
-  setPrograms(programs);
-  return newProgram;
-};
-
-export const updateProgram = (id, updates) => {
-  const programs = getPrograms();
-  const index = programs.findIndex(p => p.id === id);
-  if (index !== -1) {
-    programs[index] = {
-      ...programs[index],
-      ...updates,
-      updatedAt: new Date().toISOString()
-    };
-    setPrograms(programs);
-    return programs[index];
-  }
-  return null;
-};
-
-export const deleteProgram = (id) => {
-  const programs = getPrograms();
-  const filtered = programs.filter(p => p.id !== id);
-  setPrograms(filtered);
-  return filtered.length < programs.length;
-};
-
-export const getProgramById = (id) => {
-  const programs = getPrograms();
-  return programs.find(p => p.id === id);
-};
-
 export const getServices = () => {
   return getFromStorage(STORAGE_KEYS.SERVICES, []);
 };
@@ -983,9 +930,9 @@ export const getServiceById = (id) => {
   return services.find(s => s.id === id);
 };
 
-export const getServicesByProgramId = (programId) => {
+export const getServicesByContractId = (contractId) => {
   const services = getServices();
-  return services.filter(s => s.programId === programId);
+  return services.filter(s => s.contractId === contractId);
 };
 
 export default {
@@ -1079,17 +1026,11 @@ export default {
   deleteContract,
   getContractById,
   getContractsByServiceAddressId,
-  getPrograms,
-  setPrograms,
-  addProgram,
-  updateProgram,
-  deleteProgram,
-  getProgramById,
   getServices,
   setServices,
   addService,
   updateService,
   deleteService,
   getServiceById,
-  getServicesByProgramId
+  getServicesByContractId
 };
