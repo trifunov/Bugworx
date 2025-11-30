@@ -26,6 +26,7 @@ import useAddEditApiIntegration from '../components/Configuration/SystemSettings
 import useAddEditCustomField from '../components/Configuration/SystemSettings/CustomFields/useAddEditCustomField';
 
 import useAddEditVehicle from '../components/Configuration/FleetManagement/useAddEditVehicle';
+import useAddEditVehicleType from '../components/Configuration/FleetManagement/VehicleType/useAddEditVehicleType';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -69,6 +70,7 @@ export const EditableFormProvider = ({ children }) => {
   const addEditCustomField = useAddEditCustomField();
 
   const addEditVehicle = useAddEditVehicle();
+  const addEditVehicleType = useAddEditVehicleType();
 
   const [customers, setCustomersState] = useState(getCustomers());
   const [leads, setLeadsState] = useState(getLeads());
@@ -119,6 +121,7 @@ export const EditableFormProvider = ({ children }) => {
     addEditApiIntegration,
     addEditCustomField,
     addEditVehicle,
+    addEditVehicleType,
     loadCustomers,
     loadLeads,
     loadProspects,
