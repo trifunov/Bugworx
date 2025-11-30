@@ -13,6 +13,9 @@ import useAddEditFrequencyTemplate from '../components/Configuration/Operational
 import useAddEditJobSetting from '../components/Configuration/OperationalSetup/JobSettings/useAddEditJobSettings';
 import useAddEditRouteConfiguration from '../components/Configuration/OperationalSetup/RouteConfiguration/useAddEditRouteConfiguration';
 import useAddEditOperationalZones from '../components/Configuration/OperationalSetup/OperationalZones/useAddEditOperationalZones';
+
+import useAddEditEquipmentDevices from '../components/Configuration/ServiceInspection/EquipmentDevices/useAddEditEquipmentDevices';
+
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
@@ -42,6 +45,7 @@ export const EditableFormProvider = ({ children }) => {
     const addEditJobSetting = useAddEditJobSetting();
     const addEditRouteConfiguration = useAddEditRouteConfiguration();
     const addEditOperationalZones = useAddEditOperationalZones();
+    const addEditEquipmentDevices = useAddEditEquipmentDevices();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -82,6 +86,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditJobSetting,
         addEditRouteConfiguration,
         addEditOperationalZones,
+        addEditEquipmentDevices,
         loadCustomers,
         loadLeads,
         loadProspects,

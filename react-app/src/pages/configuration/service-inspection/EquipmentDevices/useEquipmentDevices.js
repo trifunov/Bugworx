@@ -1,45 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getEquipmentDevices, saveEquipmentDevices } from '../../../../utils/localStorage';
 
 export const useEquipmentDevices = () => {
-    const [items, setItems] = useState(getEquipmentDevices() || []);
-    
-    const initialFormState = {
-        name: '',
-        type: '',
-        description: '',
-    };
+    const [items, setItems] = useState(getEquipmentDevices());
 
-    const [form, setForm] = useState(initialFormState);
+    useEffect(() => {
+        saveEquipmentDevices(items);
+    }, [items]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-    };
-
-    const addItem = () => {
-        if (!form.name.trim() || !form.type.trim()) return;
-
-        const updated = [...items, { id: Date.now(), ...form }];
-        setItems(updated);
-        saveEquipmentDevices(updated);
-        setForm(initialFormState); 
+    const saveItem = (formData) => {
+        if (formData.id) {
+            setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+        } else {
+            const newItem = { ...formData, id: Date.now().toString() };
+            setItems(prev => [newItem, ...prev]);
+        }
     };
 
     const removeItem = (id) => {
-        if(!window.confirm('Are you sure you want to delete this equipment device?')) return;
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        saveEquipmentDevices(updated);
+        if (!window.confirm('Are you sure you want to delete this device?')) return;
+        setItems(prev => prev.filter(it => it.id !== id));
     };
 
     return {
         items,
-        form,
-        handleChange,
-        addItem,
+        saveItem,
         removeItem,
     };
 };
-
-export default useEquipmentDevices;
