@@ -10,6 +10,9 @@ import useAddEditTeam from '../components/Configuration/TeamBranches/useAddEditT
 import useAddEditContractType from '../components/Configuration/OperationalSetup/ContractTypes/useAddEditContractTypes';
 import useAddEditServiceTypes from '../components/Configuration/OperationalSetup/ServiceTypes/useAddEditServiceTypes';
 import useAddEditFrequencyTemplate from '../components/Configuration/OperationalSetup/FrequencyTemplate/useFrequencyTemplate';
+import useAddEditJobSetting from '../components/Configuration/OperationalSetup/JobSettings/useAddEditJobSettings';
+import useAddEditRouteConfiguration from '../components/Configuration/OperationalSetup/RouteConfiguration/useAddEditRouteConfiguration';
+import useAddEditOperationalZones from '../components/Configuration/OperationalSetup/OperationalZones/useAddEditOperationalZones';
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
@@ -36,6 +39,9 @@ export const EditableFormProvider = ({ children }) => {
     const addEditContractType = useAddEditContractType();
     const addEditServiceTypes = useAddEditServiceTypes();
     const addEditFrequencyTemplate = useAddEditFrequencyTemplate();
+    const addEditJobSetting = useAddEditJobSetting();
+    const addEditRouteConfiguration = useAddEditRouteConfiguration();
+    const addEditOperationalZones = useAddEditOperationalZones();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -73,6 +79,9 @@ export const EditableFormProvider = ({ children }) => {
         addEditContractType,
         addEditServiceTypes,
         addEditFrequencyTemplate,
+        addEditJobSetting,
+        addEditRouteConfiguration,
+        addEditOperationalZones,
         loadCustomers,
         loadLeads,
         loadProspects,
