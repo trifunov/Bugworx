@@ -62,15 +62,17 @@ import EquipmentDevices from './pages/configuration/service-inspection/Equipment
 import MaterialSetup from './pages/configuration/service-inspection/MaterialSetup/MaterialSetup';
 import InspectionPointCategories from './pages/configuration/service-inspection/InspectionPointCategories/InspectionPointCategories';
 
+import VehicleList from './pages/configuration/fleet-management/VehicleList';
+
 function App() {
   return (
     <Routes>
       {/* Public Route */}
-      <Route path="/login" element={<Login />} />
+      <Route path='/login' element={<Login />} />
 
       {/* Protected Routes */}
       <Route
-        path="/"
+        path='/'
         element={
           <ProtectedRoute>
             <MainLayout />
@@ -78,74 +80,84 @@ function App() {
         }
       >
         <Route index element={<Dashboard />} />
-        <Route path="search-results" element={<SearchResults />} />
-        <Route path="customers" element={<Customers />} />
-        <Route path="prospects" element={<Prospects />} />
-        <Route path="leads" element={<Leads />} />
-        <Route path="customers/:id" element={<CustomerOverview />} />
-        <Route path="customers/:id/service-addresses" element={<CustomerServiceAddresses />} />
-        <Route path="customers/:id/appointments" element={<CustomerAppointments />} />
-        <Route path="customers/:id/service-history" element={<CustomerServiceHistory />} />
-        <Route path="customers/:id/proposals" element={<CustomerProposals />} />
-        <Route path="customers/:id/invoices" element={<CustomerInvoices />} />
-        <Route path="customers/:id/contracts" element={<CustomerContracts />} />
-        <Route path="customers/:id/documents" element={<CustomerDocuments />} />
-        <Route path="customers/:id/notes" element={<CustomerNotes />} />
-        <Route path="customers/:id/inspection-points" element={<InspectionPoints />} />
-        <Route path="customers/:id/areas" element={<Areas />} />
-        <Route path="customers/:id/schedule-service" element={<CustomerAppointments />} />
-        <Route path="customers/:id/create-invoice" element={<CustomerInvoices />} />
-        <Route path="customers/:id/facilities" element={<Facilities />} />
-        <Route path="service-addresses" element={<ServiceAddresses />} />
-        <Route path="appointments" element={<Appointments />} />
-        <Route path="proposals" element={<Proposals />} />
-        <Route path="scheduler" element={<Scheduler />} />
-        <Route path="technicians" element={<Technicians />} />
-        <Route path="inventory" element={<Inventory />} />
-        <Route path="routing" element={<Routing />} />
-        <Route path="billing" element={<Billing />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="analytics" element={<Analytics />} />
-        <Route path="notifications" element={<Notifications />} />
-        <Route path="configuration" element={<Configuration />} />
-        <Route path="user-profile" element={<UserProfile />} />
+        <Route path='search-results' element={<SearchResults />} />
+        <Route path='customers' element={<Customers />} />
+        <Route path='prospects' element={<Prospects />} />
+        <Route path='leads' element={<Leads />} />
+        <Route path='customers/:id' element={<CustomerOverview />} />
+        <Route path='customers/:id/service-addresses' element={<CustomerServiceAddresses />} />
+        <Route path='customers/:id/appointments' element={<CustomerAppointments />} />
+        <Route path='customers/:id/service-history' element={<CustomerServiceHistory />} />
+        <Route path='customers/:id/proposals' element={<CustomerProposals />} />
+        <Route path='customers/:id/invoices' element={<CustomerInvoices />} />
+        <Route path='customers/:id/contracts' element={<CustomerContracts />} />
+        <Route path='customers/:id/documents' element={<CustomerDocuments />} />
+        <Route path='customers/:id/notes' element={<CustomerNotes />} />
+        <Route path='customers/:id/inspection-points' element={<InspectionPoints />} />
+        <Route path='customers/:id/areas' element={<Areas />} />
+        <Route path='customers/:id/schedule-service' element={<CustomerAppointments />} />
+        <Route path='customers/:id/create-invoice' element={<CustomerInvoices />} />
+        <Route path='customers/:id/facilities' element={<Facilities />} />
+        <Route path='service-addresses' element={<ServiceAddresses />} />
+        <Route path='appointments' element={<Appointments />} />
+        <Route path='proposals' element={<Proposals />} />
+        <Route path='scheduler' element={<Scheduler />} />
+        <Route path='technicians' element={<Technicians />} />
+        <Route path='inventory' element={<Inventory />} />
+        <Route path='routing' element={<Routing />} />
+        <Route path='billing' element={<Billing />} />
+        <Route path='reports' element={<Reports />} />
+        <Route path='analytics' element={<Analytics />} />
+        <Route path='notifications' element={<Notifications />} />
+        <Route path='configuration' element={<Configuration />} />
+        <Route path='user-profile' element={<UserProfile />} />
 
         {/* System Settings Routes */}
-        <Route path="configuration/general" element={<ConfigurationLayout />} />
-        <Route path="configuration/system-settings/api-integrations" element={<ApiIntegrations />} />
-        <Route path="configuration/system-settings/audit-trail" element={<AuditTrail />} />
-        <Route path="configuration/system-settings/backup-restore" element={<BackupAndRestore />} />
-        <Route path="configuration/system-settings/company-profile" element={<CompanyProfile />} />
-        <Route path="configuration/system-settings/custom-fields" element={<CustomFields />} />
-        <Route path="configuration/system-settings/data-import-export" element={<DataImportExport />} />
-        
+        <Route path='configuration/general' element={<ConfigurationLayout />} />
+        <Route path='configuration/system-settings/api-integrations' element={<ApiIntegrations />} />
+        <Route path='configuration/system-settings/audit-trail' element={<AuditTrail />} />
+        <Route path='configuration/system-settings/backup-restore' element={<BackupAndRestore />} />
+        <Route path='configuration/system-settings/company-profile' element={<CompanyProfile />} />
+        <Route path='configuration/system-settings/custom-fields' element={<CustomFields />} />
+        <Route path='configuration/system-settings/data-import-export' element={<DataImportExport />} />
+
         {/* User Access Management Routes */}
-        <Route path="configuration/user-access/users" element={<Users />} />
-        <Route path="configuration/user-access/employee-directory" element={<EmployeeDirectory />} />
-        <Route path="configuration/user-access/roles-permissions" element={<RolesPermissions />} />
-        <Route path="configuration/user-access/teams-branches" element={<TeamsBranches />} />
-        <Route path="configuration/user-access/user-activity-log" element={<UserActivityLog />} />
+        <Route path='configuration/user-access/users' element={<Users />} />
+        <Route path='configuration/user-access/employee-directory' element={<EmployeeDirectory />} />
+        <Route path='configuration/user-access/roles-permissions' element={<RolesPermissions />} />
+        <Route path='configuration/user-access/teams-branches' element={<TeamsBranches />} />
+        <Route path='configuration/user-access/user-activity-log' element={<UserActivityLog />} />
 
         {/* Operational Setup */}
-        <Route path="configuration/operational-setup/route-configuration" element={<RouteConfiguration />} />
-        <Route path="configuration/operational-setup/contract-types" element={<ContractTypes />} />
-        <Route path="configuration/operational-setup/operational-zones" element={<OperationZones />} />
-        <Route path="configuration/operational-setup/frequency-templates" element={<FrequencyTemplates />} />
-        <Route path="configuration/operational-setup/job-settings" element={<JobSettings />} />
-        <Route path="configuration/operational-setup/service-types" element={<ServiceTypes />} />
+        <Route path='configuration/operational-setup/route-configuration' element={<RouteConfiguration />} />
+        <Route path='configuration/operational-setup/contract-types' element={<ContractTypes />} />
+        <Route path='configuration/operational-setup/operational-zones' element={<OperationZones />} />
+        <Route path='configuration/operational-setup/frequency-templates' element={<FrequencyTemplates />} />
+        <Route path='configuration/operational-setup/job-settings' element={<JobSettings />} />
+        <Route path='configuration/operational-setup/service-types' element={<ServiceTypes />} />
 
         {/* Service Inspection */}
-        <Route path="configuration/service-inspection/inspection-point-categories" element={<InspectionPointCategories />} />
-        <Route path="configuration/service-inspection/inspection-point-types" element={<InspectionPointTypes />} />
-        <Route path="configuration/service-inspection/pest-types" element={<PestTypes />} />
-        <Route path="configuration/service-inspection/treatment-types" element={<TreatmentTypes />} />
-        <Route path="configuration/service-inspection/service-templates" element={<ServiceTemplates />} />
-        <Route path="configuration/service-inspection/equipment-devices" element={<EquipmentDevices />} />
-        <Route path="configuration/service-inspection/material-setup" element={<MaterialSetup />} />
+        <Route path='configuration/service-inspection/inspection-point-categories' element={<InspectionPointCategories />} />
+        <Route path='configuration/service-inspection/inspection-point-types' element={<InspectionPointTypes />} />
+        <Route path='configuration/service-inspection/pest-types' element={<PestTypes />} />
+        <Route path='configuration/service-inspection/treatment-types' element={<TreatmentTypes />} />
+        <Route path='configuration/service-inspection/service-templates' element={<ServiceTemplates />} />
+        <Route path='configuration/service-inspection/equipment-devices' element={<EquipmentDevices />} />
+        <Route path='configuration/service-inspection/material-setup' element={<MaterialSetup />} />
+
+        {/* Vehicle List */}
+        <Route path='configuration/fleet/vehicles' element={<VehicleList />} />
+        {/* <Route path='configuration/fleet/vehicle-types' element={<VehicleTypes />} />
+        <Route path='configuration/fleet/fuel-types' element={<FuelTypes />} />
+        <Route path='configuration/fleet/maintenance-templates' element={<MaintenanceTemplates />} />
+        <Route path='configuration/fleet/driver-assignment' element={<DriverAssignment />} />
+        <Route path='configuration/fleet/gps-integration' element={<GpsIntegration />} />
+        <Route path='configuration/fleet/insurance-registration' element={<InsuranceRegistration />} />
+        <Route path='configuration/fleet/usage-policy' element={<UsagePolicy />} /> */}
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path='*' element={<Navigate to='/' replace />} />
     </Routes>
   );
 }
