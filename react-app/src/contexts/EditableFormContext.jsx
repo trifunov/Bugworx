@@ -17,6 +17,7 @@ import useAddEditOperationalZones from '../components/Configuration/OperationalS
 import useAddEditEquipmentDevices from '../components/Configuration/ServiceInspection/EquipmentDevices/useAddEditEquipmentDevices';
 import useAddEditInspectionPointCategory from '../components/Configuration/ServiceInspection/InspectionPointCategories/useAddEditInspectionPointCategory';
 import useAddEditInspectionPointType from '../components/Configuration/ServiceInspection/InspectionPointTypes/useAddEditInspectionPointType';
+import useAddEditMaterialSetup from '../components/Configuration/ServiceInspection/MaterialSetup/useAddEditMaterialSetup';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -51,6 +52,7 @@ export const EditableFormProvider = ({ children }) => {
     const addEditEquipmentDevices = useAddEditEquipmentDevices();
     const addEditInspectionPointCategory = useAddEditInspectionPointCategory();
     const addEditInspectionPointType = useAddEditInspectionPointType();
+    const addEditMaterialSetup = useAddEditMaterialSetup();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -94,6 +96,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditEquipmentDevices,
         addEditInspectionPointCategory,
         addEditInspectionPointType,
+        addEditMaterialSetup,
         loadCustomers,
         loadLeads,
         loadProspects,
