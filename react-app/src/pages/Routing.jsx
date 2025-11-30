@@ -11,7 +11,6 @@ import {
   serviceAddresses as initialServiceAddresses,
   technicians as initialTechnicians,
   inventory as initialInventory,
-  programs,
   services,
   contracts
 } from '../data/mockData';
@@ -22,13 +21,13 @@ import {
   getRoutesByDate,
   addRoute,
   updateRoute,
-  deleteRoute,
   getTechnicians,
   getAppointments,
   getServiceAddresses
 } from '../utils/localStorage';
 import {
-  generateRouteWithStrategy
+  generateRouteWithStrategy,
+  optimizeRouteWithConstraints
 } from '../utils/routeUtils';
 import { calculateDirections } from '../services/googleMapsService';
 import {
@@ -137,7 +136,6 @@ const Routing = () => {
       vehicles: initialVehicles,
       routes: initialRoutes,
       routeTemplates: initialRouteTemplates,
-      programs: programs,
       services: services,
       contracts: contracts
     });
