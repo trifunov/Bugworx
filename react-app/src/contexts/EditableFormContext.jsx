@@ -15,6 +15,7 @@ import useAddEditRouteConfiguration from '../components/Configuration/Operationa
 import useAddEditOperationalZones from '../components/Configuration/OperationalSetup/OperationalZones/useAddEditOperationalZones';
 
 import useAddEditEquipmentDevices from '../components/Configuration/ServiceInspection/EquipmentDevices/useAddEditEquipmentDevices';
+import useAddEditInspectionPointCategory from '../components/Configuration/ServiceInspection/InspectionPointCategories/useAddEditInspectionPointCategory';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -45,7 +46,9 @@ export const EditableFormProvider = ({ children }) => {
     const addEditJobSetting = useAddEditJobSetting();
     const addEditRouteConfiguration = useAddEditRouteConfiguration();
     const addEditOperationalZones = useAddEditOperationalZones();
+
     const addEditEquipmentDevices = useAddEditEquipmentDevices();
+    const addEditInspectionPointCategory = useAddEditInspectionPointCategory();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -87,6 +90,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditRouteConfiguration,
         addEditOperationalZones,
         addEditEquipmentDevices,
+        addEditInspectionPointCategory,
         loadCustomers,
         loadLeads,
         loadProspects,

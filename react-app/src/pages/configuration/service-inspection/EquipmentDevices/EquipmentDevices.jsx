@@ -72,7 +72,7 @@ const EquipmentDevices = () => {
                         <div className="card-body">
                             <div className="row mb-3">
                                 <div className="col-12">
-                                    <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
+                                     <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
                                         <div className="flex-grow-1 w-100 me-md-3">
                                             <TableSearch
                                                 value={searchTerm}
