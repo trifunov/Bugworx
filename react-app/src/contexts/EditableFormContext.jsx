@@ -19,6 +19,7 @@ import useAddEditInspectionPointCategory from '../components/Configuration/Servi
 import useAddEditInspectionPointType from '../components/Configuration/ServiceInspection/InspectionPointTypes/useAddEditInspectionPointType';
 import useAddEditMaterialSetup from '../components/Configuration/ServiceInspection/MaterialSetup/useAddEditMaterialSetup';
 import useAddEditPestType from '../components/Configuration/ServiceInspection/PestTypes/useAddEditPestType';
+import useAddEditServiceTemplate from '../components/Configuration/ServiceInspection/ServiceTemplates/useAddEditServiceTemplate';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -55,6 +56,7 @@ export const EditableFormProvider = ({ children }) => {
     const addEditInspectionPointType = useAddEditInspectionPointType();
     const addEditMaterialSetup = useAddEditMaterialSetup();
     const addEditPestType = useAddEditPestType();
+    const addEditServiceTemplate = useAddEditServiceTemplate();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -100,6 +102,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditInspectionPointType,
         addEditMaterialSetup,
         addEditPestType,
+        addEditServiceTemplate,
         loadCustomers,
         loadLeads,
         loadProspects,
