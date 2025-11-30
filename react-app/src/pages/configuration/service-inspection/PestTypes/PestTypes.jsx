@@ -1,121 +1,128 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { usePestTypes } from './usePestTypes';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
+import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import Table from '../../../../components/Common/Table/Table';
+import useTable from '../../../../components/Common/Table/useTable';
+import AddNewButton from '../../../../components/Common/AddNewButton';
+import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
+import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
+import AddEditPestType from '../../../../components/Configuration/ServiceInspection/PestTypes/AddEditPestType';
+
+const columns = [
+    { label: 'Pest Name', accessor: 'name', sortable: true },
+    { label: 'Category', accessor: 'category', sortable: true },
+    { label: 'Risk Level', accessor: 'riskLevel', sortable: true },
+    { label: 'Actions', accessor: 'actions', sortable: false },
+];
+const columnNames = columns.map(c => c.label);
+const sortableColumns = columns.reduce((acc, col) => {
+    if (col.sortable) acc[col.label] = col.accessor;
+    return acc;
+}, {});
 
 const PestTypes = () => {
-    const { items, form, handleChange, addItem, removeItem } = usePestTypes();
-    const { setPageSubHeader } = usePageSubHeader();
+  const { items, saveItem, removeItem } = usePestTypes();
+  const { addEditPestType } = useEditableFormContext();
+  const { setPageSubHeader } = usePageSubHeader();
 
-    useEffect(() => {
-        setPageSubHeader({
-            title: 'Pest Types',
-            breadcrumbs: [
-                { label: 'Configuration', path: '/configuration' },
-                { label: 'Service Inspection', path: '/configuration/service-inspection' },
-                { label: 'Pest Types', active: true },
-            ],
-        });
-    }, [setPageSubHeader]);
+  useEffect(() => {
+    setPageSubHeader({
+        title: 'Pest Types',
+        breadcrumbs: [
+            { label: 'Configuration', path: '/configuration' },
+            { label: 'Service Inspection', path: '/configuration/service-inspection' },
+            { label: 'Pest Types', active: true },
+        ],
+    });
+  }, [setPageSubHeader]);
 
-    return (
-        <div className="configuration-page">
-            <div className="page-header">
-                <p>Maintain a database of pests, risk levels, and categories.</p>
-            </div>
+  const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(items, ['name', 'category', 'riskLevel']);
+  const { data: paginatedData, ...tableProps } = useTable(filteredItems, { defaultSortField: 'name' });
 
-            <div className="card form-card">
-                <div className="card-header">Add New Pest Type</div>
-                <div className="card-body">
-                    <form onSubmit={e => { e.preventDefault(); addItem(); }} className="configuration-form">
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Pest Name</label>
-                                <input 
-                                    className="form-control"
-                                    name="name" 
-                                    value={form.name} 
-                                    onChange={handleChange} 
-                                    placeholder="e.g., German Cockroach" 
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Category</label>
-                                <input 
-                                    className="form-control"
-                                    name="category" 
-                                    value={form.category} 
-                                    onChange={handleChange} 
-                                    placeholder="e.g., Insect, Rodent" 
-                                    required
-                                />
-                            </div>
-                        </div>
+  const getRiskLevelClass = (level) => {
+    switch (level) {
+      case 'Critical': return 'danger';
+      case 'High': return 'warning';
+      case 'Medium': return 'info';
+      case 'Low': return 'success';
+      default: return 'secondary';
+    }
+  };
 
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Risk Level</label>
-                                <select 
-                                    className="form-control"
-                                    name="riskLevel" 
-                                    value={form.riskLevel} 
-                                    onChange={handleChange}
-                                >
-                                    <option>Low</option>
-                                    <option>Medium</option>
-                                    <option>High</option>
-                                    <option>Critical</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-actions">
-                            <button type="submit" className="btn btn-primary">Add Pest</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div className="card list-card">
-                <div className="card-header">Existing Pest Types</div>
-                <div className="card-body">
-                    <table className="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Pest Name</th>
-                                <th>Category</th>
-                                <th>Risk Level</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {items.length === 0 ? (
-                                <tr>
-                                    <td colSpan="4" className="text-center">No pest types defined.</td>
-                                </tr>
-                            ) : (
-                                items.map(item => (
-                                    <tr key={item.id}>
-                                        <td>{item.name}</td>
-                                        <td>{item.category}</td>
-                                        <td>{item.riskLevel}</td>
-                                        <td>
-                                            <button 
-                                                className="btn btn-danger btn-sm" 
-                                                onClick={() => removeItem(item.id)}
-                                            >
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+  const renderRow = (item) => (
+    <tr key={item.id}>
+      <td><strong>{item.name}</strong></td>
+      <td>{item.category}</td>
+      <td>
+        <span className={`badge badge-soft-${getRiskLevelClass(item.riskLevel)}`}>{item.riskLevel}</span>
+      </td>
+      <td>
+        <div className="d-flex gap-3">
+          <a className="text-primary" href="#" title="Edit" onClick={(e) => { e.preventDefault(); addEditPestType.open(item); }}><i className="mdi mdi-pencil font-size-18"></i></a>
+          <a className="text-danger" href="#" title="Delete" onClick={(e) => { e.preventDefault(); removeItem(item.id); }}><i className="mdi mdi-delete font-size-18"></i></a>
         </div>
-    );
+      </td>
+    </tr>
+  );
+
+  return (
+    <>
+      <AddEditPestType
+        isOpen={addEditPestType.isOpen}
+        formData={addEditPestType.formData}
+        isSaving={addEditPestType.isSaving}
+        onUpdateFieldHandle={addEditPestType.onUpdateFieldHandle}
+        onClose={addEditPestType.close}
+        onSave={() => addEditPestType.onSaveHandle(saveItem)}
+      />
+
+      <div className="row">
+        <div className="col-12">
+          <div className="card">
+            <div className="card-body">
+              <div className="row mb-3">
+                <div className="col-12">
+                  <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
+                    <div className="flex-grow-1 w-100 me-md-3">
+                      <TableSearch
+                        value={searchTerm}
+                        onChange={setSearchTerm}
+                        placeholder="Search pest types..."
+                      />
+                    </div>
+                    <div className="mt-2 mt-md-0">
+                      <AddNewButton handleAddNew={() => addEditPestType.open()} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Table
+                columns={columnNames}
+                data={paginatedData}
+                renderRow={renderRow}
+                sortableColumns={sortableColumns}
+                onSort={tableProps.handleSort}
+                sortField={tableProps.sortField}
+                sortDirection={tableProps.sortDirection}
+                pagination={{
+                  currentPage: tableProps.currentPage,
+                  totalPages: tableProps.totalPages,
+                  onPageChange: tableProps.setCurrentPage,
+                  totalItems: tableProps.totalItems
+                }}
+                emptyState={{
+                  icon: 'mdi mdi-bug-outline',
+                  message: 'No pest types found. Click "Add New" to create one.'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default PestTypes;

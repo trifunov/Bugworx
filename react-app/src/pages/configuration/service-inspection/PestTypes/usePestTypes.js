@@ -1,46 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getPestTypes, savePestTypes } from '../../../../utils/localStorage';
 
 export const usePestTypes = () => {
-    const [items, setItems] = useState(getPestTypes() || []);
-    
-    const initialFormState = {
-        name: '',
-        category: '',
-        riskLevel: 'Low',
-    };
+  const [items, setItems] = useState(getPestTypes());
 
-    const [form, setForm] = useState(initialFormState);
+  useEffect(() => {
+    savePestTypes(items);
+  }, [items]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-    };
+  const saveItem = (formData) => {
+    if (formData.id) {
+      setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+    } else {
+      const newItem = { ...formData, id: Date.now().toString() };
+      setItems(prev => [newItem, ...prev]);
+    }
+  };
 
-    const addItem = () => {
-        if (!form.name.trim() || !form.category.trim()) return;
+  const removeItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this pest type?')) return;
+    setItems(prev => prev.filter(it => it.id !== id));
+  };
 
-        const updated = [...items, { id: Date.now(), ...form }];
-        setItems(updated);
-        savePestTypes(updated);
-        setForm(initialFormState); 
-    };
-
-    const removeItem = (id) => {
-        if(!window.confirm('Are you sure you want to delete this pest type?')) return;
-        if(!window.confirm('Are you sure you want to delete this pest type?')) return;
-        const updated = items.filter(i => i.id !== id);
-        setItems(updated);
-        savePestTypes(updated);
-    };
-
-    return {
-        items,
-        form,
-        handleChange,
-        addItem,
-        removeItem,
-    };
+  return {
+    items,
+    saveItem,
+    removeItem,
+  };
 };
-
-export default usePestTypes;

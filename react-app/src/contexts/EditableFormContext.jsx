@@ -18,6 +18,7 @@ import useAddEditEquipmentDevices from '../components/Configuration/ServiceInspe
 import useAddEditInspectionPointCategory from '../components/Configuration/ServiceInspection/InspectionPointCategories/useAddEditInspectionPointCategory';
 import useAddEditInspectionPointType from '../components/Configuration/ServiceInspection/InspectionPointTypes/useAddEditInspectionPointType';
 import useAddEditMaterialSetup from '../components/Configuration/ServiceInspection/MaterialSetup/useAddEditMaterialSetup';
+import useAddEditPestType from '../components/Configuration/ServiceInspection/PestTypes/useAddEditPestType';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -53,6 +54,7 @@ export const EditableFormProvider = ({ children }) => {
     const addEditInspectionPointCategory = useAddEditInspectionPointCategory();
     const addEditInspectionPointType = useAddEditInspectionPointType();
     const addEditMaterialSetup = useAddEditMaterialSetup();
+    const addEditPestType = useAddEditPestType();
 
     const [customers, setCustomersState] = useState(getCustomers());
     const [leads, setLeadsState] = useState(getLeads());
@@ -97,6 +99,7 @@ export const EditableFormProvider = ({ children }) => {
         addEditInspectionPointCategory,
         addEditInspectionPointType,
         addEditMaterialSetup,
+        addEditPestType,
         loadCustomers,
         loadLeads,
         loadProspects,
