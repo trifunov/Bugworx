@@ -22,6 +22,8 @@ import useAddEditPestType from '../components/Configuration/ServiceInspection/Pe
 import useAddEditServiceTemplate from '../components/Configuration/ServiceInspection/ServiceTemplates/useAddEditServiceTemplate';
 import useAddEditTreatmentType from '../components/Configuration/ServiceInspection/TreatmentTypes/useAddEditTreatmentType';
 
+import useAddEditApiIntegration from '../components/Configuration/SystemSettings/ApiIntegrations/useAddEditApiIntegration';
+
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
@@ -59,6 +61,8 @@ export const EditableFormProvider = ({ children }) => {
   const addEditPestType = useAddEditPestType();
   const addEditServiceTemplate = useAddEditServiceTemplate();
   const addEditTreatmentType = useAddEditTreatmentType();
+
+  const addEditApiIntegration = useAddEditApiIntegration();
 
   const [customers, setCustomersState] = useState(getCustomers());
   const [leads, setLeadsState] = useState(getLeads());
@@ -106,6 +110,7 @@ export const EditableFormProvider = ({ children }) => {
     addEditPestType,
     addEditServiceTemplate,
     addEditTreatmentType,
+    addEditApiIntegration,
     loadCustomers,
     loadLeads,
     loadProspects,
