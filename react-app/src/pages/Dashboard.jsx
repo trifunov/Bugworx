@@ -1,10 +1,20 @@
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
-  initializeStorage,
-  getCustomers,
-  setCustomers
-} from '../utils/localStorage';
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
+import { Line, Doughnut } from 'react-chartjs-2';
+import Table from '../components/Common/Table/Table';
+import useDashboardData from '../hooks/useDashboardData';
+import { initializeStorage } from '../utils/localStorage';
 import {
   appointments as initialAppointments,
   serviceAddresses as initialServiceAddresses,
@@ -16,8 +26,20 @@ import {
   inspectionPoints
 } from '../data/mockData';
 
-const Dashboard = () => {
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
+const Dashboard = () => {
   // Initialize localStorage on mount
   useEffect(() => {
     initializeStorage({
@@ -32,161 +54,159 @@ const Dashboard = () => {
     });
   }, []);
 
+  // Use shared dashboard data hook
+  const {
+    kpis,
+    revenueChartData,
+    revenueChartOptions,
+    serviceDistributionData,
+    chartOptions,
+    todaySchedule,
+    recentActivity,
+    lowStockItems,
+    getStatusClass
+  } = useDashboardData();
+
   return (
     <>
-      {/* start page title */}
+      {/* Stats Cards - Same style as Analytics */}
       <div className="row">
-        <div className="col-12">
-          <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 className="mb-sm-0">Home</h4>
+        {kpis.map((kpi) => (
+          <div key={kpi.id} className="col-xl-3 col-md-6">
+            <div className="card">
+              <div className="card-body">
+                <div className="d-flex">
+                  <div className="flex-grow-1">
+                    <p className="text-muted fw-medium mb-2">{kpi.label}</p>
+                    <h4 className="mb-0">{kpi.value}</h4>
+                    <p className="text-muted mb-0">
+                      <span className={`${kpi.change >= 0 ? 'text-success' : 'text-danger'} me-2`}>
+                        <i className={`mdi ${kpi.change >= 0 ? 'mdi-arrow-up' : 'mdi-arrow-down'}`}></i> {Math.abs(kpi.change)}%
+                      </span>
+                      vs last month
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 align-self-center">
+                    <div className={`mini-stat-icon avatar-sm rounded-circle bg-${kpi.color}`}>
+                      <span className="avatar-title">
+                        <i className={`mdi ${kpi.icon} font-size-24`}></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Revenue Trends & Service Distribution - Same style as Analytics */}
+      <div className="row">
+        <div className="col-xl-8">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title mb-4">Revenue Trends</h4>
+              <div style={{ height: '350px' }}>
+                <Line data={revenueChartData} options={revenueChartOptions} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-4">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title mb-4">Service Distribution</h4>
+              <div style={{ height: '350px' }}>
+                <Doughnut data={serviceDistributionData} options={chartOptions} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      {/* end page title */}
 
+      {/* Today's Schedule & Recent Activity */}
       <div className="row">
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/customers" style={{ textDecoration: 'none' }}>
-            <div className="card border border-primary card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-primary">
-                <h4 className="my-0 text-primary font-size-24"><i className="mdi mdi-account-circle me-3"></i>Customers</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Customer Management</h5>
-                <p className="card-text">
-                  Manage customer profiles, addresses, and service history in one place.
-                </p>
-              </div>
+        <div className="col-xl-6">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title mb-4">Today's Schedule</h4>
+              <Table
+                columns={['Time', 'Service', 'Location', 'Tech', 'Status']}
+                data={todaySchedule}
+                renderRow={(item, idx) => (
+                  <tr key={idx}>
+                    <td>{item.time}</td>
+                    <td>{item.service}</td>
+                    <td>{item.location}</td>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <div className="avatar-xs me-2">
+                          <span className="avatar-title rounded-circle bg-soft-primary text-primary">
+                            {item.tech.charAt(0)}
+                          </span>
+                        </div>
+                        <span>{item.tech}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`badge ${getStatusClass(item.status)} font-size-12`}>
+                        {item.statusText}
+                      </span>
+                    </td>
+                  </tr>
+                )}
+              />
             </div>
-          </Link>
+          </div>
         </div>
 
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/scheduler" style={{ textDecoration: 'none' }}>
-            <div className="card border border-warning card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-warning">
-                <h4 className="my-0 text-warning font-size-24"><i className="mdi mdi-calendar-multiselect me-3"></i>Scheduler</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Scheduling jobs</h5>
-                <p className="card-text">
-                  Quickly create and schedule pest control visits, assign technicians and routes
-                </p>
-              </div>
+        <div className="col-xl-6">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title mb-4">Recent Activity</h4>
+              <Table
+                columns={['Activity', 'Details', 'Time']}
+                data={recentActivity}
+                renderRow={(item, idx) => (
+                  <tr key={idx}>
+                    <td className="fw-medium">{item.title}</td>
+                    <td>
+                      {item.detail}
+                      {item.amount && <span className="text-success ms-2">{item.amount}</span>}
+                    </td>
+                    <td><span className="text-muted">{item.time}</span></td>
+                  </tr>
+                )}
+              />
             </div>
-          </Link>
+          </div>
         </div>
+      </div>
 
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/routing" style={{ textDecoration: 'none' }}>
-            <div className="card border border-warning card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-warning">
-                <h4 className="my-0 text-warning font-size-24"><i className="mdi mdi-map-marker me-3"></i>Routing & Fleet</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Routing & Fleet AI management</h5>
-                <p className="card-text">
-                  Optimize technician routes with AI-powered suggestions to save time and fuel.
-                </p>
-              </div>
+      {/* Low Stock */}
+      <div className="row">
+        <div className="col-xl-6">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title mb-4">Low Stock Items</h4>
+              <Table
+                columns={['Item', 'On Hand', 'Min Required', 'Status']}
+                data={lowStockItems}
+                renderRow={(item, idx) => (
+                  <tr key={idx}>
+                    <td>{item.item}</td>
+                    <td>{item.onHand}</td>
+                    <td>{item.min}</td>
+                    <td>
+                      <span className={`badge ${item.onHand < item.min / 2 ? 'badge-soft-danger' : 'badge-soft-warning'} font-size-12`}>
+                        {item.onHand < item.min / 2 ? 'Critical' : 'Low'}
+                      </span>
+                    </td>
+                  </tr>
+                )}
+              />
             </div>
-          </Link>
-        </div>
-
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/reports" style={{ textDecoration: 'none' }}>
-            <div className="card border border-primary card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-primary">
-                <h4 className="my-0 text-primary font-size-24"><i className="mdi mdi-file-chart me-3"></i>Reports</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Generate reports</h5>
-                <p className="card-text">
-                  Generate detailed reports on service history, technician performance, and customer feedback.
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/analytics" style={{ textDecoration: 'none' }}>
-            <div className="card border border-primary card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-primary">
-                <h4 className="my-0 text-primary font-size-24"><i className="mdi mdi-view-dashboard me-3"></i>Analytics</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Analytical dashboards</h5>
-                <p className="card-text">
-                  Gain insights into your business performance with customizable analytics dashboards.
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/inventory" style={{ textDecoration: 'none' }}>
-            <div className="card border border-success card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-success">
-                <h4 className="my-0 text-success font-size-24"><i className="mdi mdi-flask me-3"></i>Inventory</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Inventory Management</h5>
-                <p className="card-text">
-                  Track and manage pest control supplies and equipment with ease.
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/billing" style={{ textDecoration: 'none' }}>
-            <div className="card border border-success card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-success">
-                <h4 className="my-0 text-success font-size-24"><i className="mdi mdi-bank me-3"></i>Billing & Invoices</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Manage billing and invoices</h5>
-                <p className="card-text">
-                  Streamline your billing process with automated invoicing and payment tracking.
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/notifications" style={{ textDecoration: 'none' }}>
-            <div className="card border border-warning card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-warning">
-                <h4 className="my-0 text-warning font-size-24"><i className="mdi mdi-email me-3"></i>Notification hub</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">SMS and Email Notifications</h5>
-                <p className="card-text">
-                  Keep customers and technicians informed with automated notifications and reminders.
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="col-xl-4 col-md-6 card-parent">
-          <Link to="/configuration/general" style={{ textDecoration: 'none' }}>
-            <div className="card border border-dark card-height" style={{ cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-              <div className="card-header bg-transparent border-dark">
-                <h4 className="my-0 text-dark font-size-24"><i className="mdi mdi-cog me-3"></i>Configuration</h4>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">System settings</h5>
-                <p className="card-text">
-                  Customize system settings, user roles, and preferences to fit your business needs.
-                </p>
-              </div>
-            </div>
-          </Link>
+          </div>
         </div>
       </div>
     </>
