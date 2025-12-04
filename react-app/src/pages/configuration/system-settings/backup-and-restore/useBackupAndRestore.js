@@ -1,90 +1,105 @@
 import { useState, useEffect } from 'react';
-import { getBackups, saveBackups, getCompanyProfile, getCustomFields, getApiIntegrations, getAuditTrail, saveCompanyProfile, saveCustomFields, saveApiIntegrations } from '../../../../utils/localStorage';
-import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
+import { getBackups, saveBackups } from '../../../../utils/localStorage';
+
+// Helper to format bytes
+const formatBytes = (bytes, decimals = 2) => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
 
 export const useBackupAndRestore = () => {
-    const [backups, setBackups] = useState([]);
-    const { setPageSubHeader } = usePageSubHeader();
+  const [backups, setBackups] = useState(getBackups());
 
-    useEffect(() => {
-        setBackups(getBackups());
-        setPageSubHeader({
-            title: "Backup & Restore",
-            breadcrumbs: [
-                { label: "Configuration", path: "/configuration/general" },
-                { label: "System Settings", path: "/configuration/general" },
-                { label: "Backup & Restore", isActive: true }
-            ]
-        });
-    }, [setPageSubHeader]);
+  useEffect(() => {
+    saveBackups(backups);
+  }, [backups]);
 
-    const createBackup = () => {
-        const snapshot = {
-            companyProfile: getCompanyProfile(),
-            customFields: getCustomFields(),
-            apiIntegrations: getApiIntegrations(),
-            auditTrail: getAuditTrail()
+  const createBackup = () => {
+    const backupData = { ...localStorage };
+    const backupString = JSON.stringify(backupData, null, 2);
+    const blob = new Blob([backupString], { type: 'application/json' });
+    const date = new Date();
+    const newBackup = {
+      id: date.getTime().toString(),
+      name: `backup-${date.toISOString().split('T')[0]}-${date.getTime()}.json`,
+      date: date.toISOString(),
+      size: formatBytes(blob.size),
+      content: backupString,
+    };
+    setBackups((prev) => [newBackup, ...prev]);
+    alert('Backup created successfully!');
+  };
+
+  const downloadBackup = (id) => {
+    const backup = backups.find((b) => b.id === id);
+    if (!backup) {
+      alert('Backup not found!');
+      return;
+    }
+    const blob = new Blob([backup.content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = backup.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const restoreBackup = (id) => {
+    if (!window.confirm('Are you sure you want to restore this backup? This will overwrite all current data.')) return;
+    const backup = backups.find((b) => b.id === id);
+    if (!backup) {
+      alert('Backup not found!');
+      return;
+    }
+    try {
+      const data = JSON.parse(backup.content);
+      localStorage.clear();
+      Object.keys(data).forEach((key) => {
+        localStorage.setItem(key, data[key]);
+      });
+      alert('Restore successful! The application will now reload.');
+      window.location.reload();
+    } catch (error) {
+      alert('Failed to restore backup. The file may be corrupt.');
+      console.error('Restore error:', error);
+    }
+  };
+
+  const deleteBackup = (id) => {
+    if (!window.confirm('Are you sure you want to delete this backup?')) return;
+    setBackups((prev) => prev.filter((b) => b.id !== id));
+  };
+
+  const handleBackupUpload = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target.result;
+      try {
+        JSON.parse(content); // Validate JSON
+        const date = new Date();
+        const newBackup = {
+          id: date.getTime().toString(),
+          name: file.name,
+          date: date.toISOString(),
+          size: formatBytes(file.size),
+          content: content,
         };
-        const content = JSON.stringify(snapshot, null, 2);
-        const name = `backup_${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '_')}.json`;
-        const entry = { id: Date.now().toString(), name, date: new Date().toISOString(), size: `${Math.round(content.length / 1024)} KB`, content };
-        const next = [entry, ...backups];
-        setBackups(next);
-        saveBackups(next);
-        alert('Backup created and saved to local storage.');
+        setBackups((prev) => [newBackup, ...prev]);
+        alert('Backup uploaded successfully.');
+      } catch (error) {
+        alert('Invalid backup file. Please upload a valid JSON file.');
+      }
     };
+    reader.readAsText(file);
+  };
 
-    const downloadBackup = (id) => {
-        const b = backups.find(x => x.id === id);
-        if (!b) return;
-        const blob = new Blob([b.content], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = b.name;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-    };
-
-    const restoreBackup = (id) => {
-        if (!window.confirm('This will overwrite stored configuration from the backup. Proceed?')) return;
-        const b = backups.find(x => x.id === id);
-        if (!b) return;
-        try {
-            const data = JSON.parse(b.content);
-            if (data.companyProfile) saveCompanyProfile(data.companyProfile);
-            if (data.customFields) saveCustomFields(data.customFields);
-            if (data.apiIntegrations) saveApiIntegrations(data.apiIntegrations);
-            alert('Restore completed. Please refresh the page to see all changes.');
-        } catch (e) {
-            alert('Restore failed: invalid backup content.');
-        }
-    };
-
-    const deleteBackup = (id) => {
-        if (!window.confirm('Delete this backup?')) return;
-        const b = backups.find(b => b.id === id);
-        const next = backups.filter(b => b.id !== id);
-        setBackups(next);
-        saveBackups(next);
-    };
-
-    const handleBackupUpload = (file) => {
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => {
-            const content = e.target.result;
-            const name = file.name;
-            const entry = { id: Date.now().toString(), name, date: new Date().toISOString(), size: `${Math.round(content.length / 1024)} KB`, content };
-            const next = [entry, ...backups];
-            setBackups(next);
-            saveBackups(next);
-            alert('Backup uploaded and stored.');
-        };
-        reader.readAsText(file);
-    };
-
-    return { backups, createBackup, downloadBackup, restoreBackup, deleteBackup, handleBackupUpload };
+  return { backups, createBackup, downloadBackup, restoreBackup, deleteBackup, handleBackupUpload };
 };
