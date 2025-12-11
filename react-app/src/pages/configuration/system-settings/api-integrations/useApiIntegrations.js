@@ -1,87 +1,35 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { getApiIntegrations, saveApiIntegrations } from '../../../../utils/localStorage';
-import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 
 export const useApiIntegrations = () => {
-    const { setPageSubHeader } = usePageSubHeader();
-    const [apiIntegrations, setApiIntegrations] = useState([]);
-    const apiTypeRef = useRef(null);
-    const apiProviderRef = useRef(null);
-    const apiClientIdRef = useRef(null);
-    const apiClientSecretRef = useRef(null);
-    const [integrationConfigOpen, setIntegrationConfigOpen] = useState(null);
-    const [credsById, setCredsById] = useState({});
+  const [items, setItems] = useState(getApiIntegrations());
 
-    useEffect(() => {
-        setApiIntegrations(getApiIntegrations());
-        setPageSubHeader({
-            title: "API & Integrations",
-            breadcrumbs: [
-                { label: "Configuration", path: "/configuration/general" },
-                { label: "System Settings", path: "/configuration/general" },
-                { label: "API & Integrations", isActive: true }
-            ]
-        });
-    }, [setPageSubHeader]);
+  useEffect(() => {
+    saveApiIntegrations(items);
+  }, [items]);
 
-    const toggleIntegration = (id) => {
-        const next = apiIntegrations.map(i => i.id === id ? { ...i, enabled: !i.enabled } : i);
-        setApiIntegrations(next);
-        saveApiIntegrations(next);
-    };
+  const saveItem = (formData) => {
+    if (formData.id) {
+      setItems((prev) => prev.map((it) => (it.id === formData.id ? { ...it, ...formData } : it)));
+    } else {
+      const newItem = { ...formData, id: Date.now().toString(), enabled: false };
+      setItems((prev) => [newItem, ...prev]);
+    }
+  };
 
-    const addIntegration = () => {
-        const type = apiTypeRef.current?.value;
-        const provider = apiProviderRef.current?.value?.trim();
-        const clientId = apiClientIdRef.current?.value?.trim() || '';
-        const clientSecret = apiClientSecretRef.current?.value?.trim() || '';
-        if (!provider) {
-            alert('Provider required');
-            return;
-        }
-        const newInt = { id: Date.now().toString(), name: `${type} - ${provider}`, type, provider, enabled: true, clientId, clientSecret };
-        const next = [...apiIntegrations, newInt];
-        setApiIntegrations(next);
-        saveApiIntegrations(next);
-        if (apiProviderRef.current) apiProviderRef.current.value = '';
-        if (apiClientIdRef.current) apiClientIdRef.current.value = '';
-        if (apiClientSecretRef.current) apiClientSecretRef.current.value = '';
-    };
+  const removeItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this integration?')) return;
+    setItems((prev) => prev.filter((it) => it.id !== id));
+  };
 
-    const openIntegrationConfig = (id) => {
-        const nextId = integrationConfigOpen === id ? null : id;
-        setIntegrationConfigOpen(nextId);
-        if (nextId) {
-            const target = apiIntegrations.find(i => i.id === id);
-            setCredsById(prev => ({ ...prev, [id]: { clientId: target?.clientId || '', clientSecret: target?.clientSecret || '' } }));
-        }
-    };
+  const toggleEnabled = (id) => {
+    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, enabled: !it.enabled } : it)));
+  };
 
-    const changeCredField = (id, field, value) => {
-        setCredsById(prev => ({ ...prev, [id]: { ...(prev[id] || {}), [field]: value } }));
-    };
-
-    const saveIntegrationCredentials = (id) => {
-        const creds = credsById[id] || { clientId: '', clientSecret: '' };
-        const next = apiIntegrations.map(i => i.id === id ? { ...i, clientId: creds.clientId, clientSecret: creds.clientSecret } : i);
-        setApiIntegrations(next);
-        saveApiIntegrations(next);
-        setIntegrationConfigOpen(null);
-        alert('Integration credentials saved.');
-    };
-
-    return {
-        apiIntegrations,
-        apiTypeRef,
-        apiProviderRef,
-        apiClientIdRef,
-        apiClientSecretRef,
-        integrationConfigOpen,
-        credsById,
-        toggleIntegration,
-        addIntegration,
-        openIntegrationConfig,
-        changeCredField,
-        saveIntegrationCredentials
-    };
+  return {
+    items,
+    saveItem,
+    removeItem,
+    toggleEnabled,
+  };
 };

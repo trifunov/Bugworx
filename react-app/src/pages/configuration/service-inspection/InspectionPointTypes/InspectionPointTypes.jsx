@@ -1,155 +1,142 @@
 import { useEffect } from 'react';
 import { useInspectionPointTypes } from './useInspectionPointTypes';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
+import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import Table from '../../../../components/Common/Table/Table';
+import useTable from '../../../../components/Common/Table/useTable';
+import AddNewButton from '../../../../components/Common/AddNewButton';
+import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
+import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
+import AddEditInspectionPointType from '../../../../components/Configuration/ServiceInspection/InspectionPointTypes/AddEditInspectionPointType';
+
+const columns = [
+  { label: 'Type Name', accessor: 'name', sortable: true },
+  { label: 'Category', accessor: 'category', sortable: true },
+  { label: 'Description', accessor: 'description', sortable: false },
+  { label: 'Actions', accessor: 'actions', sortable: false },
+];
+const columnNames = columns.map((c) => c.label);
+const sortableColumns = columns.reduce((acc, col) => {
+  if (col.sortable) acc[col.label] = col.accessor;
+  return acc;
+}, {});
 
 const InspectionPointTypes = () => {
-    const { items, form, handleChange, addItem, removeItem } = useInspectionPointTypes();
-    const { setPageSubHeader } = usePageSubHeader();
+  const { items, categories, saveItem, removeItem } = useInspectionPointTypes();
+  const { addEditInspectionPointType } = useEditableFormContext();
+  const { setPageSubHeader } = usePageSubHeader();
 
-    useEffect(() => {
-        setPageSubHeader({
-            title: 'Inspection Point Types',
-            breadcrumbs: [
-                { label: 'Configuration', path: '/configuration' },
-                { label: 'Service Inspection', path: '/configuration/service-inspection' },
-                { label: 'Inspection Point Types', isActive: true },
-            ],
-        });
-    }, [setPageSubHeader]);
+  useEffect(() => {
+    setPageSubHeader({
+      title: 'Inspection Point Types',
+      breadcrumbs: [
+        { label: 'Configuration', path: '/configuration' },
+        {
+          label: 'Service Inspection',
+          path: '/configuration/service-inspection',
+        },
+        { label: 'Inspection Point Types', active: true },
+      ],
+    });
+  }, [setPageSubHeader]);
 
-    return (
-        <div className="configuration-page">
-            <div className="page-header">
-                <p>Define inspection categories, target pests, and required equipment.</p>
-            </div>
+  const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(items, ['name', 'category', 'description']);
+  const { data: paginatedData, ...tableProps } = useTable(filteredItems, {
+    defaultSortField: 'name',
+  });
 
-            <div className="card form-card">
-                <div className="card-header">Add New Inspection Point Type</div>
-                <div className="card-body">
-                    <form onSubmit={e => { e.preventDefault(); addItem(); }} className="configuration-form">
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Target Pests</label>
-                                <input 
-                                    className="form-control"
-                                    name="targetPests" 
-                                    value={form.targetPests} 
-                                    onChange={handleChange} 
-                                    placeholder="e.g., Rodents, Insects" 
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Materials</label>
-                                <input 
-                                    className="form-control"
-                                    name="materials" 
-                                    value={form.materials} 
-                                    onChange={handleChange} 
-                                    placeholder="Required materials" 
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Equipment</label>
-                                <input 
-                                    className="form-control"
-                                    name="equipment" 
-                                    value={form.equipment} 
-                                    onChange={handleChange} 
-                                    placeholder="Required equipment" 
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Application Methods</label>
-                                <input 
-                                    className="form-control"
-                                    name="applicationMethods" 
-                                    value={form.applicationMethods} 
-                                    onChange={handleChange} 
-                                    placeholder="Methods used" 
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Reasons</label>
-                                <input 
-                                    className="form-control"
-                                    name="reasons" 
-                                    value={form.reasons} 
-                                    onChange={handleChange} 
-                                    placeholder="Inspection reasons" 
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Observations</label>
-                                <input 
-                                    className="form-control"
-                                    name="observations" 
-                                    value={form.observations} 
-                                    onChange={handleChange} 
-                                    placeholder="Standard observations" 
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-actions">
-                            <button type="submit" className="btn btn-primary">Add Type</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div className="card list-card">
-                <div className="card-header">Existing Types</div>
-                <div className="card-body">
-                    <table className="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Target Pests</th>
-                                <th>Materials</th>
-                                <th>Equipment</th>
-                                <th>Methods</th>
-                                <th>Reasons</th>
-                                <th>Observations</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {items.length === 0 ? (
-                                <tr>
-                                    <td colSpan="7" className="text-center">No inspection point types defined.</td>
-                                </tr>
-                            ) : (
-                                items.map(item => (
-                                    <tr key={item.id}>
-                                        <td>{item.targetPests}</td>
-                                        <td>{item.materials}</td>
-                                        <td>{item.equipment}</td>
-                                        <td>{item.applicationMethods}</td>
-                                        <td>{item.reasons}</td>
-                                        <td>{item.observations}</td>
-                                        <td>
-                                            <button 
-                                                className="btn btn-danger btn-sm" 
-                                                onClick={() => removeItem(item.id)}
-                                            >
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+  const renderRow = (item) => (
+    <tr key={item.id}>
+      <td>
+        <strong>{item.name}</strong>
+      </td>
+      <td>
+        <span className='badge badge-soft-secondary'>{item.category}</span>
+      </td>
+      <td>{item.description}</td>
+      <td>
+        <div className='d-flex gap-3'>
+          <a
+            className='text-primary'
+            href='#'
+            title='Edit'
+            onClick={(e) => {
+              e.preventDefault();
+              addEditInspectionPointType.open(item);
+            }}
+          >
+            <i className='mdi mdi-pencil font-size-18'></i>
+          </a>
+          <a
+            className='text-danger'
+            href='#'
+            title='Delete'
+            onClick={(e) => {
+              e.preventDefault();
+              removeItem(item.id);
+            }}
+          >
+            <i className='mdi mdi-delete font-size-18'></i>
+          </a>
         </div>
-    );
+      </td>
+    </tr>
+  );
+
+  return (
+    <>
+      <AddEditInspectionPointType
+        isOpen={addEditInspectionPointType.isOpen}
+        formData={addEditInspectionPointType.formData}
+        isSaving={addEditInspectionPointType.isSaving}
+        onUpdateFieldHandle={addEditInspectionPointType.onUpdateFieldHandle}
+        onClose={addEditInspectionPointType.close}
+        onSave={() => addEditInspectionPointType.onSaveHandle(saveItem)}
+        categories={categories}
+      />
+
+      <div className='row'>
+        <div className='col-12'>
+          <div className='card'>
+            <div className='card-body'>
+              <div className='row mb-3'>
+                <div className='col-12'>
+                  <div className='d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2'>
+                    <div className='flex-grow-1 w-100 me-md-3'>
+                      <TableSearch value={searchTerm} onChange={setSearchTerm} placeholder='Search types...' />
+                    </div>
+                    <div className='mt-2 mt-md-0'>
+                      <AddNewButton handleAddNew={() => addEditInspectionPointType.open()} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Table
+                columns={columnNames}
+                data={paginatedData}
+                renderRow={renderRow}
+                sortableColumns={sortableColumns}
+                onSort={tableProps.handleSort}
+                sortField={tableProps.sortField}
+                sortDirection={tableProps.sortDirection}
+                pagination={{
+                  currentPage: tableProps.currentPage,
+                  totalPages: tableProps.totalPages,
+                  onPageChange: tableProps.setCurrentPage,
+                  totalItems: tableProps.totalItems,
+                }}
+                emptyState={{
+                  icon: 'mdi mdi-checkbox-multiple-marked-outline',
+                  message: 'No inspection point types found. Click "Add New" to create one.',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default InspectionPointTypes;
