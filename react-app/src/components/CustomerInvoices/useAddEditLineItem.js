@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useAddEditEmployee = () => {
+const useAddEditLineItem = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({});
@@ -26,7 +26,7 @@ const useAddEditEmployee = () => {
       await saveFunction(formData);
       close();
     } catch (error) {
-      console.error('Failed to save employee:', error);
+      console.error('Failed to save invoice item:', error);
     } finally {
       setIsSaving(false);
     }
@@ -43,4 +43,4 @@ const useAddEditEmployee = () => {
   };
 };
 
-export default useAddEditEmployee;
+export default useAddEditLineItem;
