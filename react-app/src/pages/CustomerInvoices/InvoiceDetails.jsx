@@ -333,7 +333,6 @@ const InvoiceDetails = () => {
 
       <AddEditLineItem
         isOpen={addEditLineItem.isOpen}
-        isEditing={addEditLineItem.isEditing}
         formData={addEditLineItem.formData}
         onClose={addEditLineItem.close}
         onUpdateField={addEditLineItem.onUpdateFieldHandle}
