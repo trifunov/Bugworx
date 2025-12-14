@@ -1037,7 +1037,7 @@ export const getMaterialSetups = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPE
 export const saveMaterialSetups = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, items);
 
 export const getInvoices = () => {
-  const invoices = getFromStorage(STORAGE_KEYS.INVOICES_KEY);
+  let invoices = getFromStorage(STORAGE_KEYS.INVOICES_KEY);
   // Always return fresh mock data for demonstration if it's empty
   if (!invoices || invoices.length === 0) {
     invoices = [
