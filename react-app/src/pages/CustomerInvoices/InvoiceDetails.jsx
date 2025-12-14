@@ -123,7 +123,7 @@ const InvoiceDetails = () => {
                 <div className='col-md-4 mb-3'>
                   <label className='form-label'>Customer #</label>
                   <p className='form-control-plaintext'>
-                    {customer.customerNum} ({customer.customerNum})
+                    {customer.customerNum}
                   </p>
                 </div>
                 <div className='col-md-4 mb-3'>
