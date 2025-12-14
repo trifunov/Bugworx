@@ -107,26 +107,51 @@ const InvoiceDetails = () => {
 
   return (
     <>
-      <div className='row'>
+      <div className='row align-items-stretch'>
         {/* Customer & Billing Details */}
         <div className='col-lg-8'>
-          <div className='card'>
+          <div className='card h-100'>
             <div className='card-header'>
               <h5 className='card-title mb-0'>Customer & Billing Details</h5>
             </div>
             <div className='card-body'>
               <div className='row'>
-                <div className='col-md-6 mb-3'>
+                <div className='col-md-4 mb-3'>
                   <label className='form-label'>Customer</label>
+                  <p className='form-control-plaintext'>{customer.name}</p>
+                </div>
+                <div className='col-md-4 mb-3'>
+                  <label className='form-label'>Customer #</label>
                   <p className='form-control-plaintext'>
-                    {customer.name} ({customer.customerNum})
+                    {customer.customerNum} ({customer.customerNum})
                   </p>
                 </div>
-                <div className='col-md-6 mb-3'>
+                <div className='col-md-4 mb-3'>
+                  <label htmlFor='invoice-type' className='form-label'>
+                    Invoice Type
+                  </label>
+                  <select
+                    id='invoice-type'
+                    className='form-select'
+                    value={invoice.invoiceType}
+                    onChange={(e) => handleFieldChange('invoiceType', e.target.value)}
+                  >
+                    <option>Standard</option>
+                    <option>Recurring</option>
+                    <option>Proforma</option>
+                    <option>Final</option>
+                    <option>Retainer</option>
+                  </select>
+                </div>
+                <div className='col-md-8 mb-3'>
                   <label className='form-label'>Billing Address</label>
                   <p className='form-control-plaintext'>{formatAddress(customer.billingAddress)}</p>
                 </div>
-                <div className='col-md-6 mb-3'>
+                <div className='col-md-4 mb-3'>
+                  <label className='form-label'>Invoice #</label>
+                  <p className='form-control-plaintext'>{invoice.id}</p>
+                </div>
+                <div className='col-md-4 mb-3'>
                   <label htmlFor='invoice-date' className='form-label'>
                     Invoice Date
                   </label>
@@ -138,7 +163,7 @@ const InvoiceDetails = () => {
                     onChange={(e) => handleFieldChange('date', e.target.value)}
                   />
                 </div>
-                <div className='col-md-6 mb-3'>
+                <div className='col-md-4 mb-3'>
                   <label htmlFor='due-date' className='form-label'>
                     Due Date
                   </label>
@@ -150,19 +175,7 @@ const InvoiceDetails = () => {
                     onChange={(e) => handleFieldChange('dueDate', e.target.value)}
                   />
                 </div>
-                <div className='col-md-6 mb-3'>
-                  <label htmlFor='po-number' className='form-label'>
-                    P.O. Number
-                  </label>
-                  <input
-                    type='text'
-                    id='po-number'
-                    className='form-control'
-                    value={invoice.poNumber}
-                    onChange={(e) => handleFieldChange('poNumber', e.target.value)}
-                  />
-                </div>
-                <div className='col-md-6 mb-3'>
+                <div className='col-md-4 mb-3'>
                   <label htmlFor='invoice-status' className='form-label'>
                     Status
                   </label>
@@ -178,6 +191,30 @@ const InvoiceDetails = () => {
                     <option>Overdue</option>
                     <option>Void</option>
                   </select>
+                </div>
+                <div className='col-md-4 mb-3'>
+                  <label htmlFor='po-number' className='form-label'>
+                    P.O. Number
+                  </label>
+                  <input
+                    type='text'
+                    id='po-number'
+                    className='form-control'
+                    value={invoice.poNumber}
+                    onChange={(e) => handleFieldChange('poNumber', e.target.value)}
+                  />
+                </div>
+                <div className='col-md-8 mb-3'>
+                  <label htmlFor='po-number' className='form-label'>
+                    Notes
+                  </label>
+                  <textarea
+                    type='text'
+                    id='notes'
+                    className='form-control'
+                    value={invoice.notes}
+                    onChange={(e) => handleFieldChange('notes', e.target.value)}
+                  />
                 </div>
               </div>
             </div>
@@ -222,7 +259,7 @@ const InvoiceDetails = () => {
           </div>
 
           {/* Actions Card */}
-          <div className='card mt-4'>
+          <div className='card'>
             <div className='card-header'>
               <h5 className='card-title mb-0'>Actions</h5>
             </div>
