@@ -15,8 +15,8 @@ const AddEditLineItem = ({ isOpen, onClose, onSave, formData, onUpdateField, isS
 
   return (
     <>
-      <div className={`offcanvas-backdrop fade ${isOpen ? 'show' : ''}`} onClick={onClose}></div>
-      <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex='-1' style={{ visibility: isOpen ? 'visible' : 'hidden' }}>
+      <div className="offcanvas-backdrop fade show" onClick={onClose}></div>
+      <div className="offcanvas offcanvas-end show" tabIndex='-1' style={{ visibility: 'visible' }}>
         <div className='offcanvas-header'>
           <h5 className='offcanvas-title'>{isEditing ? 'Edit Line Item' : 'Add Line Item'}</h5>
           <button type='button' className='btn-close' onClick={onClose} aria-label='Close'></button>
