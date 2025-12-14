@@ -133,7 +133,7 @@ const InvoiceDetails = () => {
                   <select
                     id='invoice-type'
                     className='form-select'
-                    value={invoice.invoiceType}
+                    value={invoice.invoiceType || "Standard"}
                     onChange={(e) => handleFieldChange('invoiceType', e.target.value)}
                   >
                     <option>Standard</option>
