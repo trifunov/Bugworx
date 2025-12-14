@@ -10,7 +10,18 @@ const useInvoice = (invoiceId, customerId) => {
 
   const getNextInvoiceId = (invoices) => {
     if (!invoices || invoices.length === 0) return 1;
-    const maxId = Math.max(...invoices.map((inv) => parseInt(inv.id.split('-')[1], 10)));
+    const idNumbers = invoices
+      .map((inv) => {
+        if (typeof inv.id === 'string') {
+          const match = inv.id.match(/^INV-(\d{3,})$/);
+          if (match) {
+            return parseInt(match[1], 10);
+          }
+        }
+        return null;
+      })
+      .filter((num) => Number.isInteger(num));
+    const maxId = idNumbers.length > 0 ? Math.max(...idNumbers) : 0;
     return maxId + 1;
   };
 
