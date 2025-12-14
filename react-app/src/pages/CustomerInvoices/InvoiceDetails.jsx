@@ -205,7 +205,7 @@ const InvoiceDetails = () => {
                   />
                 </div>
                 <div className='col-md-8 mb-3'>
-                  <label htmlFor='po-number' className='form-label'>
+                  <label htmlFor='notes' className='form-label'>
                     Notes
                   </label>
                   <textarea
