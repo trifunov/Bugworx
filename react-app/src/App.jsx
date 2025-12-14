@@ -64,6 +64,7 @@ import InspectionPointCategories from './pages/configuration/service-inspection/
 
 import VehicleList from './pages/configuration/fleet-management/VehicleLists/VehicleList';
 import VehicleTypes from './pages/configuration/fleet-management/VehicleTypes/VehicleTypes';
+import FuelTypeAndCapacity from './pages/configuration/fleet-management/FuelTypeAndCapacity/FuelTypeAndCapacity';
 
 function App() {
   return (
@@ -149,8 +150,8 @@ function App() {
         {/* Vehicle List */}
         <Route path='configuration/fleet/vehicles' element={<VehicleList />} />
         <Route path='configuration/fleet/vehicle-types' element={<VehicleTypes />} />
-        {/* <Route path='configuration/fleet/fuel-types' element={<FuelTypes />} />
-        <Route path='configuration/fleet/maintenance-templates' element={<MaintenanceTemplates />} />
+        <Route path='configuration/fleet/fuel-types' element={<FuelTypeAndCapacity />} />
+        {/*<Route path='configuration/fleet/maintenance-templates' element={<MaintenanceTemplates />} />
         <Route path='configuration/fleet/driver-assignment' element={<DriverAssignment />} />
         <Route path='configuration/fleet/gps-integration' element={<GpsIntegration />} />
         <Route path='configuration/fleet/insurance-registration' element={<InsuranceRegistration />} />

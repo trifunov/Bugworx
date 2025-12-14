@@ -34,6 +34,7 @@ const STORAGE_KEYS = {
   SERVICE_INSPECTION_EQUIPMENT_DEVICES: 'bugworx_service_inspection_equipment_devices',
   SERVICE_INSPECTION_MATERIAL_SETUP: 'bugworx_service_inspection_material_setup',
   SERVICE_INSPECTION_INSPECTION_POINT_CATEGORIES: 'bugworx_service_inspection_inspection_point_categories',
+  FLEET_MANAGEMENT_FUEL_TYPES_AND_CAPACITIES: 'bugworx_fleet_management_fuel_types_and_capacities',
   FLEET_MANAGEMENT_VEHICLE_TYPES: 'bugworx_fleet_management_vehicle_types',
   LEADS: 'bugworx_leads',
   SERVICE_TYPES: 'bugworx_service_types',
@@ -1044,6 +1045,9 @@ export const saveMaterialSetups = (items) => setToStorage(STORAGE_KEYS.SERVICE_I
 export const getVehicleTypes = () => getFromStorage(STORAGE_KEYS.FLEET_MANAGEMENT_VEHICLE_TYPES, []);
 export const saveVehicleTypes = (items) => setToStorage(STORAGE_KEYS.FLEET_MANAGEMENT_VEHICLE_TYPES, items);
 
+export const getFuelTypeAndCapacities = () => getFromStorage(STORAGE_KEYS.FLEET_MANAGEMENT_FUEL_TYPES_AND_CAPACITIES, []);
+export const saveFuelTypeAndCapacities = (items) => setToStorage(STORAGE_KEYS.FLEET_MANAGEMENT_FUEL_TYPES_AND_CAPACITIES, items);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1193,4 +1197,6 @@ export default {
   saveMaterialSetups,
   getVehicleTypes,
   saveVehicleTypes,
+  getFuelTypeAndCapacities,
+  saveFuelTypeAndCapacities,
 };

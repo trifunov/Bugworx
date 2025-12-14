@@ -27,6 +27,7 @@ import useAddEditCustomField from '../components/Configuration/SystemSettings/Cu
 
 import useAddEditVehicle from '../components/Configuration/FleetManagement/VehicleList/useAddEditVehicle';
 import useAddEditVehicleType from '../components/Configuration/FleetManagement/VehicleType/useAddEditVehicleType';
+import useAddEditFuelTypeAndCapacity from '../components/Configuration/FleetManagement/FuelTypeAndCapacity/useAddEditFuelTypeAndCapacity';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
 
@@ -71,6 +72,7 @@ export const EditableFormProvider = ({ children }) => {
 
   const addEditVehicle = useAddEditVehicle();
   const addEditVehicleType = useAddEditVehicleType();
+  const addEditFuelTypeAndCapacity = useAddEditFuelTypeAndCapacity();
 
   const [customers, setCustomersState] = useState(getCustomers());
   const [leads, setLeadsState] = useState(getLeads());
@@ -122,6 +124,7 @@ export const EditableFormProvider = ({ children }) => {
     addEditCustomField,
     addEditVehicle,
     addEditVehicleType,
+    addEditFuelTypeAndCapacity,
     loadCustomers,
     loadLeads,
     loadProspects,
