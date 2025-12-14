@@ -54,7 +54,7 @@ const AddEditApiIntegration = ({ isOpen, onClose, onSave, formData, onUpdateFiel
             </div>
             <div className='mb-3'>
               <label className='form-label'>Client Secret</label>
-              <input name='clientSecret' type='password' className='form-control' value={formData.clientSecret || ''} onChange={handleChange} />
+              <input name='clientSecret' type='password' className='form-control' value={formData.clientSecret || ''} onChange={handleChange} autoComplete="new-password" />
             </div>
             <div className='d-flex gap-2 mt-4'>
               <button type='submit' className='btn btn-primary w-sm' disabled={isSaving}>

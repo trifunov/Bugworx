@@ -22,11 +22,11 @@ const DataImportExport = () => {
 
   useEffect(() => {
     setPageSubHeader({
-      title: 'Data Import & Export',
+      title: 'Data Import/Export',
       breadcrumbs: [
         { label: 'Configuration', path: '/configuration' },
         { label: 'System Settings', path: '/configuration/system-settings' },
-        { label: 'Data Import & Export', active: true },
+        { label: 'Data Import/Export', active: true },
       ],
     });
   }, [setPageSubHeader]);
