@@ -60,7 +60,7 @@ const AddEditLineItem = ({ isOpen, onClose, onSave, formData, onUpdateField, isS
                   type='number'
                   id='item-unit-price'
                   className='form-control'
-                  value={formData.unitPrice}
+                  value={formData.unitPrice ?? ""}
                   onChange={handleChange}
                   required
                   name='unitPrice'
