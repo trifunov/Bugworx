@@ -31,7 +31,7 @@ const AddEditLineItem = ({ isOpen, onClose, onSave, formData, onUpdateField, isS
                 id='item-description'
                 className='form-control'
                 rows='3'
-                value={formData.description}
+                value={formData.description || ""}
                 onChange={handleChange}
                 required
                 name='description'
