@@ -46,7 +46,7 @@ const AddEditLineItem = ({ isOpen, onClose, onSave, formData, onUpdateField, isS
                   type='number'
                   id='item-quantity'
                   className='form-control'
-                  value={formData.quantity}
+                  value={formData.quantity || ""}
                   onChange={handleChange}
                   required
                   name='quantity'
