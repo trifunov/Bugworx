@@ -793,10 +793,10 @@ export const getCurrentUser = () => {
   return getFromStorage('currentUser', null);
 };
 
-export const updateCurrentUser = (userDetaisl) => {
+export const updateCurrentUser = (userDetais) => {
   const currentUser = getFromStorage('currentUser', null);
   if (currentUser) {
-    setToStorage('currentUser', userDetaisl);
+    setToStorage('currentUser', userDetais);
     return currentUser;
   }
 };
@@ -1040,7 +1040,7 @@ export const getInvoices = () => {
   const invoices = getFromStorage(STORAGE_KEYS.INVOICES_KEY);
   // Always return fresh mock data for demonstration if it's empty
   if (!invoices || invoices.length === 0) {
-    const invoices = [
+    invoices = [
       {
         id: 'INV-001',
         customerId: 1,
