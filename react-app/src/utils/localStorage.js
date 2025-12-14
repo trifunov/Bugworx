@@ -793,10 +793,10 @@ export const getCurrentUser = () => {
   return getFromStorage('currentUser', null);
 };
 
-export const updateCurrentUser = (userDetais) => {
+export const updateCurrentUser = (userDetails) => {
   const currentUser = getFromStorage('currentUser', null);
   if (currentUser) {
-    setToStorage('currentUser', userDetais);
+    setToStorage('currentUser', userDetails);
     return currentUser;
   }
 };
