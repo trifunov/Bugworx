@@ -11,7 +11,8 @@ const MODULE_ROUTES = [
     '/analytics',
     '/inventory',
     '/billing',
-    '/notifications'
+    '/notifications',
+    '/configuration'
 ];
 
 /**

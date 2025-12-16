@@ -1,37 +1,8 @@
 import { useState, useEffect } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  RadialLinearScale
-} from 'chart.js';
 import { Line, Bar, Doughnut, Pie, PolarArea } from 'react-chartjs-2';
 import Table from '../components/Common/Table/Table';
 import useDashboardData from '../hooks/useDashboardData';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
-
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  ArcElement,
-  RadialLinearScale,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
 
 const Analytics = () => {
   const { setPageSubHeader } = usePageSubHeader();
@@ -64,6 +35,7 @@ const Analytics = () => {
         { label: 'Analytics Dashboard', path: '/analytics' }
       ]
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setPageSubHeader]);
 
   return (

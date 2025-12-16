@@ -1,16 +1,4 @@
 import { useEffect } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-} from 'chart.js';
 import { Line, Doughnut } from 'react-chartjs-2';
 import Table from '../components/Common/Table/Table';
 import useDashboardData from '../hooks/useDashboardData';
@@ -25,19 +13,6 @@ import {
   areas,
   inspectionPoints
 } from '../data/mockData';
-
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
 
 const Dashboard = () => {
   // Initialize localStorage on mount

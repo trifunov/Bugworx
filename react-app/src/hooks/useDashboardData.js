@@ -47,15 +47,15 @@ export default function useDashboardData() {
     return {
       totalRevenue,
       totalJobs,
-      newCustomers: newCustomers || 342, // Fallback for demo
+      newCustomers: newCustomers ?? 342,
       avgRating: 4.8,
       revenueChange: 12.5,
       jobsChange: 8.3,
       customersChange: 15.2,
       ratingChange: 0.3,
-      lowStockCount: lowStockItems.length || 7,
-      todaysJobs: todaysJobs || 42,
-      openWorkOrders: openWorkOrders || 19
+      lowStockCount: lowStockItems.length ?? 7,
+      todaysJobs: todaysJobs ?? 42,
+      openWorkOrders: openWorkOrders ?? 19
     };
   }, [appointments, customers, inventory]);
 
