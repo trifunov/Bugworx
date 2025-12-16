@@ -1,5 +1,5 @@
 // filepath: [InvoiceDetails.jsx](http://_vscodecontentref_/0)
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { usePageSubHeader } from '../../contexts/PageSubHeaderContext';
 import { useEditableFormContext } from '../../contexts/EditableFormContext';
@@ -52,16 +52,13 @@ const InvoiceDetails = () => {
     itemsPerPage: 5,
   });
 
-  const handleSaveItem = useCallback(
-    (itemData) => {
-      if (itemData.id) {
-        updateLineItem(itemData);
-      } else {
-        addLineItem(itemData);
-      }
-    },
-    [addLineItem, updateLineItem]
-  );
+  const handleSaveItem = (itemData) => {
+    if (itemData.id) {
+      updateLineItem(itemData);
+    } else {
+      addLineItem(itemData);
+    }
+  };
 
   useEffect(() => {
     if (customer && invoice) {
@@ -122,9 +119,7 @@ const InvoiceDetails = () => {
                 </div>
                 <div className='col-md-4 mb-3'>
                   <label className='form-label'>Customer #</label>
-                  <p className='form-control-plaintext'>
-                    {customer.customerNum}
-                  </p>
+                  <p className='form-control-plaintext'>{customer.customerNum}</p>
                 </div>
                 <div className='col-md-4 mb-3'>
                   <label htmlFor='invoice-type' className='form-label'>
@@ -133,7 +128,7 @@ const InvoiceDetails = () => {
                   <select
                     id='invoice-type'
                     className='form-select'
-                    value={invoice.invoiceType || "Standard"}
+                    value={invoice.invoiceType || 'Standard'}
                     onChange={(e) => handleFieldChange('invoiceType', e.target.value)}
                   >
                     <option>Standard</option>

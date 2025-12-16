@@ -8,32 +8,15 @@ const useInvoice = (invoiceId, customerId) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const getNextInvoiceId = (invoices) => {
-    if (!invoices || invoices.length === 0) return 1;
-    const idNumbers = invoices
-      .map((inv) => {
-        if (typeof inv.id === 'string') {
-          const match = inv.id.match(/^INV-(\d{3,})$/);
-          if (match) {
-            return parseInt(match[1], 10);
-          }
-        }
-        return null;
-      })
-      .filter((num) => Number.isInteger(num));
-    const maxId = idNumbers.length > 0 ? Math.max(...idNumbers) : 0;
-    return maxId + 1;
-  };
-
   useEffect(() => {
     setLoading(true);
     const allInvoices = getInvoices();
     let currentInvoice;
 
     if (invoiceId === 'new') {
-      const nextId = getNextInvoiceId(allInvoices);
+      const nextId = new Date().getTime().toString(); // Use timestamp for unique ID
       currentInvoice = {
-        id: `INV-${String(nextId).padStart(3, '0')}`,
+        id: nextId,
         customerId: parseInt(customerId, 10),
         date: new Date().toISOString().split('T')[0],
         dueDate: '',
