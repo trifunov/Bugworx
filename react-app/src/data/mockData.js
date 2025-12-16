@@ -1334,3 +1334,259 @@ export const routeTemplates = [
     isActive: true
   }
 ];
+
+export const services = [
+  {
+    id: 1,
+    name: 'General Pest Control',
+    contractId: 1,
+    productionPrice: 85.00,
+    salesPrice: 125.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 2,
+    name: 'Ant Control',
+    contractId: 1,
+    productionPrice: 65.00,
+    salesPrice: 95.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 3,
+    name: 'Cockroach Treatment',
+    contractId: 1,
+    productionPrice: 75.00,
+    salesPrice: 110.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 4,
+    name: 'Spider Control',
+    contractId: 1,
+    productionPrice: 70.00,
+    salesPrice: 100.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 5,
+    name: 'Commercial Pest Inspection',
+    contractId: 2,
+    productionPrice: 120.00,
+    salesPrice: 175.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 6,
+    name: 'Commercial Pest Treatment',
+    contractId: 2,
+    productionPrice: 200.00,
+    salesPrice: 295.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 7,
+    name: 'Quarterly Maintenance',
+    contractId: 2,
+    productionPrice: 150.00,
+    salesPrice: 220.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 8,
+    name: 'Termite Inspection',
+    contractId: 6,
+    productionPrice: 95.00,
+    salesPrice: 145.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 9,
+    name: 'Termite Treatment',
+    contractId: 6,
+    productionPrice: 450.00,
+    salesPrice: 650.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 10,
+    name: 'Termite Barrier Installation',
+    contractId: 6,
+    productionPrice: 350.00,
+    salesPrice: 525.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 11,
+    name: 'Rodent Inspection',
+    contractId: 8,
+    productionPrice: 75.00,
+    salesPrice: 110.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 12,
+    name: 'Rodent Control Treatment',
+    contractId: 8,
+    productionPrice: 125.00,
+    salesPrice: 185.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 13,
+    name: 'Bait Station Installation',
+    contractId: 8,
+    productionPrice: 95.00,
+    salesPrice: 140.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 14,
+    name: 'Wildlife Removal',
+    contractId: 8,
+    productionPrice: 175.00,
+    salesPrice: 260.00,
+    taxType: 'Sales Tax',
+    taxValue: 8.5,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  }
+];
+
+export const contracts = [
+  {
+    id: 1,
+    contractNumber: 'CONT-001',
+    name: 'Residential Pest Control',
+    serviceAddressId: 1,
+    startDate: '2024-01-01',
+    endDate: '2024-12-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: 2,
+    contractNumber: 'CONT-002',
+    name: 'Commercial Pest Management',
+    serviceAddressId: 2,
+    startDate: '2024-01-15',
+    endDate: '2024-12-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-01-15T00:00:00Z'
+  },
+  {
+    id: 3,
+    contractNumber: 'CONT-003',
+    name: 'Commercial Pest Management',
+    serviceAddressId: 3,
+    startDate: '2024-02-01',
+    endDate: '2024-12-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-02-01T00:00:00Z',
+    updatedAt: '2024-02-01T00:00:00Z'
+  },
+  {
+    id: 4,
+    contractNumber: 'CONT-004',
+    name: 'Residential Pest Control',
+    serviceAddressId: 4,
+    startDate: '2024-03-01',
+    endDate: '2024-12-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-03-01T00:00:00Z',
+    updatedAt: '2024-03-01T00:00:00Z'
+  },
+  {
+    id: 5,
+    contractNumber: 'CONT-005',
+    name: 'Residential Pest Control',
+    serviceAddressId: 5,
+    startDate: '2024-01-10',
+    endDate: '2024-12-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-01-10T00:00:00Z',
+    updatedAt: '2024-01-10T00:00:00Z'
+  },
+  {
+    id: 6,
+    contractNumber: 'CONT-006',
+    name: 'Termite Protection Plan',
+    serviceAddressId: 1,
+    startDate: '2024-06-01',
+    endDate: '2025-05-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-06-01T00:00:00Z',
+    updatedAt: '2024-06-01T00:00:00Z'
+  },
+  {
+    id: 7,
+    contractNumber: 'CONT-007',
+    name: 'Commercial Pest Management',
+    serviceAddressId: 7,
+    startDate: '2024-04-01',
+    endDate: '2024-12-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-04-01T00:00:00Z',
+    updatedAt: '2024-04-01T00:00:00Z'
+  },
+  {
+    id: 8,
+    contractNumber: 'CONT-008',
+    name: 'Rodent Control Program',
+    serviceAddressId: 3,
+    startDate: '2024-05-01',
+    endDate: '2024-12-31',
+    status: 'Active',
+    isActive: true,
+    createdAt: '2024-05-01T00:00:00Z',
+    updatedAt: '2024-05-01T00:00:00Z'
+  }
+];

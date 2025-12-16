@@ -1,10 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import {
-  initializeStorage,
-  getCustomers,
-  setCustomers
-} from '../utils/localStorage';
+import { useEffect } from 'react';
+import { initializeStorage } from '../utils/localStorage';
 import {
   appointments as initialAppointments,
   serviceAddresses as initialServiceAddresses,
@@ -13,12 +9,13 @@ import {
   inventory as initialInventory,
   facilities,
   areas,
-  inspectionPoints
+  inspectionPoints,
+  services,
+  contracts
 } from '../data/mockData';
 
 const Dashboard = () => {
 
-  // Initialize localStorage on mount
   useEffect(() => {
     initializeStorage({
       appointments: initialAppointments,
@@ -28,7 +25,9 @@ const Dashboard = () => {
       inventory: initialInventory,
       facilities: facilities,
       areas: areas,
-      inspectionPoints: inspectionPoints
+      inspectionPoints: inspectionPoints,
+      services: services,
+      contracts: contracts
     });
   }, []);
 

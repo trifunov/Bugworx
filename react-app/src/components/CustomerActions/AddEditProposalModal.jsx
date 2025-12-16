@@ -1,12 +1,52 @@
-import { getCustomers } from '../../utils/localStorage';
-import SearchableSelect from '../Common/SearchableSelect';
+import { useState, useEffect } from 'react';
+import { getCustomers, getServiceAddressesByCustomerId, getContractsByServiceAddressId, getServicesByContractId } from '../../utils/localStorage';
 
 const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave, onFileUpload, onRemoveAttachment }) => {
+  const [availableContracts, setAvailableContracts] = useState([]);
+  const [availableServices, setAvailableServices] = useState([]);
+
+  useEffect(() => {
+    if (formData.serviceAddressId) {
+      const contracts = getContractsByServiceAddressId(parseInt(formData.serviceAddressId));
+      setAvailableContracts(contracts);
+    } else {
+      setAvailableContracts([]);
+    }
+  }, [formData.serviceAddressId]);
+
+  useEffect(() => {
+    if (formData.contractIds && formData.contractIds.length > 0) {
+      const services = formData.contractIds.flatMap(contractId => getServicesByContractId(contractId));
+      setAvailableServices(services);
+    } else {
+      setAvailableServices([]);
+    }
+  }, [formData.contractIds]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave();
+  };
+
+  const handleServicePriceChange = (serviceId, field, value) => {
+    const currentServices = formData.selectedServices || [];
+    const updatedServices = currentServices.map(s => {
+      if (s.id === serviceId) {
+        return { ...s, [field]: parseFloat(value) || 0 };
+      }
+      return s;
+    });
+    onUpdateField('selectedServices', updatedServices);
+  };
+
+  const calculateTotalPricing = () => {
+    const services = formData.selectedServices || [];
+    const subtotal = services.reduce((sum, s) => sum + (s.salesPrice || 0), 0);
+    const taxAmount = services.reduce((sum, s) => sum + ((s.salesPrice || 0) * (s.taxValue || 0) / 100), 0);
+    const total = subtotal + taxAmount;
+    return { subtotal, taxAmount, total };
   };
 
   const handleFileChange = async (e) => {
@@ -44,6 +84,10 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
     phone: customer.phone
   }));
 
+  const serviceAddresses = formData.customerId ? getServiceAddressesByCustomerId(parseInt(formData.customerId)) : [];
+
+  const { subtotal, taxAmount, total } = calculateTotalPricing();
+
   return (
     <>
       <div className={`offcanvas offcanvas-end ${isOpen ? 'show' : ''}`} tabIndex="-1" style={{ visibility: isOpen ? 'visible' : 'hidden', width: '700px' }}>
@@ -54,19 +98,154 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
         <div className="offcanvas-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="customerId" className="form-label">Customer <span className="text-danger">*</span></label>
-              <SearchableSelect
-                options={customerOptions}
-                value={formData.customerId || ''}
-                onChange={(value) => onUpdateField('customerId', value)}
-                placeholder="Search by name, address, or customer number..."
-                displayKey="label"
-                valueKey="value"
-                searchKeys={['customerNum', 'address', 'phone']}
-                disabled={isSaving}
-                error={errors.customerId}
-              />
+              <div className="alert alert-info mb-0">
+                <strong>Customer:</strong> {customerOptions.find(c => c.value === parseInt(formData.customerId))?.label || 'Loading...'}
+              </div>
             </div>
+
+            <div className="mb-3">
+              <label htmlFor="serviceAddressId" className="form-label">Service Address <span className="text-danger">*</span></label>
+              <select
+                className={`form-select ${errors.serviceAddressId ? 'is-invalid' : ''}`}
+                id="serviceAddressId"
+                value={formData.serviceAddressId || ''}
+                onChange={(e) => onUpdateField('serviceAddressId', e.target.value)}
+                disabled={isSaving}
+              >
+                <option value="">Select Service Address...</option>
+                {serviceAddresses.map(addr => (
+                  <option key={addr.id} value={addr.id}>
+                    {addr.serviceAddressName}
+                  </option>
+                ))}
+              </select>
+              {errors.serviceAddressId && <div className="invalid-feedback">{errors.serviceAddressId}</div>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="contractId" className="form-label">Contract <span className="text-danger">*</span></label>
+              <select
+                className={`form-select ${errors.contractIds ? 'is-invalid' : ''}`}
+                id="contractId"
+                value={formData.contractIds?.[0] || ''}
+                onChange={(e) => {
+                  const selectedValue = e.target.value ? [parseInt(e.target.value)] : [];
+                  onUpdateField('contractIds', selectedValue);
+                }}
+                disabled={isSaving || availableContracts.length === 0}
+              >
+                <option value="">{availableContracts.length === 0 ? (formData.serviceAddressId ? 'No contracts found for this service address' : 'Please select a service address first') : 'Select a contract...'}</option>
+                {availableContracts.map(contract => (
+                  <option key={contract.id} value={contract.id}>
+                    {contract.contractNumber} - {contract.name} ({contract.status})
+                  </option>
+                ))}
+              </select>
+              {errors.contractIds && <div className="invalid-feedback">{errors.contractIds}</div>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="selectedServices" className="form-label">Services <span className="text-danger">*</span></label>
+              <select
+                className={`form-select ${errors.selectedServices ? 'is-invalid' : ''}`}
+                id="selectedServices"
+                multiple
+                size="6"
+                value={formData.selectedServices?.map(s => s.id) || []}
+                onChange={(e) => {
+                  const selectedServiceIds = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                  const updatedServices = selectedServiceIds.map(serviceId => {
+                    const existing = formData.selectedServices?.find(s => s.id === serviceId);
+                    if (existing) return existing;
+                    const service = availableServices.find(s => s.id === serviceId);
+                    return {
+                      id: service.id,
+                      name: service.name,
+                      productionPrice: service.productionPrice,
+                      salesPrice: service.salesPrice,
+                      taxType: service.taxType,
+                      taxValue: service.taxValue
+                    };
+                  });
+                  onUpdateField('selectedServices', updatedServices);
+                }}
+                disabled={isSaving || availableServices.length === 0}
+              >
+                {availableServices.length === 0 ? (
+                  <option disabled>{formData.contractIds?.length > 0 ? 'No services found for selected contract' : 'Please select a contract first'}</option>
+                ) : (
+                  availableServices.map(service => (
+                    <option key={service.id} value={service.id}>
+                      {service.name} (${service.salesPrice})
+                    </option>
+                  ))
+                )}
+              </select>
+              {errors.selectedServices && <div className="invalid-feedback">{errors.selectedServices}</div>}
+              <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple services</small>
+            </div>
+
+            {formData.selectedServices && formData.selectedServices.length > 0 && (
+              <div className="mb-3">
+                <label className="form-label">Pricing Details</label>
+                <div className="table-responsive">
+                  <table className="table table-bordered table-sm">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Service</th>
+                        <th>Production Price</th>
+                        <th>Sales Price</th>
+                        <th>Tax Type</th>
+                        <th>Tax %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {formData.selectedServices.map(service => (
+                        <tr key={service.id}>
+                          <td>{service.name}</td>
+                          <td>
+                            <input
+                              type="number"
+                              className="form-control form-control-sm"
+                              value={service.productionPrice || ''}
+                              onChange={(e) => handleServicePriceChange(service.id, 'productionPrice', e.target.value)}
+                              disabled={isSaving}
+                              step="0.01"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              className="form-control form-control-sm"
+                              value={service.salesPrice || ''}
+                              onChange={(e) => handleServicePriceChange(service.id, 'salesPrice', e.target.value)}
+                              disabled={isSaving}
+                              step="0.01"
+                            />
+                          </td>
+                          <td>{service.taxType}</td>
+                          <td>{service.taxValue}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan="4" className="text-end fw-bold">Subtotal:</td>
+                        <td className="fw-bold">${subtotal.toFixed(2)}</td>
+                      </tr>
+                      <tr>
+                        <td colSpan="4" className="text-end fw-bold">Tax:</td>
+                        <td className="fw-bold">${taxAmount.toFixed(2)}</td>
+                      </tr>
+                      <tr className="table-primary">
+                        <td colSpan="4" className="text-end fw-bold">Total:</td>
+                        <td className="fw-bold">${total.toFixed(2)}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            )}
 
             <div className="mb-3">
               <label htmlFor="proposalTitle" className="form-label">Proposal Title <span className="text-danger">*</span></label>
@@ -94,33 +273,6 @@ const AddEditProposalModal = ({ isOpen, formData, errors, isSaving, onUpdateFiel
                 disabled={isSaving}
               ></textarea>
               {errors.scopeOfWork && <div className="invalid-feedback">{errors.scopeOfWork}</div>}
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="servicesProposed" className="form-label">Programs/Services Proposed</label>
-              <textarea
-                className="form-control"
-                id="servicesProposed"
-                rows="3"
-                placeholder="List programs and services included..."
-                value={formData.servicesProposed || ''}
-                onChange={(e) => onUpdateField('servicesProposed', e.target.value)}
-                disabled={isSaving}
-              ></textarea>
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="pricing" className="form-label">Pricing <span className="text-danger">*</span></label>
-              <textarea
-                className={`form-control ${errors.pricing ? 'is-invalid' : ''}`}
-                id="pricing"
-                rows="3"
-                placeholder="Enter pricing details..."
-                value={formData.pricing || ''}
-                onChange={(e) => onUpdateField('pricing', e.target.value)}
-                disabled={isSaving}
-              ></textarea>
-              {errors.pricing && <div className="invalid-feedback">{errors.pricing}</div>}
             </div>
 
             <div className="mb-3">
