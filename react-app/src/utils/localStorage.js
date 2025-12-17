@@ -36,7 +36,8 @@ const STORAGE_KEYS = {
   LEADS: 'bugworx_leads',
   SERVICE_TYPES: 'bugworx_service_types',
   PROPOSALS: 'bugworx_proposals',
-  CONFIGURATION: 'bugworx_configuration'
+  CONFIGURATION: 'bugworx_configuration',
+  INVOICES_KEY: 'bugworx_invoices',
 };
 
 // Generic storage functions
@@ -72,7 +73,7 @@ export const removeFromStorage = (key) => {
 
 export const clearAllStorage = () => {
   try {
-    Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+    Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
     return true;
   } catch (error) {
     console.error('Error clearing localStorage:', error);
@@ -95,7 +96,7 @@ export const addAppointment = (appointment) => {
     ...appointment,
     id: Date.now(), // Generate unique ID
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
   appointments.push(newAppointment);
   setAppointments(appointments);
@@ -104,12 +105,12 @@ export const addAppointment = (appointment) => {
 
 export const updateAppointment = (id, updates) => {
   const appointments = getAppointments();
-  const index = appointments.findIndex(apt => apt.id === id);
+  const index = appointments.findIndex((apt) => apt.id === id);
   if (index !== -1) {
     appointments[index] = {
       ...appointments[index],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     setAppointments(appointments);
     return appointments[index];
@@ -119,14 +120,14 @@ export const updateAppointment = (id, updates) => {
 
 export const deleteAppointment = (id) => {
   const appointments = getAppointments();
-  const filtered = appointments.filter(apt => apt.id !== id);
+  const filtered = appointments.filter((apt) => apt.id !== id);
   setAppointments(filtered);
   return filtered.length < appointments.length;
 };
 
 export const getAppointmentById = (id) => {
   const appointments = getAppointments();
-  return appointments.find(apt => apt.id === id);
+  return appointments.find((apt) => apt.id === id);
 };
 
 // Customer-specific functions
@@ -154,7 +155,7 @@ export const addCustomer = (customer) => {
     id: Date.now(),
     customerNum: `ACC-${Date.now()}`,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
   customers.push(newCustomer);
   setCustomers(customers);
@@ -163,12 +164,12 @@ export const addCustomer = (customer) => {
 
 export const updateCustomer = (id, updates) => {
   const customers = getCustomers();
-  const index = customers.findIndex(cust => cust.id === id);
+  const index = customers.findIndex((cust) => cust.id === id);
   if (index !== -1) {
     customers[index] = {
       ...customers[index],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     setCustomers(customers);
     return customers[index];
@@ -178,7 +179,7 @@ export const updateCustomer = (id, updates) => {
 
 export const getCustomerById = (id) => {
   const customers = getCustomers();
-  return customers.find(cust => cust.id === id);
+  return customers.find((cust) => cust.id === id);
 };
 
 export const addServiceAddress = (serviceAddress) => {
@@ -187,7 +188,7 @@ export const addServiceAddress = (serviceAddress) => {
     ...serviceAddress,
     id: Date.now(),
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
   serviceAddresses.push(newServiceAddress);
   setServiceAddresses(serviceAddresses);
@@ -196,12 +197,12 @@ export const addServiceAddress = (serviceAddress) => {
 
 export const updateServiceAddress = (id, updates) => {
   const serviceAddresses = getServiceAddresses();
-  const index = serviceAddresses.findIndex(s => s.id === id);
+  const index = serviceAddresses.findIndex((s) => s.id === id);
   if (index !== -1) {
     serviceAddresses[index] = {
       ...serviceAddresses[index],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     setServiceAddresses(serviceAddresses);
     return serviceAddresses[index];
@@ -211,20 +212,20 @@ export const updateServiceAddress = (id, updates) => {
 
 export const getServiceAddressesByCustomerId = (customerId) => {
   const serviceAddresses = getServiceAddresses();
-  return serviceAddresses.filter(serviceAddress => serviceAddress.customerId === customerId);
+  return serviceAddresses.filter((serviceAddress) => serviceAddress.customerId === customerId);
 };
 
 const DEFAULT_SERVICE_TYPES = [
-  {id: 1, name: 'General Pest Control'},
-  {id: 2, name: 'Termite Treatment'},
-  {id: 3, name: 'Rodent Control'},
-  {id: 4, name: 'Bed Bug Treatment'},
-  {id: 5, name: 'Ant Control'},
-  {id: 6, name: 'Cockroach Control'},
-  {id: 7, name: 'Spider Control'},
-  {id: 8, name: 'Mosquito Control'},
-  {id: 9, name: 'Flea & Tick Control'},
-  {id: 10, name: 'Wildlife Removal'}
+  { id: 1, name: 'General Pest Control' },
+  { id: 2, name: 'Termite Treatment' },
+  { id: 3, name: 'Rodent Control' },
+  { id: 4, name: 'Bed Bug Treatment' },
+  { id: 5, name: 'Ant Control' },
+  { id: 6, name: 'Cockroach Control' },
+  { id: 7, name: 'Spider Control' },
+  { id: 8, name: 'Mosquito Control' },
+  { id: 9, name: 'Flea & Tick Control' },
+  { id: 10, name: 'Wildlife Removal' },
 ];
 
 export const getServiceTypes = () => {
@@ -252,7 +253,7 @@ export const addServiceType = (serviceType) => {
 
 export const removeServiceType = (serviceType) => {
   const serviceTypes = getServiceTypes();
-  const filtered = serviceTypes.filter(st => st !== serviceType);
+  const filtered = serviceTypes.filter((st) => st !== serviceType);
   if (filtered.length < serviceTypes.length) {
     setServiceTypes(filtered);
     return true;
@@ -271,7 +272,7 @@ export const setTechnicians = (technicians) => {
 
 export const getActiveTechnicians = () => {
   const technicians = getTechnicians();
-  return technicians.filter(tech => tech.isActive);
+  return technicians.filter((tech) => tech.isActive);
 };
 
 // Inventory-specific functions
@@ -294,21 +295,21 @@ export const setVehicles = (vehicles) => {
 
 export const getVehicleById = (id) => {
   const vehicles = getVehicles();
-  return vehicles.find(v => v.id === id);
+  return vehicles.find((v) => v.id === id);
 };
 
 export const getVehicleByTechnician = (technicianId) => {
   const vehicles = getVehicles();
-  return vehicles.find(v => v.assignedTechnicianId === technicianId);
+  return vehicles.find((v) => v.assignedTechnicianId === technicianId);
 };
 
 export const updateVehicle = (id, updates) => {
   const vehicles = getVehicles();
-  const index = vehicles.findIndex(v => v.id === id);
+  const index = vehicles.findIndex((v) => v.id === id);
   if (index !== -1) {
     vehicles[index] = {
       ...vehicles[index],
-      ...updates
+      ...updates,
     };
     setVehicles(vehicles);
     return vehicles[index];
@@ -327,17 +328,17 @@ export const setRoutes = (routes) => {
 
 export const getRouteById = (id) => {
   const routes = getRoutes();
-  return routes.find(r => r.id === id);
+  return routes.find((r) => r.id === id);
 };
 
 export const getRoutesByDate = (date) => {
   const routes = getRoutes();
-  return routes.filter(r => r.date === date);
+  return routes.filter((r) => r.date === date);
 };
 
 export const getRoutesByTechnician = (technicianId) => {
   const routes = getRoutes();
-  return routes.filter(r => r.technicianId === technicianId);
+  return routes.filter((r) => r.technicianId === technicianId);
 };
 
 export const addRoute = (route) => {
@@ -345,7 +346,7 @@ export const addRoute = (route) => {
   const newRoute = {
     ...route,
     id: Date.now(),
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
   routes.push(newRoute);
   setRoutes(routes);
@@ -354,12 +355,12 @@ export const addRoute = (route) => {
 
 export const updateRoute = (id, updates) => {
   const routes = getRoutes();
-  const index = routes.findIndex(r => r.id === id);
+  const index = routes.findIndex((r) => r.id === id);
   if (index !== -1) {
     routes[index] = {
       ...routes[index],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     setRoutes(routes);
     return routes[index];
@@ -369,7 +370,7 @@ export const updateRoute = (id, updates) => {
 
 export const deleteRoute = (id) => {
   const routes = getRoutes();
-  const filtered = routes.filter(r => r.id !== id);
+  const filtered = routes.filter((r) => r.id !== id);
   setRoutes(filtered);
   return filtered.length < routes.length;
 };
@@ -385,7 +386,21 @@ export const setRouteTemplates = (templates) => {
 
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
-  const { appointments, customers, serviceAddresses, technicians, inventory, vehicles, routes, routeTemplates, facilities, areas, inspectionPoints, leads, prospects } = mockData;
+  const {
+    appointments,
+    customers,
+    serviceAddresses,
+    technicians,
+    inventory,
+    vehicles,
+    routes,
+    routeTemplates,
+    facilities,
+    areas,
+    inspectionPoints,
+    leads,
+    prospects,
+  } = mockData;
 
   if (getAppointments().length === 0) {
     setAppointments(appointments);
@@ -432,11 +447,8 @@ export const initializeStorage = (mockData) => {
 // Check technician availability
 export const isTechnicianAvailable = (technicianId, date, startTime, duration, excludeAppointmentId = null) => {
   const appointments = getAppointments();
-  const techAppointments = appointments.filter(apt =>
-    apt.technicianId === technicianId &&
-    apt.scheduledDate === date &&
-    apt.status !== 'Cancelled' &&
-    apt.id !== excludeAppointmentId
+  const techAppointments = appointments.filter(
+    (apt) => apt.technicianId === technicianId && apt.scheduledDate === date && apt.status !== 'Cancelled' && apt.id !== excludeAppointmentId
   );
 
   // Convert time to minutes for easier comparison
@@ -454,9 +466,7 @@ export const isTechnicianAvailable = (technicianId, date, startTime, duration, e
     const aptEnd = aptStart + apt.estimatedDuration;
 
     // Check if times overlap
-    if ((newStart >= aptStart && newStart < aptEnd) ||
-      (newEnd > aptStart && newEnd <= aptEnd) ||
-      (newStart <= aptStart && newEnd >= aptEnd)) {
+    if ((newStart >= aptStart && newStart < aptEnd) || (newEnd > aptStart && newEnd <= aptEnd) || (newStart <= aptStart && newEnd >= aptEnd)) {
       return false;
     }
   }
@@ -467,11 +477,7 @@ export const isTechnicianAvailable = (technicianId, date, startTime, duration, e
 // Get technician's workload for a specific date
 export const getTechnicianWorkload = (technicianId, date) => {
   const appointments = getAppointments();
-  return appointments.filter(apt =>
-    apt.technicianId === technicianId &&
-    apt.scheduledDate === date &&
-    apt.status !== 'Cancelled'
-  ).length;
+  return appointments.filter((apt) => apt.technicianId === technicianId && apt.scheduledDate === date && apt.status !== 'Cancelled').length;
 };
 
 // Smart technician suggestion algorithm
@@ -480,13 +486,13 @@ export const suggestTechnicians = (serviceType, serviceAddressId, date, startTim
   const serviceAddresses = getServiceAddresses();
   const appointments = getAppointments();
 
-  const serviceAddress = serviceAddresses.find(s => s.id === serviceAddressId);
+  const serviceAddress = serviceAddresses.find((s) => s.id === serviceAddressId);
   if (!serviceAddress) return [];
 
-  const activeTechs = technicians.filter(t => t.isActive);
+  const activeTechs = technicians.filter((t) => t.isActive);
 
   // Score each technician
-  const scoredTechnicians = activeTechs.map(tech => {
+  const scoredTechnicians = activeTechs.map((tech) => {
     let score = 0;
     const reasons = [];
 
@@ -543,13 +549,13 @@ export const suggestTechnicians = (serviceType, serviceAddressId, date, startTim
       score,
       reasons,
       workload,
-      isAvailable
+      isAvailable,
     };
   });
 
   // Filter out unavailable and sort by score
   return scoredTechnicians
-    .filter(t => t.score > 0) // Remove unavailable technicians
+    .filter((t) => t.score > 0) // Remove unavailable technicians
     .sort((a, b) => b.score - a.score); // Highest score first
 };
 
@@ -592,7 +598,7 @@ export const addFacility = (facility) => {
   facilities.push(newFacility);
   setFacilities(facilities);
   return newFacility;
-}
+};
 
 export const addArea = (area) => {
   const areas = getAreas();
@@ -614,7 +620,7 @@ export const addInspectionPoint = (inspectionPoint) => {
   inspectionPoints.push(newInspectionPoint);
   setInspectionPoints(inspectionPoints);
   return newInspectionPoint;
-}
+};
 
 // Lead-specific functions
 export const getLeads = () => {
@@ -631,7 +637,7 @@ export const addLead = (lead) => {
     ...lead,
     id: Date.now(),
     dateCreated: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
   leads.unshift(newLead);
   setLeads(leads);
@@ -640,12 +646,12 @@ export const addLead = (lead) => {
 
 export const updateLead = (id, updates) => {
   const leads = getLeads();
-  const index = leads.findIndex(l => l.id === id);
+  const index = leads.findIndex((l) => l.id === id);
   if (index !== -1) {
     leads[index] = {
       ...leads[index],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     setLeads(leads);
     return leads[index];
@@ -655,14 +661,14 @@ export const updateLead = (id, updates) => {
 
 export const deleteLead = (id) => {
   const leads = getLeads();
-  const filtered = leads.filter(l => l.id !== id);
+  const filtered = leads.filter((l) => l.id !== id);
   setLeads(filtered);
   return filtered.length < leads.length;
 };
 
 export const getLeadById = (id) => {
   const leads = getLeads();
-  return leads.find(l => l.id === id);
+  return leads.find((l) => l.id === id);
 };
 
 // Prospect-specific functions
@@ -680,7 +686,7 @@ export const addProspect = (prospect) => {
     ...prospect,
     id: Date.now(),
     dateCreated: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
   prospects.unshift(newProspect);
   setProspects(prospects);
@@ -689,12 +695,12 @@ export const addProspect = (prospect) => {
 
 export const updateProspect = (id, updates) => {
   const prospects = getProspects();
-  const index = prospects.findIndex(p => p.id === id);
+  const index = prospects.findIndex((p) => p.id === id);
   if (index !== -1) {
     prospects[index] = {
       ...prospects[index],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     setProspects(prospects);
     return prospects[index];
@@ -704,23 +710,23 @@ export const updateProspect = (id, updates) => {
 
 export const deleteProspect = (id) => {
   const prospects = getProspects();
-  const filtered = prospects.filter(p => p.id !== id);
+  const filtered = prospects.filter((p) => p.id !== id);
   setProspects(filtered);
   return filtered.length < prospects.length;
 };
 
 export const getProspectById = (id) => {
   const prospects = getProspects();
-  return prospects.find(p => p.id === id);
+  return prospects.find((p) => p.id === id);
 };
 
 export const updateFacility = (id, updates) => {
   const facilities = getFacilities();
-  const index = facilities.findIndex(f => f.id === id);
+  const index = facilities.findIndex((f) => f.id === id);
   if (index !== -1) {
     facilities[index] = {
       ...facilities[index],
-      ...updates
+      ...updates,
     };
     setFacilities(facilities);
     return facilities[index];
@@ -730,11 +736,11 @@ export const updateFacility = (id, updates) => {
 
 export const updateArea = (id, updates) => {
   const areas = getAreas();
-  const index = areas.findIndex(a => a.id === id);
+  const index = areas.findIndex((a) => a.id === id);
   if (index !== -1) {
     areas[index] = {
       ...areas[index],
-      ...updates
+      ...updates,
     };
     setAreas(areas);
     return areas[index];
@@ -744,11 +750,11 @@ export const updateArea = (id, updates) => {
 
 export const updateInspectionPoint = (id, updates) => {
   const inspectionPoints = getInspectionPoints();
-  const index = inspectionPoints.findIndex(ip => ip.id === id);
+  const index = inspectionPoints.findIndex((ip) => ip.id === id);
   if (index !== -1) {
     inspectionPoints[index] = {
       ...inspectionPoints[index],
-      ...updates
+      ...updates,
     };
     setInspectionPoints(inspectionPoints);
     return inspectionPoints[index];
@@ -758,42 +764,42 @@ export const updateInspectionPoint = (id, updates) => {
 
 export const deleteFacility = (id) => {
   const facilities = getFacilities();
-  const filtered = facilities.filter(f => f.id !== id);
+  const filtered = facilities.filter((f) => f.id !== id);
   setFacilities(filtered);
   return filtered.length < facilities.length;
 };
 
 export const deleteArea = (id) => {
   const areas = getAreas();
-  const filtered = areas.filter(a => a.id !== id);
+  const filtered = areas.filter((a) => a.id !== id);
   setAreas(filtered);
   return filtered.length < areas.length;
 };
 
 export const deleteInspectionPoint = (id) => {
   const inspectionPoints = getInspectionPoints();
-  const filtered = inspectionPoints.filter(ip => ip.id !== id);
+  const filtered = inspectionPoints.filter((ip) => ip.id !== id);
   setInspectionPoints(filtered);
   return filtered.length < inspectionPoints.length;
 };
 
 export const getFacilitiesByCustomerId = (customerId) => {
-  const serviceAddressesByCustomerId = getServiceAddressesByCustomerId(customerId).map(serviceAddress => serviceAddress.id);
+  const serviceAddressesByCustomerId = getServiceAddressesByCustomerId(customerId).map((serviceAddress) => serviceAddress.id);
   const facilities = getFacilities();
-  return facilities.filter(facility => serviceAddressesByCustomerId.includes(parseInt(facility.serviceAddressId)));
+  return facilities.filter((facility) => serviceAddressesByCustomerId.includes(parseInt(facility.serviceAddressId)));
 };
 
 export const getCurrentUser = () => {
   return getFromStorage('currentUser', null);
-}
+};
 
-export const updateCurrentUser = (userDetaisl) => {
+export const updateCurrentUser = (userDetails) => {
   const currentUser = getFromStorage('currentUser', null);
   if (currentUser) {
-    setToStorage('currentUser', userDetaisl);
+    setToStorage('currentUser', userDetails);
     return currentUser;
   }
-}
+};
 
 /* ----- Users ----- */
 export const getUsers = () => {
@@ -811,7 +817,6 @@ export const addUser = (user) => {
   saveUsers(next);
   return newUser;
 };
-
 
 /* ----- Roles ----- */
 export const getRoles = () => getFromStorage(STORAGE_KEYS.ROLES_KEY, []);
@@ -871,7 +876,7 @@ export const addProposal = (proposal) => {
     id: Date.now(),
     proposalNumber: `PROP-${String(Date.now()).slice(-6)}`,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
   proposals.push(newProposal);
   setProposals(proposals);
@@ -880,12 +885,12 @@ export const addProposal = (proposal) => {
 
 export const updateProposal = (id, updates) => {
   const proposals = getProposals();
-  const index = proposals.findIndex(p => p.id === id);
+  const index = proposals.findIndex((p) => p.id === id);
   if (index !== -1) {
     proposals[index] = {
       ...proposals[index],
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     setProposals(proposals);
     return proposals[index];
@@ -895,19 +900,19 @@ export const updateProposal = (id, updates) => {
 
 export const deleteProposal = (id) => {
   const proposals = getProposals();
-  const filtered = proposals.filter(p => p.id !== id);
+  const filtered = proposals.filter((p) => p.id !== id);
   setProposals(filtered);
   return filtered.length < proposals.length;
 };
 
 export const getProposalById = (id) => {
   const proposals = getProposals();
-  return proposals.find(p => p.id === id);
+  return proposals.find((p) => p.id === id);
 };
 
 export const getProposalsByCustomerId = (customerId) => {
   const proposals = getProposals();
-  return proposals.filter(p => p.customerId === customerId);
+  return proposals.filter((p) => p.customerId === customerId);
 };
 
 // Configuration-specific functions
@@ -932,8 +937,8 @@ const DEFAULT_CONFIGURATION = {
     address: '',
     phone: '',
     email: '',
-    license: ''
-  }
+    license: '',
+  },
 };
 
 export const getConfiguration = () => {
@@ -953,7 +958,7 @@ export const updateConfiguration = (updates) => {
   const config = getConfiguration();
   const updatedConfig = {
     ...config,
-    ...updates
+    ...updates,
   };
   setConfiguration(updatedConfig);
   return updatedConfig;
@@ -988,9 +993,9 @@ export const saveCustomFields = (fields) => setToStorage('customFields', fields)
 
 // --- API Integrations ---
 const defaultApiIntegrations = [
-    { id: 'gps', name: 'GPS / Telemetry', enabled: true, details: '', type: 'GPS', provider: 'DefaultGPS', clientId: '', clientSecret: '' },
-    { id: 'hrms', name: 'HRMS', enabled: false, details: '', type: 'HRMS', provider: 'DefaultHRMS', clientId: '', clientSecret: '' },
-    { id: 'acct', name: 'Accounting', enabled: false, details: '', type: 'Accounting', provider: 'DefaultAccounting', clientId: '', clientSecret: '' }
+  { id: 'gps', name: 'GPS / Telemetry', enabled: true, details: '', type: 'GPS', provider: 'DefaultGPS', clientId: '', clientSecret: '' },
+  { id: 'hrms', name: 'HRMS', enabled: false, details: '', type: 'HRMS', provider: 'DefaultHRMS', clientId: '', clientSecret: '' },
+  { id: 'acct', name: 'Accounting', enabled: false, details: '', type: 'Accounting', provider: 'DefaultAccounting', clientId: '', clientSecret: '' },
 ];
 export const getApiIntegrations = () => getFromStorage('apiIntegrations', defaultApiIntegrations);
 export const saveApiIntegrations = (integrations) => setToStorage('apiIntegrations', integrations);
@@ -1030,6 +1035,99 @@ export const saveInspectionPointCategories = (items) => setToStorage(STORAGE_KEY
 
 export const getMaterialSetups = () => getFromStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, []);
 export const saveMaterialSetups = (items) => setToStorage(STORAGE_KEYS.SERVICE_INSPECTION_MATERIAL_SETUP, items);
+
+export const getInvoices = () => {
+  let invoices = getFromStorage(STORAGE_KEYS.INVOICES_KEY);
+  // Always return fresh mock data for demonstration if it's empty
+  if (!invoices || invoices.length === 0) {
+    invoices = [
+      {
+        id: 'INV-001',
+        customerId: 1,
+        date: '2025-11-15',
+        dueDate: '2025-12-15',
+        poNumber: 'PO-123',
+        status: 'Paid',
+        notes: 'Initial service setup fee.',
+        items: [{ id: 1, description: 'Quarterly Pest Control Service', quantity: 1, unitPrice: 250.0 }],
+        subtotal: 250.0,
+        tax: 25.0,
+        total: 275.0,
+        amountPaid: 275.0,
+        balanceDue: 0,
+      },
+      {
+        id: 'INV-002',
+        customerId: 1,
+        date: '2025-10-20',
+        dueDate: '2025-11-20',
+        poNumber: '',
+        status: 'Overdue',
+        notes: 'Emergency call-out for rodent activity.',
+        items: [
+          { id: 2, description: 'Emergency Rodent Treatment', quantity: 1, unitPrice: 150.0 },
+          { id: 3, description: 'Bait Station Installation', quantity: 4, unitPrice: 25.0 },
+        ],
+        subtotal: 250.0,
+        tax: 25.0,
+        total: 275.0,
+        amountPaid: 100.0,
+        balanceDue: 175.0,
+      },
+      {
+        id: 'INV-003',
+        customerId: 2,
+        date: '2025-11-25',
+        dueDate: '2025-12-25',
+        poNumber: 'PO-456',
+        status: 'Sent',
+        notes: 'Monthly maintenance service.',
+        items: [{ id: 4, description: 'Commercial Monthly Pest Service', quantity: 1, unitPrice: 400.0 }],
+        subtotal: 400.0,
+        tax: 40.0,
+        total: 440.0,
+        amountPaid: 0,
+        balanceDue: 440.0,
+      },
+      {
+        id: 'INV-004',
+        customerId: 1,
+        date: '2025-12-05',
+        dueDate: '2026-01-05',
+        poNumber: '',
+        status: 'Draft',
+        notes: '',
+        items: [],
+        subtotal: 0,
+        tax: 0,
+        total: 0,
+        amountPaid: 0,
+        balanceDue: 0,
+      },
+      {
+        id: 'INV-005',
+        customerId: 3,
+        date: '2025-11-01',
+        dueDate: '2025-12-01',
+        poNumber: 'PO-789',
+        status: 'Paid',
+        notes: 'Annual termite inspection.',
+        items: [{ id: 5, description: 'Annual Termite Inspection and Report', quantity: 1, unitPrice: 350.0 }],
+        subtotal: 350.0,
+        tax: 35.0,
+        total: 385.0,
+        amountPaid: 385.0,
+        balanceDue: 0,
+      },
+    ];
+    saveInvoices(invoices);
+  }
+  return invoices;
+};
+
+export const saveInvoices = (invoices) => {
+  return setToStorage(STORAGE_KEYS.INVOICES_KEY, invoices);
+};
 
 export default {
   STORAGE_KEYS,
@@ -1176,5 +1274,7 @@ export default {
   getInspectionPointCategories,
   saveInspectionPointCategories,
   getMaterialSetups,
-  saveMaterialSetups
+  saveMaterialSetups,
+  getInvoices,
+  saveInvoices,
 };
