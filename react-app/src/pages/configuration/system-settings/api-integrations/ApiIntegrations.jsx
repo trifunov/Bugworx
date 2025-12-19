@@ -1,101 +1,131 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useApiIntegrations } from './useApiIntegrations';
+import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
+import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import Table from '../../../../components/Common/Table/Table';
+import useTable from '../../../../components/Common/Table/useTable';
+import AddNewButton from '../../../../components/Common/AddNewButton';
+import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
+import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
+import AddEditApiIntegration from '../../../../components/Configuration/SystemSettings/ApiIntegrations/AddEditApiIntegration';
+
+const columns = [
+  { label: 'Provider', accessor: 'name', sortable: true },
+  { label: 'Type', accessor: 'type', sortable: true },
+  { label: 'Status', accessor: 'enabled', sortable: true },
+  { label: 'Actions', accessor: 'actions', sortable: false },
+];
+const columnNames = columns.map((c) => c.label);
+const sortableColumns = columns.reduce((acc, col) => {
+  if (col.sortable) acc[col.label] = col.accessor;
+  return acc;
+}, {});
 
 const ApiIntegrations = () => {
-    const {
-        apiIntegrations,
-        apiTypeRef,
-        apiProviderRef,
-        apiClientIdRef,
-        apiClientSecretRef,
-        integrationConfigOpen,
-        credsById,
-        toggleIntegration,
-        addIntegration,
-        openIntegrationConfig,
-        changeCredField,
-        saveIntegrationCredentials
-    } = useApiIntegrations();
+  const { items, saveItem, removeItem, toggleEnabled } = useApiIntegrations();
+  const { addEditApiIntegration } = useEditableFormContext();
+  const { setPageSubHeader } = usePageSubHeader();
 
-    return (
-        <div className="row">
-            <div className="col-12">
-                <div className="card">
-                    <div className="card-body">
-                        <p className="text-muted">Configure third-party integrations (GPS, HRMS, Accounting).</p>
-                        <div className="list-group mb-3">
-                            {apiIntegrations.map(i => (
-                                <div key={i.id} className="list-group-item">
-                                    <div className="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h6 className="mb-1">{i.name}</h6>
-                                            <small className="text-muted">{i.provider || i.type}</small>
-                                            <div className="mt-2">
-                                                <small className="text-muted">Client ID: {i.clientId ? '●●●●●' : <em>not set</em>}</small>
-                                                <br />
-                                                <small className="text-muted">Secret: {i.clientSecret ? '●●●●●' : <em>not set</em>}</small>
-                                            </div>
-                                        </div>
-                                        <div className="text-end">
-                                            <button onClick={() => openIntegrationConfig(i.id)} className="btn btn-sm btn-outline-primary me-2">{integrationConfigOpen === i.id ? 'Close' : 'Configure'}</button>
-                                            <button onClick={() => toggleIntegration(i.id)} className={`btn btn-sm ${i.enabled ? 'btn-outline-secondary' : 'btn-outline-success'}`}>{i.enabled ? 'Disable' : 'Enable'}</button>
-                                        </div>
-                                    </div>
+  useEffect(() => {
+    setPageSubHeader({
+      title: 'API Integrations',
+      breadcrumbs: [
+        { label: 'Configuration', path: '/configuration' },
+        { label: 'System Settings', path: '/configuration/system-settings' },
+        { label: 'API Integrations', active: true },
+      ],
+    });
+  }, [setPageSubHeader]);
 
-                                    {integrationConfigOpen === i.id && (
-                                        <div className="mt-3 border-top pt-3">
-                                            <div className="row g-2 align-items-end">
-                                                <div className="col-md-4">
-                                                    <label className="form-label">Client ID</label>
-                                                    <input className="form-control" value={(credsById[i.id]?.clientId) || ''} onChange={e => changeCredField(i.id, 'clientId', e.target.value)} />
-                                                </div>
-                                                <div className="col-md-4">
-                                                    <label className="form-label">Client Secret</label>
-                                                    <input className="form-control" type="password" value={(credsById[i.id]?.clientSecret) || ''} onChange={e => changeCredField(i.id, 'clientSecret', e.target.value)} />
-                                                </div>
-                                                <div className="col-md-4 text-end">
-                                                    <button className="btn btn-primary me-2" onClick={() => saveIntegrationCredentials(i.id)}>Save</button>
-                                                    <button className="btn btn-secondary" onClick={() => openIntegrationConfig(i.id)}>Cancel</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
+  const { filteredItems, searchTerm, setSearchTerm } = useTableSearch(items, ['name', 'type']);
+  const { data: paginatedData, ...tableProps } = useTable(filteredItems, { defaultSortField: 'name' });
 
-                        <hr />
-
-                        <h6 className="mt-3">Add New Integration</h6>
-                        <div className="row">
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Integration Type</label>
-                                <select ref={apiTypeRef} className="form-select" defaultValue="GPS">
-                                    <option>GPS</option>
-                                    <option>HRMS</option>
-                                    <option>Accounting</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Provider</label>
-                                <input ref={apiProviderRef} className="form-control" placeholder="e.g. Provider name" />
-                            </div>
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Client ID</label>
-                                <input ref={apiClientIdRef} className="form-control" placeholder="client id (optional)" />
-                            </div>
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Client Secret</label>
-                                <input ref={apiClientSecretRef} className="form-control" placeholder="client secret (optional)" />
-                            </div>
-                        </div>
-                        <button onClick={addIntegration} className="btn btn-primary">Add Integration</button>
-                    </div>
-                </div>
-            </div>
+  const renderRow = (item) => (
+    <tr key={item.id}>
+      <td>
+        <strong>{item.name}</strong>
+      </td>
+      <td>{item.type}</td>
+      <td>
+        <span className={`badge ${item.enabled ? 'badge-soft-success' : 'badge-soft-secondary'}`}>{item.enabled ? 'Enabled' : 'Disabled'}</span>
+      </td>
+      <td>
+        <div className='d-flex gap-2'>
+          <button className='btn btn-sm btn-outline-primary' onClick={() => addEditApiIntegration.open(item)}>
+            Configure
+          </button>
+          <button className={`btn btn-sm ${item.enabled ? 'btn-outline-warning' : 'btn-outline-success'}`} onClick={() => toggleEnabled(item.id)}>
+            {item.enabled ? 'Disable' : 'Enable'}
+          </button>
+          <a
+            className='text-danger'
+            href='#'
+            title='Delete'
+            onClick={(e) => {
+              e.preventDefault();
+              removeItem(item.id);
+            }}
+          >
+            <i className='mdi mdi-delete font-size-18'></i>
+          </a>
         </div>
-    );
+      </td>
+    </tr>
+  );
+
+  return (
+    <>
+      <AddEditApiIntegration
+        isOpen={addEditApiIntegration.isOpen}
+        formData={addEditApiIntegration.formData}
+        isSaving={addEditApiIntegration.isSaving}
+        onUpdateFieldHandle={addEditApiIntegration.onUpdateFieldHandle}
+        onClose={addEditApiIntegration.close}
+        onSave={() => addEditApiIntegration.onSaveHandle(saveItem)}
+      />
+
+      <div className='row'>
+        <div className='col-12'>
+          <div className='card'>
+            <div className='card-body'>
+              <div className='row mb-3'>
+                <div className='col-12'>
+                  <div className='d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2'>
+                    <div className='flex-grow-1 w-100 me-md-3'>
+                      <TableSearch value={searchTerm} onChange={setSearchTerm} placeholder='Search integrations...' />
+                    </div>
+                    <div className='mt-2 mt-md-0'>
+                      <AddNewButton handleAddNew={() => addEditApiIntegration.open()} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Table
+                columns={columnNames}
+                data={paginatedData}
+                renderRow={renderRow}
+                sortableColumns={sortableColumns}
+                onSort={tableProps.handleSort}
+                sortField={tableProps.sortField}
+                sortDirection={tableProps.sortDirection}
+                pagination={{
+                  currentPage: tableProps.currentPage,
+                  totalPages: tableProps.totalPages,
+                  onPageChange: tableProps.setCurrentPage,
+                  totalItems: tableProps.totalItems,
+                }}
+                emptyState={{
+                  icon: 'mdi mdi-power-plug-outline',
+                  message: 'No API integrations found. Click "Add New" to create one.',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default ApiIntegrations;

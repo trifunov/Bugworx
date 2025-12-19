@@ -1,51 +1,51 @@
 import { useState, useEffect } from 'react';
-import { getCompanyProfile, saveCompanyProfile } from '../../../../utils/localStorage';
-import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
+import { getCompanyProfile, saveCompanyProfile as saveProfileToStorage } from '../../../../utils/localStorage';
 
 export const useCompanyProfile = () => {
-    const { setPageSubHeader } = usePageSubHeader();
-    const [companyProfile, setCompanyProfile] = useState({
-        name: '',
-        regNumber: '',
-        address: '',
-        phone: '',
-        email: '',
-        logo: ''
-    });
+  const defaultProfile = { name: '', regNumber: '', address: '', phone: '', email: '', logo: '' };
+  const [companyProfile, setCompanyProfile] = useState(defaultProfile);
+  const [isSaving, setIsSaving] = useState(false);
 
-    useEffect(() => {
-        const cp = getCompanyProfile();
-        if (cp) setCompanyProfile(cp);
-        setPageSubHeader({
-            title: "Company Profile",
-            breadcrumbs: [
-                { label: "Configuration", path: "/configuration/general" },
-                { label: "System Settings", path: "/configuration/general" },
-                { label: "Company Profile", isActive: true }
-            ]
-        });
-    }, [setPageSubHeader]);
+  useEffect(() => {
+    const loadedProfile = getCompanyProfile();
+    if (loadedProfile) {
+      setCompanyProfile({ ...defaultProfile, ...loadedProfile });
+    }
+  }, []);
 
-    const handleCompanyChange = (field, value) => {
-        setCompanyProfile(prev => ({ ...prev, [field]: value }));
+  const handleCompanyChange = (field, value) => {
+    setCompanyProfile((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleLogoUpload = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCompanyProfile((prev) => ({ ...prev, logo: reader.result }));
     };
+    reader.readAsDataURL(file);
+  };
 
-    const saveProfile = () => {
-        saveCompanyProfile(companyProfile);
-        alert('Company profile saved to local storage.');
-    };
+  const saveCompanyProfile = async () => {
+    setIsSaving(true);
+    try {
+      // Simulate async save
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      saveProfileToStorage(companyProfile);
+      alert('Company profile saved successfully!');
+    } catch (error) {
+      console.error('Failed to save company profile:', error);
+      alert('Failed to save company profile.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-    const handleLogoUpload = (file) => {
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => {
-            const dataUrl = e.target.result;
-            const next = { ...companyProfile, logo: dataUrl };
-            setCompanyProfile(next);
-            saveCompanyProfile(next);
-        };
-        reader.readAsDataURL(file);
-    };
-
-    return { companyProfile, handleCompanyChange, saveCompanyProfile: saveProfile, handleLogoUpload };
+  return {
+    companyProfile,
+    isSaving,
+    handleCompanyChange,
+    saveCompanyProfile,
+    handleLogoUpload,
+  };
 };

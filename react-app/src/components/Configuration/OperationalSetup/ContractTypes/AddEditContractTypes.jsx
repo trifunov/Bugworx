@@ -1,0 +1,94 @@
+import React, { useState, useEffect } from 'react';
+
+const AddEditContractType = ({
+  isOpen,
+  onClose,
+  onSave,
+  formData,
+  onUpdateFieldHandle,
+  isSaving,
+}) => {
+   if (!isOpen) {
+    return null;
+  }
+
+  const isEditing = formData && formData.id;
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    onUpdateFieldHandle(name, type === 'checkbox' ? checked : value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave();
+  };
+
+  return (
+    <>
+      <div className={`offcanvas offcanvas-end show`} style={{ width: '400px' }} tabIndex="-1">
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title">{isEditing ? 'Edit Contract Type' : 'Add New Contract Type'}</h5>
+          <button type="button" className="btn-close text-reset" onClick={onClose} aria-label="Close" disabled={isSaving}></button>
+        </div>
+        <div className="offcanvas-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <input
+                name="name"
+                className="form-control"
+                required
+                value={formData.name || ''}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Billing Cycle</label>
+              <select
+                name="billingCycle"
+                className="form-select"
+                value={formData.billingCycle || 'Monthly'}
+                onChange={handleChange}
+              >
+                <option>Monthly</option>
+                <option>Annual</option>
+                <option>One-time</option>
+                <option>Term</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Description</label>
+              <input
+                name="description"
+                className="form-control"
+                value={formData.description || ''}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-check mb-3">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="contract-active-check"
+                name="active"
+                checked={formData.active || false}
+                onChange={handleChange}
+              />
+              <label className="form-check-label" htmlFor="contract-active-check">Active</label>
+            </div>
+            <div className="d-flex gap-2 mt-4">
+              <button type="submit" className="btn btn-primary w-sm" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button type="button" className="btn btn-light w-sm" onClick={onClose} disabled={isSaving}>Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div className={`offcanvas-backdrop fade show`} onClick={isSaving ? undefined : onClose}></div>
+    </>
+  );
+};
+
+export default AddEditContractType;

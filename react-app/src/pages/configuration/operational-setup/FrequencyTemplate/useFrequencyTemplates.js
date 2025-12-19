@@ -1,26 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getFrequencyTemplates, saveFrequencyTemplates } from '../../../../utils/localStorage';
 
 export const useFrequencyTemplates = () => {
-    const [settings, setSettings] = useState({
-        defaultStatus: 'Open',
-        numberingFormat: '',
-        slaHours: 0,
-        escalations: '',
-        repeatSchedule: 'weekly', // Default to weekly
-    });
+  const [items, setItems] = useState(getFrequencyTemplates());
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setSettings((prevSettings) => ({
-            ...prevSettings,
-            [name]: value,
-        }));
-    };
+  useEffect(() => {
+    saveFrequencyTemplates(items);
+  }, [items]);
 
-    const save = () => {
-        // Logic to save settings, e.g., API call
-        console.log('Settings saved:', settings);
-    };
+  const saveItem = (formData) => {
+    if (formData.id) {
+      setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+    } else {
+      const newItem = { ...formData, id: Date.now().toString() };
+      setItems(prev => [newItem, ...prev]);
+    }
+  };
 
-    return { settings, handleChange, save };
+  const removeItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this template?')) return;
+    setItems(prev => prev.filter(it => it.id !== id));
+  };
+
+  return {
+    items,
+    saveItem,
+    removeItem,
+  };
 };
