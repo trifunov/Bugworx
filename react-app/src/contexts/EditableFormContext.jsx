@@ -101,7 +101,7 @@ export const EditableFormProvider = ({ children }) => {
   const loadPrograms = () => {
     const programs = getPrograms();
     setProgramsState(programs);
-  }
+  };
 
   const value = {
     addEditCustomer,
