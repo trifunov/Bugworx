@@ -38,6 +38,7 @@ const STORAGE_KEYS = {
   PROPOSALS: 'bugworx_proposals',
   CONFIGURATION: 'bugworx_configuration',
   INVOICES_KEY: 'bugworx_invoices',
+  PROGRAMS: 'bugworx_programs',
 };
 
 // Generic storage functions
@@ -400,6 +401,7 @@ export const initializeStorage = (mockData) => {
     inspectionPoints,
     leads,
     prospects,
+    programs,
   } = mockData;
 
   if (getAppointments().length === 0) {
@@ -425,6 +427,11 @@ export const initializeStorage = (mockData) => {
   }
   if (routeTemplates && getRouteTemplates().length === 0) {
     setRouteTemplates(routeTemplates);
+  }
+
+  // Seed programs
+  if (programs && getPrograms().length === 0) {
+    setPrograms(programs);
   }
 
   if (getFacilities().length === 0 && facilities) {
@@ -913,6 +920,55 @@ export const getProposalById = (id) => {
 export const getProposalsByCustomerId = (customerId) => {
   const proposals = getProposals();
   return proposals.filter((p) => p.customerId === customerId);
+};
+
+// Program-specific functions
+export const getPrograms = () => {
+  return getFromStorage(STORAGE_KEYS.PROGRAMS, []);
+};
+
+export const setPrograms = (programs) => {
+  return setToStorage(STORAGE_KEYS.PROGRAMS, programs);
+};
+
+export const addProgram = (program) => {
+  const programs = getPrograms();
+  const newProgram = {
+    ...program,
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  programs.push(newProgram);
+  setPrograms(programs);
+  return newProgram;
+};
+
+export const updateProgram = (id, updates) => {
+  const programs = getPrograms();
+  const index = programs.findIndex((p) => p.id === id);
+  if (index !== -1) {
+    programs[index] = {
+      ...programs[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    setPrograms(programs);
+    return programs[index];
+  }
+  return null;
+};
+
+export const deleteProgram = (id) => {
+  const programs = getPrograms();
+  const filtered = programs.filter((p) => p.id !== id);
+  setPrograms(filtered);
+  return filtered.length < programs.length;
+};
+
+export const getProgramById = (id) => {
+  const programs = getPrograms();
+  return programs.find((p) => p.id === id);
 };
 
 // Configuration-specific functions

@@ -2,11 +2,12 @@ import useEditableForms from "./useEditableForms";
 import AddEditCustomer from "../../components/CustomerDetails/AddEditCustomer/AddEditCustomer";
 import AddEditLead from "../../components/CustomerDetails/AddEditLead/AddEditLead";
 import AddEditProspect from "../../components/CustomerDetails/Prospects/AddEditProspect/AddEditProspect";
-import { addCustomer, updateCustomer, addLead, updateLead, addProspect, updateProspect } from "../../utils/localStorage";
+import { addCustomer, updateCustomer, addLead, updateLead, addProspect, updateProspect, addProgram } from "../../utils/localStorage";
+import AddEditProgram from "../../components/CustomerDetails/AddEditProgram/AddEditProgram";
 
 const EditableForms = () => {
 
-    const { addEditCustomer, addEditLead, addEditProspect, loadCustomers, loadLeads, loadProspects } = useEditableForms();
+    const { addEditCustomer, addEditLead, addEditProspect, loadCustomers, loadLeads, loadProspects, addEditProgram, loadPrograms } = useEditableForms();
 
     return (
         <>
@@ -69,6 +70,27 @@ const EditableForms = () => {
 
                     loadProspects();
                     return updatedProspect;
+                })}
+            />
+
+            <AddEditProgram
+                isOpen={addEditProgram.isOpen}
+                formData={addEditProgram.formData}
+                errors={addEditProgram.errors}
+                isSaving={addEditProgram.isSaving}
+                onUpdateField={addEditProgram.onUpdateFieldHandle}
+                onClose={addEditProgram.close}
+                onSave={() => addEditProgram.onSaveHandle((data) => {
+                    let updatedProgram = null;
+                    if (data.id && data.id !== 0) {
+                        // Assuming updateProgram function exists
+                        updatedProgram = updateProgram(data.id, data);
+                    }
+                    else {
+                        updatedProgram = addProgram(data);
+                    }
+                    loadPrograms();
+                    return updatedProgram;
                 })}
             />
 

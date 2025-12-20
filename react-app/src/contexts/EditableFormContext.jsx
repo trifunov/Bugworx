@@ -27,7 +27,9 @@ import useAddEditCustomField from '../components/Configuration/SystemSettings/Cu
 
 import useAddEditLineItem from '../components/CustomerInvoices/useAddEditLineItem';
 
-import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
+import useAddEditProgram from '../components/CustomerDetails/AddEditProgram/useAddEditProgram';
+
+import { getCustomers, getLeads, getProspects, getInventory, getPrograms } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
 
@@ -44,6 +46,7 @@ export const EditableFormProvider = ({ children }) => {
   const addEditLead = useAddEditLead();
   const addEditProspect = useAddEditProspect();
   const addEditInventory = useAddEditInventory();
+  const addEditProgram = useAddEditProgram();
 
   const addEditUser = useAddEditUser();
   const addEditRole = useAddEditRole();
@@ -74,6 +77,7 @@ export const EditableFormProvider = ({ children }) => {
   const [leads, setLeadsState] = useState(getLeads());
   const [prospects, setProspectsState] = useState(getProspects());
   const [inventory, setInventoryState] = useState(getInventory());
+  const [programs, setProgramsState] = useState(getPrograms());
 
   const loadCustomers = () => {
     const customers = getCustomers();
@@ -93,6 +97,11 @@ export const EditableFormProvider = ({ children }) => {
     const inventory = getInventory();
     setInventoryState(inventory);
   };
+
+  const loadPrograms = () => {
+    const programs = getPrograms();
+    setProgramsState(programs);
+  }
 
   const value = {
     addEditCustomer,
@@ -131,6 +140,9 @@ export const EditableFormProvider = ({ children }) => {
     setProspectsState,
     setInventoryState,
     addEditLineItem,
+    addEditProgram,
+    programs,
+    loadPrograms
   };
 
   return <EditableFormContext.Provider value={value}>{children}</EditableFormContext.Provider>;

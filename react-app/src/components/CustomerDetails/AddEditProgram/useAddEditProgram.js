@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { save, updateField } from '../../../utils/addEditFormUtils';
 import { getProgramTypeId, getProgramStatusId, getProgramTypeLabel, getProgramStatusLabel } from '../../../utils/programLookups';
+import { addProgram, updateProgram, getProgramById } from '../../../utils/localStorage';
 
 // Program shape inferred from elena3.html Program section
 // Required fields: name, serviceAddressId
@@ -67,10 +68,17 @@ const useAddEditProgram = () => {
 
     const [formData, setFormData] = useState(defaultForm);
 
-    const open = (program) => {
-        if (!program) {
+    const open = (programOrId) => {
+        let program = null;
+        if (!programOrId) {
             setFormData(defaultForm);
+        } else if (typeof programOrId === 'number') {
+            program = getProgramById(programOrId) || null;
         } else {
+            program = programOrId;
+        }
+
+        if (program) {
             setFormData({
                 id: program.id || 0,
                 name: program.name || '',
@@ -85,7 +93,7 @@ const useAddEditProgram = () => {
                 programCategory: program.programCategory || '',
                 accountManager: program.accountManager || '',
                 // Combined Service & Billing Details migration
-                serviceBillingDetails: program.serviceBillingDetails.map(sb => ({
+                serviceBillingDetails: (program.serviceBillingDetails || []).map(sb => ({
                     serviceEvent: sb.serviceEvent || '',
                     scheduledDate: sb.scheduledDate || '',
                     durationWindow: sb.durationWindow || '',
@@ -147,7 +155,14 @@ const useAddEditProgram = () => {
     };
 
     const onSaveHandle = async (onSaveCallback) => {
-        save(formData, onSaveCallback, setIsSaving, close, setErrors, validate);
+        const persist = async (data) => {
+            if (data.id && data.id !== 0) {
+                return updateProgram(data.id, data);
+            }
+            return addProgram(data);
+        };
+        const cb = onSaveCallback || persist;
+        save(formData, cb, setIsSaving, close, setErrors, validate);
     };
 
     // Derived display labels (optional for UI consumers)

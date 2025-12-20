@@ -3,14 +3,11 @@ import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import useSidebar from './Sidebar/useSidebar';
 import useConfigurationSidebar from './SidebarConfiguration/useSidebarConfiguration';
-import AddEditCustomer from '../components/CustomerDetails/AddEditCustomer/AddEditCustomer';
-import AddEditLead from '../components/CustomerDetails/AddEditLead/AddEditLead';
-import { getCustomers, addCustomer, updateCustomer, addLead, updateLead, getLeads } from '../utils/localStorage';
-import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
-import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
+import { getCustomers, getLeads } from '../utils/localStorage';
 import AdvancedCustomerFilter from '../components/Common/AdvancedFilter/AdvancedCustomerFilter';
 import useAdvancedCustomerFilter from '../hooks/useAdvancedCustomerFilter';
 import { serializeFiltersToUrlParams } from '../utils/filterUrlUtils';
+import { useEditableFormContext } from '../contexts/EditableFormContext';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,8 +20,7 @@ const Header = () => {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [customers, setCustomers] = useState(getCustomers());
   const [leads, setLeads] = useState(getLeads());
-  const addEditCustomer = useAddEditCustomer();
-  const addEditLead = useAddEditLead();
+  const { addEditProgram, addEditCustomer, addEditLead } = useEditableFormContext();
   const searchDropdownRef = useRef(null);
 
   // Advanced Filter
@@ -172,45 +168,6 @@ const Header = () => {
     <header id="page-topbar">
       <div className="navbar-header">
         <div className="d-flex">
-
-          <AddEditCustomer
-            isOpen={addEditCustomer.isOpen}
-            formData={addEditCustomer.formData}
-            errors={addEditCustomer.errors}
-            isSaving={addEditCustomer.isSaving}
-            onUpdateField={addEditCustomer.onUpdateFieldHandle}
-            onClose={addEditCustomer.close}
-            onSave={() => addEditCustomer.onSaveHandle((data) => {
-              let updatedCustomer = null;
-              if (data.id && data.id !== 0) {
-                updatedCustomer = updateCustomer(data.id, data);
-              }
-              else {
-                updatedCustomer = addCustomer(data);
-              }
-              loadCustomers();
-              return updatedCustomer;
-            })}
-          />
-
-          <AddEditLead
-            isOpen={addEditLead.isOpen}
-            formData={addEditLead.formData}
-            errors={addEditLead.errors}
-            isSaving={addEditLead.isSaving}
-            onUpdateField={addEditLead.onUpdateFieldHandle}
-            onClose={addEditLead.close}
-            onSave={() => addEditLead.onSaveHandle((data) => {
-              let updatedLead = null;
-              if (data.id && data.id !== 0) {
-                updatedLead = updateLead(data.id, data);
-              }
-              else {
-                updatedLead = addLead(data);
-              }
-              return updatedLead;
-            })}
-          />
 
           {/* LOGO */}
           <div className="navbar-brand-box">
@@ -531,7 +488,7 @@ const Header = () => {
               <a className="dropdown-item" href="#"><i className="mdi mdi-calendar-edit me-2"></i>Service</a>
               <a className="dropdown-item" href="#" onClick={handleCreateInvoice}><i className="mdi mdi-receipt me-2"></i>Invoice</a>
               <a className="dropdown-item" href="#"><i className="mdi mdi-cash me-2"></i>Payment</a>
-              <a className="dropdown-item" href="#"><i className="mdi mdi-file-document-outline me-2"></i>Document</a>
+              <a className="dropdown-item" href="#" onClick={() => addEditProgram.open({ id: 0 })}><i className="mdi mdi-file-document-outline me-2"></i>Program</a>
             </div>
           </div>
 
