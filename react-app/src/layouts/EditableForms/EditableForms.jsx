@@ -2,7 +2,7 @@ import useEditableForms from "./useEditableForms";
 import AddEditCustomer from "../../components/CustomerDetails/AddEditCustomer/AddEditCustomer";
 import AddEditLead from "../../components/CustomerDetails/AddEditLead/AddEditLead";
 import AddEditProspect from "../../components/CustomerDetails/Prospects/AddEditProspect/AddEditProspect";
-import { addCustomer, updateCustomer, addLead, updateLead, addProspect, updateProspect, addProgram } from "../../utils/localStorage";
+import { addCustomer, updateCustomer, addLead, updateLead, addProspect, updateProspect, addProgram, updateProgram } from "../../utils/localStorage";
 import AddEditProgram from "../../components/CustomerDetails/AddEditProgram/AddEditProgram";
 
 const EditableForms = () => {
