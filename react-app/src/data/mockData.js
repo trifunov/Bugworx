@@ -261,6 +261,21 @@ export const inspectionPointStatuses = [
   { id: 4, label: 'Critical' }
 ];
 
+// Program metadata
+export const programTypes = [
+  { id: 1, label: 'Contractual' },
+  { id: 2, label: 'Prepaid' },
+  { id: 3, label: 'On-Demand' }
+];
+
+export const programStatuses = [
+  { id: 1, label: 'Active' },
+  { id: 2, label: 'Pending' },
+  { id: 3, label: 'Suspended' },
+  { id: 4, label: 'Cancelled' },
+  { id: 5, label: 'Completed' }
+];
+
 export const leads = [
   {
     id: 1,
@@ -397,6 +412,111 @@ export const facilities = [
       name: 'Main Restaurant - Drawing B',
       url: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/Facility-map.jpg'
     }
+  }
+];
+
+// Programs derived from Program section in elena3.html
+export const programs = [
+  {
+    id: 1,
+    name: 'Hospital Hygiene Program',
+    serviceAddressId: 7, // Medical Center
+    programTypeId: 1, // Contractual
+    statusId: 1, // Active
+    startDate: '2024-10-01',
+    endDate: '2025-09-30',
+    renewalDate: '2025-09-15',
+    contractDuration: '12 months',
+    programCategory: 'Contractual',
+    accountManager: 'Manager A',
+    // Service & Billing Details
+    serviceBillingDetails: [
+      {
+        serviceEvent: 'Rodents',
+        scheduledDate: '2024-11-01',
+        durationWindow: '08:00-12:00',
+        technicianIds: [1, 2],
+        frequencyPattern: 'Monthly',
+        targetPests: ['Rodents', 'Roaches'],
+        entryPoints: ['Doors', 'Vents'],
+        equipmentRequired: ['Bait Stations', 'Sprayers'],
+        billingFrequency: 'Monthly',
+        pricingModel: 'Flat Fee',
+        billingAmount: 950.0,
+        taxType: 'US EIN',
+        taxAmount: 0,
+        salesAmount: 950.0,
+        productionAmount: 0,
+        discounts: 'None',
+        invoiceTerms: 'Net 30',
+        paymentMethod: 'Invoice',
+        priceHistoryRef: 'PRC-HOSP-001'
+      }
+    ],
+    // Compliance
+    termsAndConditions: 'Standard hospital service contract v1',
+    regulatoryRequirements: 'State health compliance',
+    healthAndSafetyGuidelines: 'Use approved chemicals only',
+    certificatesRequired: ['Applicator License', 'Food Safety Cert'],
+    // Notifications
+    nextServiceReminder: '',
+    pastDueAlerts: '',
+    customerNotificationPreferences: ['Email', 'SMS'],
+    technicianAlerts: 'Send 48h reminder',
+    // Notes & Logs
+    customInstructions: 'Focus on kitchen and storage areas.',
+    serviceHistorySummary: '',
+    renewalHistory: '',
+    auditLogRef: 'AUD-PRG-001'
+  },
+  {
+    id: 2,
+    name: 'Office Quarterly Rodent Program',
+    serviceAddressId: 2, // Office Building A
+    programTypeId: 1, // Contractual
+    statusId: 2, // Pending
+    startDate: '2024-12-01',
+    endDate: '2025-11-30',
+    renewalDate: '2025-11-15',
+    contractDuration: '12 months',
+    programCategory: 'Contractual',
+    accountManager: 'Manager B',
+    // Service & Billing Details
+    serviceBillingDetails: [
+      {
+        serviceEvent: 'Rodents',
+        scheduledDate: '2024-12-05',
+        durationWindow: '09:00-13:00',
+        technicianIds: [3],
+        frequencyPattern: 'Quarterly',
+        targetPests: ['Rodents'],
+        entryPoints: ['Doors', 'Cracks'],
+        equipmentRequired: ['Bait Stations', 'Traps'],
+        billingFrequency: 'Quarterly',
+        pricingModel: 'Per Service',
+        billingAmount: 300.0,
+        taxType: 'US EIN',
+        taxAmount: 0,
+        salesAmount: 300.0,
+        productionAmount: 0,
+        discounts: 'Intro 5%',
+        invoiceTerms: 'Net 30',
+        paymentMethod: 'Invoice',
+        priceHistoryRef: 'PRC-OFF-ROD-001'
+      }
+    ],
+    termsAndConditions: 'Standard office rodent contract',
+    regulatoryRequirements: 'Local commercial pest regulations',
+    healthAndSafetyGuidelines: 'Secure bait stations in non-public areas',
+    certificatesRequired: ['Applicator License'],
+    nextServiceReminder: '',
+    pastDueAlerts: '',
+    customerNotificationPreferences: ['Email'],
+    technicianAlerts: 'Send 24h reminder',
+    customInstructions: 'Check basement storage first.',
+    serviceHistorySummary: '',
+    renewalHistory: '',
+    auditLogRef: 'AUD-PRG-002'
   }
 ];
 
