@@ -14,6 +14,7 @@ import InvoiceDetails from './pages/CustomerInvoices/InvoiceDetails';
 import CustomerContracts from './pages/CustomerContracts';
 import CustomerDocuments from './pages/CustomerDocuments';
 import CustomerNotes from './pages/CustomerNotes';
+import CustomerPrograms from './pages/Customers/ServiceManagement/Programs';
 import ServiceAddresses from './pages/ServiceAddresses';
 import Appointments from './pages/Appointments';
 import Scheduler from './pages/Scheduler';
@@ -97,6 +98,7 @@ function App() {
         <Route path='customers/:id/areas' element={<Areas />} />
         <Route path='customers/:id/schedule-service' element={<CustomerAppointments />} />
         <Route path='customers/:id/create-invoice' element={<CustomerInvoices />} />
+        <Route path='customers/:id/programs' element={<CustomerPrograms />} />
         <Route path='customers/:id/facilities' element={<Facilities />} />
         <Route path='service-addresses' element={<ServiceAddresses />} />
         <Route path='appointments' element={<Appointments />} />

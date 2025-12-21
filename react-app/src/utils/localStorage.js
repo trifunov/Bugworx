@@ -944,19 +944,13 @@ export const addProgram = (program) => {
   return newProgram;
 };
 
-export const updateProgram = (id, updates) => {
-  const programs = getPrograms();
-  const index = programs.findIndex((p) => p.id === id);
-  if (index !== -1) {
-    programs[index] = {
-      ...programs[index],
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    };
-    setPrograms(programs);
-    return programs[index];
-  }
-  return null;
+export const updateProgram = (updatedProgram) => {
+  let programs = getPrograms();
+  programs = programs.map(program =>
+    program.id === updatedProgram.id ? { ...program, ...updatedProgram, updatedAt: new Date().toISOString() } : program
+  );
+  setPrograms(programs);
+  return updatedProgram;
 };
 
 export const deleteProgram = (id) => {
