@@ -63,6 +63,12 @@ import EquipmentDevices from './pages/configuration/service-inspection/Equipment
 import MaterialSetup from './pages/configuration/service-inspection/MaterialSetup/MaterialSetup';
 import InspectionPointCategories from './pages/configuration/service-inspection/InspectionPointCategories/InspectionPointCategories';
 
+import VehicleTypes from './pages/configuration/fleet-management/VehicleTypes/VehicleTypes';
+import VehicleList from './pages/configuration/fleet-management/VehicleList/VehicleList';
+import FuelTypes from './pages/configuration/fleet-management/FuelTypes/FuelTypes';
+import MaintenanceTemplates from './pages/configuration/fleet-management/MaintenanceTemplates/MaintenanceTemplates';
+import DriverAssignmentRules from './pages/configuration/fleet-management/DriverAssignmentRules/DriverAssignmentRules';
+
 function App() {
   return (
     <Routes>
@@ -135,6 +141,16 @@ function App() {
         <Route path='configuration/operational-setup/frequency-templates' element={<FrequencyTemplates />} />
         <Route path='configuration/operational-setup/job-settings' element={<JobSettings />} />
         <Route path='configuration/operational-setup/service-types' element={<ServiceTypes />} />
+
+        {/* Fleet Management */}
+        <Route path='configuration/fleet-management/vehicles' element={<VehicleList />} />
+        <Route path='configuration/fleet-management/vehicle-types' element={<VehicleTypes />} />
+        <Route path='configuration/fleet-management/fuel-types' element={<FuelTypes />} />
+        <Route path='configuration/fleet-management/maintenance-templates' element={<MaintenanceTemplates />} />
+        <Route path='configuration/fleet-management/driver-assignment' element={<DriverAssignmentRules />} />
+
+        {/* Fallback/Default for Fleet Management */}
+        <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />
 
         {/* Service Inspection */}
         <Route path='configuration/service-inspection/inspection-point-categories' element={<InspectionPointCategories />} />

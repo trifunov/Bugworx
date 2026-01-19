@@ -1,4 +1,5 @@
 // localStorage utility functions for Bugworx Pest Management System
+import { get } from 'jquery';
 import { users as staticUsers } from '../data/users';
 
 const STORAGE_KEYS = {
@@ -8,6 +9,10 @@ const STORAGE_KEYS = {
   TECHNICIANS: 'bugworx_technicians',
   INVENTORY: 'bugworx_inventory',
   VEHICLES: 'bugworx_vehicles',
+  VEHICLE_LIST: 'bugworx_vehicle_list',
+  VEHICLE_TYPES: 'bugworx_vehicle_types',
+  FUEL_TYPES: 'bugworx_fuel-types',
+  MAINTENANCE_SCHEDULED_TEMPLATES: 'bugworx_maintenance_scheduled_templates',
   ROUTES: 'bugworx_routes',
   ROUTE_TEMPLATES: 'bugworx_route_templates',
   FACILITIES: 'bugworx_facilities',
@@ -38,6 +43,7 @@ const STORAGE_KEYS = {
   PROPOSALS: 'bugworx_proposals',
   CONFIGURATION: 'bugworx_configuration',
   INVOICES_KEY: 'bugworx_invoices',
+  DRIVER_ASSIGNMENT_RULES: 'bugworx_driver-assignment',
 };
 
 // Generic storage functions
@@ -316,6 +322,72 @@ export const updateVehicle = (id, updates) => {
   }
   return null;
 };
+
+// Vehicle Type functions
+export const getVehicleTypes = () => {
+  const stored = getFromStorage(STORAGE_KEYS.VEHICLE_TYPES, []);
+  if (stored.length === 0) {
+    const defaultVehicleTypes = [
+      { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'Truck', capacity: '2000', fuelType: 'Diesel', active: true },
+      { id: 'b2c3d4e5-f6a7-8901-2345-67890abcdef0', name: 'Van', capacity: '1500', fuelType: 'Gasoline', active: true },
+      { id: 'c3d4e5f6-a7b8-9012-3456-7890abcdef01', name: 'Car', capacity: '500', fuelType: 'Gasoline', active: false },
+    ];
+    setToStorage(STORAGE_KEYS.VEHICLE_TYPES, defaultVehicleTypes);
+    return defaultVehicleTypes;
+  }
+  return stored;
+};
+
+export const saveVehicleTypes = (items) => setToStorage(STORAGE_KEYS.VEHICLE_TYPES, items);
+
+export const getVehicleList = () => {
+  const stored = getFromStorage(STORAGE_KEYS.VEHICLE_LIST, []);
+  if (stored.length === 0) {
+    const defaultVehicles = [
+      {
+        id: 'v1',
+        name: 'Truck 1',
+        vehicleTypeId: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+        technicianId: '1',
+        licensePlate: 'PEST-101',
+        make: 'Ford',
+        model: 'Ranger',
+        year: '2023',
+        vin: '1FTYR10E6XPA00001',
+        active: true,
+      },
+      {
+        id: 'v2',
+        name: 'Van 1',
+        vehicleTypeId: 'b2c3d4e5-f6a7-8901-2345-67890abcdef0',
+        technicianId: '2',
+        licensePlate: 'BUG-202',
+        make: 'Mercedes-Benz',
+        model: 'Sprinter',
+        year: '2022',
+        vin: 'W1K4G6CD3PA11111',
+        active: true,
+      },
+      {
+        id: 'v3',
+        name: 'Car 1',
+        vehicleTypeId: 'c3d4e5f6-a7b8-9012-3456-7890abcdef01',
+        technicianId: '3',
+        licensePlate: 'ANT-303',
+        make: 'Toyota',
+        model: 'Corolla',
+        year: '2023',
+        vin: '2T1BURHE4PC22222',
+        active: false,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.VEHICLE_LIST, defaultVehicles);
+    return defaultVehicles;
+  }
+  return stored;
+};
+
+export const saveVehicleList = (items) => setToStorage(STORAGE_KEYS.VEHICLE_LIST, items);
 
 // Route-specific functions
 export const getRoutes = () => {
@@ -1129,6 +1201,65 @@ export const saveInvoices = (invoices) => {
   return setToStorage(STORAGE_KEYS.INVOICES_KEY, invoices);
 };
 
+export const getFuelTypes = () => {
+  const stored = getFromStorage(STORAGE_KEYS.FUEL_TYPES, []);
+  if (stored.length === 0) {
+    const defaultFuelTypes = [
+      { id: 'fuel1', name: 'Gasoline' },
+      { id: 'fuel2', name: 'Diesel' },
+      { id: 'fuel3', name: 'Electric' },
+    ];
+    setToStorage(STORAGE_KEYS.FUEL_TYPES, defaultFuelTypes);
+    return defaultFuelTypes;
+  }
+  return stored;
+};
+
+export const saveFuelTypes = (fuelTypes) => {
+  return setToStorage(STORAGE_KEYS.FUEL_TYPES, fuelTypes);
+};
+
+export const getMaintenanceTemplates = () => {
+  const stored = getFromStorage(STORAGE_KEYS.MAINTENANCE_TEMPLATES, []);
+  if (stored.length === 0) {
+    const defaultTemplates = [
+      {
+        id: new Date().getTime() + 1,
+        name: 'Quarterly Service',
+        description: 'Standard 3-month vehicle check-up',
+        frequencyValue: 3,
+        frequencyUnit: 'Months',
+        tasks: 'Oil Change,Tire Rotation,Check Sprayer Nozzles',
+        active: true,
+      },
+      {
+        id: new Date().getTime() + 2,
+        name: 'Annual Inspection',
+        description: 'Full annual vehicle and equipment inspection',
+        frequencyValue: 1,
+        frequencyUnit: 'Years',
+        tasks: 'Full Engine Diagnostic,Brake Inspection,Sprayer System Calibration',
+        active: true,
+      },
+    ];
+    saveMaintenanceTemplates(defaultTemplates);
+    return defaultTemplates;
+  }
+  return stored;
+};
+
+export const saveMaintenanceTemplates = (templates) => {
+  return setToStorage(STORAGE_KEYS.MAINTENANCE_TEMPLATES, templates);
+};
+
+export const getDriverAssignmentRules = () => {
+  return getFromStorage(STORAGE_KEYS.DRIVER_ASSIGNMENT_RULES, []);
+};
+
+export const saveDriverAssignmentRules = (rules) => {
+  return setToStorage(STORAGE_KEYS.DRIVER_ASSIGNMENT_RULES, rules);
+};
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1259,6 +1390,7 @@ export default {
   saveImportedFile,
   getImportedFile,
   saveExportRecord,
+  getExportRecord,
   getAuditTrail,
   saveAuditTrail,
   getInspectionPointTypes,
@@ -1277,4 +1409,10 @@ export default {
   saveMaterialSetups,
   getInvoices,
   saveInvoices,
+  getFuelTypes,
+  saveFuelTypes,
+  getMaintenanceTemplates,
+  saveMaintenanceTemplates,
+  getDriverAssignmentRules,
+  saveDriverAssignmentRules,
 };
