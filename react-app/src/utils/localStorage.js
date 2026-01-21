@@ -43,7 +43,10 @@ const STORAGE_KEYS = {
   PROPOSALS: 'bugworx_proposals',
   CONFIGURATION: 'bugworx_configuration',
   INVOICES_KEY: 'bugworx_invoices',
-  DRIVER_ASSIGNMENT_RULES: 'bugworx_driver-assignment',
+  DRIVER_ASSIGNMENT_RULES: 'bugworx_driver_assignment_rules',
+  GPS_INTEGRATION: 'bugworx_gps-integration',
+  INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
+  USAGE_POLICY: 'bugworx_usage-policy',
 };
 
 // Generic storage functions
@@ -1260,6 +1263,30 @@ export const saveDriverAssignmentRules = (rules) => {
   return setToStorage(STORAGE_KEYS.DRIVER_ASSIGNMENT_RULES, rules);
 };
 
+export const getGpsIntegrations = () => {
+  const integrations = getFromStorage(STORAGE_KEYS.GPS_INTEGRATION);
+  if (integrations.length === 0) {
+    const defaultIntegrations = [
+      { id: new Date().getTime(), providerName: 'GPS.io', apiKey: 'test_api_key_123', apiEndpoint: '', syncFrequency: '10', active: true },
+    ];
+    setToStorage(STORAGE_KEYS.GPS_INTEGRATION, defaultIntegrations);
+    return defaultIntegrations;
+  }
+  return integrations;
+};
+
+export const saveGpsIntegrations = (integrations) => {
+  return setToStorage(STORAGE_KEYS.GPS_INTEGRATION, integrations);
+};
+
+// Insurance & Registration Records
+export const getInsuranceRegistrations = () => getFromStorage(STORAGE_KEYS.INSURANCE_REGISTRATION, []);
+export const saveInsuranceRegistrations = (items) => setToStorage(STORAGE_KEYS.INSURANCE_REGISTRATION, items);
+
+// Usage Policy
+export const getUsagePolicies = () => getFromStorage(STORAGE_KEYS.USAGE_POLICY, []);
+export const saveUsagePolicies = (items) => setToStorage(STORAGE_KEYS.USAGE_POLICY, items);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1415,4 +1442,10 @@ export default {
   saveMaintenanceTemplates,
   getDriverAssignmentRules,
   saveDriverAssignmentRules,
+  saveGpsIntegrations,
+  getGpsIntegrations,
+  getInsuranceRegistrations,
+  saveInsuranceRegistrations,
+  getUsagePolicies,
+  saveUsagePolicies,
 };

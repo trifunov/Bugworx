@@ -68,6 +68,9 @@ import VehicleList from './pages/configuration/fleet-management/VehicleList/Vehi
 import FuelTypes from './pages/configuration/fleet-management/FuelTypes/FuelTypes';
 import MaintenanceTemplates from './pages/configuration/fleet-management/MaintenanceTemplates/MaintenanceTemplates';
 import DriverAssignmentRules from './pages/configuration/fleet-management/DriverAssignmentRules/DriverAssignmentRules';
+import GpsIntegration from './pages/configuration/fleet-management/GpsIntegration/GpsIntegration';
+import InsuranceRegistration from './pages/configuration/fleet-management/InsuranceRegistration/InsuranceRegistration';
+import UsagePolicy from './pages/configuration/fleet-management/UsagePolicy/UsagePolicy';
 
 function App() {
   return (
@@ -148,6 +151,9 @@ function App() {
         <Route path='configuration/fleet-management/fuel-types' element={<FuelTypes />} />
         <Route path='configuration/fleet-management/maintenance-templates' element={<MaintenanceTemplates />} />
         <Route path='configuration/fleet-management/driver-assignment' element={<DriverAssignmentRules />} />
+        <Route path='configuration/fleet-management/gps-integration' element={<GpsIntegration />} />
+        <Route path='configuration/fleet-management/insurance-registration' element={<InsuranceRegistration />} />
+        <Route path='configuration/fleet-management/usage-policy' element={<UsagePolicy />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />
