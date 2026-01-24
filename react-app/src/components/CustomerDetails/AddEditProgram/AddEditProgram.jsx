@@ -1,3 +1,5 @@
+import { programTypes, programStatuses } from '../../../data/mockData';
+
 const AddEditProgram = ({ isOpen, formData, errors, isSaving, onUpdateField, onClose, onSave }) => {
 	if (!isOpen) return null;
 
@@ -61,9 +63,9 @@ const AddEditProgram = ({ isOpen, formData, errors, isSaving, onUpdateField, onC
 									disabled={isSaving}
 								>
 									<option value="">Select type...</option>
-									<option value={1}>Contractual</option>
-									<option value={2}>Prepaid</option>
-									<option value={3}>On-Demand</option>
+									{programTypes.map(type => (
+										<option key={type.id} value={type.id}>{type.label}</option>
+									))}
 								</select>
 							</div>
 							<div className="col-md-6 mb-3">
@@ -76,11 +78,9 @@ const AddEditProgram = ({ isOpen, formData, errors, isSaving, onUpdateField, onC
 									disabled={isSaving}
 								>
 									<option value="">Select status...</option>
-									<option value={1}>Active</option>
-									<option value={2}>Pending</option>
-									<option value={3}>Suspended</option>
-									<option value={4}>Cancelled</option>
-									<option value={5}>Completed</option>
+									{programStatuses.map(status => (
+										<option key={status.id} value={status.id}>{status.label}</option>
+									))}
 								</select>
 							</div>
 						</div>
