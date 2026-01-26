@@ -12,7 +12,7 @@ export const useCustomFields = () => {
     if (formData.id) {
       setItems((prev) => prev.map((it) => (it.id === formData.id ? formData : it)));
     } else {
-      const newItem = { ...formData, id: Date.now().toString() };
+      const newItem = { ...formData, id: new Date().getTime() };
       setItems((prev) => [newItem, ...prev]);
     }
   };

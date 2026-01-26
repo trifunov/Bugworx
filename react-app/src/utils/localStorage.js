@@ -885,7 +885,7 @@ export const getUsers = () => {
 export const saveUsers = (users) => setToStorage(STORAGE_KEYS.USERS_KEY, users);
 
 export const addUser = (user) => {
-  const newUser = { id: Date.now().toString(), ...user };
+  const newUser = { id: new Date().getTime(), ...user };
   const existing = getFromStorage(STORAGE_KEYS.USERS_KEY, []);
   const next = [newUser, ...(Array.isArray(existing) ? existing : [])];
   saveUsers(next);
@@ -901,7 +901,7 @@ export const saveRoles = (roles) => {
   return ok;
 };
 export const addRole = (role) => {
-  const newRole = { id: Date.now().toString(), ...role };
+  const newRole = { id: new Date().getTime(), ...role };
   const next = [newRole, ...getRoles()];
   saveRoles(next);
   return newRole;
@@ -915,7 +915,7 @@ export const saveTeams = (teams) => {
   return ok;
 };
 export const addTeam = (team) => {
-  const newTeam = { id: Date.now().toString(), ...team };
+  const newTeam = { id: new Date().getTime(), ...team };
   const next = [newTeam, ...getTeams()];
   saveTeams(next);
   return newTeam;
@@ -925,7 +925,7 @@ export const addTeam = (team) => {
 export const getEmployees = () => getFromStorage(STORAGE_KEYS.EMPLOYEES_KEY, []);
 export const saveEmployees = (employees) => setToStorage(STORAGE_KEYS.EMPLOYEES_KEY, employees);
 export const addEmployee = (employee) => {
-  const newItem = { id: Date.now().toString(), ...employee };
+  const newItem = { id: new Date().getTime(), ...employee };
   const next = [newItem, ...getEmployees()];
   saveEmployees(next);
   return newItem;

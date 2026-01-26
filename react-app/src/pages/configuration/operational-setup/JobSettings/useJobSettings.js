@@ -12,16 +12,16 @@ export const useJobSettings = () => {
 
   const saveItem = (formData) => {
     if (formData.id) {
-      setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+      setItems((prev) => prev.map((it) => (it.id === formData.id ? formData : it)));
     } else {
-      const newItem = { ...formData, id: Date.now().toString() };
-      setItems(prev => [newItem, ...prev]);
+      const newItem = { ...formData, id: new Date().getTime() };
+      setItems((prev) => [newItem, ...prev]);
     }
   };
 
   const removeItem = (id) => {
     if (!window.confirm('Are you sure you want to delete this job setting profile?')) return;
-    setItems(prev => prev.filter(it => it.id !== id));
+    setItems((prev) => prev.filter((it) => it.id !== id));
   };
 
   return {
