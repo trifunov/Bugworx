@@ -9,17 +9,17 @@ export const useUserActivityLog = () => {
   useEffect(() => {
     setLogs(getActivityLogs());
     setPageSubHeader({
-      title: "User Activity Log",
+      title: 'User Activity Log',
       breadcrumbs: [
-        { label: "Configuration", path: "/configuration/general" },
-        { label: "User Access", path: "/configuration/user-access" },
-        { label: "User Activity Log", isActive: true }
-      ]
+        { label: 'Configuration', path: '/configuration/general' },
+        { label: 'User Access', path: '/configuration/user-access' },
+        { label: 'User Activity Log', isActive: true },
+      ],
     });
   }, []);
 
   const handleAddLog = (action, details = '') => {
-    setLogs(prev => [{ id: Date.now(), timestamp: new Date().toISOString(), user: '', action, details }, ...prev]);
+    setLogs((prev) => [{ id: new Date().getTime(), timestamp: new Date().toISOString(), user: '', action, details }, ...prev]);
   };
 
   const handleClear = () => {

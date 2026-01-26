@@ -102,7 +102,7 @@ export const addAppointment = (appointment) => {
   const appointments = getAppointments();
   const newAppointment = {
     ...appointment,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -160,8 +160,8 @@ export const addCustomer = (customer) => {
   const customers = getCustomers();
   const newCustomer = {
     ...customer,
-    id: Date.now(),
-    customerNum: `ACC-${Date.now()}`,
+    id: new Date().getTime(),
+    customerNum: `ACC-${new Date().getTime()}`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -194,7 +194,7 @@ export const addServiceAddress = (serviceAddress) => {
   const serviceAddresses = getServiceAddresses();
   const newServiceAddress = {
     ...serviceAddress,
-    id: Date.now(),
+    id: new Date().getTime(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -419,7 +419,7 @@ export const addRoute = (route) => {
   const routes = getRoutes();
   const newRoute = {
     ...route,
-    id: Date.now(),
+    id: new Date().getTime(),
     createdAt: new Date().toISOString(),
   };
   routes.push(newRoute);
@@ -667,7 +667,7 @@ export const addFacility = (facility) => {
   const facilities = getFacilities();
   const newFacility = {
     ...facility,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
   };
   facilities.push(newFacility);
   setFacilities(facilities);
@@ -678,7 +678,7 @@ export const addArea = (area) => {
   const areas = getAreas();
   const newArea = {
     ...area,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
   };
   areas.push(newArea);
   setAreas(areas);
@@ -689,7 +689,7 @@ export const addInspectionPoint = (inspectionPoint) => {
   const inspectionPoints = getInspectionPoints();
   const newInspectionPoint = {
     ...inspectionPoint,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
   };
   inspectionPoints.push(newInspectionPoint);
   setInspectionPoints(inspectionPoints);
@@ -709,7 +709,7 @@ export const addLead = (lead) => {
   const leads = getLeads();
   const newLead = {
     ...lead,
-    id: Date.now(),
+    id: new Date().getTime(),
     dateCreated: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -758,7 +758,7 @@ export const addProspect = (prospect) => {
   const prospects = getProspects();
   const newProspect = {
     ...prospect,
-    id: Date.now(),
+    id: new Date().getTime(),
     dateCreated: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -947,8 +947,8 @@ export const addProposal = (proposal) => {
   const proposals = getProposals();
   const newProposal = {
     ...proposal,
-    id: Date.now(),
-    proposalNumber: `PROP-${String(Date.now()).slice(-6)}`,
+    id: new Date().getTime(),
+    proposalNumber: `PROP-${String(new Date().getTime()).slice(-6)}`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
