@@ -1447,4 +1447,8 @@ export default {
   saveInsuranceRegistrations,
   getUsagePolicies,
   saveUsagePolicies,
+  getVehicleTypes,
+  saveVehicleTypes,
+  getVehicleList,
+  saveVehicleList,
 };
