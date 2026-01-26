@@ -1,19 +1,26 @@
 import { useState, useCallback } from 'react';
 
+const getInitialState = () => ({
+  name: '',
+  capacity: '',
+  fuelType: '',
+  active: true,
+});
+
 export const useAddEditVehicleTypes = (onSaveCallback) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState(getInitialState());
 
   const open = useCallback((data = null) => {
-    setFormData(data || { name: '', capacity: '', fuelType: '', active: true });
+    setFormData(data ? { ...getInitialState(), ...data } : getInitialState());
     setIsOpen(true);
   }, []);
 
   const close = useCallback(() => {
     if (isSaving) return;
     setIsOpen(false);
-    setFormData(null);
+    setFormData(getInitialState());
   }, [isSaving]);
 
   const onUpdateFieldHandle = useCallback((field, value) => {
