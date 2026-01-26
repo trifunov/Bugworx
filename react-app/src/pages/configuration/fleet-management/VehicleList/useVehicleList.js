@@ -22,7 +22,7 @@ export const useVehicleList = () => {
         if (index > -1) {
           newItems[index] = itemToSave;
         } else {
-          newItems.push({ ...itemToSave, id: Date.now().toString() });
+          newItems.push({ ...itemToSave, id: new Date().getTime() });
         }
         saveItems(newItems);
         return newItems;

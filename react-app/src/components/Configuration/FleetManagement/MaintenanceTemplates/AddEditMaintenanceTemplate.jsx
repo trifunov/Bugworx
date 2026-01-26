@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 const AddEditMaintenanceTemplate = ({ isOpen, formData, isSaving, onUpdateFieldHandle, onClose, onSave }) => {
-  const [taskInput, setTaskInput] = useState('');
-
   if (!isOpen) return null;
 
   const isEditing = formData && formData.id;
@@ -10,24 +8,6 @@ const AddEditMaintenanceTemplate = ({ isOpen, formData, isSaving, onUpdateFieldH
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     onUpdateFieldHandle(name, type === 'checkbox' ? checked : value);
-  };
-
-  const handleTaskInputChange = (e) => {
-    setTaskInput(e.target.value);
-  };
-
-  const handleAddTask = (e) => {
-    if (e.key === 'Enter' && taskInput.trim() !== '') {
-      e.preventDefault();
-      const newTasks = [...(formData.tasks || []), taskInput.trim()];
-      onUpdateFieldHandle('tasks', newTasks);
-      setTaskInput('');
-    }
-  };
-
-  const handleRemoveTask = (taskToRemove) => {
-    const newTasks = formData.tasks.filter((task) => task !== taskToRemove);
-    onUpdateFieldHandle('tasks', newTasks);
   };
 
   const handleSubmit = (e) => {

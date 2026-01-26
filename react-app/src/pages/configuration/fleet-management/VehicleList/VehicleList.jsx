@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useVehicleList } from './useVehicleList';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 import Table from '../../../../components/Common/Table/Table';
@@ -29,8 +29,21 @@ const VehicleList = () => {
   const addEditVehicle = useAddEditVehicle(saveItem);
   const { setPageSubHeader } = usePageSubHeader();
 
-  const vehicleTypes = useMemo(() => getVehicleTypes(), []);
-  const technicians = useMemo(() => getTechnicians(), []);
+  const [vehicleTypes, setVehicleTypes] = useState(() => getVehicleTypes());
+  const [technicians, setTechnicians] = useState(() => getTechnicians());
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setVehicleTypes(getVehicleTypes());
+      setTechnicians(getTechnicians());
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     setPageSubHeader({

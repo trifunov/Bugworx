@@ -1,5 +1,4 @@
 // localStorage utility functions for Bugworx Pest Management System
-import { get } from 'jquery';
 import { users as staticUsers } from '../data/users';
 
 const STORAGE_KEYS = {
@@ -1223,7 +1222,7 @@ export const saveFuelTypes = (fuelTypes) => {
 };
 
 export const getMaintenanceTemplates = () => {
-  const stored = getFromStorage(STORAGE_KEYS.MAINTENANCE_TEMPLATES, []);
+  const stored = getFromStorage(STORAGE_KEYS.MAINTENANCE_SCHEDULED_TEMPLATES, []);
   if (stored.length === 0) {
     const defaultTemplates = [
       {
@@ -1252,7 +1251,7 @@ export const getMaintenanceTemplates = () => {
 };
 
 export const saveMaintenanceTemplates = (templates) => {
-  return setToStorage(STORAGE_KEYS.MAINTENANCE_TEMPLATES, templates);
+  return setToStorage(STORAGE_KEYS.MAINTENANCE_SCHEDULED_TEMPLATES, templates);
 };
 
 export const getDriverAssignmentRules = () => {
@@ -1264,7 +1263,7 @@ export const saveDriverAssignmentRules = (rules) => {
 };
 
 export const getGpsIntegrations = () => {
-  const integrations = getFromStorage(STORAGE_KEYS.GPS_INTEGRATION);
+  const integrations = getFromStorage(STORAGE_KEYS.GPS_INTEGRATION, []);
   if (integrations.length === 0) {
     const defaultIntegrations = [
       { id: new Date().getTime(), providerName: 'GPS.io', apiKey: 'test_api_key_123', apiEndpoint: '', syncFrequency: '10', active: true },
