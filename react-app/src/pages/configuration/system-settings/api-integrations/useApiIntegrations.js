@@ -12,7 +12,7 @@ export const useApiIntegrations = () => {
     if (formData.id) {
       setItems((prev) => prev.map((it) => (it.id === formData.id ? { ...it, ...formData } : it)));
     } else {
-      const newItem = { ...formData, id: Date.now().toString(), enabled: false };
+      const newItem = { ...formData, id: new Date().getTime(), enabled: false };
       setItems((prev) => [newItem, ...prev]);
     }
   };

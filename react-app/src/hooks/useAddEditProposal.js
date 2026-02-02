@@ -13,7 +13,7 @@ const useAddEditProposal = (customerId = null) => {
     pricing: '',
     termsAndConditions: config.defaultTermsAndConditions || '',
     attachments: [],
-    status: 'Draft'
+    status: 'Draft',
   });
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
@@ -21,7 +21,7 @@ const useAddEditProposal = (customerId = null) => {
   const open = (proposal = null) => {
     if (proposal) {
       setFormData({
-        ...proposal
+        ...proposal,
       });
     } else {
       const config = getConfiguration();
@@ -34,7 +34,7 @@ const useAddEditProposal = (customerId = null) => {
         pricing: '',
         termsAndConditions: config.defaultTermsAndConditions || '',
         attachments: [],
-        status: 'Draft'
+        status: 'Draft',
       });
     }
     setErrors({});
@@ -53,20 +53,20 @@ const useAddEditProposal = (customerId = null) => {
       pricing: '',
       termsAndConditions: config.defaultTermsAndConditions || '',
       attachments: [],
-      status: 'Draft'
+      status: 'Draft',
     });
     setErrors({});
   };
 
   const onUpdateFieldHandle = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: null
+        [field]: null,
       }));
     }
   };
@@ -76,15 +76,14 @@ const useAddEditProposal = (customerId = null) => {
 
     const filePromises = fileArray.map((file) => {
       return new Promise((resolve, reject) => {
-        
         const reader = new FileReader();
         reader.onload = () => {
           resolve({
-            id: Date.now() + Math.random(),
+            id: new Date().getTime(),
             fileName: file.name,
             fileType: file.type,
             fileSize: file.size,
-            uploadedAt: new Date().toISOString()
+            uploadedAt: new Date().toISOString(),
           });
         };
         reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
@@ -94,24 +93,24 @@ const useAddEditProposal = (customerId = null) => {
 
     try {
       const uploadedFiles = await Promise.all(filePromises);
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        attachments: [...prev.attachments, ...uploadedFiles]
+        attachments: [...prev.attachments, ...uploadedFiles],
       }));
       return true;
     } catch (error) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        attachments: error.message
+        attachments: error.message,
       }));
       return false;
     }
   };
 
   const removeAttachment = (fileId) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      attachments: prev.attachments.filter(file => file.id !== fileId)
+      attachments: prev.attachments.filter((file) => file.id !== fileId),
     }));
   };
 
@@ -168,7 +167,7 @@ const useAddEditProposal = (customerId = null) => {
     onUpdateFieldHandle,
     onSaveHandle,
     handleFileUpload,
-    removeAttachment
+    removeAttachment,
   };
 };
 

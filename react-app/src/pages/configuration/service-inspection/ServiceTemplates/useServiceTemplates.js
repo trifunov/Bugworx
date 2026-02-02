@@ -21,7 +21,7 @@ export const useServiceTemplates = () => {
     if (itemData.id) {
       setItems((prev) => prev.map((it) => (it.id === itemData.id ? itemData : it)));
     } else {
-      const newItem = { ...itemData, id: Date.now().toString() };
+      const newItem = { ...itemData, id: new Date().getTime() };
       setItems((prev) => [newItem, ...prev]);
     }
   };

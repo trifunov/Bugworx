@@ -8,6 +8,10 @@ const STORAGE_KEYS = {
   TECHNICIANS: 'bugworx_technicians',
   INVENTORY: 'bugworx_inventory',
   VEHICLES: 'bugworx_vehicles',
+  VEHICLE_LIST: 'bugworx_vehicle_list',
+  VEHICLE_TYPES: 'bugworx_vehicle_types',
+  FUEL_TYPES: 'bugworx_fuel-types',
+  MAINTENANCE_SCHEDULED_TEMPLATES: 'bugworx_maintenance_scheduled_templates',
   ROUTES: 'bugworx_routes',
   ROUTE_TEMPLATES: 'bugworx_route_templates',
   FACILITIES: 'bugworx_facilities',
@@ -38,6 +42,10 @@ const STORAGE_KEYS = {
   PROPOSALS: 'bugworx_proposals',
   CONFIGURATION: 'bugworx_configuration',
   INVOICES_KEY: 'bugworx_invoices',
+  DRIVER_ASSIGNMENT_RULES: 'bugworx_driver_assignment_rules',
+  GPS_INTEGRATION: 'bugworx_gps-integration',
+  INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
+  USAGE_POLICY: 'bugworx_usage-policy',
 };
 
 // Generic storage functions
@@ -94,7 +102,7 @@ export const addAppointment = (appointment) => {
   const appointments = getAppointments();
   const newAppointment = {
     ...appointment,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -152,8 +160,8 @@ export const addCustomer = (customer) => {
   const customers = getCustomers();
   const newCustomer = {
     ...customer,
-    id: Date.now(),
-    customerNum: `ACC-${Date.now()}`,
+    id: new Date().getTime(),
+    customerNum: `ACC-${new Date().getTime()}`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -186,7 +194,7 @@ export const addServiceAddress = (serviceAddress) => {
   const serviceAddresses = getServiceAddresses();
   const newServiceAddress = {
     ...serviceAddress,
-    id: Date.now(),
+    id: new Date().getTime(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -317,6 +325,72 @@ export const updateVehicle = (id, updates) => {
   return null;
 };
 
+// Vehicle Type functions
+export const getVehicleTypes = () => {
+  const stored = getFromStorage(STORAGE_KEYS.VEHICLE_TYPES, []);
+  if (stored.length === 0) {
+    const defaultVehicleTypes = [
+      { id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', name: 'Truck', capacity: '2000', fuelType: 'Diesel', active: true },
+      { id: 'b2c3d4e5-f6a7-8901-2345-67890abcdef0', name: 'Van', capacity: '1500', fuelType: 'Gasoline', active: true },
+      { id: 'c3d4e5f6-a7b8-9012-3456-7890abcdef01', name: 'Car', capacity: '500', fuelType: 'Gasoline', active: false },
+    ];
+    setToStorage(STORAGE_KEYS.VEHICLE_TYPES, defaultVehicleTypes);
+    return defaultVehicleTypes;
+  }
+  return stored;
+};
+
+export const saveVehicleTypes = (items) => setToStorage(STORAGE_KEYS.VEHICLE_TYPES, items);
+
+export const getVehicleList = () => {
+  const stored = getFromStorage(STORAGE_KEYS.VEHICLE_LIST, []);
+  if (stored.length === 0) {
+    const defaultVehicles = [
+      {
+        id: 'v1',
+        name: 'Truck 1',
+        vehicleTypeId: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+        technicianId: '1',
+        licensePlate: 'PEST-101',
+        make: 'Ford',
+        model: 'Ranger',
+        year: '2023',
+        vin: '1FTYR10E6XPA00001',
+        active: true,
+      },
+      {
+        id: 'v2',
+        name: 'Van 1',
+        vehicleTypeId: 'b2c3d4e5-f6a7-8901-2345-67890abcdef0',
+        technicianId: '2',
+        licensePlate: 'BUG-202',
+        make: 'Mercedes-Benz',
+        model: 'Sprinter',
+        year: '2022',
+        vin: 'W1K4G6CD3PA11111',
+        active: true,
+      },
+      {
+        id: 'v3',
+        name: 'Car 1',
+        vehicleTypeId: 'c3d4e5f6-a7b8-9012-3456-7890abcdef01',
+        technicianId: '3',
+        licensePlate: 'ANT-303',
+        make: 'Toyota',
+        model: 'Corolla',
+        year: '2023',
+        vin: '2T1BURHE4PC22222',
+        active: false,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.VEHICLE_LIST, defaultVehicles);
+    return defaultVehicles;
+  }
+  return stored;
+};
+
+export const saveVehicleList = (items) => setToStorage(STORAGE_KEYS.VEHICLE_LIST, items);
+
 // Route-specific functions
 export const getRoutes = () => {
   return getFromStorage(STORAGE_KEYS.ROUTES, []);
@@ -345,7 +419,7 @@ export const addRoute = (route) => {
   const routes = getRoutes();
   const newRoute = {
     ...route,
-    id: Date.now(),
+    id: new Date().getTime(),
     createdAt: new Date().toISOString(),
   };
   routes.push(newRoute);
@@ -593,7 +667,7 @@ export const addFacility = (facility) => {
   const facilities = getFacilities();
   const newFacility = {
     ...facility,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
   };
   facilities.push(newFacility);
   setFacilities(facilities);
@@ -604,7 +678,7 @@ export const addArea = (area) => {
   const areas = getAreas();
   const newArea = {
     ...area,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
   };
   areas.push(newArea);
   setAreas(areas);
@@ -615,7 +689,7 @@ export const addInspectionPoint = (inspectionPoint) => {
   const inspectionPoints = getInspectionPoints();
   const newInspectionPoint = {
     ...inspectionPoint,
-    id: Date.now(), // Generate unique ID
+    id: new Date().getTime(), // Generate unique ID
   };
   inspectionPoints.push(newInspectionPoint);
   setInspectionPoints(inspectionPoints);
@@ -635,7 +709,7 @@ export const addLead = (lead) => {
   const leads = getLeads();
   const newLead = {
     ...lead,
-    id: Date.now(),
+    id: new Date().getTime(),
     dateCreated: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -684,7 +758,7 @@ export const addProspect = (prospect) => {
   const prospects = getProspects();
   const newProspect = {
     ...prospect,
-    id: Date.now(),
+    id: new Date().getTime(),
     dateCreated: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -811,7 +885,7 @@ export const getUsers = () => {
 export const saveUsers = (users) => setToStorage(STORAGE_KEYS.USERS_KEY, users);
 
 export const addUser = (user) => {
-  const newUser = { id: Date.now().toString(), ...user };
+  const newUser = { id: new Date().getTime(), ...user };
   const existing = getFromStorage(STORAGE_KEYS.USERS_KEY, []);
   const next = [newUser, ...(Array.isArray(existing) ? existing : [])];
   saveUsers(next);
@@ -827,7 +901,7 @@ export const saveRoles = (roles) => {
   return ok;
 };
 export const addRole = (role) => {
-  const newRole = { id: Date.now().toString(), ...role };
+  const newRole = { id: new Date().getTime(), ...role };
   const next = [newRole, ...getRoles()];
   saveRoles(next);
   return newRole;
@@ -841,7 +915,7 @@ export const saveTeams = (teams) => {
   return ok;
 };
 export const addTeam = (team) => {
-  const newTeam = { id: Date.now().toString(), ...team };
+  const newTeam = { id: new Date().getTime(), ...team };
   const next = [newTeam, ...getTeams()];
   saveTeams(next);
   return newTeam;
@@ -851,7 +925,7 @@ export const addTeam = (team) => {
 export const getEmployees = () => getFromStorage(STORAGE_KEYS.EMPLOYEES_KEY, []);
 export const saveEmployees = (employees) => setToStorage(STORAGE_KEYS.EMPLOYEES_KEY, employees);
 export const addEmployee = (employee) => {
-  const newItem = { id: Date.now().toString(), ...employee };
+  const newItem = { id: new Date().getTime(), ...employee };
   const next = [newItem, ...getEmployees()];
   saveEmployees(next);
   return newItem;
@@ -873,8 +947,8 @@ export const addProposal = (proposal) => {
   const proposals = getProposals();
   const newProposal = {
     ...proposal,
-    id: Date.now(),
-    proposalNumber: `PROP-${String(Date.now()).slice(-6)}`,
+    id: new Date().getTime(),
+    proposalNumber: `PROP-${String(new Date().getTime()).slice(-6)}`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -1129,6 +1203,89 @@ export const saveInvoices = (invoices) => {
   return setToStorage(STORAGE_KEYS.INVOICES_KEY, invoices);
 };
 
+export const getFuelTypes = () => {
+  const stored = getFromStorage(STORAGE_KEYS.FUEL_TYPES, []);
+  if (stored.length === 0) {
+    const defaultFuelTypes = [
+      { id: 'fuel1', name: 'Gasoline' },
+      { id: 'fuel2', name: 'Diesel' },
+      { id: 'fuel3', name: 'Electric' },
+    ];
+    setToStorage(STORAGE_KEYS.FUEL_TYPES, defaultFuelTypes);
+    return defaultFuelTypes;
+  }
+  return stored;
+};
+
+export const saveFuelTypes = (fuelTypes) => {
+  return setToStorage(STORAGE_KEYS.FUEL_TYPES, fuelTypes);
+};
+
+export const getMaintenanceTemplates = () => {
+  const stored = getFromStorage(STORAGE_KEYS.MAINTENANCE_SCHEDULED_TEMPLATES, []);
+  if (stored.length === 0) {
+    const defaultTemplates = [
+      {
+        id: new Date().getTime() + 1,
+        name: 'Quarterly Service',
+        description: 'Standard 3-month vehicle check-up',
+        frequencyValue: 3,
+        frequencyUnit: 'Months',
+        tasks: 'Oil Change,Tire Rotation,Check Sprayer Nozzles',
+        active: true,
+      },
+      {
+        id: new Date().getTime() + 2,
+        name: 'Annual Inspection',
+        description: 'Full annual vehicle and equipment inspection',
+        frequencyValue: 1,
+        frequencyUnit: 'Years',
+        tasks: 'Full Engine Diagnostic,Brake Inspection,Sprayer System Calibration',
+        active: true,
+      },
+    ];
+    saveMaintenanceTemplates(defaultTemplates);
+    return defaultTemplates;
+  }
+  return stored;
+};
+
+export const saveMaintenanceTemplates = (templates) => {
+  return setToStorage(STORAGE_KEYS.MAINTENANCE_SCHEDULED_TEMPLATES, templates);
+};
+
+export const getDriverAssignmentRules = () => {
+  return getFromStorage(STORAGE_KEYS.DRIVER_ASSIGNMENT_RULES, []);
+};
+
+export const saveDriverAssignmentRules = (rules) => {
+  return setToStorage(STORAGE_KEYS.DRIVER_ASSIGNMENT_RULES, rules);
+};
+
+export const getGpsIntegrations = () => {
+  const integrations = getFromStorage(STORAGE_KEYS.GPS_INTEGRATION, []);
+  if (integrations.length === 0) {
+    const defaultIntegrations = [
+      { id: new Date().getTime(), providerName: 'GPS.io', apiKey: 'test_api_key_123', apiEndpoint: '', syncFrequency: '10', active: true },
+    ];
+    setToStorage(STORAGE_KEYS.GPS_INTEGRATION, defaultIntegrations);
+    return defaultIntegrations;
+  }
+  return integrations;
+};
+
+export const saveGpsIntegrations = (integrations) => {
+  return setToStorage(STORAGE_KEYS.GPS_INTEGRATION, integrations);
+};
+
+// Insurance & Registration Records
+export const getInsuranceRegistrations = () => getFromStorage(STORAGE_KEYS.INSURANCE_REGISTRATION, []);
+export const saveInsuranceRegistrations = (items) => setToStorage(STORAGE_KEYS.INSURANCE_REGISTRATION, items);
+
+// Usage Policy
+export const getUsagePolicies = () => getFromStorage(STORAGE_KEYS.USAGE_POLICY, []);
+export const saveUsagePolicies = (items) => setToStorage(STORAGE_KEYS.USAGE_POLICY, items);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1259,6 +1416,7 @@ export default {
   saveImportedFile,
   getImportedFile,
   saveExportRecord,
+  getExportRecord,
   getAuditTrail,
   saveAuditTrail,
   getInspectionPointTypes,
@@ -1277,4 +1435,20 @@ export default {
   saveMaterialSetups,
   getInvoices,
   saveInvoices,
+  getFuelTypes,
+  saveFuelTypes,
+  getMaintenanceTemplates,
+  saveMaintenanceTemplates,
+  getDriverAssignmentRules,
+  saveDriverAssignmentRules,
+  saveGpsIntegrations,
+  getGpsIntegrations,
+  getInsuranceRegistrations,
+  saveInsuranceRegistrations,
+  getUsagePolicies,
+  saveUsagePolicies,
+  getVehicleTypes,
+  saveVehicleTypes,
+  getVehicleList,
+  saveVehicleList,
 };

@@ -17,10 +17,10 @@ export const useContractTypes = () => {
   const saveItem = (formData) => {
     if (formData.id) {
       // Logic for editing an existing item.
-      setItems(prev => prev.map(it => (it.id === formData.id ? formData : it)));
+      setItems((prev) => prev.map((it) => (it.id === formData.id ? formData : it)));
     } else {
-      const newItem = { ...formData, id: Date.now().toString() };
-      setItems(prev => [newItem, ...prev]);
+      const newItem = { ...formData, id: new Date().getTime() };
+      setItems((prev) => [newItem, ...prev]);
     }
   };
 
@@ -31,7 +31,7 @@ export const useContractTypes = () => {
    */
   const removeItem = (id) => {
     if (!window.confirm('Are you sure you want to delete this contract type?')) return;
-    setItems(prev => prev.filter(it => it.id !== id));
+    setItems((prev) => prev.filter((it) => it.id !== id));
   };
 
   return {

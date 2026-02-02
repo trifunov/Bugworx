@@ -74,7 +74,7 @@ const useInvoice = (invoiceId, customerId) => {
   const addLineItem = useCallback(
     (item) => {
       if (!invoice) return;
-      updateInvoice({ items: [...invoice.items, { ...item, id: Date.now() }] });
+      updateInvoice({ items: [...invoice.items, { ...item, id: new Date().getTime() }] });
     },
     [invoice, updateInvoice]
   );
