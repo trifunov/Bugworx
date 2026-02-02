@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useSidebarMenu from '../../hooks/useSidebarMenu';
 
 const ConfigurationSidebar = () => {
   useSidebarMenu(); // uses default selector '#side-menu'
+  const [activeMenu, setActiveMenu] = useState(null);
+
+  const handleMenuClick = (menu) => {
+    setActiveMenu(activeMenu === menu ? null : menu);
+  };
 
   return (
     <div className='vertical-menu'>
@@ -15,12 +20,12 @@ const ConfigurationSidebar = () => {
             <li className='menu-title'>Configuration</li>
 
             {/* Main Menu 1: User & Access Management */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'userAccess' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('userAccess')}>
                 <i className='ri-user-settings-line' />
                 <span>User & Access</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'userAccess' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/user-access/users'>Users</Link>
                 </li>
@@ -40,12 +45,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 2: Operational Setup */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'operationalSetup' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('operationalSetup')}>
                 <i className='ri-settings-2-line' />
                 <span>Operational Setup</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'operationalSetup' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/operational-setup/contract-types'>Contract Types</Link>
                 </li>
@@ -68,12 +73,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 3: Service & Inspection Setup */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'serviceInspection' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('serviceInspection')}>
                 <i className='ri-clipboard-line' />
                 <span>Service & Inspection</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'serviceInspection' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/service-inspection/inspection-point-categories'>Inspection Point Categories</Link>
                 </li>
@@ -99,12 +104,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 4: Fleet / Vehicle Management */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'fleetManagement' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('fleetManagement')}>
                 <i className='ri-truck-line' />
                 <span>Fleet Management</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'fleetManagement' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/fleet-management/vehicles'>Vehicle List</Link>
                 </li>
@@ -133,12 +138,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 5: Financial & Billing Setup */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'financialBilling' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('financialBilling')}>
                 <i className='ri-wallet-3-line' />
                 <span>Financial & Billing Setup</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'financialBilling' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/financial/tax-configuration'>Tax Configuration</Link>
                 </li>
@@ -164,12 +169,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 6: Communication & Notifications */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'communication' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('communication')}>
                 <i className='ri-notification-2-line' />
                 <span>Communication</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'communication' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/communication/email-sms-templates'>Email & SMS Templates</Link>
                 </li>
@@ -186,12 +191,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 7: Templates & Defaults */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'templatesDefaults' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('templatesDefaults')}>
                 <i className='ri-file-3-line' />
                 <span>Templates & Defaults</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'templatesDefaults' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/templates/property-type'>Property Type Template</Link>
                 </li>
@@ -226,12 +231,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 8: General System Settings */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'systemSettings' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('systemSettings')}>
                 <i className='ri-global-line' />
                 <span>System Settings</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'systemSettings' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/system-settings/company-profile'>Company Profile</Link>
                 </li>
@@ -254,12 +259,12 @@ const ConfigurationSidebar = () => {
             </li>
 
             {/* Main Menu 9: Optional Add-ons */}
-            <li>
-              <a href='#' className='has-arrow waves-effect'>
+            <li className={activeMenu === 'optionalAddons' ? 'mm-active' : ''}>
+              <a href='#' className='has-arrow waves-effect' onClick={() => handleMenuClick('optionalAddons')}>
                 <i className='ri-tools-fill' />
                 <span>Optional Add-ons</span>
               </a>
-              <ul className='sub-menu' aria-expanded='false'>
+              <ul className={`sub-menu mm-collapse ${activeMenu === 'optionalAddons' ? 'mm-show' : ''}`} aria-expanded='false'>
                 <li>
                   <Link to='/configuration/addons/safety-compliance'>Safety & Compliance Setup</Link>
                 </li>
