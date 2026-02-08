@@ -12,11 +12,6 @@ export const PageSubHeaderProvider = ({ children }) => {
   });
   const location = useLocation();
 
-  // Reset the sub-header automatically on every route change
-  useEffect(() => {
-    setPageSubHeader({ title: '', breadcrumbs: [] });
-  }, [location.pathname]); // This effect runs when the path changes
-
   const value = { pageSubHeader, setPageSubHeader };
 
   return <PageSubHeaderContext.Provider value={value}>{children}</PageSubHeaderContext.Provider>;
