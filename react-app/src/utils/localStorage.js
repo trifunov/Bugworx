@@ -46,6 +46,7 @@ const STORAGE_KEYS = {
   GPS_INTEGRATION: 'bugworx_gps-integration',
   INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
   USAGE_POLICY: 'bugworx_usage-policy',
+  TAX_CONFIGURATIONS: 'bugworx_tax_configuration',
 };
 
 // Generic storage functions
@@ -1286,6 +1287,10 @@ export const saveInsuranceRegistrations = (items) => setToStorage(STORAGE_KEYS.I
 export const getUsagePolicies = () => getFromStorage(STORAGE_KEYS.USAGE_POLICY, []);
 export const saveUsagePolicies = (items) => setToStorage(STORAGE_KEYS.USAGE_POLICY, items);
 
+// Tax Configurations
+export const getTaxConfigurations = () => getFromStorage(STORAGE_KEYS.TAX_CONFIGURATIONS, []);
+export const saveTaxConfigurations = (items) => setToStorage(STORAGE_KEYS.TAX_CONFIGURATIONS, items);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1447,6 +1452,8 @@ export default {
   saveInsuranceRegistrations,
   getUsagePolicies,
   saveUsagePolicies,
+  getTaxConfigurations,
+  saveTaxConfigurations,
   getVehicleTypes,
   saveVehicleTypes,
   getVehicleList,
