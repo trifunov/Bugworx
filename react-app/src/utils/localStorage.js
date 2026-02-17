@@ -49,6 +49,7 @@ const STORAGE_KEYS = {
   TAX_CONFIGURATIONS: 'bugworx_tax_configuration',
   CURRENCIES: 'bugworx_financial_currencies',
   INVOICE_TEMPLATES: 'bugworx_invoice_templates',
+  SERVICE_PRICING_RULES: 'bugworx_service_pricing_rules',
 };
 
 // Generic storage functions
@@ -1327,6 +1328,41 @@ export const getInvoiceTemplates = () => {
   return stored;
 };
 export const saveInvoiceTemplates = (items) => setToStorage(STORAGE_KEYS.INVOICE_TEMPLATES, items);
+
+// Service Pricing Rules
+export const getServicePricingRules = () => {
+  const stored = getFromStorage(STORAGE_KEYS.SERVICE_PRICING_RULES, []);
+  if (stored.length === 0) {
+    const defaultRules = [
+      {
+        id: 'rule1',
+        ruleName: 'Residential Quarterly GPC',
+        serviceType: 'General Pest Control',
+        pestType: '',
+        clientTier: 'Residential',
+        pricingMethod: 'Flat Rate',
+        price: 125,
+        unitLabel: '',
+        active: true,
+      },
+      {
+        id: 'rule2',
+        ruleName: 'Commercial Rodent Bait Station',
+        serviceType: 'Rodent Control',
+        pestType: 'Rodents',
+        clientTier: 'Commercial',
+        pricingMethod: 'Per Unit',
+        price: 35,
+        unitLabel: 'per device',
+        active: true,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.SERVICE_PRICING_RULES, defaultRules);
+    return defaultRules;
+  }
+  return stored;
+};
+export const saveServicePricingRules = (items) => setToStorage(STORAGE_KEYS.SERVICE_PRICING_RULES, items);
 
 export default {
   STORAGE_KEYS,
