@@ -48,6 +48,7 @@ const STORAGE_KEYS = {
   USAGE_POLICY: 'bugworx_usage-policy',
   TAX_CONFIGURATIONS: 'bugworx_tax_configuration',
   CURRENCIES: 'bugworx_financial_currencies',
+  INVOICE_TEMPLATES: 'bugworx_invoice_templates',
 };
 
 // Generic storage functions
@@ -1295,6 +1296,37 @@ export const saveTaxConfigurations = (items) => setToStorage(STORAGE_KEYS.TAX_CO
 // Currencies
 export const getCurrencies = () => getFromStorage(STORAGE_KEYS.CURRENCIES, []);
 export const saveCurrencies = (items) => setToStorage(STORAGE_KEYS.CURRENCIES, items);
+
+// Invoice Templates
+export const getInvoiceTemplates = () => {
+  const stored = getFromStorage(STORAGE_KEYS.INVOICE_TEMPLATES, []);
+  if (stored.length === 0) {
+    const defaultTemplates = [
+      {
+        id: 'template1',
+        templateName: 'Standard Invoice',
+        numberingPrefix: 'INV-',
+        nextNumber: 1001,
+        numberingSuffix: '',
+        isDefault: true,
+        active: true,
+      },
+      {
+        id: 'template2',
+        templateName: 'Commercial Client Invoice',
+        numberingPrefix: 'COM-',
+        nextNumber: 2024001,
+        numberingSuffix: '-C',
+        isDefault: false,
+        active: true,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.INVOICE_TEMPLATES, defaultTemplates);
+    return defaultTemplates;
+  }
+  return stored;
+};
+export const saveInvoiceTemplates = (items) => setToStorage(STORAGE_KEYS.INVOICE_TEMPLATES, items);
 
 export default {
   STORAGE_KEYS,
