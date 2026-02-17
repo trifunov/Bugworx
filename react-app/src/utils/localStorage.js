@@ -50,6 +50,7 @@ const STORAGE_KEYS = {
   CURRENCIES: 'bugworx_financial_currencies',
   INVOICE_TEMPLATES: 'bugworx_invoice_templates',
   SERVICE_PRICING_RULES: 'bugworx_service_pricing_rules',
+  PAYMENT_TERMS: 'bugworx_payment_terms',
 };
 
 // Generic storage functions
@@ -1363,6 +1364,51 @@ export const getServicePricingRules = () => {
   return stored;
 };
 export const saveServicePricingRules = (items) => setToStorage(STORAGE_KEYS.SERVICE_PRICING_RULES, items);
+
+// Payment Terms
+export const getPaymentTerms = () => {
+  const stored = getFromStorage(STORAGE_KEYS.PAYMENT_TERMS, []);
+  if (stored.length === 0) {
+    const defaultTerms = [
+      {
+        id: 1,
+        termName: 'Due on Receipt',
+        daysUntilDue: 0,
+        isDefault: true,
+        active: true,
+        description: 'Payment is due immediately upon receipt of the invoice.',
+      },
+      {
+        id: 2,
+        termName: 'Net 15',
+        daysUntilDue: 15,
+        isDefault: false,
+        active: true,
+        description: 'Payment is due within 15 days of the invoice date.',
+      },
+      {
+        id: 3,
+        termName: 'Net 30',
+        daysUntilDue: 30,
+        isDefault: false,
+        active: true,
+        description: 'Payment is due within 30 days of the invoice date.',
+      },
+      {
+        id: 4,
+        termName: 'Net 60',
+        daysUntilDue: 60,
+        isDefault: false,
+        active: false,
+        description: 'Payment is due within 60 days of the invoice date.',
+      },
+    ];
+    setToStorage(STORAGE_KEYS.PAYMENT_TERMS, defaultTerms);
+    return defaultTerms;
+  }
+  return stored;
+};
+export const savePaymentTerms = (items) => setToStorage(STORAGE_KEYS.PAYMENT_TERMS, items);
 
 export default {
   STORAGE_KEYS,
