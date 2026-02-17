@@ -47,6 +47,7 @@ const STORAGE_KEYS = {
   INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
   USAGE_POLICY: 'bugworx_usage-policy',
   TAX_CONFIGURATIONS: 'bugworx_tax_configuration',
+  CURRENCIES: 'bugworx_financial_currencies',
 };
 
 // Generic storage functions
@@ -1291,6 +1292,10 @@ export const saveUsagePolicies = (items) => setToStorage(STORAGE_KEYS.USAGE_POLI
 export const getTaxConfigurations = () => getFromStorage(STORAGE_KEYS.TAX_CONFIGURATIONS, []);
 export const saveTaxConfigurations = (items) => setToStorage(STORAGE_KEYS.TAX_CONFIGURATIONS, items);
 
+// Currencies
+export const getCurrencies = () => getFromStorage(STORAGE_KEYS.CURRENCIES, []);
+export const saveCurrencies = (items) => setToStorage(STORAGE_KEYS.CURRENCIES, items);
+
 export default {
   STORAGE_KEYS,
   getFromStorage,
@@ -1454,6 +1459,8 @@ export default {
   saveUsagePolicies,
   getTaxConfigurations,
   saveTaxConfigurations,
+  getCurrencies,
+  saveCurrencies,
   getVehicleTypes,
   saveVehicleTypes,
   getVehicleList,

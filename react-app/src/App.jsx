@@ -73,6 +73,7 @@ import InsuranceRegistration from './pages/configuration/fleet-management/Insura
 import UsagePolicy from './pages/configuration/fleet-management/UsagePolicy/UsagePolicy';
 
 import TaxConfiguration from './pages/configuration/financial-and-billing/TaxConfiguration/TaxConfiguration';
+import Currencies from './pages/configuration/financial-and-billing/CurrencyAndLocalization/Currencies';
 
 function App() {
   return (
@@ -159,6 +160,7 @@ function App() {
 
         {/* Financial & Billing Setup */}
         <Route path='/configuration/financial/tax-configuration' element={<TaxConfiguration />} />
+        <Route path='/configuration/financial/currency-localization' element={<Currencies />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />
