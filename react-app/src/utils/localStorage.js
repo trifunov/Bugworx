@@ -51,6 +51,7 @@ const STORAGE_KEYS = {
   INVOICE_TEMPLATES: 'bugworx_invoice_templates',
   SERVICE_PRICING_RULES: 'bugworx_service_pricing_rules',
   PAYMENT_TERMS: 'bugworx_payment_terms',
+  BATCH_PROCESSING_SETUP: 'bugworx_batch_processing',
 };
 
 // Generic storage functions
@@ -1408,10 +1409,54 @@ export const getPaymentTerms = () => {
   }
   return stored;
 };
+
 export const savePaymentTerms = (items) => setToStorage(STORAGE_KEYS.PAYMENT_TERMS, items);
 
+// Batch Processing Setup
+export const getBatchProcessingSetups = () => {
+  const stored = getFromStorage(STORAGE_KEYS.BATCH_PROCESSING_SETUP, []);
+  if (stored.length === 0) {
+    const defaultSetups = [
+      {
+        id: 1,
+        batchName: 'Daily Invoice Generation',
+        description: 'Generates all pending invoices for completed jobs.',
+        transactionType: 'Invoices',
+        frequency: 'Daily',
+        scheduledTime: '01:00',
+        postingRule: 'Auto-post',
+        active: true,
+      },
+      {
+        id: 2,
+        batchName: 'Weekly Payment Reminders',
+        description: 'Sends payment reminders for overdue invoices.',
+        transactionType: 'Payments',
+        frequency: 'Weekly',
+        scheduledTime: '09:00',
+        postingRule: 'Review',
+        active: true,
+      },
+      {
+        id: 3,
+        batchName: 'Monthly Late Fee Assessment',
+        description: 'Applies late fees to invoices over 30 days past due.',
+        transactionType: 'Late Fees',
+        frequency: 'Monthly',
+        scheduledTime: '03:00',
+        postingRule: 'Auto-post',
+        active: false,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.BATCH_PROCESSING_SETUP, defaultSetups);
+    return defaultSetups;
+  }
+  return stored;
+};
+
+export const saveBatchProcessingSetups = (items) => setToStorage(STORAGE_KEYS.BATCH_PROCESSING_SETUP, items);
+
 export default {
-  STORAGE_KEYS,
   getFromStorage,
   setToStorage,
   removeFromStorage,
@@ -1424,11 +1469,11 @@ export default {
   getAppointmentById,
   getCustomers,
   setCustomers,
-  getCustomerById,
-  addCustomer,
-  updateCustomer,
   getServiceAddresses,
   setServiceAddresses,
+  addCustomer,
+  updateCustomer,
+  getCustomerById,
   addServiceAddress,
   updateServiceAddress,
   getServiceAddressesByCustomerId,
@@ -1446,6 +1491,10 @@ export default {
   getVehicleById,
   getVehicleByTechnician,
   updateVehicle,
+  getVehicleTypes,
+  saveVehicleTypes,
+  getVehicleList,
+  saveVehicleList,
   getRoutes,
   setRoutes,
   getRouteById,
@@ -1505,6 +1554,16 @@ export default {
   addEmployee,
   getActivityLogs,
   clearActivityLogs,
+  getProposals,
+  setProposals,
+  addProposal,
+  updateProposal,
+  deleteProposal,
+  getProposalById,
+  getProposalsByCustomerId,
+  getConfiguration,
+  setConfiguration,
+  updateConfiguration,
   getContractTypes,
   saveContractTypes,
   getServiceTypesSetup,
@@ -1517,18 +1576,6 @@ export default {
   saveRouteConfiguration,
   getOperationalZones,
   saveOperationalZones,
-  addCustomer,
-  updateCustomer,
-  getProposals,
-  setProposals,
-  addProposal,
-  updateProposal,
-  deleteProposal,
-  getProposalById,
-  getProposalsByCustomerId,
-  getConfiguration,
-  setConfiguration,
-  updateConfiguration,
   getCompanyProfile,
   saveCompanyProfile,
   getCustomFields,
@@ -1565,8 +1612,8 @@ export default {
   saveMaintenanceTemplates,
   getDriverAssignmentRules,
   saveDriverAssignmentRules,
-  saveGpsIntegrations,
   getGpsIntegrations,
+  saveGpsIntegrations,
   getInsuranceRegistrations,
   saveInsuranceRegistrations,
   getUsagePolicies,
@@ -1575,8 +1622,12 @@ export default {
   saveTaxConfigurations,
   getCurrencies,
   saveCurrencies,
-  getVehicleTypes,
-  saveVehicleTypes,
-  getVehicleList,
-  saveVehicleList,
+  getInvoiceTemplates,
+  saveInvoiceTemplates,
+  getServicePricingRules,
+  saveServicePricingRules,
+  getPaymentTerms,
+  savePaymentTerms,
+  getBatchProcessingSetups,
+  saveBatchProcessingSetups,
 };
