@@ -78,6 +78,7 @@ import InvoiceTemplates from './pages/configuration/financial-and-billing/Invoic
 import ServicePricingRules from './pages/configuration/financial-and-billing/ServicePricingRules/ServicePricingRules';
 import PaymentTerms from './pages/configuration/financial-and-billing/PaymentTerms/PaymentTerms';
 import BatchProcessingSetup from './pages/configuration/financial-and-billing/BatchProcessingSetup/BatchProcessingSetup';
+import AccountingPeriods from './pages/configuration/financial-and-billing/AccountingPeriods/AccountingPeriods';
 
 function App() {
   return (
@@ -169,6 +170,7 @@ function App() {
         <Route path='/configuration/financial/service-pricing-rules' element={<ServicePricingRules />} />
         <Route path='/configuration/financial/payment-terms' element={<PaymentTerms />} />
         <Route path='/configuration/financial/batch-processing' element={<BatchProcessingSetup />} />
+        <Route path='/configuration/financial/accounting-periods' element={<AccountingPeriods />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />

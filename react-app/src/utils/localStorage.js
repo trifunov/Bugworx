@@ -52,6 +52,7 @@ const STORAGE_KEYS = {
   SERVICE_PRICING_RULES: 'bugworx_service_pricing_rules',
   PAYMENT_TERMS: 'bugworx_payment_terms',
   BATCH_PROCESSING_SETUP: 'bugworx_batch_processing',
+  ACCOUNTING_PERIODS: 'bugworx_accounting_periods',
 };
 
 // Generic storage functions
@@ -1456,7 +1457,53 @@ export const getBatchProcessingSetups = () => {
 
 export const saveBatchProcessingSetups = (items) => setToStorage(STORAGE_KEYS.BATCH_PROCESSING_SETUP, items);
 
-export default {
+// Accounting Periods
+export const getAccountingPeriods = () => {
+  const stored = getFromStorage(STORAGE_KEYS.ACCOUNTING_PERIODS, []);
+  if (stored.length === 0) {
+    const defaultPeriods = [
+      {
+        id: 'period1',
+        name: 'Q1 2026',
+        startDate: '2026-01-01',
+        endDate: '2026-03-31',
+        status: 'Future',
+        isCurrent: false,
+      },
+      {
+        id: 'period2',
+        name: 'Q2 2026',
+        startDate: '2026-04-01',
+        endDate: '2026-06-30',
+        status: 'Future',
+        isCurrent: false,
+      },
+      {
+        id: 'period3',
+        name: 'Jan 2026',
+        startDate: '2026-01-01',
+        endDate: '2026-01-31',
+        status: 'Open',
+        isCurrent: true,
+      },
+      {
+        id: 'period4',
+        name: 'Dec 2025',
+        startDate: '2025-12-01',
+        endDate: '2025-12-31',
+        status: 'Closed',
+        isCurrent: false,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.ACCOUNTING_PERIODS, defaultPeriods);
+    return defaultPeriods;
+  }
+  return stored;
+};
+
+export const saveAccountingPeriods = (items) => setToStorage(STORAGE_KEYS.ACCOUNTING_PERIODS, items);
+
+const fns = {
   getFromStorage,
   setToStorage,
   removeFromStorage,
@@ -1630,4 +1677,8 @@ export default {
   savePaymentTerms,
   getBatchProcessingSetups,
   saveBatchProcessingSetups,
+  getAccountingPeriods,
+  saveAccountingPeriods,
 };
+
+export default fns;
