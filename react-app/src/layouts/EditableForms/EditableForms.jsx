@@ -2,7 +2,8 @@ import useEditableForms from "./useEditableForms";
 import AddEditCustomer from "../../components/CustomerDetails/AddEditCustomer/AddEditCustomer";
 import AddEditLead from "../../components/CustomerDetails/AddEditLead/AddEditLead";
 import AddEditProspect from "../../components/CustomerDetails/Prospects/AddEditProspect/AddEditProspect";
-import { addCustomer, updateCustomer, addLead, updateLead, addProspect, updateProspect } from "../../utils/localStorage";
+import { addLead, updateLead, addProspect, updateProspect } from "../../utils/localStorage";
+import customerService from "../../services/customerService";
 
 const EditableForms = () => {
 
@@ -17,16 +18,14 @@ const EditableForms = () => {
                 isSaving={addEditCustomer.isSaving}
                 onUpdateField={addEditCustomer.onUpdateFieldHandle}
                 onClose={addEditCustomer.close}
-                onSave={() => addEditCustomer.onSaveHandle((data) => {
-                    let updatedCustomer = null;
+                onSave={() => addEditCustomer.onSaveHandle(async (data) => {
                     if (data.id && data.id !== 0) {
-                        updatedCustomer = updateCustomer(data.id, data);
+                        await customerService.updateCustomer(data.id, data);
                     }
                     else {
-                        updatedCustomer = addCustomer(data);
+                        await customerService.createCustomer(data);
                     }
-                    loadCustomers();
-                    return updatedCustomer;
+                    await loadCustomers();
                 })}
             />
 

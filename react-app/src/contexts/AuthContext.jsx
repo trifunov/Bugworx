@@ -1,5 +1,6 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import { getUsers } from '../utils/localStorage';
+import { createContext, useState, useContext, useEffect, useRef } from 'react';
+import Keycloak from 'keycloak-js';
+import { setTokenProvider } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -15,44 +16,60 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8080';
+  const keycloak = useRef(
+    new Keycloak({
+      url: keycloakUrl,
+      realm: 'pestmanagement',
+      clientId: 'bugworx-frontend',
+    })
+  ).current;
+
+  const [token, setToken] = useState(null);
+  const initCalled = useRef(false);
+
   // Check for existing session on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('currentUser');
-      }
-    }
-    setLoading(false);
+    if (initCalled.current) return;
+    initCalled.current = true;
+
+    keycloak
+      .init({ onLoad: 'login-required' })
+      .then((authenticated) => {
+        if (authenticated) {
+          const parsed = keycloak.tokenParsed;
+          const roles = parsed?.realm_access?.roles || [];
+
+          setUser({
+            id: parsed.sub,
+            username: parsed.preferred_username,
+            email: parsed.email,
+            firstName: parsed.given_name,
+            lastName: parsed.family_name,
+            roles,
+            permissions: roles.includes('admin') ? ['all'] : roles,
+          });
+          setToken(keycloak.token);
+          setTokenProvider(() => keycloak.token);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Keycloak init failed:', err);
+        setLoading(false);
+      });
+
+    keycloak.onTokenExpired = () => {
+      keycloak.updateToken(30).then(() => {
+        setToken(keycloak.token);
+        setTokenProvider(() => keycloak.token);
+      });
+    };
   }, []);
 
-  const login = async (username, password) => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    const users = getUsers();
-    const foundUser = users.find((u) => u.username === username && u.password === password);
-
-    if (foundUser) {
-      const userWithoutPassword = {
-        ...foundUser,
-        password: undefined, // Don't store password in session
-        lastLogin: new Date().toISOString(),
-      };
-
-      setUser(userWithoutPassword);
-      localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-      return { success: true, user: userWithoutPassword };
-    }
-
-    return { success: false, error: 'Invalid username or password' };
-  };
-
   const logout = () => {
+    keycloak.logout();
     setUser(null);
-    localStorage.removeItem('currentUser');
   };
 
   const hasPermission = (permission) => {
@@ -64,10 +81,10 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-    login,
     logout,
     hasPermission,
     isAuthenticated: !!user,
+    token,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

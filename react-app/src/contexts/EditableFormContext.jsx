@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
 import useAddEditProspect from '../components/CustomerDetails/Prospects/AddEditProspect/useAddEditProspect';
@@ -27,7 +27,8 @@ import useAddEditCustomField from '../components/Configuration/SystemSettings/Cu
 
 import useAddEditLineItem from '../components/CustomerInvoices/useAddEditLineItem';
 
-import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
+import { getLeads, getProspects, getInventory } from '../utils/localStorage';
+import customerService from '../services/customerService';
 
 const EditableFormContext = createContext(null);
 
@@ -70,15 +71,23 @@ export const EditableFormProvider = ({ children }) => {
 
   const addEditLineItem = useAddEditLineItem();
 
-  const [customers, setCustomersState] = useState(getCustomers());
+  const [customers, setCustomersState] = useState([]);
   const [leads, setLeadsState] = useState(getLeads());
   const [prospects, setProspectsState] = useState(getProspects());
   const [inventory, setInventoryState] = useState(getInventory());
 
-  const loadCustomers = () => {
-    const customers = getCustomers();
-    setCustomersState(customers);
+  const loadCustomers = async () => {
+    try {
+      const data = await customerService.getCustomers();
+      setCustomersState(data || []);
+    } catch {
+      // Fallback: keep current state on error
+    }
   };
+
+  useEffect(() => {
+    loadCustomers();
+  }, []);
 
   const loadLeads = () => {
     const leads = getLeads();
