@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     new Keycloak({
       url: keycloakUrl,
       realm: 'pestmanagement',
-      clientId: 'bugworx-frontend',
+      clientId: 'pestmanagement-webapp',
     })
   ).current;
 
