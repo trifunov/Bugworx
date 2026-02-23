@@ -71,6 +71,10 @@ import DriverAssignmentRules from './pages/configuration/fleet-management/Driver
 import GpsIntegration from './pages/configuration/fleet-management/GpsIntegration/GpsIntegration';
 import InsuranceRegistration from './pages/configuration/fleet-management/InsuranceRegistration/InsuranceRegistration';
 import UsagePolicy from './pages/configuration/fleet-management/UsagePolicy/UsagePolicy';
+import EmailAndSMSTemplates from './pages/configuration/communication/EmailAndSMSTemplates/EmailAndSMSTemplates';
+import NotificationRules from './pages/configuration/communication/NotificationRules/NotificationRules';
+import ReportDistribution from './pages/configuration/communication/ReportDistribution/ReportDistribution';
+import SystemMessages from './pages/configuration/communication/SystemMessages/SystemMessages';
 
 function App() {
   return (
@@ -166,6 +170,12 @@ function App() {
         <Route path='configuration/service-inspection/service-templates' element={<ServiceTemplates />} />
         <Route path='configuration/service-inspection/equipment-devices' element={<EquipmentDevices />} />
         <Route path='configuration/service-inspection/material-setup' element={<MaterialSetup />} />
+
+        {/* Communication */}
+        <Route path='configuration/communication/email-sms-templates' element={<EmailAndSMSTemplates />} />
+        <Route path='configuration/communication/notification-rules' element={<NotificationRules />} />
+        <Route path='configuration/communication/report-distribution' element={<ReportDistribution />} />
+        <Route path='configuration/communication/system-messages' element={<SystemMessages />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}

@@ -46,6 +46,10 @@ const STORAGE_KEYS = {
   GPS_INTEGRATION: 'bugworx_gps-integration',
   INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
   USAGE_POLICY: 'bugworx_usage-policy',
+  EMAIL_SMS_TEMPLATES: 'bugworx_email_sms_templates',
+  NOTIFICATION_RULES: 'bugworx_notification_rules',
+  REPORT_DISTRIBUTIONS: 'bugworx_report_distributions',
+  SYSTEM_MESSAGES: 'bugworx_system_messages',
 };
 
 // Generic storage functions
@@ -1221,6 +1225,38 @@ export const saveFuelTypes = (fuelTypes) => {
   return setToStorage(STORAGE_KEYS.FUEL_TYPES, fuelTypes);
 };
 
+export const getEmailSmsTemplates = () => {
+  return getFromStorage(STORAGE_KEYS.EMAIL_SMS_TEMPLATES, []);
+};
+
+export const saveEmailSmsTemplates = (templates) => {
+  return setToStorage(STORAGE_KEYS.EMAIL_SMS_TEMPLATES, templates);
+};
+
+export const getNotificationRules = () => {
+  return getFromStorage(STORAGE_KEYS.NOTIFICATION_RULES, []);
+};
+
+export const saveNotificationRules = (rules) => {
+  return setToStorage(STORAGE_KEYS.NOTIFICATION_RULES, rules);
+};
+
+export const getReportDistributions = () => {
+  return getFromStorage(STORAGE_KEYS.REPORT_DISTRIBUTIONS, []);
+};
+
+export const saveReportDistributions = (distributions) => {
+  return setToStorage(STORAGE_KEYS.REPORT_DISTRIBUTIONS, distributions);
+};
+
+export const getSystemMessages = () => {
+  return getFromStorage(STORAGE_KEYS.SYSTEM_MESSAGES, []);
+};
+
+export const saveSystemMessages = (messages) => {
+  return setToStorage(STORAGE_KEYS.SYSTEM_MESSAGES, messages);
+};
+
 export const getMaintenanceTemplates = () => {
   const stored = getFromStorage(STORAGE_KEYS.MAINTENANCE_SCHEDULED_TEMPLATES, []);
   if (stored.length === 0) {
@@ -1451,4 +1487,12 @@ export default {
   saveVehicleTypes,
   getVehicleList,
   saveVehicleList,
+  getEmailSmsTemplates,
+  saveEmailSmsTemplates,
+  getNotificationRules,
+  saveNotificationRules,
+  getReportDistributions,
+  saveReportDistributions,
+  getSystemMessages,
+  saveSystemMessages,
 };
