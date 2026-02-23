@@ -73,6 +73,7 @@ import InsuranceRegistration from './pages/configuration/fleet-management/Insura
 import UsagePolicy from './pages/configuration/fleet-management/UsagePolicy/UsagePolicy';
 import EmailAndSMSTemplates from './pages/configuration/communication/EmailAndSMSTemplates/EmailAndSMSTemplates';
 import NotificationRules from './pages/configuration/communication/NotificationRules/NotificationRules';
+import ReportDistribution from './pages/configuration/communication/ReportDistribution/ReportDistribution';
 
 function App() {
   return (
@@ -172,6 +173,7 @@ function App() {
         {/* Communication */}
         <Route path='configuration/communication/email-sms-templates' element={<EmailAndSMSTemplates />} />
         <Route path='configuration/communication/notification-rules' element={<NotificationRules />} />
+        <Route path='configuration/communication/report-distribution' element={<ReportDistribution />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}
