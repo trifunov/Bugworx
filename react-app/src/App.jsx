@@ -71,6 +71,7 @@ import DriverAssignmentRules from './pages/configuration/fleet-management/Driver
 import GpsIntegration from './pages/configuration/fleet-management/GpsIntegration/GpsIntegration';
 import InsuranceRegistration from './pages/configuration/fleet-management/InsuranceRegistration/InsuranceRegistration';
 import UsagePolicy from './pages/configuration/fleet-management/UsagePolicy/UsagePolicy';
+import EmailAndSMSTemplates from './pages/configuration/communication/EmailAndSMSTemplates/EmailAndSMSTemplates';
 
 function App() {
   return (
@@ -166,6 +167,9 @@ function App() {
         <Route path='configuration/service-inspection/service-templates' element={<ServiceTemplates />} />
         <Route path='configuration/service-inspection/equipment-devices' element={<EquipmentDevices />} />
         <Route path='configuration/service-inspection/material-setup' element={<MaterialSetup />} />
+
+        {/* Communication */}
+        <Route path='configuration/communication/email-sms-templates' element={<EmailAndSMSTemplates />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}

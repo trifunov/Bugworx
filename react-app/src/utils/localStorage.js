@@ -46,6 +46,7 @@ const STORAGE_KEYS = {
   GPS_INTEGRATION: 'bugworx_gps-integration',
   INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
   USAGE_POLICY: 'bugworx_usage-policy',
+  EMAIL_SMS_TEMPLATES: 'bugworx_email_sms_templates',
 };
 
 // Generic storage functions
@@ -1221,6 +1222,14 @@ export const saveFuelTypes = (fuelTypes) => {
   return setToStorage(STORAGE_KEYS.FUEL_TYPES, fuelTypes);
 };
 
+export const getEmailSmsTemplates = () => {
+  return getFromStorage(STORAGE_KEYS.EMAIL_SMS_TEMPLATES, []);
+};
+
+export const saveEmailSmsTemplates = (templates) => {
+  return setToStorage(STORAGE_KEYS.EMAIL_SMS_TEMPLATES, templates);
+};
+
 export const getMaintenanceTemplates = () => {
   const stored = getFromStorage(STORAGE_KEYS.MAINTENANCE_SCHEDULED_TEMPLATES, []);
   if (stored.length === 0) {
@@ -1451,4 +1460,6 @@ export default {
   saveVehicleTypes,
   getVehicleList,
   saveVehicleList,
+  getEmailSmsTemplates,
+  saveEmailSmsTemplates,
 };
