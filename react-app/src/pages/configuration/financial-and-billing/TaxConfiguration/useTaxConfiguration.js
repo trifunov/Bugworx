@@ -35,6 +35,7 @@ export const useTaxConfiguration = () => {
 
   const deleteTaxConfig = useCallback(
     (id) => {
+      if (!window.confirm('Are you sure you want to delete this tax configuration?')) return;
       const newConfigs = taxConfigs.filter((config) => config.id !== id);
       setTaxConfigs(newConfigs);
       saveTaxConfigurations(newConfigs);

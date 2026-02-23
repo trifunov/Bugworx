@@ -11,10 +11,9 @@ export const useAddEditTaxConfiguration = (onSave) => {
   }, []);
 
   const close = useCallback(() => {
-    if (isSaving) return;
     setIsOpen(false);
     setFormData(null);
-  }, [isSaving]);
+  }, []);
 
   const onUpdateFieldHandle = useCallback((field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

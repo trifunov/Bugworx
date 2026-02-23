@@ -21,7 +21,7 @@ export const useAccountingPeriods = () => {
 
   const handleAdd = useCallback(
     (newPeriodData) => {
-      const { id, ...rest } = newPeriodData; // Destructure to remove the null id
+      const { id, ...rest } = newPeriodData; // Destructure to omit any existing id before assigning a new one
       const newPeriod = {
         id: new Date().getTime(),
         ...rest, // Use the rest of the form data

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
 import { usePaymentTerms } from './usePaymentTerms';
 import AddEditPaymentTerm from '../../../../components/Configuration/FinancialAndBilling/PaymentTerms/AddEditPaymentTerm';

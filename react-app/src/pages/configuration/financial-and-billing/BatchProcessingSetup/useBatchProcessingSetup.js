@@ -31,7 +31,7 @@ export const useBatchProcessingSetup = () => {
       if (formData.id) {
         updatedSetups = setups.map((s) => (s.id === formData.id ? formData : s));
       } else {
-        const newSetup = { ...formData, id: Date.now() };
+        const newSetup = { ...formData, id: new Date().getTime() };
         updatedSetups = [...setups, newSetup];
       }
 

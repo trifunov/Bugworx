@@ -9,16 +9,12 @@ export const useServicePricingRules = () => {
     setRules(storedRules);
   }, []);
 
-  const updateStorage = (updatedRules) => {
-    saveServicePricingRules(updatedRules);
-    setRules(updatedRules);
-  };
-
   const addRule = useCallback(
     (rule) => {
       const newRule = { ...rule, id: new Date().getTime() };
       const updatedRules = [...rules, newRule];
-      updateStorage(updatedRules);
+      saveServicePricingRules(updatedRules);
+      setRules(updatedRules);
     },
     [rules]
   );
@@ -26,15 +22,18 @@ export const useServicePricingRules = () => {
   const editRule = useCallback(
     (id, updatedRule) => {
       const updatedRules = rules.map((rule) => (rule.id === id ? { ...rule, ...updatedRule } : rule));
-      updateStorage(updatedRules);
+      saveServicePricingRules(updatedRules);
+      setRules(updatedRules);
     },
     [rules]
   );
 
   const deleteRule = useCallback(
     (id) => {
+      if (!window.confirm('Are you sure you want to delete this pricing rule?')) return;
       const updatedRules = rules.filter((rule) => rule.id !== id);
-      updateStorage(updatedRules);
+      saveServicePricingRules(updatedRules);
+      setRules(updatedRules);
     },
     [rules]
   );

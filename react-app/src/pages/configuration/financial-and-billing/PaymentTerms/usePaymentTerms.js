@@ -28,12 +28,13 @@ export const usePaymentTerms = () => {
     (formData) => {
       setIsSaving(true);
       let updatedTerms;
+      const termId = formData.id || new Date().getTime();
       if (formData.id) {
         // Edit existing term
         updatedTerms = paymentTerms.map((term) => (term.id === formData.id ? formData : term));
       } else {
         // Add new term
-        const newTerm = { ...formData, id: Date.now() };
+        const newTerm = { ...formData, id: termId };
         updatedTerms = [...paymentTerms, newTerm];
       }
 
@@ -41,7 +42,7 @@ export const usePaymentTerms = () => {
       if (formData.isDefault) {
         updatedTerms = updatedTerms.map((term) => ({
           ...term,
-          isDefault: term.id === (formData.id || updatedTerms[updatedTerms.length - 1].id),
+          isDefault: term.id === termId,
         }));
       }
 

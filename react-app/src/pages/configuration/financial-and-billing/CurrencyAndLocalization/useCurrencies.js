@@ -35,6 +35,7 @@ export const useCurrencies = () => {
 
   const deleteCurrency = useCallback(
     (id) => {
+      if (!window.confirm('Are you sure you want to delete this currency?')) return;
       const newCurrencies = currencies.filter((currency) => currency.id !== id);
       setCurrencies(newCurrencies);
       saveCurrencies(newCurrencies);

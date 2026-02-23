@@ -35,6 +35,7 @@ export const useInvoiceTemplates = () => {
 
   const deleteInvoiceTemplate = useCallback(
     (id) => {
+      if (!window.confirm('Are you sure you want to delete this invoice template?')) return;
       const newTemplates = invoiceTemplates.filter((template) => template.id !== id);
       setInvoiceTemplates(newTemplates);
       saveInvoiceTemplates(newTemplates);
