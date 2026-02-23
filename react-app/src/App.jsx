@@ -72,6 +72,7 @@ import GpsIntegration from './pages/configuration/fleet-management/GpsIntegratio
 import InsuranceRegistration from './pages/configuration/fleet-management/InsuranceRegistration/InsuranceRegistration';
 import UsagePolicy from './pages/configuration/fleet-management/UsagePolicy/UsagePolicy';
 import EmailAndSMSTemplates from './pages/configuration/communication/EmailAndSMSTemplates/EmailAndSMSTemplates';
+import NotificationRules from './pages/configuration/communication/NotificationRules/NotificationRules';
 
 function App() {
   return (
@@ -170,6 +171,7 @@ function App() {
 
         {/* Communication */}
         <Route path='configuration/communication/email-sms-templates' element={<EmailAndSMSTemplates />} />
+        <Route path='configuration/communication/notification-rules' element={<NotificationRules />} />
       </Route>
 
       {/* Catch all - redirect to login or dashboard */}

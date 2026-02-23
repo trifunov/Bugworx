@@ -47,6 +47,7 @@ const STORAGE_KEYS = {
   INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
   USAGE_POLICY: 'bugworx_usage-policy',
   EMAIL_SMS_TEMPLATES: 'bugworx_email_sms_templates',
+  NOTIFICATION_RULES: 'bugworx_notification_rules',
 };
 
 // Generic storage functions
@@ -1230,6 +1231,14 @@ export const saveEmailSmsTemplates = (templates) => {
   return setToStorage(STORAGE_KEYS.EMAIL_SMS_TEMPLATES, templates);
 };
 
+export const getNotificationRules = () => {
+  return getFromStorage(STORAGE_KEYS.NOTIFICATION_RULES, []);
+};
+
+export const saveNotificationRules = (rules) => {
+  return setToStorage(STORAGE_KEYS.NOTIFICATION_RULES, rules);
+};
+
 export const getMaintenanceTemplates = () => {
   const stored = getFromStorage(STORAGE_KEYS.MAINTENANCE_SCHEDULED_TEMPLATES, []);
   if (stored.length === 0) {
@@ -1462,4 +1471,6 @@ export default {
   saveVehicleList,
   getEmailSmsTemplates,
   saveEmailSmsTemplates,
+  getNotificationRules,
+  saveNotificationRules,
 };
