@@ -72,6 +72,14 @@ import GpsIntegration from './pages/configuration/fleet-management/GpsIntegratio
 import InsuranceRegistration from './pages/configuration/fleet-management/InsuranceRegistration/InsuranceRegistration';
 import UsagePolicy from './pages/configuration/fleet-management/UsagePolicy/UsagePolicy';
 
+import TaxConfiguration from './pages/configuration/financial-and-billing/TaxConfiguration/TaxConfiguration';
+import Currencies from './pages/configuration/financial-and-billing/CurrencyAndLocalization/Currencies';
+import InvoiceTemplates from './pages/configuration/financial-and-billing/InvoiceTemplates/InvoiceTemplates';
+import ServicePricingRules from './pages/configuration/financial-and-billing/ServicePricingRules/ServicePricingRules';
+import PaymentTerms from './pages/configuration/financial-and-billing/PaymentTerms/PaymentTerms';
+import BatchProcessingSetup from './pages/configuration/financial-and-billing/BatchProcessingSetup/BatchProcessingSetup';
+import AccountingPeriods from './pages/configuration/financial-and-billing/AccountingPeriods/AccountingPeriods';
+
 function App() {
   return (
     <Routes>
@@ -154,6 +162,15 @@ function App() {
         <Route path='configuration/fleet-management/gps-integration' element={<GpsIntegration />} />
         <Route path='configuration/fleet-management/insurance-registration' element={<InsuranceRegistration />} />
         <Route path='configuration/fleet-management/usage-policy' element={<UsagePolicy />} />
+
+        {/* Financial & Billing Setup */}
+        <Route path='/configuration/financial/tax-configuration' element={<TaxConfiguration />} />
+        <Route path='/configuration/financial/currency-localization' element={<Currencies />} />
+        <Route path='/configuration/financial/invoice-templates' element={<InvoiceTemplates />} />
+        <Route path='/configuration/financial/service-pricing-rules' element={<ServicePricingRules />} />
+        <Route path='/configuration/financial/payment-terms' element={<PaymentTerms />} />
+        <Route path='/configuration/financial/batch-processing' element={<BatchProcessingSetup />} />
+        <Route path='/configuration/financial/accounting-periods' element={<AccountingPeriods />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />
