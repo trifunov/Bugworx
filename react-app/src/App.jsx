@@ -86,6 +86,7 @@ import ObservationsRecommendations from './pages/configuration/communication/Obs
 import CancellationAdjustmentRejectionReasons from './pages/configuration/communication/CancellationAdjustmentRejectionReasons/CancellationAdjustmentRejectionReasons';
 import TechnicianFieldFormsChecklists from './pages/configuration/communication/TechnicianFieldFormsChecklists/TechnicianFieldFormsChecklists';
 import FacilityTemplates from './pages/configuration/communication/FacilityTemplate/FacilityTemplates';
+import LocationsZonesTemplates from './pages/configuration/communication/LocationsZonesTemplates/LocationsZonesTemplates';
 
 function App() {
   return (
@@ -187,6 +188,7 @@ function App() {
         <Route path='configuration/templates/cancellation-adjustment-reasons' element={<CancellationAdjustmentRejectionReasons />} />
         <Route path='configuration/templates/technician-field-forms' element={<TechnicianFieldFormsChecklists />} />
         <Route path='configuration/templates/facility-template' element={<FacilityTemplates />} />
+        <Route path='configuration/templates/locations-zones' element={<LocationsZonesTemplates />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />
