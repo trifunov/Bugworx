@@ -190,11 +190,11 @@ const AddEditInspectionPointTypeTemplate = ({ isOpen, onClose, onSave, formData,
             <div className='mb-3'>
               <label className='form-label'>Pass / Fail Criteria</label>
               <textarea
-                name='passFail Criteria'
+                name='passFailCriteria'
                 className='form-control'
                 rows={2}
                 placeholder='e.g. Pass: No active signs. Fail: Evidence of gnawing, droppings, or live pest activity.'
-                value={formData['passFail Criteria'] || ''}
+                value={formData.passFailCriteria || ''}
                 onChange={handleChange}
               />
             </div>
