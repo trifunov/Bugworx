@@ -54,6 +54,7 @@ const STORAGE_KEYS = {
   BATCH_PROCESSING_SETUP: 'bugworx_batch_processing',
   ACCOUNTING_PERIODS: 'bugworx_accounting_periods',
   PROPERTY_TYPE_TEMPLATES: 'bugworx_property_type_templates',
+  SERVICE_PROGRAM_TEMPLATES: 'bugworx_service_program_templates',
 };
 
 // Generic storage functions
@@ -1508,6 +1509,10 @@ export const saveAccountingPeriods = (items) => setToStorage(STORAGE_KEYS.ACCOUN
 export const getPropertyTypeTemplates = () => getFromStorage(STORAGE_KEYS.PROPERTY_TYPE_TEMPLATES, []);
 export const savePropertyTypeTemplates = (items) => setToStorage(STORAGE_KEYS.PROPERTY_TYPE_TEMPLATES, items);
 
+// Service / Program Templates
+export const getServiceProgramTemplates = () => getFromStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, []);
+export const saveServiceProgramTemplates = (items) => setToStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, items);
+
 const fns = {
   getFromStorage,
   setToStorage,
@@ -1686,6 +1691,8 @@ const fns = {
   saveAccountingPeriods,
   getPropertyTypeTemplates,
   savePropertyTypeTemplates,
+  getServiceProgramTemplates,
+  saveServiceProgramTemplates,
 };
 
 export default fns;

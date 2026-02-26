@@ -80,6 +80,7 @@ import PaymentTerms from './pages/configuration/financial-and-billing/PaymentTer
 import BatchProcessingSetup from './pages/configuration/financial-and-billing/BatchProcessingSetup/BatchProcessingSetup';
 import AccountingPeriods from './pages/configuration/financial-and-billing/AccountingPeriods/AccountingPeriods';
 import PropertyTypeTemplates from './pages/configuration/communication/TemplatesAndDefaults/PropertyTypeTemplates';
+import ServiceProgramTemplates from './pages/configuration/communication/ServiceProgramTemplates/ServiceProgramTemplates';
 
 function App() {
   return (
@@ -175,6 +176,7 @@ function App() {
 
         {/* Templates & Defaults */}
         <Route path='configuration/templates/property-type' element={<PropertyTypeTemplates />} />
+        <Route path='configuration/templates/service-program-templates' element={<ServiceProgramTemplates />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />
