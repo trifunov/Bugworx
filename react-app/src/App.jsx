@@ -84,6 +84,7 @@ import ServiceProgramTemplates from './pages/configuration/communication/Service
 import ProposalTemplates from './pages/configuration/communication/ProposalTemplates/ProposalTemplates';
 import ObservationsRecommendations from './pages/configuration/communication/ObservationsRecommendations/ObservationsRecommendations';
 import CancellationAdjustmentRejectionReasons from './pages/configuration/communication/CancellationAdjustmentRejectionReasons/CancellationAdjustmentRejectionReasons';
+import TechnicianFieldFormsChecklists from './pages/configuration/communication/TechnicianFieldFormsChecklists/TechnicianFieldFormsChecklists';
 
 function App() {
   return (
@@ -183,6 +184,7 @@ function App() {
         <Route path='configuration/templates/proposal-templates' element={<ProposalTemplates />} />
         <Route path='configuration/templates/observations-recommendations' element={<ObservationsRecommendations />} />
         <Route path='configuration/templates/cancellation-adjustment-reasons' element={<CancellationAdjustmentRejectionReasons />} />
+        <Route path='configuration/templates/technician-field-forms' element={<TechnicianFieldFormsChecklists />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />
