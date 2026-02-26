@@ -59,6 +59,7 @@ const STORAGE_KEYS = {
   OBSERVATIONS_RECOMMENDATIONS: 'bugworx_observations_recommendations',
   CANCELLATION_ADJUSTMENT_REJECTION_REASONS: 'bugworx_cancellation_adjustment_rejection_reasons',
   TECHNICIAN_FIELD_FORMS_CHECKLISTS: 'bugworx_technician_field_forms_checklists',
+  FACILITY_TEMPLATES: 'bugworx_facility_templates',
 };
 
 // Generic storage functions
@@ -1533,6 +1534,10 @@ export const saveCancellationAdjustmentRejectionReasons = (items) => setToStorag
 export const getTechnicianFieldFormsChecklists = () => getFromStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, []);
 export const saveTechnicianFieldFormsChecklists = (items) => setToStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, items);
 
+// Facility Templates
+export const getFacilityTemplates = () => getFromStorage(STORAGE_KEYS.FACILITY_TEMPLATES, []);
+export const saveFacilityTemplates = (items) => setToStorage(STORAGE_KEYS.FACILITY_TEMPLATES, items);
+
 const fns = {
   getFromStorage,
   setToStorage,
@@ -1721,6 +1726,8 @@ const fns = {
   saveCancellationAdjustmentRejectionReasons,
   getTechnicianFieldFormsChecklists,
   saveTechnicianFieldFormsChecklists,
+  getFacilityTemplates,
+  saveFacilityTemplates,
 };
 
 export default fns;
