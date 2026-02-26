@@ -88,6 +88,7 @@ import TechnicianFieldFormsChecklists from './pages/configuration/communication/
 import FacilityTemplates from './pages/configuration/communication/FacilityTemplate/FacilityTemplates';
 import LocationsZonesTemplates from './pages/configuration/communication/LocationsZonesTemplates/LocationsZonesTemplates';
 import InspectionPointCategoryTemplates from './pages/configuration/communication/InspectionPointCategoryTemplates/InspectionPointCategoryTemplates';
+import InspectionPointTypeTemplates from './pages/configuration/communication/InspectionPointTypeTemplates/InspectionPointTypeTemplates';
 
 function App() {
   return (
@@ -191,6 +192,7 @@ function App() {
         <Route path='configuration/templates/facility-template' element={<FacilityTemplates />} />
         <Route path='configuration/templates/locations-zones' element={<LocationsZonesTemplates />} />
         <Route path='configuration/templates/inspection-point-category-templates' element={<InspectionPointCategoryTemplates />} />
+        <Route path='configuration/templates/inspection-point-type-templates' element={<InspectionPointTypeTemplates />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />

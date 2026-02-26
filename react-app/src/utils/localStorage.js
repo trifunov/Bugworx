@@ -62,6 +62,7 @@ const STORAGE_KEYS = {
   FACILITY_TEMPLATES: 'bugworx_facility_templates',
   LOCATIONS_ZONES_TEMPLATES: 'bugworx_locations_zones_templates',
   INSPECTION_POINT_CATEGORY_TEMPLATES: 'bugworx_inspection_point_category_templates',
+  INSPECTION_POINT_TYPE_TEMPLATES: 'bugworx_inspection_point_type_templates',
 };
 
 // Generic storage functions
@@ -1548,6 +1549,10 @@ export const saveLocationsZonesTemplates = (items) => setToStorage(STORAGE_KEYS.
 export const getInspectionPointCategoryTemplates = () => getFromStorage(STORAGE_KEYS.INSPECTION_POINT_CATEGORY_TEMPLATES, []);
 export const saveInspectionPointCategoryTemplates = (items) => setToStorage(STORAGE_KEYS.INSPECTION_POINT_CATEGORY_TEMPLATES, items);
 
+// Inspection Point Type Templates
+export const getInspectionPointTypeTemplates = () => getFromStorage(STORAGE_KEYS.INSPECTION_POINT_TYPE_TEMPLATES, []);
+export const saveInspectionPointTypeTemplates = (items) => setToStorage(STORAGE_KEYS.INSPECTION_POINT_TYPE_TEMPLATES, items);
+
 const fns = {
   getFromStorage,
   setToStorage,
@@ -1742,6 +1747,8 @@ const fns = {
   saveLocationsZonesTemplates,
   getInspectionPointCategoryTemplates,
   saveInspectionPointCategoryTemplates,
+  getInspectionPointTypeTemplates,
+  saveInspectionPointTypeTemplates,
 };
 
 export default fns;
