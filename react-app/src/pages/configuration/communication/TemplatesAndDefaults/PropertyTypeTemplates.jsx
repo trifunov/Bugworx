@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { usePropertyTypeTemplates } from './usePropertyTypeTemplates';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
-import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import useAddEditPropertyTypeTemplate from '../../../../components/Configuration/communication/TemplatesAndDefaults/useAddEditPropertyTypeTemplate';
 import Table from '../../../../components/Common/Table/Table';
 import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
@@ -33,7 +33,7 @@ const sortableColumns = columns.reduce((acc, col) => {
 
 const PropertyTypeTemplates = () => {
   const { items, saveItem, removeItem } = usePropertyTypeTemplates();
-  const { addEditPropertyTypeTemplate } = useEditableFormContext();
+  const addEditPropertyTypeTemplate = useAddEditPropertyTypeTemplate();
   const { setPageSubHeader } = usePageSubHeader();
 
   useEffect(() => {

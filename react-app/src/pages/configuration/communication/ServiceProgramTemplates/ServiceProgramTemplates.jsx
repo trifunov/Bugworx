@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useServiceProgramTemplates } from './useServiceProgramTemplates';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
-import { useEditableFormContext } from '../../../../contexts/EditableFormContext';
+import useAddEditServiceProgramTemplate from '../../../../components/Configuration/communication/ServiceProgramTemplates/useAddEditServiceProgramTemplate';
 import Table from '../../../../components/Common/Table/Table';
 import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
@@ -36,7 +36,7 @@ const sortableColumns = columns.reduce((acc, col) => {
 
 const ServiceProgramTemplates = () => {
   const { items, saveItem, removeItem } = useServiceProgramTemplates();
-  const { addEditServiceProgramTemplate } = useEditableFormContext();
+  const addEditServiceProgramTemplate = useAddEditServiceProgramTemplate();
   const { setPageSubHeader } = usePageSubHeader();
 
   useEffect(() => {
