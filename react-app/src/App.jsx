@@ -82,6 +82,7 @@ import AccountingPeriods from './pages/configuration/financial-and-billing/Accou
 import PropertyTypeTemplates from './pages/configuration/communication/TemplatesAndDefaults/PropertyTypeTemplates';
 import ServiceProgramTemplates from './pages/configuration/communication/ServiceProgramTemplates/ServiceProgramTemplates';
 import ProposalTemplates from './pages/configuration/communication/ProposalTemplates/ProposalTemplates';
+import ObservationsRecommendations from './pages/configuration/communication/ObservationsRecommendations/ObservationsRecommendations';
 
 function App() {
   return (
@@ -179,6 +180,7 @@ function App() {
         <Route path='configuration/templates/property-type' element={<PropertyTypeTemplates />} />
         <Route path='configuration/templates/service-program-templates' element={<ServiceProgramTemplates />} />
         <Route path='configuration/templates/proposal-templates' element={<ProposalTemplates />} />
+        <Route path='configuration/templates/observations-recommendations' element={<ObservationsRecommendations />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />

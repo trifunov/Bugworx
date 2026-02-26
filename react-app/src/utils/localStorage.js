@@ -56,6 +56,7 @@ const STORAGE_KEYS = {
   PROPERTY_TYPE_TEMPLATES: 'bugworx_property_type_templates',
   SERVICE_PROGRAM_TEMPLATES: 'bugworx_service_program_templates',
   PROPOSAL_TEMPLATES: 'bugworx_proposal_templates',
+  OBSERVATIONS_RECOMMENDATIONS: 'bugworx_observations_recommendations',
 };
 
 // Generic storage functions
@@ -1518,6 +1519,10 @@ export const saveServiceProgramTemplates = (items) => setToStorage(STORAGE_KEYS.
 export const getProposalTemplates = () => getFromStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, []);
 export const saveProposalTemplates = (items) => setToStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, items);
 
+// Observations & Recommendations Templates
+export const getObservationsRecommendations = () => getFromStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, []);
+export const saveObservationsRecommendations = (items) => setToStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, items);
+
 const fns = {
   getFromStorage,
   setToStorage,
@@ -1700,6 +1705,8 @@ const fns = {
   saveServiceProgramTemplates,
   getProposalTemplates,
   saveProposalTemplates,
+  getObservationsRecommendations,
+  saveObservationsRecommendations,
 };
 
 export default fns;
