@@ -81,6 +81,7 @@ import BatchProcessingSetup from './pages/configuration/financial-and-billing/Ba
 import AccountingPeriods from './pages/configuration/financial-and-billing/AccountingPeriods/AccountingPeriods';
 import PropertyTypeTemplates from './pages/configuration/communication/TemplatesAndDefaults/PropertyTypeTemplates';
 import ServiceProgramTemplates from './pages/configuration/communication/ServiceProgramTemplates/ServiceProgramTemplates';
+import ProposalTemplates from './pages/configuration/communication/ProposalTemplates/ProposalTemplates';
 
 function App() {
   return (
@@ -177,6 +178,7 @@ function App() {
         {/* Templates & Defaults */}
         <Route path='configuration/templates/property-type' element={<PropertyTypeTemplates />} />
         <Route path='configuration/templates/service-program-templates' element={<ServiceProgramTemplates />} />
+        <Route path='configuration/templates/proposal-templates' element={<ProposalTemplates />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />

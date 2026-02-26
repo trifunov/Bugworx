@@ -55,6 +55,7 @@ const STORAGE_KEYS = {
   ACCOUNTING_PERIODS: 'bugworx_accounting_periods',
   PROPERTY_TYPE_TEMPLATES: 'bugworx_property_type_templates',
   SERVICE_PROGRAM_TEMPLATES: 'bugworx_service_program_templates',
+  PROPOSAL_TEMPLATES: 'bugworx_proposal_templates',
 };
 
 // Generic storage functions
@@ -1513,6 +1514,10 @@ export const savePropertyTypeTemplates = (items) => setToStorage(STORAGE_KEYS.PR
 export const getServiceProgramTemplates = () => getFromStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, []);
 export const saveServiceProgramTemplates = (items) => setToStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, items);
 
+// Proposal Templates
+export const getProposalTemplates = () => getFromStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, []);
+export const saveProposalTemplates = (items) => setToStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, items);
+
 const fns = {
   getFromStorage,
   setToStorage,
@@ -1693,6 +1698,8 @@ const fns = {
   savePropertyTypeTemplates,
   getServiceProgramTemplates,
   saveServiceProgramTemplates,
+  getProposalTemplates,
+  saveProposalTemplates,
 };
 
 export default fns;
