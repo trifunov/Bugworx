@@ -38,12 +38,6 @@ const AddEditCancellationAdjustmentRejectionReason = ({ isOpen, onClose, onSave,
     onSave();
   };
 
-  const typeColorMap = {
-    Cancellation: 'danger',
-    Adjustment: 'warning',
-    Rejection: 'secondary',
-  };
-
   return (
     <>
       <div className='offcanvas offcanvas-end show' style={{ width: '500px' }} tabIndex='-1'>
