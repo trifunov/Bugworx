@@ -57,6 +57,7 @@ const STORAGE_KEYS = {
   SERVICE_PROGRAM_TEMPLATES: 'bugworx_service_program_templates',
   PROPOSAL_TEMPLATES: 'bugworx_proposal_templates',
   OBSERVATIONS_RECOMMENDATIONS: 'bugworx_observations_recommendations',
+  CANCELLATION_ADJUSTMENT_REJECTION_REASONS: 'bugworx_cancellation_adjustment_rejection_reasons',
 };
 
 // Generic storage functions
@@ -1523,6 +1524,10 @@ export const saveProposalTemplates = (items) => setToStorage(STORAGE_KEYS.PROPOS
 export const getObservationsRecommendations = () => getFromStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, []);
 export const saveObservationsRecommendations = (items) => setToStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, items);
 
+// Cancellation, Adjustment & Rejection Reasons
+export const getCancellationAdjustmentRejectionReasons = () => getFromStorage(STORAGE_KEYS.CANCELLATION_ADJUSTMENT_REJECTION_REASONS, []);
+export const saveCancellationAdjustmentRejectionReasons = (items) => setToStorage(STORAGE_KEYS.CANCELLATION_ADJUSTMENT_REJECTION_REASONS, items);
+
 const fns = {
   getFromStorage,
   setToStorage,
@@ -1707,6 +1712,8 @@ const fns = {
   saveProposalTemplates,
   getObservationsRecommendations,
   saveObservationsRecommendations,
+  getCancellationAdjustmentRejectionReasons,
+  saveCancellationAdjustmentRejectionReasons,
 };
 
 export default fns;
