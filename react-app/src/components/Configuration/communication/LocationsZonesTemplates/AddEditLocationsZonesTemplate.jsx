@@ -114,15 +114,16 @@ const AddEditLocationsZonesTemplate = ({ isOpen, onClose, onSave, formData, onUp
               <label className='form-label'>Common Pest Concerns</label>
               <div className='d-flex flex-wrap gap-2 mt-1'>
                 {COMMON_PEST_CONCERNS.map((pest) => (
-                  <div
+                  <button
                     key={pest}
+                    type='button'
                     className={`badge font-size-12 ${selectedPests.includes(pest) ? 'badge-soft-primary' : 'badge-soft-secondary'}`}
                     style={{ cursor: 'pointer', padding: '6px 10px' }}
                     onClick={() => togglePest(pest)}
                   >
                     {selectedPests.includes(pest) && <i className='ri-check-line me-1' />}
                     {pest}
-                  </div>
+                  </button>
                 ))}
               </div>
               <div className='form-text'>Click to toggle pest types typically found in this location / zone.</div>
