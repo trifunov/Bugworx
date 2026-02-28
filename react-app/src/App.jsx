@@ -79,6 +79,16 @@ import ServicePricingRules from './pages/configuration/financial-and-billing/Ser
 import PaymentTerms from './pages/configuration/financial-and-billing/PaymentTerms/PaymentTerms';
 import BatchProcessingSetup from './pages/configuration/financial-and-billing/BatchProcessingSetup/BatchProcessingSetup';
 import AccountingPeriods from './pages/configuration/financial-and-billing/AccountingPeriods/AccountingPeriods';
+import PropertyTypeTemplates from './pages/configuration/communication/TemplatesAndDefaults/PropertyTypeTemplates';
+import ServiceProgramTemplates from './pages/configuration/communication/ServiceProgramTemplates/ServiceProgramTemplates';
+import ProposalTemplates from './pages/configuration/communication/ProposalTemplates/ProposalTemplates';
+import ObservationsRecommendations from './pages/configuration/communication/ObservationsRecommendations/ObservationsRecommendations';
+import CancellationAdjustmentRejectionReasons from './pages/configuration/communication/CancellationAdjustmentRejectionReasons/CancellationAdjustmentRejectionReasons';
+import TechnicianFieldFormsChecklists from './pages/configuration/communication/TechnicianFieldFormsChecklists/TechnicianFieldFormsChecklists';
+import FacilityTemplates from './pages/configuration/communication/FacilityTemplate/FacilityTemplates';
+import LocationsZonesTemplates from './pages/configuration/communication/LocationsZonesTemplates/LocationsZonesTemplates';
+import InspectionPointCategoryTemplates from './pages/configuration/communication/InspectionPointCategoryTemplates/InspectionPointCategoryTemplates';
+import InspectionPointTypeTemplates from './pages/configuration/communication/InspectionPointTypeTemplates/InspectionPointTypeTemplates';
 
 function App() {
   return (
@@ -171,6 +181,18 @@ function App() {
         <Route path='/configuration/financial/payment-terms' element={<PaymentTerms />} />
         <Route path='/configuration/financial/batch-processing' element={<BatchProcessingSetup />} />
         <Route path='/configuration/financial/accounting-periods' element={<AccountingPeriods />} />
+
+        {/* Templates & Defaults */}
+        <Route path='configuration/templates/property-type' element={<PropertyTypeTemplates />} />
+        <Route path='configuration/templates/service-program-templates' element={<ServiceProgramTemplates />} />
+        <Route path='configuration/templates/proposal-templates' element={<ProposalTemplates />} />
+        <Route path='configuration/templates/observations-recommendations' element={<ObservationsRecommendations />} />
+        <Route path='configuration/templates/cancellation-adjustment-reasons' element={<CancellationAdjustmentRejectionReasons />} />
+        <Route path='configuration/templates/technician-field-forms' element={<TechnicianFieldFormsChecklists />} />
+        <Route path='configuration/templates/facility-template' element={<FacilityTemplates />} />
+        <Route path='configuration/templates/locations-zones' element={<LocationsZonesTemplates />} />
+        <Route path='configuration/templates/inspection-point-category-templates' element={<InspectionPointCategoryTemplates />} />
+        <Route path='configuration/templates/inspection-point-type-templates' element={<InspectionPointTypeTemplates />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />

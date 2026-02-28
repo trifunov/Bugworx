@@ -24,7 +24,6 @@ import useAddEditTreatmentType from '../components/Configuration/ServiceInspecti
 
 import useAddEditApiIntegration from '../components/Configuration/SystemSettings/ApiIntegrations/useAddEditApiIntegration';
 import useAddEditCustomField from '../components/Configuration/SystemSettings/CustomFields/useAddEditCustomField';
-
 import useAddEditLineItem from '../components/CustomerInvoices/useAddEditLineItem';
 
 import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';

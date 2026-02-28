@@ -53,6 +53,16 @@ const STORAGE_KEYS = {
   PAYMENT_TERMS: 'bugworx_payment_terms',
   BATCH_PROCESSING_SETUP: 'bugworx_batch_processing',
   ACCOUNTING_PERIODS: 'bugworx_accounting_periods',
+  PROPERTY_TYPE_TEMPLATES: 'bugworx_property_type_templates',
+  SERVICE_PROGRAM_TEMPLATES: 'bugworx_service_program_templates',
+  PROPOSAL_TEMPLATES: 'bugworx_proposal_templates',
+  OBSERVATIONS_RECOMMENDATIONS: 'bugworx_observations_recommendations',
+  CANCELLATION_ADJUSTMENT_REJECTION_REASONS: 'bugworx_cancellation_adjustment_rejection_reasons',
+  TECHNICIAN_FIELD_FORMS_CHECKLISTS: 'bugworx_technician_field_forms_checklists',
+  FACILITY_TEMPLATES: 'bugworx_facility_templates',
+  LOCATIONS_ZONES_TEMPLATES: 'bugworx_locations_zones_templates',
+  INSPECTION_POINT_CATEGORY_TEMPLATES: 'bugworx_inspection_point_category_templates',
+  INSPECTION_POINT_TYPE_TEMPLATES: 'bugworx_inspection_point_type_templates',
 };
 
 // Generic storage functions
@@ -1503,6 +1513,46 @@ export const getAccountingPeriods = () => {
 
 export const saveAccountingPeriods = (items) => setToStorage(STORAGE_KEYS.ACCOUNTING_PERIODS, items);
 
+// Property Type Templates
+export const getPropertyTypeTemplates = () => getFromStorage(STORAGE_KEYS.PROPERTY_TYPE_TEMPLATES, []);
+export const savePropertyTypeTemplates = (items) => setToStorage(STORAGE_KEYS.PROPERTY_TYPE_TEMPLATES, items);
+
+// Service / Program Templates
+export const getServiceProgramTemplates = () => getFromStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, []);
+export const saveServiceProgramTemplates = (items) => setToStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, items);
+
+// Proposal Templates
+export const getProposalTemplates = () => getFromStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, []);
+export const saveProposalTemplates = (items) => setToStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, items);
+
+// Observations & Recommendations Templates
+export const getObservationsRecommendations = () => getFromStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, []);
+export const saveObservationsRecommendations = (items) => setToStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, items);
+
+// Cancellation, Adjustment & Rejection Reasons
+export const getCancellationAdjustmentRejectionReasons = () => getFromStorage(STORAGE_KEYS.CANCELLATION_ADJUSTMENT_REJECTION_REASONS, []);
+export const saveCancellationAdjustmentRejectionReasons = (items) => setToStorage(STORAGE_KEYS.CANCELLATION_ADJUSTMENT_REJECTION_REASONS, items);
+
+// Technician Field Forms / Checklists
+export const getTechnicianFieldFormsChecklists = () => getFromStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, []);
+export const saveTechnicianFieldFormsChecklists = (items) => setToStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, items);
+
+// Facility Templates
+export const getFacilityTemplates = () => getFromStorage(STORAGE_KEYS.FACILITY_TEMPLATES, []);
+export const saveFacilityTemplates = (items) => setToStorage(STORAGE_KEYS.FACILITY_TEMPLATES, items);
+
+// Locations / Zones Templates
+export const getLocationsZonesTemplates = () => getFromStorage(STORAGE_KEYS.LOCATIONS_ZONES_TEMPLATES, []);
+export const saveLocationsZonesTemplates = (items) => setToStorage(STORAGE_KEYS.LOCATIONS_ZONES_TEMPLATES, items);
+
+// Inspection Point Category Templates
+export const getInspectionPointCategoryTemplates = () => getFromStorage(STORAGE_KEYS.INSPECTION_POINT_CATEGORY_TEMPLATES, []);
+export const saveInspectionPointCategoryTemplates = (items) => setToStorage(STORAGE_KEYS.INSPECTION_POINT_CATEGORY_TEMPLATES, items);
+
+// Inspection Point Type Templates
+export const getInspectionPointTypeTemplates = () => getFromStorage(STORAGE_KEYS.INSPECTION_POINT_TYPE_TEMPLATES, []);
+export const saveInspectionPointTypeTemplates = (items) => setToStorage(STORAGE_KEYS.INSPECTION_POINT_TYPE_TEMPLATES, items);
+
 const fns = {
   getFromStorage,
   setToStorage,
@@ -1679,6 +1729,26 @@ const fns = {
   saveBatchProcessingSetups,
   getAccountingPeriods,
   saveAccountingPeriods,
+  getPropertyTypeTemplates,
+  savePropertyTypeTemplates,
+  getServiceProgramTemplates,
+  saveServiceProgramTemplates,
+  getProposalTemplates,
+  saveProposalTemplates,
+  getObservationsRecommendations,
+  saveObservationsRecommendations,
+  getCancellationAdjustmentRejectionReasons,
+  saveCancellationAdjustmentRejectionReasons,
+  getTechnicianFieldFormsChecklists,
+  saveTechnicianFieldFormsChecklists,
+  getFacilityTemplates,
+  saveFacilityTemplates,
+  getLocationsZonesTemplates,
+  saveLocationsZonesTemplates,
+  getInspectionPointCategoryTemplates,
+  saveInspectionPointCategoryTemplates,
+  getInspectionPointTypeTemplates,
+  saveInspectionPointTypeTemplates,
 };
 
 export default fns;
