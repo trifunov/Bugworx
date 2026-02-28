@@ -70,10 +70,10 @@ const useAddEditCustomer = () => {
     setFormData({
       id: customer?.id || 0,
       name: customer?.name || '',
-      customerType: customer?.customerType || '',
+      customerType: customer?.customerType === 1 ? 'Residential' : (customer?.customerType === 2 ? 'Commercial' : (customer?.customerType || '')),
       billingContact,
       preferredContactMethod: customer?.preferredContactMethod || '',
-      customerStatus: customer?.customerStatus || 'Active'
+      customerStatus: customer?.customerStatus || (customer?.isActive === false ? 'Inactive' : 'Active')
     });
     setErrors({});
     setIsOpen(true);

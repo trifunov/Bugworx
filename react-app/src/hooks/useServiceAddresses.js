@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getServiceAddressesByCustomerId } from '../utils/localStorage';
+import serviceAddressService from '../services/serviceAddressService';
 
 /**
  * Hook for managing service addresses
@@ -10,11 +10,17 @@ const useServiceAddresses = (customerId) => {
   const [serviceAddresses, setServiceAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const loadServiceAddresses = useCallback(() => {
+  const loadServiceAddresses = useCallback(async () => {
     setLoading(true);
-    const data = getServiceAddressesByCustomerId(parseInt(customerId));
-    setServiceAddresses(data);
-    setLoading(false);
+    try {
+      const data = await serviceAddressService.getByCustomerId(parseInt(customerId));
+      setServiceAddresses(data || []);
+    } catch (error) {
+      console.error('Failed to load service addresses:', error);
+      setServiceAddresses([]);
+    } finally {
+      setLoading(false);
+    }
   }, [customerId]);
 
   useEffect(() => {
