@@ -1762,7 +1762,7 @@ const fns = {
   getReportDistributions,
   saveReportDistributions,
   getSystemMessages,
-  saveSystemMessages.
+  saveSystemMessages,
   getTaxConfigurations,
   saveTaxConfigurations,
   getCurrencies,
