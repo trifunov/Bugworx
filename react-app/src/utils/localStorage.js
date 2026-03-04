@@ -50,6 +50,23 @@ const STORAGE_KEYS = {
   NOTIFICATION_RULES: 'bugworx_notification_rules',
   REPORT_DISTRIBUTIONS: 'bugworx_report_distributions',
   SYSTEM_MESSAGES: 'bugworx_system_messages',
+  TAX_CONFIGURATIONS: 'bugworx_tax_configuration',
+  CURRENCIES: 'bugworx_financial_currencies',
+  INVOICE_TEMPLATES: 'bugworx_invoice_templates',
+  SERVICE_PRICING_RULES: 'bugworx_service_pricing_rules',
+  PAYMENT_TERMS: 'bugworx_payment_terms',
+  BATCH_PROCESSING_SETUP: 'bugworx_batch_processing',
+  ACCOUNTING_PERIODS: 'bugworx_accounting_periods',
+  PROPERTY_TYPE_TEMPLATES: 'bugworx_property_type_templates',
+  SERVICE_PROGRAM_TEMPLATES: 'bugworx_service_program_templates',
+  PROPOSAL_TEMPLATES: 'bugworx_proposal_templates',
+  OBSERVATIONS_RECOMMENDATIONS: 'bugworx_observations_recommendations',
+  CANCELLATION_ADJUSTMENT_REJECTION_REASONS: 'bugworx_cancellation_adjustment_rejection_reasons',
+  TECHNICIAN_FIELD_FORMS_CHECKLISTS: 'bugworx_technician_field_forms_checklists',
+  FACILITY_TEMPLATES: 'bugworx_facility_templates',
+  LOCATIONS_ZONES_TEMPLATES: 'bugworx_locations_zones_templates',
+  INSPECTION_POINT_CATEGORY_TEMPLATES: 'bugworx_inspection_point_category_templates',
+  INSPECTION_POINT_TYPE_TEMPLATES: 'bugworx_inspection_point_type_templates',
 };
 
 // Generic storage functions
@@ -1322,8 +1339,257 @@ export const saveInsuranceRegistrations = (items) => setToStorage(STORAGE_KEYS.I
 export const getUsagePolicies = () => getFromStorage(STORAGE_KEYS.USAGE_POLICY, []);
 export const saveUsagePolicies = (items) => setToStorage(STORAGE_KEYS.USAGE_POLICY, items);
 
-export default {
-  STORAGE_KEYS,
+// Tax Configurations
+export const getTaxConfigurations = () => getFromStorage(STORAGE_KEYS.TAX_CONFIGURATIONS, []);
+export const saveTaxConfigurations = (items) => setToStorage(STORAGE_KEYS.TAX_CONFIGURATIONS, items);
+
+// Currencies
+export const getCurrencies = () => getFromStorage(STORAGE_KEYS.CURRENCIES, []);
+export const saveCurrencies = (items) => setToStorage(STORAGE_KEYS.CURRENCIES, items);
+
+// Invoice Templates
+export const getInvoiceTemplates = () => {
+  const stored = getFromStorage(STORAGE_KEYS.INVOICE_TEMPLATES, []);
+  if (stored.length === 0) {
+    const defaultTemplates = [
+      {
+        id: 'template1',
+        templateName: 'Standard Invoice',
+        numberingPrefix: 'INV-',
+        nextNumber: 1001,
+        numberingSuffix: '',
+        isDefault: true,
+        active: true,
+      },
+      {
+        id: 'template2',
+        templateName: 'Commercial Client Invoice',
+        numberingPrefix: 'COM-',
+        nextNumber: 2024001,
+        numberingSuffix: '-C',
+        isDefault: false,
+        active: true,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.INVOICE_TEMPLATES, defaultTemplates);
+    return defaultTemplates;
+  }
+  return stored;
+};
+export const saveInvoiceTemplates = (items) => setToStorage(STORAGE_KEYS.INVOICE_TEMPLATES, items);
+
+// Service Pricing Rules
+export const getServicePricingRules = () => {
+  const stored = getFromStorage(STORAGE_KEYS.SERVICE_PRICING_RULES, []);
+  if (stored.length === 0) {
+    const defaultRules = [
+      {
+        id: 'rule1',
+        ruleName: 'Residential Quarterly GPC',
+        serviceType: 'General Pest Control',
+        pestType: '',
+        clientTier: 'Residential',
+        pricingMethod: 'Flat Rate',
+        price: 125,
+        unitLabel: '',
+        active: true,
+      },
+      {
+        id: 'rule2',
+        ruleName: 'Commercial Rodent Bait Station',
+        serviceType: 'Rodent Control',
+        pestType: 'Rodents',
+        clientTier: 'Commercial',
+        pricingMethod: 'Per Unit',
+        price: 35,
+        unitLabel: 'per device',
+        active: true,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.SERVICE_PRICING_RULES, defaultRules);
+    return defaultRules;
+  }
+  return stored;
+};
+export const saveServicePricingRules = (items) => setToStorage(STORAGE_KEYS.SERVICE_PRICING_RULES, items);
+
+// Payment Terms
+export const getPaymentTerms = () => {
+  const stored = getFromStorage(STORAGE_KEYS.PAYMENT_TERMS, []);
+  if (stored.length === 0) {
+    const defaultTerms = [
+      {
+        id: 1,
+        termName: 'Due on Receipt',
+        daysUntilDue: 0,
+        isDefault: true,
+        active: true,
+        description: 'Payment is due immediately upon receipt of the invoice.',
+      },
+      {
+        id: 2,
+        termName: 'Net 15',
+        daysUntilDue: 15,
+        isDefault: false,
+        active: true,
+        description: 'Payment is due within 15 days of the invoice date.',
+      },
+      {
+        id: 3,
+        termName: 'Net 30',
+        daysUntilDue: 30,
+        isDefault: false,
+        active: true,
+        description: 'Payment is due within 30 days of the invoice date.',
+      },
+      {
+        id: 4,
+        termName: 'Net 60',
+        daysUntilDue: 60,
+        isDefault: false,
+        active: false,
+        description: 'Payment is due within 60 days of the invoice date.',
+      },
+    ];
+    setToStorage(STORAGE_KEYS.PAYMENT_TERMS, defaultTerms);
+    return defaultTerms;
+  }
+  return stored;
+};
+
+export const savePaymentTerms = (items) => setToStorage(STORAGE_KEYS.PAYMENT_TERMS, items);
+
+// Batch Processing Setup
+export const getBatchProcessingSetups = () => {
+  const stored = getFromStorage(STORAGE_KEYS.BATCH_PROCESSING_SETUP, []);
+  if (stored.length === 0) {
+    const defaultSetups = [
+      {
+        id: 1,
+        batchName: 'Daily Invoice Generation',
+        description: 'Generates all pending invoices for completed jobs.',
+        transactionType: 'Invoices',
+        frequency: 'Daily',
+        scheduledTime: '01:00',
+        postingRule: 'Auto-post',
+        active: true,
+      },
+      {
+        id: 2,
+        batchName: 'Weekly Payment Reminders',
+        description: 'Sends payment reminders for overdue invoices.',
+        transactionType: 'Payments',
+        frequency: 'Weekly',
+        scheduledTime: '09:00',
+        postingRule: 'Review',
+        active: true,
+      },
+      {
+        id: 3,
+        batchName: 'Monthly Late Fee Assessment',
+        description: 'Applies late fees to invoices over 30 days past due.',
+        transactionType: 'Late Fees',
+        frequency: 'Monthly',
+        scheduledTime: '03:00',
+        postingRule: 'Auto-post',
+        active: false,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.BATCH_PROCESSING_SETUP, defaultSetups);
+    return defaultSetups;
+  }
+  return stored;
+};
+
+export const saveBatchProcessingSetups = (items) => setToStorage(STORAGE_KEYS.BATCH_PROCESSING_SETUP, items);
+
+// Accounting Periods
+export const getAccountingPeriods = () => {
+  const stored = getFromStorage(STORAGE_KEYS.ACCOUNTING_PERIODS, []);
+  if (stored.length === 0) {
+    const defaultPeriods = [
+      {
+        id: 'period1',
+        name: 'Q1 2026',
+        startDate: '2026-01-01',
+        endDate: '2026-03-31',
+        status: 'Future',
+        isCurrent: false,
+      },
+      {
+        id: 'period2',
+        name: 'Q2 2026',
+        startDate: '2026-04-01',
+        endDate: '2026-06-30',
+        status: 'Future',
+        isCurrent: false,
+      },
+      {
+        id: 'period3',
+        name: 'Jan 2026',
+        startDate: '2026-01-01',
+        endDate: '2026-01-31',
+        status: 'Open',
+        isCurrent: true,
+      },
+      {
+        id: 'period4',
+        name: 'Dec 2025',
+        startDate: '2025-12-01',
+        endDate: '2025-12-31',
+        status: 'Closed',
+        isCurrent: false,
+      },
+    ];
+    setToStorage(STORAGE_KEYS.ACCOUNTING_PERIODS, defaultPeriods);
+    return defaultPeriods;
+  }
+  return stored;
+};
+
+export const saveAccountingPeriods = (items) => setToStorage(STORAGE_KEYS.ACCOUNTING_PERIODS, items);
+
+// Property Type Templates
+export const getPropertyTypeTemplates = () => getFromStorage(STORAGE_KEYS.PROPERTY_TYPE_TEMPLATES, []);
+export const savePropertyTypeTemplates = (items) => setToStorage(STORAGE_KEYS.PROPERTY_TYPE_TEMPLATES, items);
+
+// Service / Program Templates
+export const getServiceProgramTemplates = () => getFromStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, []);
+export const saveServiceProgramTemplates = (items) => setToStorage(STORAGE_KEYS.SERVICE_PROGRAM_TEMPLATES, items);
+
+// Proposal Templates
+export const getProposalTemplates = () => getFromStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, []);
+export const saveProposalTemplates = (items) => setToStorage(STORAGE_KEYS.PROPOSAL_TEMPLATES, items);
+
+// Observations & Recommendations Templates
+export const getObservationsRecommendations = () => getFromStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, []);
+export const saveObservationsRecommendations = (items) => setToStorage(STORAGE_KEYS.OBSERVATIONS_RECOMMENDATIONS, items);
+
+// Cancellation, Adjustment & Rejection Reasons
+export const getCancellationAdjustmentRejectionReasons = () => getFromStorage(STORAGE_KEYS.CANCELLATION_ADJUSTMENT_REJECTION_REASONS, []);
+export const saveCancellationAdjustmentRejectionReasons = (items) => setToStorage(STORAGE_KEYS.CANCELLATION_ADJUSTMENT_REJECTION_REASONS, items);
+
+// Technician Field Forms / Checklists
+export const getTechnicianFieldFormsChecklists = () => getFromStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, []);
+export const saveTechnicianFieldFormsChecklists = (items) => setToStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, items);
+
+// Facility Templates
+export const getFacilityTemplates = () => getFromStorage(STORAGE_KEYS.FACILITY_TEMPLATES, []);
+export const saveFacilityTemplates = (items) => setToStorage(STORAGE_KEYS.FACILITY_TEMPLATES, items);
+
+// Locations / Zones Templates
+export const getLocationsZonesTemplates = () => getFromStorage(STORAGE_KEYS.LOCATIONS_ZONES_TEMPLATES, []);
+export const saveLocationsZonesTemplates = (items) => setToStorage(STORAGE_KEYS.LOCATIONS_ZONES_TEMPLATES, items);
+
+// Inspection Point Category Templates
+export const getInspectionPointCategoryTemplates = () => getFromStorage(STORAGE_KEYS.INSPECTION_POINT_CATEGORY_TEMPLATES, []);
+export const saveInspectionPointCategoryTemplates = (items) => setToStorage(STORAGE_KEYS.INSPECTION_POINT_CATEGORY_TEMPLATES, items);
+
+// Inspection Point Type Templates
+export const getInspectionPointTypeTemplates = () => getFromStorage(STORAGE_KEYS.INSPECTION_POINT_TYPE_TEMPLATES, []);
+export const saveInspectionPointTypeTemplates = (items) => setToStorage(STORAGE_KEYS.INSPECTION_POINT_TYPE_TEMPLATES, items);
+
+const fns = {
   getFromStorage,
   setToStorage,
   removeFromStorage,
@@ -1336,11 +1602,11 @@ export default {
   getAppointmentById,
   getCustomers,
   setCustomers,
-  getCustomerById,
-  addCustomer,
-  updateCustomer,
   getServiceAddresses,
   setServiceAddresses,
+  addCustomer,
+  updateCustomer,
+  getCustomerById,
   addServiceAddress,
   updateServiceAddress,
   getServiceAddressesByCustomerId,
@@ -1358,6 +1624,10 @@ export default {
   getVehicleById,
   getVehicleByTechnician,
   updateVehicle,
+  getVehicleTypes,
+  saveVehicleTypes,
+  getVehicleList,
+  saveVehicleList,
   getRoutes,
   setRoutes,
   getRouteById,
@@ -1417,6 +1687,16 @@ export default {
   addEmployee,
   getActivityLogs,
   clearActivityLogs,
+  getProposals,
+  setProposals,
+  addProposal,
+  updateProposal,
+  deleteProposal,
+  getProposalById,
+  getProposalsByCustomerId,
+  getConfiguration,
+  setConfiguration,
+  updateConfiguration,
   getContractTypes,
   saveContractTypes,
   getServiceTypesSetup,
@@ -1429,18 +1709,6 @@ export default {
   saveRouteConfiguration,
   getOperationalZones,
   saveOperationalZones,
-  addCustomer,
-  updateCustomer,
-  getProposals,
-  setProposals,
-  addProposal,
-  updateProposal,
-  deleteProposal,
-  getProposalById,
-  getProposalsByCustomerId,
-  getConfiguration,
-  setConfiguration,
-  updateConfiguration,
   getCompanyProfile,
   saveCompanyProfile,
   getCustomFields,
@@ -1477,8 +1745,8 @@ export default {
   saveMaintenanceTemplates,
   getDriverAssignmentRules,
   saveDriverAssignmentRules,
-  saveGpsIntegrations,
   getGpsIntegrations,
+  saveGpsIntegrations,
   getInsuranceRegistrations,
   saveInsuranceRegistrations,
   getUsagePolicies,
@@ -1494,5 +1762,41 @@ export default {
   getReportDistributions,
   saveReportDistributions,
   getSystemMessages,
-  saveSystemMessages,
+  saveSystemMessages.
+  getTaxConfigurations,
+  saveTaxConfigurations,
+  getCurrencies,
+  saveCurrencies,
+  getInvoiceTemplates,
+  saveInvoiceTemplates,
+  getServicePricingRules,
+  saveServicePricingRules,
+  getPaymentTerms,
+  savePaymentTerms,
+  getBatchProcessingSetups,
+  saveBatchProcessingSetups,
+  getAccountingPeriods,
+  saveAccountingPeriods,
+  getPropertyTypeTemplates,
+  savePropertyTypeTemplates,
+  getServiceProgramTemplates,
+  saveServiceProgramTemplates,
+  getProposalTemplates,
+  saveProposalTemplates,
+  getObservationsRecommendations,
+  saveObservationsRecommendations,
+  getCancellationAdjustmentRejectionReasons,
+  saveCancellationAdjustmentRejectionReasons,
+  getTechnicianFieldFormsChecklists,
+  saveTechnicianFieldFormsChecklists,
+  getFacilityTemplates,
+  saveFacilityTemplates,
+  getLocationsZonesTemplates,
+  saveLocationsZonesTemplates,
+  getInspectionPointCategoryTemplates,
+  saveInspectionPointCategoryTemplates,
+  getInspectionPointTypeTemplates,
+  saveInspectionPointTypeTemplates,
 };
+
+export default fns;
