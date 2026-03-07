@@ -6,8 +6,8 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEmailAndSMSTemplates from '../../../../components/Configuration/Communication/EmailAndSMSTemplates/AddEmailAndSMSTemplates';
-import { useAddEditEmailAndSMSTemplates } from '../../../../components/Configuration/Communication/EmailAndSMSTemplates/useAddEditEmailAndSMSTemplates';
+import AddEmailAndSMSTemplates from '../../../../components/Configuration/communication/EmailAndSMSTemplates/AddEmailAndSMSTemplates';
+import { useAddEditEmailAndSMSTemplates } from '../../../../components/Configuration/communication/EmailAndSMSTemplates/useAddEditEmailAndSMSTemplates';
 
 const CHANNEL_COLORS = {
   Email: 'primary',
