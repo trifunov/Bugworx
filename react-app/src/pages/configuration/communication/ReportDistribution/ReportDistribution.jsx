@@ -33,7 +33,7 @@ const formatSchedule = (item) => {
   if (item.schedule === 'Scheduled') {
     return `After ${item.scheduleValue ?? 1} ${item.scheduleUnit ?? 'Days'}`;
   }
-  return 'Immediately';
+  return 'Immediately After Service';
 };
 
 const ReportDistribution = () => {
@@ -77,28 +77,28 @@ const ReportDistribution = () => {
       </td>
       <td>
         <div className='d-flex gap-3'>
-          <a
+          <button
+            type='button'
             className='text-primary'
-            href='#'
             title='Edit'
-            onClick={(e) => {
-              e.preventDefault();
+            aria-label='Edit report distribution'
+            onClick={() => {
               addEdit.open(item);
             }}
           >
             <i className='mdi mdi-pencil font-size-18' />
-          </a>
-          <a
+          </button>
+          <button
+            type='button'
             className='text-danger'
-            href='#'
             title='Delete'
-            onClick={(e) => {
-              e.preventDefault();
+            aria-label='Delete report distribution'
+            onClick={() => {
               removeItem(item.id);
             }}
           >
             <i className='mdi mdi-delete font-size-18' />
-          </a>
+          </button>
         </div>
       </td>
     </tr>

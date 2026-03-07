@@ -74,28 +74,28 @@ const EmailAndSMSTemplates = () => {
       </td>
       <td>
         <div className='d-flex gap-3'>
-          <a
+          <button
+            type='button'
             className='text-primary'
-            href='#'
             title='Edit'
-            onClick={(e) => {
-              e.preventDefault();
+            aria-label='Edit template'
+            onClick={() => {
               addEdit.open(item);
             }}
           >
             <i className='mdi mdi-pencil font-size-18' />
-          </a>
-          <a
+          </button>
+          <button
+            type='button'
             className='text-danger'
-            href='#'
             title='Delete'
-            onClick={(e) => {
-              e.preventDefault();
+            aria-label='Delete template'
+            onClick={() => {
               removeItem(item.id);
             }}
           >
             <i className='mdi mdi-delete font-size-18' />
-          </a>
+          </button>
         </div>
       </td>
     </tr>

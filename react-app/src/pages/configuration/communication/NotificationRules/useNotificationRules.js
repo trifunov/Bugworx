@@ -21,13 +21,13 @@ export const useNotificationRules = () => {
         if (index > -1) {
           updated[index] = itemToSave;
         } else {
-          updated.push({ ...itemToSave, id: new Date().getTime() });
+          updated.push({ ...itemToSave, id: crypto.randomUUID() });
         }
         saveNotificationRules(updated);
         return updated;
       });
     },
-    [saveItems]
+    []
   );
 
   const removeItem = useCallback(
