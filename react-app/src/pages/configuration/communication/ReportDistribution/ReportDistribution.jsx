@@ -6,8 +6,8 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditReportDistribution from '../../../../components/Configuration/Communication/ReportDistribution/AddEditReportDistribution';
-import { useAddEditReportDistribution } from '../../../../components/Configuration/Communication/ReportDistribution/useAddEditReportDistribution';
+import AddEditReportDistribution from '../../../../components/Configuration/communication/ReportDistribution/AddEditReportDistribution';
+import { useAddEditReportDistribution } from '../../../../components/Configuration/communication/ReportDistribution/useAddEditReportDistribution';
 
 const CHANNEL_COLORS = { Email: 'primary', SMS: 'warning', 'Portal Upload': 'info' };
 const FORMAT_COLORS = { PDF: 'danger', Excel: 'success', CSV: 'secondary' };
