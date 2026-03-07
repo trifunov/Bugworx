@@ -6,8 +6,8 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditSystemMessage from '../../../../components/Configuration/Communication/SystemMessages/AddEditSystemMessage';
-import { useAddEditSystemMessage } from '../../../../components/Configuration/Communication/SystemMessages/useAddEditSystemMessage';
+import AddEditSystemMessage from '../../../../components/Configuration/communication/SystemMessages/AddEditSystemMessage';
+import { useAddEditSystemMessage } from '../../../../components/Configuration/communication/SystemMessages/useAddEditSystemMessage';
 
 const CATEGORY_COLORS = {
   'Status Label': 'info',
