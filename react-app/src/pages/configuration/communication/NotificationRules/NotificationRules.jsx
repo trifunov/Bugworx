@@ -6,8 +6,8 @@ import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditNotificationRules from '../../../../components/Configuration/Communication/NotificationRules/AddEditNotificationRules';
-import { useAddEditNotificationRules } from '../../../../components/Configuration/Communication/NotificationRules/useAddEditNotificationRules';
+import AddEditNotificationRules from '../../../../components/Configuration/communication/NotificationRules/AddEditNotificationRules';
+import { useAddEditNotificationRules } from '../../../../components/Configuration/communication/NotificationRules/useAddEditNotificationRules';
 
 const PRIORITY_COLORS = { Low: 'success', Medium: 'warning', High: 'danger', Critical: 'dark' };
 const CHANNEL_COLORS = { 'In-App': 'info', Email: 'primary', SMS: 'warning', 'Push Notification': 'secondary' };
