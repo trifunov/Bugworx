@@ -59,7 +59,7 @@ const SafetyAndComplianceSetups = () => {
       description: 'MSDS links, hazard codes, safety instructions',
       breadcrumbs: [
         { label: 'Configuration', path: '/configuration' },
-        { label: 'Optional Add-ons', path: '/configuration/optional-add-ons' },
+        { label: 'Optional Add-ons', path: '/configuration/addons/optional-add-ons' },
         { label: 'Safety & Compliance Setup', active: true },
       ],
     });
