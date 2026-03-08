@@ -140,13 +140,10 @@ const AddEditIoTSmartDevice = ({ isOpen, onClose, onSave, formData, onUpdateFiel
             <div className='mb-3'>
               <label className='form-label'>API Key / Access Token</label>
               <input
-                name='apiKey'
                 type='password'
                 className='form-control'
                 placeholder='Enter API key or bearer token'
-                value={formData.apiKey || ''}
-                onChange={handleChange}
-                autoComplete='new-password'
+                autoComplete='off'
               />
             </div>
 
