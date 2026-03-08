@@ -65,6 +65,7 @@ const STORAGE_KEYS = {
   INSPECTION_POINT_TYPE_TEMPLATES: 'bugworx_inspection_point_type_templates',
   SAFETY_AND_COMPLIANCE_SETUP: 'bugworx_safety_and_compliance_setup',
   QUALITY_ASSURANCE_SETUP: 'bugworx_quality_assurance_setup',
+  IOT_SMART_DEVICES: 'bugworx_iot_smart_devices',
 };
 
 // Generic storage functions
@@ -1547,6 +1548,10 @@ export const saveSafetyAndComplianceSetups = (items) => setToStorage(STORAGE_KEY
 export const getQualityAssuranceSetups = () => getFromStorage(STORAGE_KEYS.QUALITY_ASSURANCE_SETUP, []);
 export const saveQualityAssuranceSetups = (items) => setToStorage(STORAGE_KEYS.QUALITY_ASSURANCE_SETUP, items);
 
+// IoT & Smart Devices
+export const getIoTSmartDevices = () => getFromStorage(STORAGE_KEYS.IOT_SMART_DEVICES, []);
+export const saveIoTSmartDevices = (items) => setToStorage(STORAGE_KEYS.IOT_SMART_DEVICES, items);
+
 // Facility Templates
 export const getFacilityTemplates = () => getFromStorage(STORAGE_KEYS.FACILITY_TEMPLATES, []);
 export const saveFacilityTemplates = (items) => setToStorage(STORAGE_KEYS.FACILITY_TEMPLATES, items);
@@ -1763,6 +1768,8 @@ const fns = {
   saveSafetyAndComplianceSetups,
   getQualityAssuranceSetups,
   saveQualityAssuranceSetups,
+  getIoTSmartDevices,
+  saveIoTSmartDevices,
 };
 
 export default fns;
