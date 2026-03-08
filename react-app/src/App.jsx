@@ -89,6 +89,7 @@ import FacilityTemplates from './pages/configuration/communication/FacilityTempl
 import LocationsZonesTemplates from './pages/configuration/communication/LocationsZonesTemplates/LocationsZonesTemplates';
 import InspectionPointCategoryTemplates from './pages/configuration/communication/InspectionPointCategoryTemplates/InspectionPointCategoryTemplates';
 import InspectionPointTypeTemplates from './pages/configuration/communication/InspectionPointTypeTemplates/InspectionPointTypeTemplates';
+import SafetyAndComplianceSetups from './pages/configuration/optional-add-ons/SafetyAndComplianceSetup/SafetyAndComplianceSetups';
 
 function App() {
   return (
@@ -193,6 +194,9 @@ function App() {
         <Route path='configuration/templates/locations-zones' element={<LocationsZonesTemplates />} />
         <Route path='configuration/templates/inspection-point-category-templates' element={<InspectionPointCategoryTemplates />} />
         <Route path='configuration/templates/inspection-point-type-templates' element={<InspectionPointTypeTemplates />} />
+
+        {/* Optional Add-ons */}
+        <Route path='configuration/addons/safety-compliances' element={<SafetyAndComplianceSetups />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />

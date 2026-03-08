@@ -63,6 +63,7 @@ const STORAGE_KEYS = {
   LOCATIONS_ZONES_TEMPLATES: 'bugworx_locations_zones_templates',
   INSPECTION_POINT_CATEGORY_TEMPLATES: 'bugworx_inspection_point_category_templates',
   INSPECTION_POINT_TYPE_TEMPLATES: 'bugworx_inspection_point_type_templates',
+  SAFETY_AND_COMPLIANCE_SETUP: 'bugworx_safety_and_compliance_setup',
 };
 
 // Generic storage functions
@@ -1537,6 +1538,10 @@ export const saveCancellationAdjustmentRejectionReasons = (items) => setToStorag
 export const getTechnicianFieldFormsChecklists = () => getFromStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, []);
 export const saveTechnicianFieldFormsChecklists = (items) => setToStorage(STORAGE_KEYS.TECHNICIAN_FIELD_FORMS_CHECKLISTS, items);
 
+// Safety & Compliance Setup
+export const getSafetyAndComplianceSetups = () => getFromStorage(STORAGE_KEYS.SAFETY_AND_COMPLIANCE_SETUP, []);
+export const saveSafetyAndComplianceSetups = (items) => setToStorage(STORAGE_KEYS.SAFETY_AND_COMPLIANCE_SETUP, items);
+
 // Facility Templates
 export const getFacilityTemplates = () => getFromStorage(STORAGE_KEYS.FACILITY_TEMPLATES, []);
 export const saveFacilityTemplates = (items) => setToStorage(STORAGE_KEYS.FACILITY_TEMPLATES, items);
@@ -1749,6 +1754,8 @@ const fns = {
   saveInspectionPointCategoryTemplates,
   getInspectionPointTypeTemplates,
   saveInspectionPointTypeTemplates,
+  getSafetyAndComplianceSetups,
+  saveSafetyAndComplianceSetups,
 };
 
 export default fns;
