@@ -291,7 +291,7 @@ const ConfigurationSidebar = () => {
                 aria-expanded={activeMenu === 'optionalAddons'}
               >
                 <li>
-                  <Link to='/configuration/addons/safety-compliance'>Safety & Compliance Setup</Link>
+                  <Link to='/configuration/addons/safety-compliances'>Safety & Compliance Setup</Link>
                 </li>
                 <li>
                   <Link to='/configuration/addons/quality-assurance'>Quality Assurance Setup</Link>
