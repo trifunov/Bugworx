@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useQualityAssuranceSetups } from './useQualityAssuranceSetups';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
-import useAddEditQualityAssuranceSetup from '../../../../components/configuration/optional-add-ons/QualityAssuranceSetup/useAddEditQualityAssuranceSetup';
+import useAddEditQualityAssuranceSetup from '../../../../components/Configuration/optional-add-ons/QualityAssuranceSetup/useAddEditQualityAssuranceSetup';
 import Table from '../../../../components/Common/Table/Table';
 import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditQualityAssuranceSetup from '../../../../components/configuration/optional-add-ons/QualityAssuranceSetup/AddEditQualityAssuranceSetup';
+import AddEditQualityAssuranceSetup from '../../../../components/Configuration/optional-add-ons/QualityAssuranceSetup/AddEditQualityAssuranceSetup';
 
 const CHECK_TYPE_BADGE = {
   'Inspection Scoring': 'primary',
