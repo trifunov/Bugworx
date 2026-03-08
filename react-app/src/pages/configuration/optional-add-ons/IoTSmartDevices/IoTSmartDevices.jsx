@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useIoTSmartDevices } from './useIoTSmartDevices';
 import { usePageSubHeader } from '../../../../contexts/PageSubHeaderContext';
-import useAddEditIoTSmartDevice from '../../../../components/configuration/optional-add-ons/IoTSmartDevices/useAddEditIoTSmartDevice';
+import useAddEditIoTSmartDevice from '../../../../components/Configuration/optional-add-ons/IoTSmartDevices/useAddEditIoTSmartDevice';
 import Table from '../../../../components/Common/Table/Table';
 import useTable from '../../../../components/Common/Table/useTable';
 import AddNewButton from '../../../../components/Common/AddNewButton';
 import useTableSearch from '../../../../components/Common/SearchBar/useTableSearch';
 import TableSearch from '../../../../components/Common/SearchBar/TableSearch';
-import AddEditIoTSmartDevice from '../../../../components/configuration/optional-add-ons/IoTSmartDevices/AddEditIoTSmartDevice';
+import AddEditIoTSmartDevice from '../../../../components/Configuration/optional-add-ons/IoTSmartDevices/AddEditIoTSmartDevice';
 
 const DEVICE_TYPE_BADGE = {
   'Smart Trap': 'primary',
