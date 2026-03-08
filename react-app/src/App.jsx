@@ -90,6 +90,7 @@ import LocationsZonesTemplates from './pages/configuration/communication/Locatio
 import InspectionPointCategoryTemplates from './pages/configuration/communication/InspectionPointCategoryTemplates/InspectionPointCategoryTemplates';
 import InspectionPointTypeTemplates from './pages/configuration/communication/InspectionPointTypeTemplates/InspectionPointTypeTemplates';
 import SafetyAndComplianceSetups from './pages/configuration/optional-add-ons/SafetyAndComplianceSetup/SafetyAndComplianceSetups';
+import QualityAssuranceSetups from './pages/configuration/optional-add-ons/QualityAssuranceSetup/QualityAssuranceSetups';
 
 function App() {
   return (
@@ -197,6 +198,7 @@ function App() {
 
         {/* Optional Add-ons */}
         <Route path='configuration/addons/safety-compliances' element={<SafetyAndComplianceSetups />} />
+        <Route path='configuration/addons/quality-assurance' element={<QualityAssuranceSetups />} />
 
         {/* Fallback/Default for Fleet Management */}
         <Route path='configuration/fleet-management' element={<Navigate to='/configuration/fleet-management/vehicles' />} />

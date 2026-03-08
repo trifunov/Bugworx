@@ -64,6 +64,7 @@ const STORAGE_KEYS = {
   INSPECTION_POINT_CATEGORY_TEMPLATES: 'bugworx_inspection_point_category_templates',
   INSPECTION_POINT_TYPE_TEMPLATES: 'bugworx_inspection_point_type_templates',
   SAFETY_AND_COMPLIANCE_SETUP: 'bugworx_safety_and_compliance_setup',
+  QUALITY_ASSURANCE_SETUP: 'bugworx_quality_assurance_setup',
 };
 
 // Generic storage functions
@@ -1542,6 +1543,10 @@ export const saveTechnicianFieldFormsChecklists = (items) => setToStorage(STORAG
 export const getSafetyAndComplianceSetups = () => getFromStorage(STORAGE_KEYS.SAFETY_AND_COMPLIANCE_SETUP, []);
 export const saveSafetyAndComplianceSetups = (items) => setToStorage(STORAGE_KEYS.SAFETY_AND_COMPLIANCE_SETUP, items);
 
+// Quality Assurance Setup
+export const getQualityAssuranceSetups = () => getFromStorage(STORAGE_KEYS.QUALITY_ASSURANCE_SETUP, []);
+export const saveQualityAssuranceSetups = (items) => setToStorage(STORAGE_KEYS.QUALITY_ASSURANCE_SETUP, items);
+
 // Facility Templates
 export const getFacilityTemplates = () => getFromStorage(STORAGE_KEYS.FACILITY_TEMPLATES, []);
 export const saveFacilityTemplates = (items) => setToStorage(STORAGE_KEYS.FACILITY_TEMPLATES, items);
@@ -1756,6 +1761,8 @@ const fns = {
   saveInspectionPointTypeTemplates,
   getSafetyAndComplianceSetups,
   saveSafetyAndComplianceSetups,
+  getQualityAssuranceSetups,
+  saveQualityAssuranceSetups,
 };
 
 export default fns;
