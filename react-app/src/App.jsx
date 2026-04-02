@@ -33,6 +33,7 @@ import Leads from './pages/Leads';
 import SearchResults from './pages/SearchResults';
 import InspectionPoints from './pages/InspectionPoints';
 import Prospects from './pages/Prospects';
+import Programs from './pages/Programs';
 
 import ConfigurationLayout from './pages/configuration/ConfigurationLayout';
 import ApiIntegrations from './pages/configuration/system-settings/api-integrations/ApiIntegrations';
@@ -110,6 +111,7 @@ function App() {
         <Route path='service-addresses' element={<ServiceAddresses />} />
         <Route path='appointments' element={<Appointments />} />
         <Route path='proposals' element={<Proposals />} />
+        <Route path='programs' element={<Programs />} />
         <Route path='scheduler' element={<Scheduler />} />
         <Route path='technicians' element={<Technicians />} />
         <Route path='inventory' element={<Inventory />} />

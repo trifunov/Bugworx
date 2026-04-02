@@ -46,6 +46,7 @@ const STORAGE_KEYS = {
   GPS_INTEGRATION: 'bugworx_gps-integration',
   INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
   USAGE_POLICY: 'bugworx_usage-policy',
+  PROGRAMS: 'bugworx_programs',
 };
 
 // Generic storage functions
@@ -458,6 +459,58 @@ export const setRouteTemplates = (templates) => {
   return setToStorage(STORAGE_KEYS.ROUTE_TEMPLATES, templates);
 };
 
+// Program-specific functions
+export const getPrograms = () => {
+  return getFromStorage(STORAGE_KEYS.PROGRAMS, []);
+};
+
+export const setPrograms = (programs) => {
+  return setToStorage(STORAGE_KEYS.PROGRAMS, programs);
+};
+
+export const getProgramById = (id) => {
+  return getPrograms().find((p) => p.id === id);
+};
+
+export const getProgramsByCustomerId = (customerId) => {
+  return getPrograms().filter((p) => p.customerId === customerId);
+};
+
+export const addProgram = (program) => {
+  const programs = getPrograms();
+  const newProgram = {
+    ...program,
+    id: new Date().getTime(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  programs.push(newProgram);
+  setPrograms(programs);
+  return newProgram;
+};
+
+export const updateProgram = (id, updates) => {
+  const programs = getPrograms();
+  const index = programs.findIndex((p) => p.id === id);
+  if (index !== -1) {
+    programs[index] = {
+      ...programs[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    setPrograms(programs);
+    return programs[index];
+  }
+  return null;
+};
+
+export const deleteProgram = (id) => {
+  const programs = getPrograms();
+  const filtered = programs.filter((p) => p.id !== id);
+  setPrograms(filtered);
+  return filtered.length < programs.length;
+};
+
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
   const {
@@ -474,6 +527,7 @@ export const initializeStorage = (mockData) => {
     inspectionPoints,
     leads,
     prospects,
+    programs,
   } = mockData;
 
   if (getAppointments().length === 0) {
@@ -515,6 +569,9 @@ export const initializeStorage = (mockData) => {
   }
   if (getProspects().length === 0 && prospects) {
     setProspects(prospects);
+  }
+  if (getPrograms().length === 0 && programs) {
+    setPrograms(programs);
   }
 };
 
@@ -1451,4 +1508,11 @@ export default {
   saveVehicleTypes,
   getVehicleList,
   saveVehicleList,
+  getPrograms,
+  setPrograms,
+  getProgramById,
+  getProgramsByCustomerId,
+  addProgram,
+  updateProgram,
+  deleteProgram,
 };

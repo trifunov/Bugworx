@@ -95,6 +95,12 @@ export const customerMenuConfig = [
         icon: 'ri-file-text-line'
       },
       {
+        id: 'programs',
+        label: 'Programs',
+        route: '/programs',
+        icon: 'ri-clipboard-line'
+      },
+      {
         id: 'work-orders',
         label: 'Work Orders',
         route: '/work-orders',

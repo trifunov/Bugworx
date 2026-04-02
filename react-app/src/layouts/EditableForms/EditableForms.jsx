@@ -2,11 +2,12 @@ import useEditableForms from "./useEditableForms";
 import AddEditCustomer from "../../components/CustomerDetails/AddEditCustomer/AddEditCustomer";
 import AddEditLead from "../../components/CustomerDetails/AddEditLead/AddEditLead";
 import AddEditProspect from "../../components/CustomerDetails/Prospects/AddEditProspect/AddEditProspect";
-import { addCustomer, updateCustomer, addLead, updateLead, addProspect, updateProspect } from "../../utils/localStorage";
+import AddEditProgram from "../../components/CustomerDetails/AddEditProgram/AddEditProgram";
+import { addCustomer, updateCustomer, addLead, updateLead, addProspect, updateProspect, addProgram, updateProgram } from "../../utils/localStorage";
 
 const EditableForms = () => {
 
-    const { addEditCustomer, addEditLead, addEditProspect, loadCustomers, loadLeads, loadProspects } = useEditableForms();
+    const { addEditCustomer, addEditLead, addEditProspect, addEditProgram, loadCustomers, loadLeads, loadProspects, loadPrograms } = useEditableForms();
 
     return (
         <>
@@ -69,6 +70,35 @@ const EditableForms = () => {
 
                     loadProspects();
                     return updatedProspect;
+                })}
+            />
+
+            <AddEditProgram
+                isOpen={addEditProgram.isOpen}
+                formData={addEditProgram.formData}
+                errors={addEditProgram.errors}
+                isSaving={addEditProgram.isSaving}
+                onUpdateField={addEditProgram.onUpdateFieldHandle}
+                onToggleSite={addEditProgram.toggleSite}
+                onClose={addEditProgram.close}
+                onSave={() => addEditProgram.onSaveHandle((data) => {
+                    const payload = {
+                        ...data,
+                        leadId: data.leadId ? parseInt(data.leadId) : null,
+                        assignedTechnicianId: data.assignedTechnicianId ? parseInt(data.assignedTechnicianId) : null,
+                        estimatedDuration: parseInt(data.estimatedDuration),
+                        endDate: data.endDate || null,
+                        totalWorkOrders: data.totalWorkOrders || 0,
+                        completedWorkOrders: data.completedWorkOrders || 0,
+                    };
+                    let result = null;
+                    if (data.id) {
+                        result = updateProgram(data.id, payload);
+                    } else {
+                        result = addProgram(payload);
+                    }
+                    loadPrograms();
+                    return result;
                 })}
             />
 

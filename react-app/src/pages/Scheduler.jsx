@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -10,7 +11,8 @@ import {
   customers as initialCustomers,
   priorities,
   appointmentStatuses,
-  inventory as initialInventory
+  inventory as initialInventory,
+  programs as initialPrograms
 } from '../data/mockData';
 import {
   initializeStorage,
@@ -23,12 +25,14 @@ import {
   getTechnicians,
   isTechnicianAvailable,
   suggestTechnicians,
-  getServiceTypes
+  getServiceTypes,
+  getPrograms
 } from '../utils/localStorage';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
 const Scheduler = () => {
   const { setPageSubHeader } = usePageSubHeader();
+  const [searchParams] = useSearchParams();
   const calendarRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('create'); // 'create' or 'edit'
@@ -39,6 +43,7 @@ const Scheduler = () => {
   const [customers, setCustomers] = useState([]);
   const [serviceAddresses, setServiceAddresses] = useState([]);
   const [technicians, setTechniciansState] = useState([]);
+  const [programs, setProgramsState] = useState([]);
 
   const serviceTypes = getServiceTypes();
 
@@ -46,6 +51,7 @@ const Scheduler = () => {
   const [filterTechnician, setFilterTechnician] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterServiceType, setFilterServiceType] = useState('all');
+  const [filterProgram, setFilterProgram] = useState('all');
 
   // Technician suggestion state
   const [suggestedTechnicians, setSuggestedTechnicians] = useState([]);
@@ -87,7 +93,8 @@ const Scheduler = () => {
       customers: initialCustomers,
       serviceAddresses: initialServiceAddresses,
       technicians: initialTechnicians,
-      inventory: initialInventory
+      inventory: initialInventory,
+      programs: initialPrograms
     });
     loadData();
     setPageSubHeader({
@@ -98,12 +105,19 @@ const Scheduler = () => {
     });
   }, [setPageSubHeader]);
 
+  // Pre-apply program filter from URL ?programId=
+  useEffect(() => {
+    const programId = searchParams.get('programId');
+    if (programId) setFilterProgram(programId);
+  }, [searchParams]);
+
   // Load data from localStorage
   const loadData = () => {
     setAppointmentsState(getAppointments());
     setCustomers(getCustomers());
     setServiceAddresses(getServiceAddresses());
     setTechniciansState(getTechnicians());
+    setProgramsState(getPrograms());
   };
 
   // Handle modal animations with Bootstrap
@@ -142,6 +156,8 @@ const Scheduler = () => {
     if (filterTechnician !== 'all' && apt.technicianId !== parseInt(filterTechnician)) return false;
     if (filterStatus !== 'all' && apt.status !== filterStatus) return false;
     if (filterServiceType !== 'all' && apt.serviceType !== filterServiceType) return false;
+    if (filterProgram === 'none' && apt.programId != null) return false;
+    if (filterProgram !== 'all' && filterProgram !== 'none' && apt.programId !== parseInt(filterProgram)) return false;
     return true;
   });
 
@@ -162,6 +178,8 @@ const Scheduler = () => {
 
     const endTime = calculateEndTime(apt.scheduledDate, apt.scheduledTime, apt.estimatedDuration || 60);
 
+    const program = apt.programId ? programs.find((p) => p.id === apt.programId) : null;
+
     return {
       id: apt.id,
       title: `${getCustomerName(apt.serviceAddressId)} - ${apt.serviceType}`,
@@ -173,7 +191,8 @@ const Scheduler = () => {
         technician: getTechnicianName(apt.technicianId),
         serviceAddress: getServiceAddressName(apt.serviceAddressId),
         duration: apt.estimatedDuration,
-        priority: apt.priority
+        priority: apt.priority,
+        program: program ?? null
       }
     };
   });
@@ -642,20 +661,43 @@ const Scheduler = () => {
                     ))}
                   </select>
                 </div>
-                <div className="col-md-3 d-flex align-items-end">
-                  <button
-                    className="btn btn-secondary w-100"
-                    onClick={() => {
-                      setFilterTechnician('all');
-                      setFilterStatus('all');
-                      setFilterServiceType('all');
-                    }}
+                <div className="col-md-3">
+                  <label className="form-label mb-1">Filter by Program</label>
+                  <select
+                    className="form-select"
+                    value={filterProgram}
+                    onChange={(e) => setFilterProgram(e.target.value)}
                   >
-                    <i className="bx bx-refresh me-1"></i>
-                    Clear Filters
-                  </button>
+                    <option value="all">All Programs</option>
+                    {programs.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                    <option value="none">Ad-hoc (no program)</option>
+                  </select>
                 </div>
               </div>
+              {(filterTechnician !== 'all' || filterStatus !== 'all' || filterServiceType !== 'all' || filterProgram !== 'all') && (
+                <div className="row mt-2">
+                  <div className="col-12 d-flex align-items-center gap-2">
+                    {filterProgram !== 'all' && (
+                      <span className="badge bg-primary">
+                        Program: {filterProgram === 'none' ? 'Ad-hoc' : programs.find(p => p.id === parseInt(filterProgram))?.name ?? filterProgram}
+                      </span>
+                    )}
+                    <button
+                      className="btn btn-sm btn-secondary ms-auto"
+                      onClick={() => {
+                        setFilterTechnician('all');
+                        setFilterStatus('all');
+                        setFilterServiceType('all');
+                        setFilterProgram('all');
+                      }}
+                    >
+                      <i className="bx bx-refresh me-1"></i>Clear Filters
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -771,6 +813,23 @@ const Scheduler = () => {
                 droppable={false}
                 selectable={true}
                 height="auto"
+                eventContent={(eventInfo) => {
+                  const prog = eventInfo.event.extendedProps.program;
+                  return (
+                    <div className="fc-event-main-frame" style={{ overflow: 'hidden', width: '100%' }}>
+                      <div className="fc-event-title-container">
+                        <div className="fc-event-title fc-sticky" style={{ fontSize: '0.78em' }}>
+                          {eventInfo.event.title}
+                        </div>
+                      </div>
+                      {prog && (
+                        <div style={{ fontSize: '0.7em', opacity: 0.9, marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          <i className="bx bx-clipboard" style={{ marginRight: '2px' }}></i>{prog.name}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }}
               />
             </div>
           </div>
@@ -903,6 +962,7 @@ const Scheduler = () => {
                         <th>Customer</th>
                         <th>Service Address</th>
                         <th>Service Type</th>
+                        <th>Program</th>
                         <th>Technician</th>
                         <th>Status</th>
                         <th>Priority</th>
@@ -912,7 +972,7 @@ const Scheduler = () => {
                     <tbody>
                       {filteredAppointments.length === 0 ? (
                         <tr>
-                          <td colSpan="9" className="text-center py-4 text-muted">
+                          <td colSpan="10" className="text-center py-4 text-muted">
                             No appointments found
                           </td>
                         </tr>
@@ -939,6 +999,19 @@ const Scheduler = () => {
                             <td>{getServiceAddressName(apt.serviceAddressId)}</td>
                             <td>
                               <span className="badge badge-soft-info">{apt.serviceType}</span>
+                            </td>
+                            <td>
+                              {apt.programId ? (() => {
+                                const prog = programs.find(p => p.id === apt.programId);
+                                return prog ? (
+                                  <span className="badge badge-soft-primary" title={prog.name}>
+                                    <i className="bx bx-clipboard me-1"></i>
+                                    {prog.name.length > 20 ? prog.name.slice(0, 20) + '…' : prog.name}
+                                  </span>
+                                ) : null;
+                              })() : (
+                                <span className="text-muted small">—</span>
+                              )}
                             </td>
                             <td>{getTechnicianName(apt.technicianId)}</td>
                             <td>
@@ -997,6 +1070,20 @@ const Scheduler = () => {
             </div>
 
             <div className="modal-body p-4">
+              {modalMode === 'edit' && selectedAppointment?.programId && (() => {
+                const prog = programs.find(p => p.id === selectedAppointment.programId);
+                return prog ? (
+                  <div className="alert alert-primary d-flex align-items-center gap-2 py-2 mb-3">
+                    <i className="bx bx-clipboard fs-5"></i>
+                    <span>
+                      Part of program: <strong>{prog.name}</strong>
+                    </span>
+                    <Link to={`/customers/${prog.customerId}/programs`} className="ms-auto btn btn-sm btn-outline-primary py-0">
+                      View Program
+                    </Link>
+                  </div>
+                ) : null;
+              })()}
               <form onSubmit={handleSaveAppointment}>
                 <div className="row">
                   {/* Customer Selection */}
