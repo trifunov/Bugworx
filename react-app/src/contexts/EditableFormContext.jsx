@@ -28,8 +28,7 @@ import useAddEditCustomField from '../components/Configuration/SystemSettings/Cu
 
 import useAddEditLineItem from '../components/CustomerInvoices/useAddEditLineItem';
 
-import { getCustomers, getLeads, getProspects, getInventory, getPrograms, addProgram } from '../utils/localStorage';
-import { programs as initialPrograms } from '../data/mockData';
+import { getCustomers, getLeads, getProspects, getInventory, getPrograms } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
 
