@@ -490,7 +490,23 @@ export const getProgramById = (id) => {
 };
 
 export const getProgramsByCustomerId = (customerId) => {
-  return getPrograms().filter((p) => p.customerId === customerId);
+  const numericId = Number(customerId);
+
+  const saIds = new Set(
+    getServiceAddressesByCustomerId(numericId).map((sa) => sa.id)
+  );
+
+  const leadIds = new Set(
+    getLeads()
+      .filter((l) => l.customerId === numericId)
+      .map((l) => l.id)
+  );
+
+  return getPrograms().filter(
+    (p) =>
+      leadIds.has(p.leadId) ||
+      (Array.isArray(p.serviceAddressIds) && p.serviceAddressIds.some((id) => saIds.has(id)))
+  );
 };
 
 export const addProgram = (program) => {
