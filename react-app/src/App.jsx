@@ -1,4 +1,20 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { initializeStorage } from './utils/localStorage';
+import {
+  appointments,
+  customers,
+  serviceAddresses,
+  technicians,
+  inventory,
+  facilities,
+  areas,
+  inspectionPoints,
+  programs,
+  vehicles,
+  routes,
+  routeTemplates,
+} from './data/mockData';
 import ProtectedRoute from './components/ProtectedRoute';
 import MainLayout from './layouts/MainLayout';
 import Login from './pages/Login';
@@ -92,6 +108,23 @@ import InspectionPointCategoryTemplates from './pages/configuration/communicatio
 import InspectionPointTypeTemplates from './pages/configuration/communication/InspectionPointTypeTemplates/InspectionPointTypeTemplates';
 
 function App() {
+  useEffect(() => {
+    initializeStorage({
+      appointments,
+      customers,
+      serviceAddresses,
+      technicians,
+      inventory,
+      facilities,
+      areas,
+      inspectionPoints,
+      programs,
+      vehicles,
+      routes,
+      routeTemplates,
+    });
+  }, []);
+
   return (
     <Routes>
       {/* Public Route */}

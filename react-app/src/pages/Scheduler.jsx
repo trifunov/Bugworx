@@ -5,17 +5,10 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import {
-  appointments as initialAppointments,
-  serviceAddresses as initialServiceAddresses,
-  technicians as initialTechnicians,
-  customers as initialCustomers,
   priorities,
   appointmentStatuses,
-  inventory as initialInventory,
-  programs as initialPrograms
 } from '../data/mockData';
 import {
-  initializeStorage,
   getAppointments,
   addAppointment,
   updateAppointment,
@@ -88,14 +81,6 @@ const Scheduler = () => {
 
   // Initialize localStorage on mount
   useEffect(() => {
-    initializeStorage({
-      appointments: initialAppointments,
-      customers: initialCustomers,
-      serviceAddresses: initialServiceAddresses,
-      technicians: initialTechnicians,
-      inventory: initialInventory,
-      programs: initialPrograms
-    });
     loadData();
     setPageSubHeader({
       title: 'Scheduler & Calendar',
