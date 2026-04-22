@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteProgram, updateProgram, getProgramsByCustomerId } from '../utils/localStorage';
 import usePrograms from '../hooks/usePrograms';
 import { STATUSES } from '../components/CustomerDetails/AddEditProgram/useAddEditProgram';
@@ -9,10 +9,8 @@ import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 const Programs = () => {
   const { setPageSubHeader } = usePageSubHeader();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { id: customerId } = useParams();
   const { addEditProgram, programs, loadPrograms } = useEditableFormContext();
-
-  const customerId = searchParams.get('customerId');
 
   const displayPrograms = useMemo(() => {
     if (!customerId) return programs;
