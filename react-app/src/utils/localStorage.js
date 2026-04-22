@@ -489,6 +489,13 @@ export const getProgramById = (id) => {
   return getPrograms().find((p) => p.id === id);
 };
 
+export const getCustomerIdByProgramId = (programId) => {
+  const program = getProgramById(programId);
+  if (!program) return null;
+  const lead = getLeadById(program.leadId);
+  return lead?.customerId ?? null;
+};
+
 export const getProgramsByCustomerId = (customerId) => {
   const numericId = Number(customerId);
 

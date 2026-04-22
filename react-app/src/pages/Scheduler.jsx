@@ -19,7 +19,8 @@ import {
   isTechnicianAvailable,
   suggestTechnicians,
   getServiceTypes,
-  getPrograms
+  getPrograms,
+  getCustomerIdByProgramId,
 } from '../utils/localStorage';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 
@@ -1063,7 +1064,7 @@ const Scheduler = () => {
                     <span>
                       Part of program: <strong>{prog.name}</strong>
                     </span>
-                    <Link to={`/customers/${prog.customerId}/programs`} className="ms-auto btn btn-sm btn-outline-primary py-0">
+                    <Link to={`/customers/${getCustomerIdByProgramId(prog.id)}/programs`} className="ms-auto btn btn-sm btn-outline-primary py-0">
                       View Program
                     </Link>
                   </div>
