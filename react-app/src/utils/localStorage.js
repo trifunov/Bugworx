@@ -17,7 +17,6 @@ const STORAGE_KEYS = {
   FACILITIES: 'bugworx_facilities',
   AREAS: 'bugworx_areas',
   INSPECTION_POINTS: 'bugworx_inspection_points',
-  SERVICE_TYPES: 'bugworx_service_types',
   USERS_KEY: 'bugworx_users',
   ROLES_KEY: 'bugworx_roles',
   TEAMS_KEY: 'bugworx_teams_branches',
