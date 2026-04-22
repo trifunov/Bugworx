@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { deleteProgram, updateProgram } from '../utils/localStorage';
+import { useEffect, useMemo } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { deleteProgram, updateProgram, getServiceAddressesByCustomerId, getLeads } from '../utils/localStorage';
 import usePrograms from '../hooks/usePrograms';
 import { STATUSES } from '../components/CustomerDetails/AddEditProgram/useAddEditProgram';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
@@ -9,7 +9,36 @@ import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
 const Programs = () => {
   const { setPageSubHeader } = usePageSubHeader();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { addEditProgram, programs, loadPrograms } = useEditableFormContext();
+
+  const customerId = searchParams.get('customerId');
+
+  const displayPrograms = useMemo(() => {
+    if (!customerId) return programs;
+
+    const numericId = Number(customerId);
+
+    // Step 1: service address IDs for this customer
+    const saIds = new Set(
+      getServiceAddressesByCustomerId(numericId).map((sa) => sa.id)
+    );
+
+    // Step 2: lead IDs linked to this customer
+    const leadIds = new Set(
+      getLeads()
+        .filter((l) => l.customerId === numericId)
+        .map((l) => l.id)
+    );
+
+    // Step 3: programs matching via leadId or serviceAddressIds
+    return programs.filter(
+      (p) =>
+        leadIds.has(p.leadId) ||
+        (Array.isArray(p.serviceAddressIds) && p.serviceAddressIds.some((id) => saIds.has(id)))
+    );
+  }, [customerId, programs]);
+
   const {
     filteredPrograms,
     searchTerm,
@@ -23,7 +52,7 @@ const Programs = () => {
     getProgress,
     getStatusBadge,
     getFrequencyLabel,
-  } = usePrograms(programs);
+  } = usePrograms(displayPrograms);
 
   useEffect(() => {
     setPageSubHeader({
