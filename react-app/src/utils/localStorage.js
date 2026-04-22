@@ -17,7 +17,6 @@ const STORAGE_KEYS = {
   FACILITIES: 'bugworx_facilities',
   AREAS: 'bugworx_areas',
   INSPECTION_POINTS: 'bugworx_inspection_points',
-  SERVICE_TYPES: 'bugworx_service_types',
   USERS_KEY: 'bugworx_users',
   ROLES_KEY: 'bugworx_roles',
   TEAMS_KEY: 'bugworx_teams_branches',
@@ -46,6 +45,7 @@ const STORAGE_KEYS = {
   GPS_INTEGRATION: 'bugworx_gps-integration',
   INSURANCE_REGISTRATION: 'bugworx_insurance-registration',
   USAGE_POLICY: 'bugworx_usage-policy',
+  PROGRAMS: 'bugworx_programs',
   TAX_CONFIGURATIONS: 'bugworx_tax_configuration',
   CURRENCIES: 'bugworx_financial_currencies',
   INVOICE_TEMPLATES: 'bugworx_invoice_templates',
@@ -475,6 +475,81 @@ export const setRouteTemplates = (templates) => {
   return setToStorage(STORAGE_KEYS.ROUTE_TEMPLATES, templates);
 };
 
+// Program-specific functions
+export const getPrograms = () => {
+  return getFromStorage(STORAGE_KEYS.PROGRAMS, []);
+};
+
+export const setPrograms = (programs) => {
+  return setToStorage(STORAGE_KEYS.PROGRAMS, programs);
+};
+
+export const getProgramById = (id) => {
+  return getPrograms().find((p) => p.id === id);
+};
+
+export const getCustomerIdByProgramId = (programId) => {
+  const program = getProgramById(programId);
+  if (!program) return null;
+  const lead = getLeadById(program.leadId);
+  return lead?.customerId ?? null;
+};
+
+export const getProgramsByCustomerId = (customerId) => {
+  const numericId = Number(customerId);
+
+  const saIds = new Set(
+    getServiceAddressesByCustomerId(numericId).map((sa) => sa.id)
+  );
+
+  const leadIds = new Set(
+    getLeads()
+      .filter((l) => l.customerId === numericId)
+      .map((l) => l.id)
+  );
+
+  return getPrograms().filter(
+    (p) =>
+      leadIds.has(p.leadId) ||
+      (Array.isArray(p.serviceAddressIds) && p.serviceAddressIds.some((id) => saIds.has(id)))
+  );
+};
+
+export const addProgram = (program) => {
+  const programs = getPrograms();
+  const newProgram = {
+    ...program,
+    id: new Date().getTime(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  programs.push(newProgram);
+  setPrograms(programs);
+  return newProgram;
+};
+
+export const updateProgram = (id, updates) => {
+  const programs = getPrograms();
+  const index = programs.findIndex((p) => p.id === id);
+  if (index !== -1) {
+    programs[index] = {
+      ...programs[index],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    setPrograms(programs);
+    return programs[index];
+  }
+  return null;
+};
+
+export const deleteProgram = (id) => {
+  const programs = getPrograms();
+  const filtered = programs.filter((p) => p.id !== id);
+  setPrograms(filtered);
+  return filtered.length < programs.length;
+};
+
 // Initialize storage with mock data if empty
 export const initializeStorage = (mockData) => {
   const {
@@ -491,6 +566,7 @@ export const initializeStorage = (mockData) => {
     inspectionPoints,
     leads,
     prospects,
+    programs,
   } = mockData;
 
   if (getAppointments().length === 0) {
@@ -532,6 +608,9 @@ export const initializeStorage = (mockData) => {
   }
   if (getProspects().length === 0 && prospects) {
     setProspects(prospects);
+  }
+  if (getPrograms().length === 0 && programs) {
+    setPrograms(programs);
   }
 };
 
@@ -1749,6 +1828,13 @@ const fns = {
   saveInspectionPointCategoryTemplates,
   getInspectionPointTypeTemplates,
   saveInspectionPointTypeTemplates,
+  getPrograms,
+  setPrograms,
+  getProgramById,
+  getProgramsByCustomerId,
+  addProgram,
+  updateProgram,
+  deleteProgram
 };
 
 export default fns;
