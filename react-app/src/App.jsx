@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { initializeStorage } from './utils/localStorage';
 import {
@@ -107,24 +106,22 @@ import LocationsZonesTemplates from './pages/configuration/communication/Locatio
 import InspectionPointCategoryTemplates from './pages/configuration/communication/InspectionPointCategoryTemplates/InspectionPointCategoryTemplates';
 import InspectionPointTypeTemplates from './pages/configuration/communication/InspectionPointTypeTemplates/InspectionPointTypeTemplates';
 
-function App() {
-  useEffect(() => {
-    initializeStorage({
-      appointments,
-      customers,
-      serviceAddresses,
-      technicians,
-      inventory,
-      facilities,
-      areas,
-      inspectionPoints,
-      programs,
-      vehicles,
-      routes,
-      routeTemplates,
-    });
-  }, []);
+initializeStorage({
+  appointments,
+  customers,
+  serviceAddresses,
+  technicians,
+  inventory,
+  facilities,
+  areas,
+  inspectionPoints,
+  programs,
+  vehicles,
+  routes,
+  routeTemplates,
+});
 
+function App() {
   return (
     <Routes>
       {/* Public Route */}
