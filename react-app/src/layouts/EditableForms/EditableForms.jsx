@@ -19,13 +19,15 @@ const EditableForms = () => {
                 onUpdateField={addEditCustomer.onUpdateFieldHandle}
                 onClose={addEditCustomer.close}
                 onSave={() => addEditCustomer.onSaveHandle(async (data) => {
+                    let savedCustomer = null;
                     if (data.id && data.id !== 0) {
-                        await customerService.updateCustomer(data.id, data);
+                        savedCustomer = await customerService.updateCustomer(data.id, data);
                     }
                     else {
-                        await customerService.createCustomer(data);
+                        savedCustomer = await customerService.createCustomer(data);
                     }
                     await loadCustomers();
+                    return savedCustomer;
                 })}
             />
 
