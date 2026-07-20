@@ -60,10 +60,16 @@ export const AuthProvider = ({ children }) => {
       });
 
     keycloak.onTokenExpired = () => {
-      keycloak.updateToken(30).then(() => {
-        setToken(keycloak.token);
-        setTokenProvider(() => keycloak.token);
-      });
+      keycloak
+        .updateToken(30)
+        .then(() => {
+          setToken(keycloak.token);
+          setTokenProvider(() => keycloak.token);
+        })
+        .catch((err) => {
+          console.error('Keycloak token refresh failed:', err);
+          keycloak.logout();
+        });
     };
   }, []);
 
