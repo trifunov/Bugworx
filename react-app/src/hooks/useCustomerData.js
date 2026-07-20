@@ -20,7 +20,8 @@ const useCustomerData = (customerId) => {
       }
       const allCustomers = await customerService.getCustomers();
       setCustomers(allCustomers || []);
-    } catch {
+    } catch (error) {
+      console.error('Failed to load customer data', error);
       // Keep current state on error
     } finally {
       setLoading(false);
