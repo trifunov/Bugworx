@@ -2,7 +2,7 @@ import { api } from './api';
 
 const serviceAddressService = {
   getByCustomerId: async (customerId) => {
-    return api.get(`/api/service-addresses?customerId=${customerId}`);
+    return api.get(`/api/service-addresses?customerId=${encodeURIComponent(customerId)}`);
   },
 
   getById: async (id) => {
