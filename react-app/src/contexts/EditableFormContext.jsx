@@ -80,7 +80,8 @@ export const EditableFormProvider = ({ children }) => {
     try {
       const data = await customerService.getCustomers();
       setCustomersState(data || []);
-    } catch {
+    } catch (error) {
+      console.error('Failed to load customers in EditableFormContext.loadCustomers:', error);
       // Fallback: keep current state on error
     }
   };
