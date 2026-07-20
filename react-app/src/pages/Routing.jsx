@@ -3,17 +3,6 @@ import { GoogleMap, Marker, InfoWindow, Polyline, DirectionsRenderer, useJsApiLo
 import Table from '../components/Common/Table/Table';
 import useTable from '../components/Common/Table/useTable';
 import {
-  vehicles as initialVehicles,
-  routes as initialRoutes,
-  routeTemplates as initialRouteTemplates,
-  appointments as initialAppointments,
-  customers as initialCustomers,
-  serviceAddresses as initialServiceAddresses,
-  technicians as initialTechnicians,
-  inventory as initialInventory
-} from '../data/mockData';
-import {
-  initializeStorage,
   getVehicles,
   getRoutes,
   getRoutesByDate,
@@ -122,18 +111,6 @@ const Routing = () => {
       breadcrumbs: [
         { label: 'Routing', path: '/routing' }
       ]
-    });
-    console.log('Initializing mock data in local storage...');
-    // Initialize all mock data
-    initializeStorage({
-      appointments: initialAppointments,
-      customers: initialCustomers,
-      serviceAddresses: initialServiceAddresses,
-      technicians: initialTechnicians,
-      inventory: initialInventory,
-      vehicles: initialVehicles,
-      routes: initialRoutes,
-      routeTemplates: initialRouteTemplates
     });
     loadData();
   }, [setPageSubHeader]);

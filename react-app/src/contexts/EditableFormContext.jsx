@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import useAddEditCustomer from '../components/CustomerDetails/AddEditCustomer/useAddEditCustomer';
 import useAddEditLead from '../components/CustomerDetails/AddEditLead/useAddEditLead';
+import useAddEditProgram from '../components/CustomerDetails/AddEditProgram/useAddEditProgram';
 import useAddEditProspect from '../components/CustomerDetails/Prospects/AddEditProspect/useAddEditProspect';
 import useAddEditInventory from '../components/InventoryDetails/useAddEditInventory';
 import useAddEditUser from '../components/Users/useAddEditUser';
@@ -24,10 +25,9 @@ import useAddEditTreatmentType from '../components/Configuration/ServiceInspecti
 
 import useAddEditApiIntegration from '../components/Configuration/SystemSettings/ApiIntegrations/useAddEditApiIntegration';
 import useAddEditCustomField from '../components/Configuration/SystemSettings/CustomFields/useAddEditCustomField';
-
 import useAddEditLineItem from '../components/CustomerInvoices/useAddEditLineItem';
 
-import { getCustomers, getLeads, getProspects, getInventory } from '../utils/localStorage';
+import { getCustomers, getLeads, getProspects, getInventory, getPrograms } from '../utils/localStorage';
 
 const EditableFormContext = createContext(null);
 
@@ -42,6 +42,7 @@ export const useEditableFormContext = () => {
 export const EditableFormProvider = ({ children }) => {
   const addEditCustomer = useAddEditCustomer();
   const addEditLead = useAddEditLead();
+  const addEditProgram = useAddEditProgram();
   const addEditProspect = useAddEditProspect();
   const addEditInventory = useAddEditInventory();
 
@@ -74,11 +75,14 @@ export const EditableFormProvider = ({ children }) => {
   const [leads, setLeadsState] = useState(getLeads());
   const [prospects, setProspectsState] = useState(getProspects());
   const [inventory, setInventoryState] = useState(getInventory());
+  const [programs, setProgramsState] = useState(getPrograms());
 
   const loadCustomers = () => {
     const customers = getCustomers();
     setCustomersState(customers);
   };
+
+  const loadPrograms = () => setProgramsState(getPrograms());
 
   const loadLeads = () => {
     const leads = getLeads();
@@ -97,6 +101,7 @@ export const EditableFormProvider = ({ children }) => {
   const value = {
     addEditCustomer,
     addEditLead,
+    addEditProgram,
     addEditProspect,
     addEditInventory,
     addEditUser,
@@ -120,10 +125,12 @@ export const EditableFormProvider = ({ children }) => {
     addEditCustomField,
     loadCustomers,
     loadLeads,
+    loadPrograms,
     loadProspects,
     loadInventory,
     customers,
     leads,
+    programs,
     prospects,
     inventory,
     setCustomersState,
