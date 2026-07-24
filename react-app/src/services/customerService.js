@@ -1,8 +1,9 @@
 import { api } from './api';
+import { customerTypeToApi } from '../utils/customerEnums';
 
 const mapFormToApi = (data) => ({
   name: data.name,
-  customerType: data.customerType, // string: 'Residential' or 'Commercial'
+  customerType: customerTypeToApi(data.customerType), // enum int: 1 = Residential, 2 = Commercial
   isActive: data.customerStatus === 'Active',
   sendInvoice: data.sendInvoice ?? false,
   emailInvoice: data.emailInvoice ?? false,

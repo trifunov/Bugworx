@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import AddNewButton from '../components/Common/AddNewButton';
 import { useEditableFormContext } from '../contexts/EditableFormContext';
 import { usePageSubHeader } from '../contexts/PageSubHeaderContext';
+import { customerTypeToLabel } from '../utils/customerEnums';
 
 const Customers = () => {
   const [searchParams] = useSearchParams();
@@ -35,7 +36,7 @@ const Customers = () => {
   const mapCustomerToForm = (customer) => ({
     id: customer?.id || 0,
     name: customer?.name || '',
-    customerType: customer?.customerType === 1 ? 'Residential' : (customer?.customerType === 2 ? 'Commercial' : ''),
+    customerType: customerTypeToLabel(customer?.customerType),
     billingContact: customer?.billingContact || {
       firstName: '',
       middleName: '',
