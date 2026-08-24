@@ -71,6 +71,7 @@ export const AuthProvider = ({ children }) => {
           keycloak.logout();
         });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logout = () => {
