@@ -1,12 +1,11 @@
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import {
-  addServiceAddress,
-  updateServiceAddress,
   addAppointment,
   addProposal,
   updateProposal,
 } from "../utils/localStorage";
+import serviceAddressService from "../services/serviceAddressService";
 import useAddEditServiceAddress from "../components/CustomerDetails/AddEditServiceAddress/useAddEditServiceAddress";
 import useScheduleService from "../hooks/useScheduleService";
 import useViewReports from "../hooks/useViewReports";
@@ -438,15 +437,15 @@ const CustomerOverview = () => {
         onUpdateField={serviceAddressModal.onUpdateFieldHandle}
         onClose={serviceAddressModal.close}
         onSave={() =>
-          serviceAddressModal.onSaveHandle((data) => {
-            let updatedServiceAddress = null;
+          serviceAddressModal.onSaveHandle(async (data) => {
+            let result = null;
             if (data.id && data.id !== 0) {
-              updatedServiceAddress = updateServiceAddress(data.id, data);
+              result = await serviceAddressService.update(data.id, data);
             } else {
-              updatedServiceAddress = addServiceAddress(data);
+              result = await serviceAddressService.create(data);
             }
-            refreshServiceAddresses();
-            return updatedServiceAddress;
+            await refreshServiceAddresses();
+            return result;
           })
         }
       />

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { save, updateField } from '../../../utils/addEditFormUtils';
 import { isValidContactData } from '../../../utils/contactValidation';
+import { customerTypeToLabel } from '../../../utils/customerEnums';
 
 const useAddEditCustomer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,10 +71,10 @@ const useAddEditCustomer = () => {
     setFormData({
       id: customer?.id || 0,
       name: customer?.name || '',
-      customerType: customer?.customerType || '',
+      customerType: customerTypeToLabel(customer?.customerType),
       billingContact,
       preferredContactMethod: customer?.preferredContactMethod || '',
-      customerStatus: customer?.customerStatus || 'Active'
+      customerStatus: customer?.customerStatus || (customer?.isActive === false ? 'Inactive' : 'Active')
     });
     setErrors({});
     setIsOpen(true);
