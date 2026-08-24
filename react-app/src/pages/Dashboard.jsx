@@ -1,33 +1,8 @@
-import { useEffect } from 'react';
 import { Line, Doughnut } from 'react-chartjs-2';
 import Table from '../components/Common/Table/Table';
 import useDashboardData from '../hooks/useDashboardData';
-import { initializeStorage } from '../utils/localStorage';
-import {
-  appointments as initialAppointments,
-  serviceAddresses as initialServiceAddresses,
-  technicians as initialTechnicians,
-  customers as initialCustomers,
-  inventory as initialInventory,
-  facilities,
-  areas,
-  inspectionPoints
-} from '../data/mockData';
 
 const Dashboard = () => {
-  // Initialize localStorage on mount
-  useEffect(() => {
-    initializeStorage({
-      appointments: initialAppointments,
-      customers: initialCustomers,
-      serviceAddresses: initialServiceAddresses,
-      technicians: initialTechnicians,
-      inventory: initialInventory,
-      facilities: facilities,
-      areas: areas,
-      inspectionPoints: inspectionPoints
-    });
-  }, []);
 
   // Use shared dashboard data hook
   const {

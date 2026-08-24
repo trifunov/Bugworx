@@ -12,6 +12,13 @@ export const dashboardMenuConfig = [
     description: 'Customer profiles, addresses, and service history.'
   },
   {
+    id: 'programs',
+    label: 'Programs',
+    route: '/programs',
+    icon: 'mdi mdi-clipboard-list-outline',
+    description: 'Recurring service programs and treatment plans.'
+  },
+  {
     id: 'scheduler',
     label: 'Scheduler',
     route: '/scheduler',
